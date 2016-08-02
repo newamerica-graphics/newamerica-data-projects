@@ -1,0 +1,26 @@
+{
+  "name": "newamerica-data-projects",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack -d --watch",
+    "build": "webpack -p"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/newamericafoundation/newamerica-data-projects.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/newamericafoundation/newamerica-data-projects/issues"
+  },
+  "homepage": "https://github.com/newamericafoundation/newamerica-data-projects#readme",
+  "dependencies": {
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "jquery": "^3.1.0",
+    "webpack": "^1.13.1"
+  }
+}
