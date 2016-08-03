@@ -6,5 +6,6 @@ bower_components
 npm-debug.log
 
 build/
+utilities/sample_data/
 
 index.html

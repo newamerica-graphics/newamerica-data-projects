@@ -3,7 +3,7 @@ var path = require('path');
 var S3Plugin = require('webpack-s3-plugin')
 
 var BUILD_DIR = path.resolve(__dirname, 'build/');
-var PROJECT_DIR = path.resolve(__dirname, 'src/js/projects');
+var PROJECT_DIR = path.resolve(__dirname, 'src/js');
 
 // s3 bucket settings
 var AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
@@ -16,7 +16,7 @@ function getProjectEntryPoints() {
 	let projectList = ['homegrown_terrorism', 'care_index'];
 
 	for (var project of projectList) {
-		entryPoints[project] = PROJECT_DIR + "/" + project + '/index.js';
+		entryPoints[project] = PROJECT_DIR + "/projects/" + project + '/index.js';
 	}
 
 	return entryPoints;
