@@ -10,26 +10,17 @@ var AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
 var AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
 var STATIC_BUCKET_NAME = process.env.STATIC_S3_BUCKET_NAME;
 
-// static file settings
-// var S3_STATIC_DOMAIN = '%s.s3.amazonaws.com' % STATIC_BUCKET_NAME
-
-// var STATICFILES_LOCATION='static'
-// var STATICFILES_STORAGE = 'custom_storages.StaticStorage'
-// var STATIC_URL = "https://%s/%s/" % (S3_STATIC_DOMAIN, STATICFILES_LOCATION)
-
 function getProjectEntryPoints() {
 	let entryPoints = {};
 
 	let projectList = ['homegrown_terrorism', 'care_index'];
 
 	for (var project of projectList) {
-		entryPoints[project] = PROJECT_DIR + "/" + project + '/index.js'
+		entryPoints[project] = PROJECT_DIR + "/" + project + '/index.js';
 	}
 
 	return entryPoints;
 }
-
-
 
 var config = {
   entry: getProjectEntryPoints(),
