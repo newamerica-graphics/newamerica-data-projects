@@ -34,11 +34,6 @@ var config = {
         test : /\.js?/,
         include : PROJECT_DIR,
         loader : 'babel'
-      },
-      {
-        test : /\.json?/,
-        include : PROJECT_DIR,
-        loader : 'babel'
       }
     ]
   },
