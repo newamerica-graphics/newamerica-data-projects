@@ -1,8 +1,10 @@
 import $ from 'jquery';
 import Tabletop from 'tabletop';
 
+import {usStates} from '../../geography/us-states.js';
+console.log(usStates);
+
 let d3 = require("d3");
-let statesJSON = "../../../../utilities/geography/us-states.json";
 
 export class usStatesMap {
 	constructor(id) {
@@ -20,6 +22,7 @@ export class usStatesMap {
 	}
 
 	buildGraph(data) {
+		console.log(usStates);
 		//Width and height
 		var w = 500;
 		var h = 300;
@@ -48,53 +51,50 @@ export class usStatesMap {
 			d3.min(data, function(d) { return d.value; }), 
 			d3.max(data, function(d) { return d.value; })
 		]);
-		//Load in GeoJSON data
-		d3.json(statesJSON, function(json) {
-			// Merge the ag. data and GeoJSON
-			// Loop through once for each ag. data value
-			for (var i = 0; i < data.length; i++) {
-		
-				//Grab state name
-				var dataState = data[i].state;
-				
-				//Grab data value, and convert from string to float
-				var dataValue = parseFloat(data[i].value);
-		
-				//Find the corresponding state inside the GeoJSON
-				for (var j = 0; j < json.features.length; j++) {
 
-					var jsonState = json.features[j].properties.name;
+		// Merge the ag. data and GeoJSON
+		// Loop through once for each ag. data value
+		for (var i = 0; i < data.length; i++) {
+	
+			//Grab state name
+			var dataState = data[i].state;
+			
+			//Grab data value, and convert from string to float
+			var dataValue = parseFloat(data[i].value);
+	
+			//Find the corresponding state inside the GeoJSON
+			for (var j = 0; j < usStates.features.length; j++) {
 
-					if (dataState == jsonState) {
-						//Copy the data value into the JSON
-						json.features[j].properties.value = dataValue;
-						
-						//Stop looking through the JSON
-						break;
-						
-					}
-				}		
-			}
-			// Bind data and create one path per GeoJSON feature
-			svg.selectAll("path")
-			   .data(json.features)
-			   .enter()
-			   .append("path")
-			   .attr("d", path)
-			   .style("fill", function(d) {
-			   		//Get data value
-			   		var value = d.properties.value;
-			   		
-			   		if (value) {
-			   			//If value exists…
-				   		return color(value);
-			   		} else {
-			   			//If value is undefined…
-				   		return "#ccc";
-			   		}
-			   });
+				var jsonState = usStates.features[j].properties.name;
 
-		});
+				if (dataState == jsonState) {
+					//Copy the data value into the JSON
+					usStates.features[j].properties.value = dataValue;
+					
+					//Stop looking through the JSON
+					break;
+					
+				}
+			}		
+		}
+		// Bind data and create one path per GeoJSON feature
+		svg.selectAll("path")
+		   .data(usStates.features)
+		   .enter()
+		   .append("path")
+		   .attr("d", path)
+		   .style("fill", function(d) {
+		   		//Get data value
+		   		var value = d.properties.value;
+		   		
+		   		if (value) {
+		   			//If value exists…
+			   		return color(value);
+		   		} else {
+		   			//If value is undefined…
+			   		return "#ccc";
+		   		}
+		   });
 	}
 			
 }

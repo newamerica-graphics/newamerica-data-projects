@@ -3,12 +3,12 @@ var path = require('path');
 var S3Plugin = require('webpack-s3-plugin')
 
 var BUILD_DIR = path.resolve(__dirname, 'build/');
-var PROJECT_DIR = path.resolve(__dirname, 'src/js');
+var PROJECT_DIR = path.resolve(__dirname, 'src');
 
 // s3 bucket settings
 var AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
 var AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
-var STATIC_BUCKET_NAME = process.env.STATIC_S3_BUCKET_NAME;
+var DATA_PROJECTS_S3_BUCKET_NAME = process.env.DATA_PROJECTS_S3_BUCKET_NAME;
 
 function getProjectEntryPoints() {
 	let entryPoints = {};
@@ -16,7 +16,7 @@ function getProjectEntryPoints() {
 	let projectList = ['homegrown_terrorism', 'care_index'];
 
 	for (var project of projectList) {
-		entryPoints[project] = PROJECT_DIR + "/projects/" + project + '/index.js';
+		entryPoints[project] = PROJECT_DIR + "/js/projects/" + project + '/index.js';
 	}
 
 	return entryPoints;
@@ -34,6 +34,11 @@ var config = {
         test : /\.js?/,
         include : PROJECT_DIR,
         loader : 'babel'
+      },
+      {
+        test : /\.json?/,
+        include : PROJECT_DIR,
+        loader : 'babel'
       }
     ]
   },
@@ -47,7 +52,7 @@ var config = {
         secretAccessKey: AWS_SECRET_ACCESS_KEY,
       },
       s3UploadOptions: {
-        Bucket: STATIC_BUCKET_NAME
+        Bucket: DATA_PROJECTS_S3_BUCKET_NAME
       }
     })
   ]
