@@ -8,25 +8,34 @@ let dotW = 10;
 let dotOffset = 10;
 
 export class dotMatrix {
-	constructor(id, w) {
+	constructor(id, w, scaleType) {
 		this.w = w;
+
+		this.scaleType = scaleType;
 
 		this.svg = d3.select(id)
 			.append("svg")
-			.attr("width", w)
-			.attr("height", 500);
+			.attr("width", "100%");
 	}
 
 	initialRender() {
-		let self = this;
-
-		d3.json("https://na-data-projects.s3.amazonaws.com/data/isp/homegrown.json", function(d) {
+		d3.json("https://na-data-projects.s3.amazonaws.com/data/isp/homegrown.json", (d) => {
 			console.log(d);
-			self.buildGraph(d.Sheet1);
+			this.setScale();
+			this.buildGraph(d.Sheet1);
 		});
 	}
 
+	setScale() {
+		if (this.scaleType === "linear") {
+			this.colorScale = d3.scaleLinear()
+				.domain([0,100])
+				.range(["white", "blue"]);
+		}
+	}
+
 	buildGraph(data) {
+
 		for (var d of data) {
 			if(!$.isNumeric(d.field_age)) {
 				d.field_age = -1;
@@ -37,11 +46,7 @@ export class dotMatrix {
 
 		this.dataLength = data.length;
 
-		this.setDimensions(this.w);
-
-		let colorScale = d3.scaleLinear()
-			.domain([0,100])
-			.range(["white", "blue"]);
+		this.setDimensions();
 
 		this.cells = this.svg.selectAll("rect")
 			.data(data)
@@ -50,28 +55,22 @@ export class dotMatrix {
 		    .attr("height", 10)
 		    .attr("x", (d, i) => { return this.calcX(i); })
 		    .attr("y", (d, i) => { return this.calcY(i); })
-		    .attr("fill", function(d) {
-		    	return d.field_age > 0 ? colorScale(d.field_age) : "red";
+		    .attr("fill", (d) => {
+		    	return d.field_age > 0 ? this.colorScale(d.field_age) : "red";
 		    })
 		    .on("mouseover", function(d) {
 		    	console.log(d.field_age);
 		    });
-
 	}
 
-	setDimensions(w) {
-		this.w = w;
-
+	setDimensions() {
 		this.numCols = Math.floor(this.w/(dotW + dotOffset));
 		this.dotsPerCol = Math.ceil(this.dataLength/this.numCols);
 
 		this.h = this.dotsPerCol * (dotW + dotOffset);
 
 		this.svg
-			.attr("width", this.w)
 			.attr("height", this.h);
-
-
 	}
 
 	calcX(i) {
@@ -83,7 +82,8 @@ export class dotMatrix {
 	}
 
 	resize(w) {
-		this.setDimensions(w);
+		this.w = w;
+		this.setDimensions();
 
 		this.cells
 			.attr("x", (d, i) => { return this.calcX(i); })
