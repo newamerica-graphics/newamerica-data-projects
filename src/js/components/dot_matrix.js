@@ -8,44 +8,58 @@ let dotW = 10;
 let dotOffset = 10;
 
 export class dotMatrix {
-	constructor(id, w, scaleType) {
-		this.w = w;
-
-		this.scaleType = scaleType;
+	constructor(id, colorVar, scaleType) {
+		this.w = $(id).width();
 
 		this.svg = d3.select(id)
 			.append("svg")
 			.attr("width", "100%");
+
+		this.colorVar = colorVar;
+		this.scaleType = scaleType;
 	}
 
 	initialRender() {
 		d3.json("https://na-data-projects.s3.amazonaws.com/data/isp/homegrown.json", (d) => {
 			console.log(d);
-			this.setScale();
-			this.buildGraph(d.Sheet1);
+			let firstElem = d.Sheet1[0];
+			if ( !firstElem.hasOwnProperty(this.colorVar) ) {
+				console.log("Dot Matrix dataset has no field named " + this.colorVar);
+				return;
+			}
+			let processedData = this.processData(d);
+			this.setScale(processedData);
+			this.buildGraph(processedData);
 		});
 	}
 
-	setScale() {
+	setScale(data) {
 		if (this.scaleType === "linear") {
+			let dataMin = d3.min(data, (d) => { return d[this.colorVar] ? d[this.colorVar] : 10000000; });
+			let dataMax = d3.max(data, (d) => { return d[this.colorVar] ? d[this.colorVar] : -1; });
+
 			this.colorScale = d3.scaleLinear()
-				.domain([0,100])
+				.domain([dataMin, dataMax])
 				.range(["white", "blue"]);
 		}
 	}
 
-	buildGraph(data) {
-
+	processData(d) {
+		let data = d.Sheet1;
 		for (var d of data) {
-			if(!$.isNumeric(d.field_age)) {
-				d.field_age = -1;
+			if(!$.isNumeric(d[this.colorVar])) {
+				d[this.colorVar] = null;
 			}
 		}
 
-		data = data.sort(function(a, b) { return a.field_age - b.field_age;});
+		data = data.sort((a, b) => { return a[this.colorVar] - b[this.colorVar];});
 
 		this.dataLength = data.length;
 
+		return data;
+	}
+
+	buildGraph(data) {
 		this.setDimensions();
 
 		this.cells = this.svg.selectAll("rect")
@@ -56,11 +70,20 @@ export class dotMatrix {
 		    .attr("x", (d, i) => { return this.calcX(i); })
 		    .attr("y", (d, i) => { return this.calcY(i); })
 		    .attr("fill", (d) => {
-		    	return d.field_age > 0 ? this.colorScale(d.field_age) : "red";
+		    	return d[this.colorVar] ? this.colorScale(d[this.colorVar]) : "red";
 		    })
 		    .on("mouseover", function(d) {
 		    	console.log(d.field_age);
 		    });
+	}
+
+	resize(w) {
+		this.w = w;
+		this.setDimensions();
+
+		this.cells
+			.attr("x", (d, i) => { return this.calcX(i); })
+		    .attr("y", (d, i) => { return this.calcY(i); });
 	}
 
 	setDimensions() {
@@ -79,15 +102,6 @@ export class dotMatrix {
 
 	calcY(i) {
 		return i%this.dotsPerCol * (dotW + dotOffset);
-	}
-
-	resize(w) {
-		this.w = w;
-		this.setDimensions();
-
-		this.cells
-			.attr("x", (d, i) => { return this.calcX(i); })
-		    .attr("y", (d, i) => { return this.calcY(i); });
 	}
 
 }
