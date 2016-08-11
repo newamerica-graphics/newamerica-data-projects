@@ -40,12 +40,11 @@ export class usStatesMap {
 	initialRender() {
 		console.log("in initial render");
 		let self = this;
-
-		Tabletop.init( { key: 'https://docs.google.com/spreadsheets/d/1dGMIGe-14nOiMBf_BLtTTnzqTKelNl96fObhiqqb_HU/pubhtml',
-                    callback: function(d) {
-                   		self.buildGraph(d);
-                   	},
-                    simpleSheet: true } );
+		
+		d3.json("https://na-data-projects.s3.amazonaws.com/data/test/ag.json", function(d) {
+			console.log(d);
+			self.buildGraph(d.Sheet1);
+		});
 	}
 
 	buildGraph(data) {
