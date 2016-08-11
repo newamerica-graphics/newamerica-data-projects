@@ -16,9 +16,8 @@ export class HomegrownTerrorism {
 
 	update() {
 		let w = $(this.id).width();
-		console.log(w);
 		// this.usMap.updateDimensions(w);
-		this.dotMatrix.updateDimensions(w);
+		this.dotMatrix.resize(w);
 	}
 }
 

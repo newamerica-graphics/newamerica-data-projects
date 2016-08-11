@@ -27,51 +27,67 @@ export class dotMatrix {
 	}
 
 	buildGraph(data) {
+		for (var d of data) {
+			if(!$.isNumeric(d.field_age)) {
+				d.field_age = -1;
+			}
+		}
+
+		data = data.sort(function(a, b) { return a.field_age - b.field_age;});
+
 		this.dataLength = data.length;
-		console.log(data);
 
-		let numCols = Math.floor(this.w/(dotW + dotOffset));
-		let dotsPerCol = Math.ceil(this.dataLength/numCols);
+		this.setDimensions(this.w);
 
-		console.log("width " + this.w);
-		console.log("dataLength " + this.dataLength);
-		console.log("numCols " + numCols);
-		console.log("dotsPerCol " + dotsPerCol);
+		let colorScale = d3.scaleLinear()
+			.domain([0,100])
+			.range(["white", "blue"]);
 
 		this.cells = this.svg.selectAll("rect")
 			.data(data)
 			.enter().append("rect")
 			.attr("width", 10)
 		    .attr("height", 10)
-		    .attr("x", function(d, i) {
-		       	return Math.floor(i/dotsPerCol) * (dotW + dotOffset);
-		    }) 
-		    .attr("y", function(d, i) {
-		    	// console.log(i);
-		        return i%dotsPerCol * (dotW + dotOffset);
+		    .attr("x", (d, i) => { return this.calcX(i); })
+		    .attr("y", (d, i) => { return this.calcY(i); })
+		    .attr("fill", function(d) {
+		    	return d.field_age > 0 ? colorScale(d.field_age) : "red";
+		    })
+		    .on("mouseover", function(d) {
+		    	console.log(d.field_age);
 		    });
 
 	}
 
-	updateDimensions(w) {
+	setDimensions(w) {
 		this.w = w;
-		this.h = 1000;
+
+		this.numCols = Math.floor(this.w/(dotW + dotOffset));
+		this.dotsPerCol = Math.ceil(this.dataLength/this.numCols);
+
+		this.h = this.dotsPerCol * (dotW + dotOffset);
 
 		this.svg
 			.attr("width", this.w)
 			.attr("height", this.h);
 
-		let numCols = Math.floor(this.w/(dotW + dotOffset));
-		let dotsPerCol = Math.ceil(this.dataLength/numCols);
+
+	}
+
+	calcX(i) {
+		return Math.floor(i/this.dotsPerCol) * (dotW + dotOffset);
+	}
+
+	calcY(i) {
+		return i%this.dotsPerCol * (dotW + dotOffset);
+	}
+
+	resize(w) {
+		this.setDimensions(w);
 
 		this.cells
-			.attr("x", function(d, i) {
-		       	return Math.floor(i/dotsPerCol) * (dotW + dotOffset);
-		    }) 
-		    .attr("y", function(d, i) {
-		    	// console.log(i);
-		        return i%dotsPerCol * (dotW + dotOffset);
-		    });
+			.attr("x", (d, i) => { return this.calcX(i); })
+		    .attr("y", (d, i) => { return this.calcY(i); });
 	}
 
 }
