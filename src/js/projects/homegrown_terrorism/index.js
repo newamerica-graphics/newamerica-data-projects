@@ -9,7 +9,7 @@ export class HomegrownTerrorism {
 		this.id = "#test1";
 		// this.usMap = new usStatesMap(this.id, width);
 		// this.usMap.initialRender();
-		this.dotMatrix = new dotMatrix(dataUrl, this.id, "field_gender", "categorical");
+		this.dotMatrix = new dotMatrix(dataUrl, this.id, "field_citizenship", "categorical");
 		this.dotMatrix.initialRender();
 		window.addEventListener('resize', this.update.bind(this));
 	}

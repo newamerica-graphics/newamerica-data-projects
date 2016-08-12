@@ -32,8 +32,41 @@ export class dotMatrix {
 			}
 			let processedData = this.processData(d);
 			this.setScale(processedData);
+			
 			this.buildGraph(processedData);
+			this.addLegend(processedData);
 		});
+	}
+
+	processData(d) {
+		let data = d.Sheet1;
+
+		if (this.scaleType === "linear") {
+			for (var d of data) {
+				if(!$.isNumeric(d[colorVar])) {
+					d[colorVar] = null;
+				}
+			}
+			data.sort((a, b) => { return a[colorVar] - b[colorVar];});
+
+		} else if (this.scaleType == "categorical") {
+			data.sort((a, b) => { 
+				let elem1 = a[colorVar];
+				let elem2 = b[colorVar];
+
+				if (elem1 < elem2) {
+				    return -1;
+				} else if (elem1 > elem2) {
+					return 1;
+				} else {
+					return 0;
+				}
+			});
+		}
+
+		this.dataLength = data.length;
+
+		return data;
 	}
 
 	setScale(data) {
@@ -47,23 +80,16 @@ export class dotMatrix {
 
 		} else if (this.scaleType == "categorical") {
 			colorScale = d3.scaleOrdinal()
-				.range(["#2ebcb3", "#5ba4da", "#a076ac", "#e75c64", "#1a8a84"]);
+				.range(["#2ebcb3", "#5ba4da", "#a076ac", "#e75c64", "#1a8a84", "#4378a0", "#74557e", "#a64046", "#005753", "#234a67", "#48304f", "#692025"]);
 		}
 	}
 
-	processData(d) {
-		let data = d.Sheet1;
-		for (var d of data) {
-			if(!$.isNumeric(d[colorVar])) {
-				d[colorVar] = null;
-			}
-		}
+	addLegend(data) {
+		console.log(colorScale.domain());
+		let legend = this.svg.selectAll('g')
+			.data(colorScale.domain())
+			.enter().append('g')
 
-		data = data.sort((a, b) => { return a[colorVar] - b[colorVar];});
-
-		this.dataLength = data.length;
-
-		return data;
 	}
 
 	buildGraph(data) {
@@ -77,7 +103,6 @@ export class dotMatrix {
 		    .attr("x", (d, i) => { return this.calcX(i); })
 		    .attr("y", (d, i) => { return this.calcY(i); })
 		    .attr("fill", (d) => {
-		    	console.log(d["field_gender"]);
 		    	return d[colorVar] ? colorScale(d[colorVar]) : "red";
 		    })
 		    .on("mouseover", this.mouseover)
@@ -117,7 +142,7 @@ export class dotMatrix {
 
 	mouseout() {
 		d3.select(this).attr("fill", function(d) {
-			console.log(d);
+			console.log(d[colorVar]);
 		    return d[colorVar] ? colorScale(d[colorVar]) : "red";
 		});
 	}
