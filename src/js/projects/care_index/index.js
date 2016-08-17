@@ -12,7 +12,9 @@ let projectVars = {
 		"cost": ["value", "value1"], 
 		"quality": ["value1", "value"]
 	},
-	tooltipVariables: ["value"]
+	tooltipVariables: {
+		"cost": ["value", "value1"]
+	}
 }
 
 let usMap, filterGroup;

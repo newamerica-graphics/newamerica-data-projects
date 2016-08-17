@@ -2,12 +2,12 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
-let tooltip, title, titleVar, dataVars, variableList, variableListElems;
+let tooltip, title, titleVar, tooltipVars, valueFields;
 
 export class Tooltip {
-	constructor(id, titleVariable, dataVariables) {
+	constructor(id, titleVariable, tooltipVariables) {
 		titleVar = titleVariable;
-		dataVars = dataVariables;
+		tooltipVars = tooltipVariables;
 		tooltip = d3.select(id)
 			.append("div")
 			.attr("class", "tooltip hidden");
@@ -16,28 +16,42 @@ export class Tooltip {
 			.append("h1")
 			.classed("tooltip__title", true);
 
-		variableList = tooltip
-			.append("ul")
-			.classed("tooltip__variable-list", true);
+		valueFields = {};
 
-		variableListElems = {};
+		for (let category of Object.keys(tooltipVars)) {
+			tooltip.append("h5")
+				.classed("tooltip__category__name", true)
+				.text(category);
 
-		for (let variable of dataVariables) {
-			variableListElems[variable] = variableList.append("li")
-				.classed("tooltip__variable-list__element", true);
+			let listForCategory = tooltip.append("ul")
+				.classed("tooltip__category__list", true);
+
+			for (let variable of tooltipVars[category]) {
+				let listElem = listForCategory.append("li")
+					.classed("tooltip__category__list__elem", true);
+
+				listElem.append("h3")
+					.classed("tooltip__category__list__elem__label", true)
+					.text(variable);
+
+				valueFields[variable] = listElem.append("h3")
+					.classed("tooltip__category__list__elem__value", true)
+					.text(variable);
+			}
 		}
 	}
 
 	show(d, mouse) {
 		console.log(d);
-		tooltip.classed('hidden', false)
+		tooltip
+			.classed('hidden', false)
             .attr('style', 'left:' + (mouse[0] + 20) + 'px; top:' + (mouse[1] - 30) + 'px');
 
 		title.text(d[titleVar]);
 
-		for (let variable of dataVars) {
-			variableListElems[variable]
-				.text(d[variable]);
+		for (let field of Object.keys(valueFields)) {
+			valueFields[field]
+				.text(d[field]);
 		} 
 	}
 
