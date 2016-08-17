@@ -29,6 +29,7 @@ export class Tooltip {
 	}
 
 	show(d, mouse) {
+		console.log(d);
 		tooltip.classed('hidden', false)
             .attr('style', 'left:' + (mouse[0] + 20) + 'px; top:' + (mouse[1] - 30) + 'px');
 

@@ -1,25 +1,24 @@
 import $ from 'jquery';
-import Tabletop from 'tabletop';
 
-import {usStates} from '../../geography/us-states.js';
+import { Tooltip } from "./tooltip.js"; 
+
+import { usStates } from '../../geography/us-states.js';
 
 let d3 = require("d3");
 
-let colorScale, dataUrl;
+let colorVar, colorScale, dataUrl, tooltip, geometry;
 
 
-export class usStatesMap {
-	constructor(inputDataUrl, id) {
+export class UsStatesMap {
+	constructor(id, inputDataUrl, colorVariable, tooltipVariables) {
 		dataUrl = inputDataUrl;
+		colorVar = colorVariable;
 		this.w = $(id).width();
 
 		this.svg = d3.select(id)
 					.append("svg");
 
-		this.tooltip = d3.select(id)
-			.append("div")
-			.attr("class", "tooltip hidden")
-			.text("I'm a Tooltip!");
+		tooltip = new Tooltip(id, "name", tooltipVariables)
 
 		this.setDimensions(this.w);
 	}
@@ -45,63 +44,75 @@ export class usStatesMap {
 
 	initialRender() {
 		console.log("in initial render");
-		let self = this;
 		
-		d3.json(dataUrl, function(d) {
-			console.log(d);
-			self.buildGraph(d.Sheet1);
+		d3.json(dataUrl, (d) => {
+			this.data = d.Sheet1;
+			this.setScale();
+			this.bindDataToGeom();
+			this.buildGraph();
 		});
 	}
 
-	buildGraph(data) {
-		console.log("rendering");
-
-		//Define quantize scale to sort data values into buckets of color
+	setScale() {
 		colorScale = d3.scaleQuantize()
 			.domain([
-				d3.min(data, function(d) { return d.value; }), 
-				d3.max(data, function(d) { return d.value; })
+				d3.min(this.data, function(d) { return d[colorVar]; }), 
+				d3.max(this.data, function(d) { return d[colorVar]; })
 			])
 			.range(["rgb(237,248,233)","rgb(186,228,179)","rgb(116,196,118)","rgb(49,163,84)","rgb(0,109,44)"]);
+	}
 
-		for (var i = 0; i < data.length; i++) {
-			//Grab state name
-			var dataState = data[i].state;
-			//Grab data value, and convert from string to float
-			var dataValue = parseFloat(data[i].value);
-			//Find the corresponding state inside the GeoJSON
-			for (var j = 0; j < usStates.features.length; j++) {
-				var jsonState = usStates.features[j].properties.name;
-				if (dataState == jsonState) {
-					//Copy the data value into the JSON
-					usStates.features[j].properties.value = dataValue;
-					//Stop looking through the JSON
+
+	bindDataToGeom() {
+		let data = this.data;
+
+		for (let elem of data) {
+			let dataState = elem.state;
+
+			for (let state of usStates.features) {
+				if (dataState == state.properties.name) {
+					state.properties = elem;
 					break;
 				}
-			}		
+			}
 		}
-		// Bind data and create one path per GeoJSON feature
+	}
+
+	buildGraph() {
 		this.paths = this.svg.selectAll("path")
 		   .data(usStates.features)
 		   .enter()
 		   .append("path");
 
 		this.paths.attr("d", this.pathGenerator)
-		    .style("fill", function(d) {
-		   		var value = d.properties.value;
+		    .style("fill", (d) => {
+		   		var value = d.properties[colorVar];
 		   		return value ? colorScale(value) : "#ccc";
-		    }.bind(this))
+		    })
 		    .on("mouseover", this.mouseover)
 		    .on("mouseout", this.mouseout);
 	}
 
+	
 	resize(w) {
 		this.setDimensions(w);
 		this.paths.attr("d", this.pathGenerator);
 	}
 
-	mouseover() {
+	changeFilter(newVar) {
+		colorVar = newVar;
+		this.setScale();
+		this.paths
+			.style("fill", (d) => {
+		   		var value = d.properties[colorVar];
+		   		return value ? colorScale(value) : "#ccc";
+		    })
+	}
+
+	mouseover(d) {
 		d3.select(this).style("fill", "orange");
+		let mousePos = d3.mouse(this);
+		tooltip.show(d.properties, mousePos);
 		// this.tooltip
 		// 	.classed('hidden', false)
   //           .attr('style', 'left:' + (mouse[0] + 15) + 'px; top:' + (mouse[1] - 35) + 'px');
@@ -109,9 +120,10 @@ export class usStatesMap {
 
 	mouseout() {
 		d3.select(this).style("fill", function(d) {
-	   		var value = d.properties.value;
+	   		var value = d.properties[colorVar];
 	   		return value ? colorScale(value) : "#ccc";
 	    });
+	    tooltip.hide();
 	}
 			
 }
