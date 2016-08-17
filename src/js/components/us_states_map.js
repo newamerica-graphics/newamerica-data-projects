@@ -18,7 +18,7 @@ export class UsStatesMap {
 		this.svg = d3.select(id)
 					.append("svg");
 
-		tooltip = new Tooltip(id, "name", tooltipVariables)
+		tooltip = new Tooltip(id, "state", tooltipVariables)
 
 		this.setDimensions(this.w);
 	}
@@ -50,10 +50,14 @@ export class UsStatesMap {
 			this.setScale();
 			this.bindDataToGeom();
 			this.buildGraph();
+
+			console.log("finished rendering");
 		});
 	}
 
 	setScale() {
+		console.log("data is ")
+		console.log(this.data);
 		colorScale = d3.scaleQuantize()
 			.domain([
 				d3.min(this.data, function(d) { return d[colorVar]; }), 
