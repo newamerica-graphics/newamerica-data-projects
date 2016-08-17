@@ -31,11 +31,12 @@ export class Tooltip {
 	show(d, mouse) {
 		tooltip.classed('hidden', false)
             .attr('style', 'left:' + (mouse[0] + 20) + 'px; top:' + (mouse[1] - 30) + 'px');
+
 		title.text(d[titleVar]);
 
 		for (let variable of dataVars) {
-			console.log(variable);
-			variableListElems[variable].text(d[variable]);
+			variableListElems[variable]
+				.text(d[variable]);
 		} 
 	}
 
