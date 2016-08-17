@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 var path = require('path');
-var S3Plugin = require('webpack-s3-plugin')
+var S3Plugin = require('webpack-s3-plugin');
+
 
 var BUILD_DIR = path.resolve(__dirname, 'build/');
 var PROJECT_DIR = path.resolve(__dirname, 'src');
@@ -17,9 +18,9 @@ function getProjectEntryPoints() {
 
 	for (var project of projectList) {
 		entryPoints[project] = PROJECT_DIR + "/js/projects/" + project + '/index.js';
-	}
+  }
 
-	return entryPoints;
+  return entryPoints;
 }
 
 var config = {
@@ -34,13 +35,20 @@ var config = {
         test : /\.js?/,
         include : PROJECT_DIR,
         loader : 'babel'
+      },
+      {
+        test: /\.scss$/,
+        loaders: [ 'style', 'css', 'sass' ]
       }
     ]
+  },
+  sassLoader: {
+    includePaths: [path.resolve(__dirname, "./src/scss/index.scss")]
   },
   plugins: (process.env.NODE_ENV === 'development') ? [] : [
     new S3Plugin({
       // Only upload css and js 
-      include: /.*\.(css|js)/,
+      include: /.*\.(scss|css|js)/,
       // s3Options are required 
       s3Options: {
         accessKeyId: AWS_ACCESS_KEY_ID,

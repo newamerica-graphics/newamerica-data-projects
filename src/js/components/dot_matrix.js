@@ -1,22 +1,32 @@
 import $ from 'jquery';
-import Tabletop from 'tabletop';
 
 let d3 = require("d3");
-let grid = require('d3-grid-layout')(d3);
+import { legendColor } from 'd3-svg-legend';
+
+import { Tooltip } from "./tooltip.js"; 
 
 let dotW = 10;
 let dotOffset = 5;
 
-let colorScale, colorVar, dataUrl;
+let colorScale, colorVar, dataUrl, tooltip;
 
 export class dotMatrix {
-	constructor(inputDataUrl, id, colorVariable, scaleType) {
+	constructor(inputDataUrl, id, colorVariable, scaleType, tooltipTitleVar, tooltipVariables) {
 		dataUrl = inputDataUrl;
 		this.w = $(id).width();
 
 		this.svg = d3.select(id)
 			.append("svg")
 			.attr("width", "100%");
+
+		tooltip = new Tooltip(id, tooltipTitleVar, tooltipVariables);
+
+		
+		
+
+		// this.legendSvg = d3.select(id)
+		// 	.append("svg")
+		// 	.attr("width", "100%");
 
 		colorVar = colorVariable;
 		this.scaleType = scaleType;
@@ -30,11 +40,11 @@ export class dotMatrix {
 				console.log("Dot Matrix dataset has no field named " + colorVar);
 				return;
 			}
-			let processedData = this.processData(d);
-			this.setScale(processedData);
-			
-			this.buildGraph(processedData);
-			this.addLegend(processedData);
+			this.data = this.processData(d);
+			this.sortData();
+			this.setScale();
+			this.buildGraph();
+			// this.addLegend();
 		});
 	}
 
@@ -47,10 +57,24 @@ export class dotMatrix {
 					d[colorVar] = null;
 				}
 			}
-			data.sort((a, b) => { return a[colorVar] - b[colorVar];});
 
 		} else if (this.scaleType == "categorical") {
-			data.sort((a, b) => { 
+			for (var d of data) {
+				// removes leading and trailing whitespace
+				d[colorVar] = d[colorVar].trim();
+			}
+		}
+
+		this.dataLength = data.length;
+
+		return data;
+	}
+
+	sortData() {
+		if (this.scaleType === "linear") {
+			this.data.sort((a, b) => { return a[colorVar] - b[colorVar];});
+		} else if (this.scaleType == "categorical") {
+			this.data.sort((a, b) => { 
 				let elem1 = a[colorVar];
 				let elem2 = b[colorVar];
 
@@ -63,13 +87,10 @@ export class dotMatrix {
 				}
 			});
 		}
-
-		this.dataLength = data.length;
-
-		return data;
 	}
 
-	setScale(data) {
+	setScale() {
+		let data = this.data
 		if (this.scaleType === "linear") {
 			let dataMin = d3.min(data, (d) => { return d[colorVar] ? d[colorVar] : 10000000; });
 			let dataMax = d3.max(data, (d) => { return d[colorVar] ? d[colorVar] : -1; });
@@ -85,14 +106,79 @@ export class dotMatrix {
 	}
 
 	addLegend(data) {
-		console.log(colorScale.domain());
-		let legend = this.svg.selectAll('g')
-			.data(colorScale.domain())
-			.enter().append('g')
+		let test = d3.nest()
+			.key((d) => { return d[colorVar]; })
+			.rollup(function(v) { return v.length; })
+			.map(data);
 
+		console.log(test.keys());
+
+		// console.log(colorScale.domain());
+
+		// let keys = legendList.selectAll('li')
+		// 	.data(colorScale.domain())
+		// 	.enter()
+		// 	.append("li");
+
+		// keys.append("g")
+		// 	.text((d) => { return d; })
+
+
+		for (var value of colorScale.domain()) {
+			console.log(value);
+		}
+
+		this.legendSvg.append("g")
+		  .attr("class", "legendOrdinal")
+		  .attr("transform", "translate(20,20)");
+
+		var legendOrdinal = legendColor()
+		  .shape("rect")
+		  .orient("horizontal")
+		  .shapePadding(100)
+		  .scale(colorScale);
+
+		this.legendSvg.select(".legendOrdinal")
+		  .call(legendOrdinal);
+
+		 d3.selectAll("g.cell")
+		 	.append("text")
+		 	.text((d) => { return test.get(d); });
+
+		// var width = 360;
+  //       var height = 360;
+  //       var radius = Math.min(width, height) / 2;
+  //       var donutWidth = 75;
+  //       var legendRectSize = 18;
+  //       var legendSpacing = 4;
+
+		// var legend = this.legendSvg.selectAll('.legend')
+  //           .data(colorScale.domain())
+  //           .enter()
+  //           .append('g')
+  //           .attr('class', 'legend')
+  //           .attr('transform', function(d, i) {
+  //             var height = legendRectSize + legendSpacing;
+  //             var offset =  height * colorScale.domain().length / 2;
+  //             var horz = 2 * legendRectSize;
+  //             var vert = i * height - offset;
+  //             return 'translate(' + horz + ',' + vert + ')';
+  //           });
+
+  //         legend.append('rect')
+  //           .attr('width', legendRectSize)
+  //           .attr('height', legendRectSize)                                   
+  //           .style('fill', "red")
+  //           .style('stroke', "red");
+            
+  //         legend.append('text')
+  //           .attr('x', legendRectSize + legendSpacing)
+  //           .attr('y', legendRectSize - legendSpacing)
+  //           .text(function(d) { return d; });
 	}
 
-	buildGraph(data) {
+	buildGraph() {
+		let data = this.data;
 		this.setDimensions();
 
 		this.cells = this.svg.selectAll("rect")
@@ -105,6 +191,7 @@ export class dotMatrix {
 		    .attr("fill", (d) => {
 		    	return d[colorVar] ? colorScale(d[colorVar]) : "red";
 		    })
+		    .attr("class", (d) => { return d[colorVar]; })
 		    .on("mouseover", this.mouseover)
 		    .on("mouseout", this.mouseout);
 	}
@@ -136,8 +223,22 @@ export class dotMatrix {
 		    .attr("y", (d, i) => { return this.calcY(i); });
 	}
 
+	changeFilter(colorVariable, scaleType) {
+		console.log("changing filter");
+		colorVar = colorVariable;
+		this.scaleType = scaleType;
+
+		this.sortData();
+		this.setScale();
+		this.cells.remove();
+		this.buildGraph();
+	}
+
 	mouseover(d) {
 		d3.select(this).attr("fill", "orange");
+		let mousePos = d3.mouse(this);
+
+		tooltip.show(d, mousePos);
 	}
 
 	mouseout() {
@@ -145,6 +246,8 @@ export class dotMatrix {
 			console.log(d[colorVar]);
 		    return d[colorVar] ? colorScale(d[colorVar]) : "red";
 		});
+
+		tooltip.hide();
 	}
 
 }

@@ -1,0 +1,10 @@
+.tooltip {
+	width: 300px;
+	position:absolute;
+	background-color: white;
+
+	&.hidden {
+		display: none;
+	}
+
+}

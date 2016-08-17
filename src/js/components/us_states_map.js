@@ -5,17 +5,23 @@ import {usStates} from '../../geography/us-states.js';
 
 let d3 = require("d3");
 
-let colorScale;
+let colorScale, dataUrl;
 
 
 export class usStatesMap {
-	constructor(id, w) {
-		this.id = id;
+	constructor(inputDataUrl, id) {
+		dataUrl = inputDataUrl;
+		this.w = $(id).width();
 
 		this.svg = d3.select(id)
 					.append("svg");
 
-		this.setDimensions(w);
+		this.tooltip = d3.select(id)
+			.append("div")
+			.attr("class", "tooltip hidden")
+			.text("I'm a Tooltip!");
+
+		this.setDimensions(this.w);
 	}
 
 	setDimensions(w) {
@@ -41,7 +47,7 @@ export class usStatesMap {
 		console.log("in initial render");
 		let self = this;
 		
-		d3.json("https://na-data-projects.s3.amazonaws.com/data/test/ag.json", function(d) {
+		d3.json(dataUrl, function(d) {
 			console.log(d);
 			self.buildGraph(d.Sheet1);
 		});
@@ -89,13 +95,16 @@ export class usStatesMap {
 		    .on("mouseout", this.mouseout);
 	}
 
-	updateDimensions(w) {
+	resize(w) {
 		this.setDimensions(w);
 		this.paths.attr("d", this.pathGenerator);
 	}
 
 	mouseover() {
 		d3.select(this).style("fill", "orange");
+		// this.tooltip
+		// 	.classed('hidden', false)
+  //           .attr('style', 'left:' + (mouse[0] + 15) + 'px; top:' + (mouse[1] - 35) + 'px');
 	}
 
 	mouseout() {
