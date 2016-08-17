@@ -8,7 +8,10 @@ let projectVars = {
 	id: "#test1",
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/test/ag.json",
 	colorVar: "value",
-	filterVars: ["value", "value1"],
+	filterVars: {
+		"cost": ["value", "value1"], 
+		"quality": ["value1", "value"]
+	},
 	tooltipVariables: ["value"]
 }
 
@@ -25,7 +28,6 @@ function initialize() {
 function resize() {
 	let w = $(projectVars.id).width();
 	usMap.resize(w);
-	usMap.changeFilter("value1");
 }
 
 function changeFilter() {
