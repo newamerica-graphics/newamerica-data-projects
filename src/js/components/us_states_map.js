@@ -1,7 +1,8 @@
 import $ from 'jquery';
 
 import { Tooltip } from "./tooltip.js";
-import { Legend } from "./legend.js"; 
+import { Legend } from "./legend.js";
+import { Table } from "./table.js";
 
 import { usStates } from '../../geography/us-states.js';
 
@@ -52,9 +53,11 @@ export class UsStatesMap {
 			this.data = d.Sheet1;
 			this.setScale();
 			this.bindDataToGeom();
-			this.buildGraph();
+			// this.buildGraph();
 
 			this.setLegend();
+
+			let table = new Table("#test1", this.data);
 
 			console.log("finished rendering");
 		});

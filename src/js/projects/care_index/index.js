@@ -4,6 +4,7 @@ import $ from 'jquery';
 import { UsStatesMap } from "../../components/us_states_map.js";
 import { FilterGroup } from "../../components/filter_group.js";
 
+
 let projectVars = {
 	id: "#test1",
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/test/ag.json",
@@ -18,7 +19,7 @@ let projectVars = {
 	legendBins:5
 }
 
-let usMap, filterGroup;
+let usMap, filterGroup, table;
 
 function initialize() {
 	window.addEventListener('resize', resize);
@@ -26,6 +27,7 @@ function initialize() {
 	filterGroup = new FilterGroup(projectVars.id, projectVars.filterVars, changeFilter);
 	usMap = new UsStatesMap(projectVars.id, projectVars.dataUrl, projectVars.colorVar, projectVars.tooltipVariables, projectVars.legendBins);
 	usMap.initialRender();
+	
 }
 
 function resize() {
