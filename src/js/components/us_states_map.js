@@ -9,14 +9,15 @@ import { usStates } from '../../geography/us-states.js';
 
 let d3 = require("d3");
 
-let id, dataUrl, colorVar, tooltipVars, filterVars;
+let id, dataUrl, defaultFilterVar, currFilterVar, tooltipVars, filterVars;
 let colorScale, tooltip, legend, geometry, dataMin, dataMax;
 
 
 export class UsStatesMap {
 	
 	constructor(projectVars) {
-		({id, dataUrl, colorVar, tooltipVars, filterVars} = projectVars);
+		({id, dataUrl, defaultFilterVar, tooltipVars, filterVars} = projectVars);
+		currFilterVar = defaultFilterVar;
 
 		this.w = $(id).width();
 
@@ -68,10 +69,13 @@ export class UsStatesMap {
 		console.log("data is ")
 		console.log(this.data);
 
-		dataMin = Number(d3.min(this.data, function(d) { return d[colorVar]; })); 
-		dataMax = Number(d3.max(this.data, function(d) { return d[colorVar]; }));
+		let {scaleType, color, numBins} = filterVars[currFilterVar];
+		console.log(filterVars);
 
-		colorScale = getColorScale("quantize", 5, "blue");
+		dataMin = Number(d3.min(this.data, function(d) { return d[currFilterVar]; })); 
+		dataMax = Number(d3.max(this.data, function(d) { return d[currFilterVar]; }));
+
+		colorScale = getColorScale(scaleType, color, numBins);
 		colorScale.domain([dataMin, dataMax]);
 	}
 
@@ -99,7 +103,7 @@ export class UsStatesMap {
 
 		this.paths.attr("d", this.pathGenerator)
 		    .style("fill", (d) => {
-		   		var value = d.properties[colorVar];
+		   		var value = d.properties[currFilterVar];
 		   		return value ? colorScale(value) : "#ccc";
 		    })
 		    .on("mouseover", this.mouseover)
@@ -117,12 +121,12 @@ export class UsStatesMap {
 	}
 
 	changeFilter(newVar) {
-		colorVar = newVar;
+		currFilterVar = newVar;
 		this.setScale();
 		this.setLegend();
 		this.paths
 			.style("fill", (d) => {
-		   		var value = d.properties[colorVar];
+		   		var value = d.properties[currFilterVar];
 		   		return value ? colorScale(value) : "#ccc";
 		    })
 	}
@@ -138,7 +142,7 @@ export class UsStatesMap {
 
 	mouseout() {
 		d3.select(this).style("fill", function(d) {
-	   		var value = d.properties[colorVar];
+	   		var value = d.properties[currFilterVar];
 	   		return value ? colorScale(value) : "#ccc";
 	    });
 	    tooltip.hide();

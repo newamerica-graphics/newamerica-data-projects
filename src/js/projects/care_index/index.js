@@ -7,11 +7,11 @@ import { FilterGroup } from "../../components/filter_group.js";
 let projectVars = {
 	id: "#test1",
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/test/ag.json",
-	colorVar: "value",
+	defaultFilterVar: "value",
 	filterVars: {
-		"value":{"category":"cost", "scaleType":"linear", "color":"blue"},
-		"value1":{"category":"quality", "scaleType":"linear", "color":"green"},
-		"value2":{"category":"quality", "scaleType":"linear", "color":"green"}
+		"value":{"category":"cost", "scaleType":"quantize", "color":"blue", "numBins":5},
+		"value1":{"category":"quality", "scaleType":"quantize", "color":"turquoise", "numBins":5},
+		"value2":{"category":"quality", "scaleType":"quantize", "color":"red", "numBins":5}
 	},
 	tooltipVars: {
 		"cost": ["value", "value1"]

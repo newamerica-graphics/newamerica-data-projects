@@ -8,7 +8,7 @@ let colorOptions = {
 	"red":"#E75C64"
 }
 
-export function getColorScale(type, numBins, color) {
+export function getColorScale(type, color, numBins) {
 	console.log(numBins);
 	let scale;
 
