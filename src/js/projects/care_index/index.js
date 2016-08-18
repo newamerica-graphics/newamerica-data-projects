@@ -14,7 +14,8 @@ let projectVars = {
 	},
 	tooltipVariables: {
 		"cost": ["value", "value1"]
-	}
+	},
+	legendBins:5
 }
 
 let usMap, filterGroup;
@@ -23,7 +24,7 @@ function initialize() {
 	window.addEventListener('resize', resize);
 
 	filterGroup = new FilterGroup(projectVars.id, projectVars.filterVars, changeFilter);
-	usMap = new UsStatesMap(projectVars.id, projectVars.dataUrl, projectVars.colorVar, projectVars.tooltipVariables);
+	usMap = new UsStatesMap(projectVars.id, projectVars.dataUrl, projectVars.colorVar, projectVars.tooltipVariables, projectVars.legendBins);
 	usMap.initialRender();
 }
 

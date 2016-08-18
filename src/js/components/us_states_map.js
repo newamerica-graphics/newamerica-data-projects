@@ -1,16 +1,17 @@
 import $ from 'jquery';
 
-import { Tooltip } from "./tooltip.js"; 
+import { Tooltip } from "./tooltip.js";
+import { Legend } from "./legend.js"; 
 
 import { usStates } from '../../geography/us-states.js';
 
 let d3 = require("d3");
 
-let colorVar, colorScale, dataUrl, tooltip, geometry;
+let colorVar, colorScale, dataUrl, tooltip, legend, geometry, dataMin, dataMax;
 
 
 export class UsStatesMap {
-	constructor(id, inputDataUrl, colorVariable, tooltipVariables) {
+	constructor(id, inputDataUrl, colorVariable, tooltipVariables, legendBins) {
 		dataUrl = inputDataUrl;
 		colorVar = colorVariable;
 		this.w = $(id).width();
@@ -19,6 +20,8 @@ export class UsStatesMap {
 					.append("svg");
 
 		tooltip = new Tooltip(id, "state", tooltipVariables)
+
+		legend = new Legend(id, legendBins);
 
 		this.setDimensions(this.w);
 	}
@@ -51,6 +54,8 @@ export class UsStatesMap {
 			this.bindDataToGeom();
 			this.buildGraph();
 
+			this.setLegend();
+
 			console.log("finished rendering");
 		});
 	}
@@ -58,11 +63,12 @@ export class UsStatesMap {
 	setScale() {
 		console.log("data is ")
 		console.log(this.data);
+
+		dataMin = Number(d3.min(this.data, function(d) { return d[colorVar]; })); 
+		dataMax = Number(d3.max(this.data, function(d) { return d[colorVar]; }));
+
 		colorScale = d3.scaleQuantize()
-			.domain([
-				d3.min(this.data, function(d) { return d[colorVar]; }), 
-				d3.max(this.data, function(d) { return d[colorVar]; })
-			])
+			.domain([dataMin, dataMax])
 			.range(["rgb(237,248,233)","rgb(186,228,179)","rgb(116,196,118)","rgb(49,163,84)","rgb(0,109,44)"]);
 	}
 
@@ -97,6 +103,10 @@ export class UsStatesMap {
 		    .on("mouseout", this.mouseout);
 	}
 
+	setLegend() {
+		legend.setScale(dataMin, dataMax, colorScale);
+	}
+
 	
 	resize(w) {
 		this.setDimensions(w);
@@ -106,6 +116,7 @@ export class UsStatesMap {
 	changeFilter(newVar) {
 		colorVar = newVar;
 		this.setScale();
+		this.setLegend();
 		this.paths
 			.style("fill", (d) => {
 		   		var value = d.properties[colorVar];
