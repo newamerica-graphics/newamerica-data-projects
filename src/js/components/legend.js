@@ -2,28 +2,29 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
-import { legendColor } from 'd3-svg-legend';
-
-let legend;
+let cellContainer;
 
 export class Legend {
 	constructor(id) {
-		legend = d3.select(id)
+		let legend = d3.select(id)
 			.append("svg")
 			.attr("class", "legend");
+
+		cellContainer = legend.append("g")
+			.attr("class", "legend__cell-container");
 	}
 
 	setScale(dataMin, dataMax, colorScale) {
+		cellContainer.selectAll(".legend__cell").remove();
+
 		let numBins = colorScale.range().length
 		let dataSpread = dataMax - dataMin;
 		let binInterval = dataSpread/numBins;
 
 		let calcBinVal = (i) => {
-			return dataMin + (binInterval * i);
+			let binVal = dataMin + (binInterval * i);
+			return Math.round(binVal * 100)/100;
 		}
-
-		let cellContainer = legend.append("g")
-			.attr("class", "legend__cell-container");
 
 		for (let i = 0; i < numBins; i++) {
 			let cell = cellContainer.append("g")
@@ -45,7 +46,5 @@ export class Legend {
 				.text(calcBinVal(i) + " to " + calcBinVal(i+1));
 
 		}
-
-		
 	}
 }
