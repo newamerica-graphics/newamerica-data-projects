@@ -9,10 +9,11 @@ let projectVars = {
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/test/ag.json",
 	colorVar: "value",
 	filterVars: {
-		"cost": ["value", "value1"], 
-		"quality": ["value1", "value"]
+		"value":{"category":"cost", "scaleType":"linear", "color":"blue"},
+		"value1":{"category":"quality", "scaleType":"linear", "color":"green"},
+		"value2":{"category":"quality", "scaleType":"linear", "color":"green"}
 	},
-	tooltipVariables: {
+	tooltipVars: {
 		"cost": ["value", "value1"]
 	},
 	legendBins:5
@@ -24,7 +25,7 @@ function initialize() {
 	window.addEventListener('resize', resize);
 
 	filterGroup = new FilterGroup(projectVars.id, projectVars.filterVars, changeFilter);
-	usMap = new UsStatesMap(projectVars.id, projectVars.dataUrl, projectVars.colorVar, projectVars.tooltipVariables, projectVars.legendBins);
+	usMap = new UsStatesMap(projectVars);
 	usMap.initialRender();
 }
 

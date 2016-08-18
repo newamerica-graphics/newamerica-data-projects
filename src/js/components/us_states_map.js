@@ -3,25 +3,29 @@ import $ from 'jquery';
 import { Tooltip } from "./tooltip.js";
 import { Legend } from "./legend.js"; 
 
+import { getColorScale } from "./get_color_scale.js";
+
 import { usStates } from '../../geography/us-states.js';
 
 let d3 = require("d3");
 
-let colorVar, colorScale, dataUrl, tooltip, legend, geometry, dataMin, dataMax;
+let id, dataUrl, colorVar, tooltipVars, filterVars;
+let colorScale, tooltip, legend, geometry, dataMin, dataMax;
 
 
 export class UsStatesMap {
-	constructor(id, inputDataUrl, colorVariable, tooltipVariables, legendBins) {
-		dataUrl = inputDataUrl;
-		colorVar = colorVariable;
+	
+	constructor(projectVars) {
+		({id, dataUrl, colorVar, tooltipVars, filterVars} = projectVars);
+
 		this.w = $(id).width();
 
 		this.svg = d3.select(id)
 					.append("svg");
 
-		tooltip = new Tooltip(id, "state", tooltipVariables)
+		tooltip = new Tooltip(id, "state", tooltipVars)
 
-		legend = new Legend(id, legendBins);
+		legend = new Legend(id);
 
 		this.setDimensions(this.w);
 	}
@@ -67,9 +71,8 @@ export class UsStatesMap {
 		dataMin = Number(d3.min(this.data, function(d) { return d[colorVar]; })); 
 		dataMax = Number(d3.max(this.data, function(d) { return d[colorVar]; }));
 
-		colorScale = d3.scaleQuantize()
-			.domain([dataMin, dataMax])
-			.range(["rgb(237,248,233)","rgb(186,228,179)","rgb(116,196,118)","rgb(49,163,84)","rgb(0,109,44)"]);
+		colorScale = getColorScale("quantize", 5, "blue");
+		colorScale.domain([dataMin, dataMax]);
 	}
 
 
