@@ -10,14 +10,13 @@ import { usStates } from '../../geography/us-states.js';
 
 let d3 = require("d3");
 
-let id, dataUrl, defaultFilterVar, currFilterVar, tooltipVars, filterVars;
+let id, defaultFilterVar, currFilterVar, tooltipVars, filterVars;
 let colorScale, tooltip, legend, geometry, dataMin, dataMax;
-
 
 export class UsStatesMap {
 	
 	constructor(projectVars) {
-		({id, dataUrl, defaultFilterVar, tooltipVars, filterVars} = projectVars);
+		({id, defaultFilterVar, tooltipVars, filterVars} = projectVars);
 		currFilterVar = defaultFilterVar;
 
 		this.w = $(id).width();
@@ -51,21 +50,19 @@ export class UsStatesMap {
 						 .projection(projection);
 	}
 
-	initialRender() {
+	initialRender(data) {
 		console.log("in initial render");
 		
-		d3.json(dataUrl, (d) => {
-			this.data = d.Sheet1;
-			this.setScale();
-			this.bindDataToGeom();
-			// this.buildGraph();
+		this.data = data;
+		this.setScale();
+		this.bindDataToGeom();
+		this.buildGraph();
 
-			this.setLegend();
+		this.setLegend();
 
-			let table = new Table("#test1", this.data);
+		// let table = new Table("#test1", this.data);
 
-			console.log("finished rendering");
-		});
+		console.log("finished rendering");
 	}
 
 	setScale() {
@@ -119,8 +116,8 @@ export class UsStatesMap {
 
 	
 	resize(w) {
-		this.setDimensions(w);
-		this.paths.attr("d", this.pathGenerator);
+		// this.setDimensions(w);
+		// this.paths.attr("d", this.pathGenerator);
 	}
 
 	changeFilter(newVar) {

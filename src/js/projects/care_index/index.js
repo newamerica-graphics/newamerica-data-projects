@@ -1,6 +1,7 @@
 require('../../../scss/index.scss');
 
 import $ from 'jquery';
+let d3 = require("d3");
 import { UsStatesMap } from "../../components/us_states_map.js";
 import { FilterGroup } from "../../components/filter_group.js";
 
@@ -26,8 +27,15 @@ function initialize() {
 
 	filterGroup = new FilterGroup(projectVars.id, projectVars.filterVars, changeFilter);
 	usMap = new UsStatesMap(projectVars);
-	usMap.initialRender();
 	
+	console.log(usMap.data);
+	// table = new Table("#test1", this.data);
+}
+
+function render() {
+	d3.json(projectVars.dataUrl, (d) => {
+		usMap.initialRender(d.Sheet1);
+	});
 }
 
 function resize() {
@@ -41,3 +49,4 @@ function changeFilter() {
 }
 
 initialize();
+render();
