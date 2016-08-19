@@ -4,6 +4,7 @@ import $ from 'jquery';
 let d3 = require("d3");
 import { UsStatesMap } from "../../components/us_states_map.js";
 import { FilterGroup } from "../../components/filter_group.js";
+import { Table } from "../../components/table.js";
 
 
 let projectVars = {
@@ -11,13 +12,18 @@ let projectVars = {
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/test/ag.json",
 	defaultFilterVar: "value",
 	filterVars: {
-		"value":{"category":"cost", "scaleType":"quantize", "color":"blue", "numBins":5},
+		"value":{"category":"cost", "scaleType":"quantize", "color":"blue", "numBins":11},
 		"value1":{"category":"quality", "scaleType":"quantize", "color":"turquoise", "numBins":7},
 		"value2":{"category":"cost", "scaleType":"quantize", "color":"red", "numBins":5}
 	},
 	tooltipVars: {
 		"cost": ["value", "value1"]
-	}
+	},
+	tableVars: [
+		{"variable":"state", "scaleType":"quantize", "color":"blue", "numBins":11},
+		{"variable":"value", "scaleType":"quantize", "color":"turquoise", "numBins":11},
+		{"variable":"value1", "scaleType":"quantize", "color":"red", "numBins":4}
+	]
 }
 
 let usMap, filterGroup, table;
@@ -27,6 +33,7 @@ function initialize() {
 
 	filterGroup = new FilterGroup(projectVars.id, projectVars.filterVars, changeFilter);
 	usMap = new UsStatesMap(projectVars);
+	table = new Table(projectVars);
 	
 	console.log(usMap.data);
 	// table = new Table("#test1", this.data);
@@ -35,6 +42,7 @@ function initialize() {
 function render() {
 	d3.json(projectVars.dataUrl, (d) => {
 		usMap.initialRender(d.Sheet1);
+		table.render(d.Sheet1);
 	});
 }
 

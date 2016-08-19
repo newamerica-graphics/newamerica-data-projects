@@ -2,7 +2,6 @@ import $ from 'jquery';
 
 import { Tooltip } from "./tooltip.js";
 import { Legend } from "./legend.js";
-import { Table } from "./table.js";
 
 import { getColorScale } from "./get_color_scale.js";
 
@@ -56,7 +55,7 @@ export class UsStatesMap {
 		this.data = data;
 		this.setScale();
 		this.bindDataToGeom();
-		this.buildGraph();
+		// this.buildGraph();
 
 		this.setLegend();
 
@@ -66,17 +65,11 @@ export class UsStatesMap {
 	}
 
 	setScale() {
-		console.log("data is ")
-		console.log(this.data);
-
-		let {scaleType, color, numBins} = filterVars[currFilterVar];
-		console.log(filterVars);
-
 		dataMin = Number(d3.min(this.data, function(d) { return d[currFilterVar]; })); 
 		dataMax = Number(d3.max(this.data, function(d) { return d[currFilterVar]; }));
 
-		colorScale = getColorScale(scaleType, color, numBins);
-		colorScale.domain([dataMin, dataMax]);
+		colorScale = getColorScale(filterVars[currFilterVar], dataMin, dataMax);
+		// colorScale.domain([dataMin, dataMax]);
 	}
 
 

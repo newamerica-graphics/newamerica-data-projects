@@ -5,34 +5,64 @@ let d3 = require("d3");
 let dt = require('datatables.net');
 // let zf = require('datatables.net-responsive');
 
+
+import { getColorScale } from "./get_color_scale.js";
+
+let table, id, tableVars;
+
 export class Table {
-	constructor(id, data) {
-		console.log("I'm a table!");
-		console.log(data);
+	constructor(projectVars) {
+		({id, tableVars} = projectVars);
 
-		// d3.select(id).append("table")
-		// 	.classed("table", true);
 
-		let table = $("#tableDiv").DataTable({
+		d3.select(id).append("table")
+			.attr("id", "dataTable")
+			.attr("class", "hover order-column cell-border");
+	}
+
+	render(data) {
+		this.data = data;
+		table = $("#dataTable").DataTable({
 			data: data,
-			columns: [
-		        { data: 'state' },
-		        { data: 'value' },
-		        { data: 'value1' }
-		    ],
+			columns: this.getColumnNames(),
 		    lengthChange: false,
 		    paging: false,
-		    // pageLength: 50
-		});
+		}).on('order.dt', this.orderChanged.bind(this));
 
-		$("#tableDiv").on( 'order.dt', function () {
-		    // This will show: "Ordering on column 1 (asc)", for example
-		    var order = table.order();
-		    console.log(order);
-		   console.log( 'Ordering on column '+order[0][0]+' ('+order[0][1]+')' );
-		} );
+	}
 
-		this.applyColorScale();
+	getColumnNames() {
+
+		console.log(tableVars);
+		let columnNames = [];
+		for (let tableVar of tableVars) {
+			columnNames.push({"data": tableVar.variable});
+		}
+
+		return columnNames;
+	}
+
+	orderChanged() {
+		let orderingIndex = table.order()[0][0];
+		let orderingColumn = tableVars[orderingIndex];
+
+		console.log("here!");
+
+		let dataMin = Number(d3.min(this.data, function(d) { return d[orderingColumn.variable]; })); 
+		let dataMax = Number(d3.max(this.data, function(d) { return d[orderingColumn.variable]; }));
+
+		console.log(dataMin);
+
+		let colorScale = getColorScale(orderingColumn, dataMin, dataMax);
+
+		console.log(colorScale);
+
+		let sorted = d3.selectAll(".sorting_1")
+			.style("background-color", function() { return colorScale($(this).text());});
+
+
+		console.log(sorted);
+
 	}
 
 	applyColorScale() {
