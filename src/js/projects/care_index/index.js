@@ -8,15 +8,15 @@ import { FilterGroup } from "../../components/filter_group.js";
 let projectVars = {
 	id: "#test1",
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/test/ag.json",
-	colorVar: "value",
+	defaultFilterVar: "value",
 	filterVars: {
-		"cost": ["value", "value1"], 
-		"quality": ["value1", "value"]
+		"value":{"category":"cost", "scaleType":"quantize", "color":"blue", "numBins":5},
+		"value1":{"category":"quality", "scaleType":"quantize", "color":"turquoise", "numBins":7},
+		"value2":{"category":"cost", "scaleType":"quantize", "color":"red", "numBins":5}
 	},
-	tooltipVariables: {
+	tooltipVars: {
 		"cost": ["value", "value1"]
-	},
-	legendBins:5
+	}
 }
 
 let usMap, filterGroup, table;
@@ -25,7 +25,7 @@ function initialize() {
 	window.addEventListener('resize', resize);
 
 	filterGroup = new FilterGroup(projectVars.id, projectVars.filterVars, changeFilter);
-	usMap = new UsStatesMap(projectVars.id, projectVars.dataUrl, projectVars.colorVar, projectVars.tooltipVariables, projectVars.legendBins);
+	usMap = new UsStatesMap(projectVars);
 	usMap.initialRender();
 	
 }

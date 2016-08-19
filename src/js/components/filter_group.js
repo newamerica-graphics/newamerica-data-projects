@@ -13,38 +13,28 @@ export class FilterGroup {
 			.append("div")
 			.attr("class", "filter-group");
 
-		for (let category of Object.keys(filterVars)) {
-			console.log(category);
-			filterContainer.append("h5")
-				.classed("filter-group__category__name", true)
-				.text(category);
+		let categoryList = {};
 
-			let filterList = filterContainer.append("ul")
-				.classed("filter-group__category__list", true);
+		for (let variable of Object.keys(filterVars)) {
+			console.log(filterVars[variable]);
+			let category = filterVars[variable].category;
 
-			for (let variable of filterVars[category]) {
-				filterList.append("li")
-					.classed("filter-list__filter", true)
-					.text(variable)
-					.attr("value", variable)
-					.on("click", listenerFunc);
+			if (!categoryList.hasOwnProperty(category)) {
+				filterContainer.append("h5")
+					.classed("filter-group__category__name", true)
+					.text(category);
+
+				categoryList[category] = filterContainer.append("ul")
+					.classed("filter-group__category__name", true);
+				
 			}
+
+			categoryList[category].append("li")
+				.classed("filter-list__filter", true)
+				.text(variable)
+				.attr("value", variable)
+				.on("click", listenerFunc);
 		}
-
-
-		// filterList = d3.select(id)
-		// 	.append("ul")
-		// 	.attr("class", "filter-list");
-
-		// filterListElems = {};
-
-		// for (let variable of filterVars) {
-		// 	filterListElems[variable] = filterList.append("li")
-		// 		.classed("filter-list__filter", true)
-		// 		.text(variable)
-		// 		.attr("value", variable)
-		// 		.on("click", listenerFunc);
-		// }
 	}
 
 

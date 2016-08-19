@@ -4,25 +4,30 @@ import { Tooltip } from "./tooltip.js";
 import { Legend } from "./legend.js";
 import { Table } from "./table.js";
 
+import { getColorScale } from "./get_color_scale.js";
+
 import { usStates } from '../../geography/us-states.js';
 
 let d3 = require("d3");
 
-let colorVar, colorScale, dataUrl, tooltip, legend, geometry, dataMin, dataMax;
+let id, dataUrl, defaultFilterVar, currFilterVar, tooltipVars, filterVars;
+let colorScale, tooltip, legend, geometry, dataMin, dataMax;
 
 
 export class UsStatesMap {
-	constructor(id, inputDataUrl, colorVariable, tooltipVariables, legendBins) {
-		dataUrl = inputDataUrl;
-		colorVar = colorVariable;
+	
+	constructor(projectVars) {
+		({id, dataUrl, defaultFilterVar, tooltipVars, filterVars} = projectVars);
+		currFilterVar = defaultFilterVar;
+
 		this.w = $(id).width();
 
 		this.svg = d3.select(id)
 					.append("svg");
 
-		tooltip = new Tooltip(id, "state", tooltipVariables)
+		tooltip = new Tooltip(id, "state", tooltipVars)
 
-		legend = new Legend(id, legendBins);
+		legend = new Legend(id);
 
 		this.setDimensions(this.w);
 	}
@@ -67,12 +72,14 @@ export class UsStatesMap {
 		console.log("data is ")
 		console.log(this.data);
 
-		dataMin = Number(d3.min(this.data, function(d) { return d[colorVar]; })); 
-		dataMax = Number(d3.max(this.data, function(d) { return d[colorVar]; }));
+		let {scaleType, color, numBins} = filterVars[currFilterVar];
+		console.log(filterVars);
 
-		colorScale = d3.scaleQuantize()
-			.domain([dataMin, dataMax])
-			.range(["rgb(237,248,233)","rgb(186,228,179)","rgb(116,196,118)","rgb(49,163,84)","rgb(0,109,44)"]);
+		dataMin = Number(d3.min(this.data, function(d) { return d[currFilterVar]; })); 
+		dataMax = Number(d3.max(this.data, function(d) { return d[currFilterVar]; }));
+
+		colorScale = getColorScale(scaleType, color, numBins);
+		colorScale.domain([dataMin, dataMax]);
 	}
 
 
@@ -99,7 +106,7 @@ export class UsStatesMap {
 
 		this.paths.attr("d", this.pathGenerator)
 		    .style("fill", (d) => {
-		   		var value = d.properties[colorVar];
+		   		var value = d.properties[currFilterVar];
 		   		return value ? colorScale(value) : "#ccc";
 		    })
 		    .on("mouseover", this.mouseover)
@@ -117,12 +124,12 @@ export class UsStatesMap {
 	}
 
 	changeFilter(newVar) {
-		colorVar = newVar;
+		currFilterVar = newVar;
 		this.setScale();
 		this.setLegend();
 		this.paths
 			.style("fill", (d) => {
-		   		var value = d.properties[colorVar];
+		   		var value = d.properties[currFilterVar];
 		   		return value ? colorScale(value) : "#ccc";
 		    })
 	}
@@ -138,7 +145,7 @@ export class UsStatesMap {
 
 	mouseout() {
 		d3.select(this).style("fill", function(d) {
-	   		var value = d.properties[colorVar];
+	   		var value = d.properties[currFilterVar];
 	   		return value ? colorScale(value) : "#ccc";
 	    });
 	    tooltip.hide();
