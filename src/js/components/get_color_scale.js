@@ -9,20 +9,19 @@ let colorOptions = {
 }
 
 export function getColorScale(type, color, numBins) {
-	console.log(numBins);
 	let scale;
 
 	if (type == "quantize") {
 		scale = d3.scaleQuantize();
+		let colorBins = setColorBins(numBins, colorOptions[color]);
+		scale.range(colorBins);
 	}
 
-	let colorBins = getBinnedColors(numBins, colorOptions[color]);
-
-	scale.range(colorBins);
+	
 	return scale;
 }
 
-function getBinnedColors(numBins, baseColor) {
+function setColorBins(numBins, baseColor) {
 	let colorBins = [];
 
 	let linearColorScale = d3.scaleLinear()

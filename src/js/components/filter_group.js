@@ -13,8 +13,6 @@ export class FilterGroup {
 			.append("div")
 			.attr("class", "filter-group");
 
-		console.log(filterVars);
-
 		let categoryList = {};
 
 		for (let variable of Object.keys(filterVars)) {

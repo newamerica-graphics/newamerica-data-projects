@@ -10,13 +10,12 @@ let projectVars = {
 	defaultFilterVar: "value",
 	filterVars: {
 		"value":{"category":"cost", "scaleType":"quantize", "color":"blue", "numBins":5},
-		"value1":{"category":"quality", "scaleType":"quantize", "color":"turquoise", "numBins":5},
-		"value2":{"category":"quality", "scaleType":"quantize", "color":"red", "numBins":5}
+		"value1":{"category":"quality", "scaleType":"quantize", "color":"turquoise", "numBins":7},
+		"value2":{"category":"cost", "scaleType":"quantize", "color":"red", "numBins":5}
 	},
 	tooltipVars: {
 		"cost": ["value", "value1"]
-	},
-	legendBins:5
+	}
 }
 
 let usMap, filterGroup;
