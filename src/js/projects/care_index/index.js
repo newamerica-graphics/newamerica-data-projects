@@ -20,7 +20,7 @@ let projectVars = {
 		"cost": ["value", "value1"]
 	},
 	tableVars: [
-		{"variable":"state", "scaleType":"quantize", "color":"blue", "numBins":11},
+		{"variable":"state"},
 		{"variable":"value", "scaleType":"quantize", "color":"blue", "numBins":11},
 		{"variable":"value1", "scaleType":"quantize", "color":"red", "numBins":4}
 	]

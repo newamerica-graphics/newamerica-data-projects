@@ -17,7 +17,7 @@ export class Table {
 
 		d3.select(id).append("table")
 			.attr("id", "dataTable")
-			.attr("class", "hover order-column cell-border");
+			.attr("class", "table hover order-column cell-border");
 	}
 
 	render(data) {
@@ -46,22 +46,17 @@ export class Table {
 		let orderingIndex = table.order()[0][0];
 		let orderingColumn = tableVars[orderingIndex];
 
-		console.log("here!");
-
 		let dataMin = Number(d3.min(this.data, function(d) { return d[orderingColumn.variable]; })); 
 		let dataMax = Number(d3.max(this.data, function(d) { return d[orderingColumn.variable]; }));
 
-		console.log(dataMin);
-
 		let colorScale = getColorScale(orderingColumn, dataMin, dataMax);
 
-		console.log(colorScale);
+		// clears previously colored cells
+		d3.selectAll("td")
+			.style("background-color", "white");
 
 		let sorted = d3.selectAll(".sorting_1")
 			.style("background-color", function() { return colorScale($(this).text());});
-
-
-		console.log(sorted);
 
 	}
 

@@ -55,7 +55,7 @@ export class UsStatesMap {
 		this.data = data;
 		this.setScale();
 		this.bindDataToGeom();
-		// this.buildGraph();
+		this.buildGraph();
 
 		this.setLegend();
 

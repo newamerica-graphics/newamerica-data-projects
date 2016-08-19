@@ -13,6 +13,11 @@ export function getColorScale(variable, dataMin, dataMax) {
 	let {scaleType, color, numBins} = variable;
 	let scale;
 
+	if (!scaleType) {
+		console.log("no scale type!");
+		return d3.scaleQuantize().range(["#ffffff", "#ffffff"]);
+	}
+
 	if (scaleType == "quantize") {
 		scale = d3.scaleQuantize();
 		let colorBins = setColorBins(numBins, colorOptions[color]);
