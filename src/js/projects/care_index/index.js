@@ -52,9 +52,9 @@ function resize() {
 	usMap.resize(w);
 }
 
-function changeFilter() {
+function changeFilter(variable) {
 	console.log(variable);
-	let newFilterVar = $(this).attr("value");
+	let newFilterVar = $(variable).attr("value");
 
 	usMap.changeFilter(newFilterVar);
 }

@@ -1,0 +1,38 @@
+.filter-group {
+	&__category {
+		display: inline-block;
+		padding: 11px;
+		border: 1px solid grey;
+		cursor: pointer;
+
+		&.active {
+			background-color: palette-get(na-black);
+			color: white;
+			border-color: palette-get(na-black);
+		}
+	}
+	&__variable-list {
+		display: none;
+		padding: 0px;
+		margin: 0px;
+		list-style-type: none;
+
+		&:first-of-type {
+			display: block;
+		}
+	}
+
+	&__variable {
+		display: inline-block;
+		padding-right: $desktop-padding;
+
+		&.active {
+			a {
+			    font-weight: 800;
+			    border-bottom: $standard-border;
+			    padding-bottom: 2px;
+			    opacity: 1;
+			}
+		}
+	}
+}
