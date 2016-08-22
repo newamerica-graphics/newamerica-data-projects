@@ -18,31 +18,35 @@ export class Tooltip {
 
 		valueFields = {};
 
-		for (let category of Object.keys(tooltipVars)) {
-			tooltip.append("h5")
-				.classed("tooltip__category__name", true)
-				.text(category);
+		let categories = {};
 
-			let listForCategory = tooltip.append("ul")
-				.classed("tooltip__category__list", true);
+		for (let variable of tooltipVars) {
+			let category = variable.category;
 
-			for (let variable of tooltipVars[category]) {
-				let listElem = listForCategory.append("li")
-					.classed("tooltip__category__list__elem", true);
+			if (!categories.hasOwnProperty(category)) {
+				tooltip.append("h5")
+					.classed("tooltip__category__name", true)
+					.text(category);
 
-				listElem.append("h3")
-					.classed("tooltip__category__list__elem__label", true)
-					.text(variable);
-
-				valueFields[variable] = listElem.append("h3")
-					.classed("tooltip__category__list__elem__value", true)
-					.text(variable);
+				categories[category] = tooltip.append("ul")
+					.classed("tooltip__category__list", true);
 			}
+			
+
+			let listElem = categories[category].append("li")
+				.classed("tooltip__category__list-item", true);
+
+			listElem.append("h3")
+				.classed("tooltip__category__list-item__label", true)
+				.text(variable.displayName + ":");
+
+			valueFields[variable.variable] = listElem.append("h3")
+				.classed("tooltip__category__list-item__value", true)
+				
 		}
 	}
 
 	show(d, mouse) {
-		console.log(d);
 		tooltip
 			.classed('hidden', false)
             .attr('style', 'left:' + (mouse[0] + 20) + 'px; top:' + (mouse[1] - 30) + 'px');

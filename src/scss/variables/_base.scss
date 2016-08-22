@@ -1,3 +1,9 @@
 $desktop-padding: 25px;
 
 $standard-border: 2px solid palette-get(na-black-10);
+
+@mixin standard-shadow {
+	$s: 0 2px 5px 0 rgba(0,0,0,0.15), 0 2px 10px 0 rgba(0,0,0,0.10);
+	-webkit-box-shadow: $s;
+	box-shadow: $s;
+}

@@ -15,9 +15,10 @@ let projectVars = {
 		{"variable":"value1", "displayName":"Value1", "category":"Quality", "scaleType":"quantize", "color":"red", "numBins":4},
 		{"variable":"value2", "displayName":"Value2", "category":"Cost", "scaleType":"quantize", "color":"red", "numBins":4}
 	],
-	tooltipVars: {
-		"cost": ["value", "value1"]
-	},
+	tooltipVars: [
+		{"variable":"value", "displayName":"Value", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":11},
+		{"variable":"value1", "displayName":"Value1", "category":"Quality", "scaleType":"quantize", "color":"red", "numBins":4}
+	],
 	tableVars: [
 		{"variable":"state", "displayName":"State"},
 		{"variable":"value", "displayName":"Value", "scaleType":"quantize", "color":"blue", "numBins":11},
