@@ -2,7 +2,7 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
-let id, filterCategoryContainer, filterVariableContainer, filterList, filterListElems, filterVars;
+let id, filterCategoryContainer, filterVariableContainer, filterList, filterListElems, filterVars, changeListenerFunc;
 
 export class FilterGroup {
 
@@ -22,11 +22,12 @@ export class FilterGroup {
 	}
 
 	render(listenerFunc) {
+		changeListenerFunc = listenerFunc;
+
 		let categories = {};
 		let i = 0;
-		for (let variable of Object.keys(filterVars)) {
-			console.log(filterVars[variable]);
-			let category = filterVars[variable].category;
+		for (let variable of filterVars) {
+			let category = variable.category;
 
 			if (!categories.hasOwnProperty(category)) {
 				filterCategoryContainer.append("h5")
@@ -45,14 +46,14 @@ export class FilterGroup {
 			categories[category].append("li")
 				.classed("filter-group__variable", true)
 				.classed("active", () => { return i == 0 ? true : false; })
-				.append("a")
-				.text(variable)
-				.attr("value", variable)
+				.attr("value", i)
 				.on("click", function() {
 					$(".filter-group__variable.active").removeClass("active");
-					$(this).parent().addClass("active");
-					listenerFunc(this);
-				});
+					$(this).addClass("active");
+					changeListenerFunc(this);
+				})
+				.text(variable.displayName);
+				
 
 			i++;
 		}
@@ -64,7 +65,13 @@ export class FilterGroup {
 		$(this).addClass("active");
 		// hide any open variable list
 		$(".filter-group__variable-list").hide();
-		$("#" + targetID + ".filter-group__variable-list").show();
+
+		let $varList = $("#" + targetID + ".filter-group__variable-list");
+		
+		$varList.show();
+		let firstVar = $varList.children().first().addClass("active");
+		console.log(firstVar);
+		changeListenerFunc(firstVar);
 	}
 
 

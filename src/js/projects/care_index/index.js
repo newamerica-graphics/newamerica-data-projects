@@ -10,12 +10,11 @@ import { Table } from "../../components/table.js";
 let projectVars = {
 	id: "#test1",
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/test/ag.json",
-	defaultFilterVar: "value",
-	filterVars: {
-		"value":{"category":"cost", "scaleType":"quantize", "color":"blue", "numBins":11},
-		"value1":{"category":"quality", "scaleType":"quantize", "color":"turquoise", "numBins":7},
-		"value2":{"category":"cost", "scaleType":"quantize", "color":"red", "numBins":5}
-	},
+	filterVars: [
+		{"variable":"value", "displayName":"Value", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":11},
+		{"variable":"value1", "displayName":"Value1", "category":"Quality", "scaleType":"quantize", "color":"red", "numBins":4},
+		{"variable":"value2", "displayName":"Value2", "category":"Cost", "scaleType":"quantize", "color":"red", "numBins":4}
+	],
 	tooltipVars: {
 		"cost": ["value", "value1"]
 	},
@@ -53,9 +52,7 @@ function resize() {
 }
 
 function changeFilter(variable) {
-	console.log(variable);
 	let newFilterVar = $(variable).attr("value");
-
 	usMap.changeFilter(newFilterVar);
 }
 

@@ -9,14 +9,15 @@ import { usStates } from '../../geography/us-states.js';
 
 let d3 = require("d3");
 
-let id, defaultFilterVar, currFilterVar, tooltipVars, filterVars;
+let id, currFilterIndex, currFilterVar, tooltipVars, filterVars;
 let colorScale, tooltip, legend, geometry, dataMin, dataMax;
 
 export class UsStatesMap {
 	
 	constructor(projectVars) {
-		({id, defaultFilterVar, tooltipVars, filterVars} = projectVars);
-		currFilterVar = defaultFilterVar;
+		({id, tooltipVars, filterVars} = projectVars);
+		currFilterIndex = 0;
+		currFilterVar = filterVars[currFilterIndex].variable;
 
 		this.w = $(id).width();
 
@@ -69,7 +70,7 @@ export class UsStatesMap {
 		dataMin = Number(d3.min(this.data, function(d) { return d[currFilterVar]; })); 
 		dataMax = Number(d3.max(this.data, function(d) { return d[currFilterVar]; }));
 
-		colorScale = getColorScale(filterVars[currFilterVar], dataMin, dataMax);
+		colorScale = getColorScale(filterVars[currFilterIndex], dataMin, dataMax);
 		// colorScale.domain([dataMin, dataMax]);
 	}
 
@@ -114,10 +115,10 @@ export class UsStatesMap {
 		// this.paths.attr("d", this.pathGenerator);
 	}
 
-	changeFilter(newVar) {
-
-		currFilterVar = newVar;
-		console.log(newVar);
+	changeFilter(newVarIndex) {
+		currFilterIndex = newVarIndex;
+		currFilterVar = filterVars[currFilterIndex].variable;
+		
 		this.setScale();
 		this.setLegend();
 		this.paths
