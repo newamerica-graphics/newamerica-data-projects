@@ -65,6 +65,7 @@ export class UsStatesMap {
 	}
 
 	setScale() {
+		console.log(this.data);
 		dataMin = Number(d3.min(this.data, function(d) { return d[currFilterVar]; })); 
 		dataMax = Number(d3.max(this.data, function(d) { return d[currFilterVar]; }));
 
@@ -114,7 +115,9 @@ export class UsStatesMap {
 	}
 
 	changeFilter(newVar) {
+
 		currFilterVar = newVar;
+		console.log(newVar);
 		this.setScale();
 		this.setLegend();
 		this.paths

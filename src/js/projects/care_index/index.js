@@ -20,9 +20,9 @@ let projectVars = {
 		"cost": ["value", "value1"]
 	},
 	tableVars: [
-		{"variable":"state"},
-		{"variable":"value", "scaleType":"quantize", "color":"blue", "numBins":11},
-		{"variable":"value1", "scaleType":"quantize", "color":"red", "numBins":4}
+		{"variable":"state", "displayName":"State"},
+		{"variable":"value", "displayName":"Value", "scaleType":"quantize", "color":"blue", "numBins":11},
+		{"variable":"value1", "displayName":"Value1", "scaleType":"quantize", "color":"red", "numBins":4}
 	]
 }
 
@@ -31,7 +31,7 @@ let usMap, filterGroup, table;
 function initialize() {
 	window.addEventListener('resize', resize);
 
-	filterGroup = new FilterGroup(projectVars.id, projectVars.filterVars, changeFilter);
+	filterGroup = new FilterGroup(projectVars);
 	usMap = new UsStatesMap(projectVars);
 	table = new Table(projectVars);
 	
@@ -41,6 +41,7 @@ function initialize() {
 
 function render() {
 	d3.json(projectVars.dataUrl, (d) => {
+		filterGroup.render(changeFilter);
 		usMap.initialRender(d.Sheet1);
 		table.render(d.Sheet1);
 	});
@@ -52,7 +53,9 @@ function resize() {
 }
 
 function changeFilter() {
+	console.log(variable);
 	let newFilterVar = $(this).attr("value");
+
 	usMap.changeFilter(newFilterVar);
 }
 

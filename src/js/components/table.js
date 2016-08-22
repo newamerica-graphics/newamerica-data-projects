@@ -14,10 +14,9 @@ export class Table {
 	constructor(projectVars) {
 		({id, tableVars} = projectVars);
 
-
 		d3.select(id).append("table")
 			.attr("id", "dataTable")
-			.attr("class", "table hover order-column cell-border");
+			.attr("class", "table hover cell-border");
 	}
 
 	render(data) {
@@ -29,6 +28,7 @@ export class Table {
 		    paging: false,
 		}).on('order.dt', this.orderChanged.bind(this));
 
+
 	}
 
 	getColumnNames() {
@@ -36,7 +36,8 @@ export class Table {
 		console.log(tableVars);
 		let columnNames = [];
 		for (let tableVar of tableVars) {
-			columnNames.push({"data": tableVar.variable});
+			let varObject = {"title": tableVar.displayName, "data": tableVar.variable};
+			columnNames.push(varObject);
 		}
 
 		return columnNames;

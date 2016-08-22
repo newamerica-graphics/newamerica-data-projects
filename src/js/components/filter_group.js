@@ -2,17 +2,20 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
-let filterContainer, filterList, filterListElems, filterVars;
+let id, filterContainer, filterList, filterListElems, filterVars;
 
 export class FilterGroup {
 
-	constructor(id, filterVariables, listenerFunc) {
-		filterVars = filterVariables;
+	constructor(projectVars) {
+		({id, filterVars} = projectVars);
 
 		filterContainer = d3.select(id)
 			.append("div")
 			.attr("class", "filter-group");
+		
+	}
 
+	render(listenerFunc) {
 		let categoryList = {};
 
 		for (let variable of Object.keys(filterVars)) {
