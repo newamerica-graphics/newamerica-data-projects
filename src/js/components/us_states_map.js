@@ -7,6 +7,8 @@ import { getColorScale } from "./get_color_scale.js";
 
 import { usStates } from '../../geography/us-states.js';
 
+import * as global from "./../utilities.js";
+
 let d3 = require("d3");
 
 let id, currFilterIndex, currFilterVar, tooltipVars, filterVars;
@@ -14,12 +16,11 @@ let colorScale, tooltip, legend, geometry, dataMin, dataMax;
 
 export class UsStatesMap {
 	
-	constructor(projectVars) {
-		({id, tooltipVars, filterVars} = projectVars);
+	constructor(divId, projectVars) {
+		id = divId;
+		({tooltipVars, filterVars} = projectVars);
 		currFilterIndex = 0;
 		currFilterVar = filterVars[currFilterIndex].variable;
-
-		this.w = $(id).width();
 
 		this.svg = d3.select(id)
 					.append("svg");
@@ -28,11 +29,10 @@ export class UsStatesMap {
 
 		legend = new Legend(id);
 
-		this.setDimensions(this.w);
+		this.setDimensions($(id).width());
 	}
 
 	setDimensions(w) {
-		console.log(w);
 		this.w = w;
 		this.h = w/2;
 
@@ -40,10 +40,13 @@ export class UsStatesMap {
 			.attr("width", this.w)
 			.attr("height", this.h);
 
+		let translateX = this.w/2;
+
+		w > global.showLegendBreakpoint ? translateX -= global.legendWidth/2 : null;
 		//Define map projection
 		let projection = d3.geoAlbersUsa()
 				.scale(this.w)
-				.translate([this.w/2, this.h/2]);
+				.translate([translateX, this.h/2]);
 
 		//Define path generator
 		this.pathGenerator = d3.geoPath()
@@ -106,19 +109,20 @@ export class UsStatesMap {
 	}
 
 	setLegend() {
-		legend.setScale(dataMin, dataMax, colorScale);
+		let currFilterDisplayName = filterVars[currFilterIndex].displayName;
+		legend.setScale(currFilterDisplayName, dataMin, dataMax, colorScale);
 	}
 
 	
 	resize(w) {
-		// this.setDimensions(w);
-		// this.paths.attr("d", this.pathGenerator);
+		this.setDimensions(w);
+		this.paths.attr("d", this.pathGenerator);
 	}
 
 	changeFilter(newVarIndex) {
 		currFilterIndex = newVarIndex;
 		currFilterVar = filterVars[currFilterIndex].variable;
-		
+
 		this.setScale();
 		this.setLegend();
 		this.paths
@@ -143,6 +147,11 @@ export class UsStatesMap {
 	   		return value ? colorScale(value) : "#ccc";
 	    });
 	    tooltip.hide();
+	}
+
+	toggleVisibility() {
+		console.log("toggling visibility of map!");
+		$(id).toggle();
 	}
 			
 }

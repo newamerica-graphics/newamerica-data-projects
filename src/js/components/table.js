@@ -11,8 +11,9 @@ import { getColorScale } from "./get_color_scale.js";
 let table, id, tableVars;
 
 export class Table {
-	constructor(projectVars) {
-		({id, tableVars} = projectVars);
+	constructor(divId, projectVars) {
+		id = divId;
+		({tableVars} = projectVars);
 
 		d3.select(id).append("table")
 			.attr("id", "dataTable")
@@ -63,6 +64,11 @@ export class Table {
 
 	applyColorScale() {
 		console.log($(".sorting_1"));
+	}
+
+	toggleVisibility() {
+		console.log("toggling visibility of table!");
+		$(id).toggle();
 	}
 }
 

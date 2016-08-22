@@ -6,8 +6,8 @@ let id, filterCategoryContainer, filterVariableContainer, filterList, filterList
 
 export class FilterGroup {
 
-	constructor(projectVars) {
-		({id, filterVars} = projectVars);
+	constructor(id, projectVars) {
+		({filterVars} = projectVars);
 
 		let filterContainer = d3.select(id)
 			.append("div")
@@ -30,7 +30,7 @@ export class FilterGroup {
 			let category = variable.category;
 
 			if (!categories.hasOwnProperty(category)) {
-				filterCategoryContainer.append("h5")
+				filterCategoryContainer.append("p")
 					.classed("filter-group__category", true)
 					.classed("active", () => { return i == 0 ? true : false; })
 					.attr("id", category)
@@ -53,8 +53,6 @@ export class FilterGroup {
 					changeListenerFunc(this);
 				})
 				.text(variable.displayName);
-				
-
 			i++;
 		}
 	}
@@ -69,6 +67,7 @@ export class FilterGroup {
 		let $varList = $("#" + targetID + ".filter-group__variable-list");
 		
 		$varList.show();
+		$(".filter-group__variable.active").removeClass("active");
 		let firstVar = $varList.children().first().addClass("active");
 		console.log(firstVar);
 		changeListenerFunc(firstVar);
