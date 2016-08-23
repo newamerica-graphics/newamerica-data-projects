@@ -33,8 +33,6 @@ export class Table {
 	}
 
 	getColumnNames() {
-
-		console.log(tableVars);
 		let columnNames = [];
 		for (let tableVar of tableVars) {
 			let varObject = {"title": tableVar.displayName, "data": tableVar.variable};
@@ -48,8 +46,8 @@ export class Table {
 		let orderingIndex = table.order()[0][0];
 		let orderingColumn = tableVars[orderingIndex];
 
-		let dataMin = Number(d3.min(this.data, function(d) { return d[orderingColumn.variable]; })); 
-		let dataMax = Number(d3.max(this.data, function(d) { return d[orderingColumn.variable]; }));
+		let dataMin = Number(d3.min(this.data, function(d) { return Number(d[orderingColumn.variable]); })); 
+		let dataMax = Number(d3.max(this.data, function(d) { return Number(d[orderingColumn.variable]); }));
 
 		let colorScale = getColorScale(orderingColumn, dataMin, dataMax);
 

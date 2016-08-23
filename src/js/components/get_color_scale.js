@@ -22,7 +22,7 @@ export function getColorScale(variable, dataMin, dataMax) {
 		scale = d3.scaleQuantize();
 		let colorBins = setColorBins(numBins, colorOptions[color]);
 		scale.range(colorBins);
-		scale.domain([dataMin, dataMax]);
+		scale.domain([1, dataMax]);
 	}
 	
 	return scale;

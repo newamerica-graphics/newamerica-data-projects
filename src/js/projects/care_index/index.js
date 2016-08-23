@@ -9,15 +9,17 @@ import { FilterGroup } from "../../components/filter_group.js";
 import { Table } from "../../components/table.js";
 
 let state = {"variable":"state", "displayName":"State"};
-let value = {"variable":"value", "displayName":"Value", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":11};
-let value1 = {"variable":"value1", "displayName":"Value1", "category":"Quality", "scaleType":"quantize", "color":"red", "numBins":4};
-let value2 = {"variable":"value2", "displayName":"Value2", "category":"Cost", "scaleType":"quantize", "color":"red", "numBins":4};
+let cost_rank = {"variable":"cost_rank", "displayName":"Cost Rank", "format":"number", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":4};
+let cost_in_home = {"variable":"cost_in_home", "displayName":"Cost in Home", "format":"price", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":3};
+let cost_in_center = {"variable":"cost_in_center", "displayName":"Cost in Center", "format":"price", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":3};
+let quality_rank = {"variable":"quality_rank", "displayName":"Quality Rank", "format":"number", "category":"Quality", "scaleType":"quantize", "color":"red", "numBins":4};
+let children_5_under = {"variable":"children_5_under", "displayName":"Children 5 & Under", "format":"number", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":5};
 
 let projectVars = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/test/ag.json",
-	filterVars: [ value, value1, value2 ],
-	tooltipVars: [ value, value1, value2 ],
-	tableVars: [ state, value, value1 ]
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/bll/care_index.json",
+	filterVars: [ children_5_under, quality_rank, cost_rank ],
+	tooltipVars: [ children_5_under, cost_rank ],
+	tableVars: [ state, children_5_under, cost_rank ]
 }
 
 let projectCharts = [
@@ -59,7 +61,7 @@ function render() {
 }
 
 function resize() {
-	let w = $(projectVars.id).width();
+	let w = $("#chart").width();
 	usMap.resize(w);
 }
 

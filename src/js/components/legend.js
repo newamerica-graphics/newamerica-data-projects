@@ -2,9 +2,11 @@ import $ from 'jquery';
 
 import * as global from "./../utilities.js";
 
+import { formatValue } from "./format_value.js";
+
 let d3 = require("d3");
 
-let legend, title, cellContainer;
+let legend, title, cellContainer, colorScale, dataMin, dataMax, binInterval;
 
 export class Legend {
 	constructor(id) {
@@ -20,7 +22,9 @@ export class Legend {
 			.attr("class", "legend__cell-container");
 	}
 
-	setScale(currFilterVar, dataMin, dataMax, colorScale) {
+	render(currFilterDisplayName, valueFormat, scale) {
+		colorScale = scale;
+
 		cellContainer.selectAll(".legend__cell").remove();
 
 		let numBins = colorScale.range().length;
@@ -28,15 +32,11 @@ export class Legend {
 			return (numBins * 25) + "px";
 		});
 
+		[dataMin, dataMax] = colorScale.domain();
 		let dataSpread = dataMax - dataMin;
-		let binInterval = dataSpread/numBins;
+		binInterval = dataSpread/numBins;
 
-		let calcBinVal = (i) => {
-			let binVal = dataMin + (binInterval * i);
-			return Math.round(binVal * 100)/100;
-		}
-
-		title.text(currFilterVar);
+		title.text(currFilterDisplayName);
 
 		for (let i = 0; i < numBins; i++) {
 			let cell = cellContainer.append("g")
@@ -54,8 +54,12 @@ export class Legend {
 				.attr("x", 15)
 				.attr("y", 5)
 				.classed("legend__cell__label", true)
-				.text(calcBinVal(i) + " to " + calcBinVal(i+1));
-
+				.text(formatValue(Math.ceil(this.calcBinVal(i)), valueFormat) + " to " + formatValue(Math.floor(this.calcBinVal(i+1)), valueFormat));
 		}
+	}
+
+	calcBinVal(i) {
+		let binVal = dataMin + (binInterval * i);
+		return Math.round(binVal * 100)/100;
 	}
 }

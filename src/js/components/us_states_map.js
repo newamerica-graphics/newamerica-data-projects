@@ -53,28 +53,21 @@ export class UsStatesMap {
 						 .projection(projection);
 	}
 
-	initialRender(data) {
-		console.log("in initial render");
-		
+	initialRender(data) {	
 		this.data = data;
+		console.log(this.data);
 		this.setScale();
 		this.bindDataToGeom();
 		this.buildGraph();
-
 		this.setLegend();
-
-		// let table = new Table("#test1", this.data);
-
-		console.log("finished rendering");
 	}
 
 	setScale() {
-		console.log(this.data);
-		dataMin = Number(d3.min(this.data, function(d) { return d[currFilterVar]; })); 
-		dataMax = Number(d3.max(this.data, function(d) { return d[currFilterVar]; }));
+		dataMin = Number(d3.min(this.data, function(d) { return d[currFilterVar] ? Number(d[currFilterVar]) : null; })); 
+		dataMax = Number(d3.max(this.data, function(d) { return d[currFilterVar] ? Number(d[currFilterVar]) : null; }));
 
+		console.log(dataMin);
 		colorScale = getColorScale(filterVars[currFilterIndex], dataMin, dataMax);
-		// colorScale.domain([dataMin, dataMax]);
 	}
 
 
@@ -110,7 +103,8 @@ export class UsStatesMap {
 
 	setLegend() {
 		let currFilterDisplayName = filterVars[currFilterIndex].displayName;
-		legend.setScale(currFilterDisplayName, dataMin, dataMax, colorScale);
+		let currFilterFormat = filterVars[currFilterIndex].format;
+		legend.render(currFilterDisplayName, currFilterFormat, colorScale);
 	}
 
 	
