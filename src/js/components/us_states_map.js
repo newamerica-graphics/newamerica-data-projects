@@ -7,6 +7,8 @@ import { getColorScale } from "./get_color_scale.js";
 
 import { usStates } from '../../geography/us-states.js';
 
+import { formatValue, deformatValue } from "./format_value.js";
+
 import * as global from "./../utilities.js";
 
 let d3 = require("d3");
@@ -56,17 +58,27 @@ export class UsStatesMap {
 	initialRender(data) {	
 		this.data = data;
 		console.log(this.data);
+		this.processData();
 		this.setScale();
 		this.bindDataToGeom();
 		this.buildGraph();
 		this.setLegend();
 	}
 
-	setScale() {
-		dataMin = Number(d3.min(this.data, function(d) { return d[currFilterVar] ? Number(d[currFilterVar]) : null; })); 
-		dataMax = Number(d3.max(this.data, function(d) { return d[currFilterVar] ? Number(d[currFilterVar]) : null; }));
+	processData() {
+		for (let variable of filterVars) {
+			for (let d of this.data) {
+				if (d[variable.variable]) {
+					d[variable.variable] = deformatValue(d[variable.variable]);
+				}
+			}
+		}
+	}
 
-		console.log(dataMin);
+	setScale() {
+		dataMin = Number(d3.min(this.data, function(d) { return d[currFilterVar] ? d[currFilterVar] : null; })); 
+		dataMax = Number(d3.max(this.data, function(d) { return d[currFilterVar] ? d[currFilterVar] : null; }));
+
 		colorScale = getColorScale(filterVars[currFilterIndex], dataMin, dataMax);
 	}
 
@@ -93,10 +105,12 @@ export class UsStatesMap {
 		   .append("path");
 
 		this.paths.attr("d", this.pathGenerator)
+			.classed("map-feature", true)
 		    .style("fill", (d) => {
 		   		var value = d.properties[currFilterVar];
 		   		return value ? colorScale(value) : "#ccc";
 		    })
+		    .style("stroke", "white")
 		    .on("mouseover", this.mouseover)
 		    .on("mouseout", this.mouseout);
 	}
@@ -127,7 +141,7 @@ export class UsStatesMap {
 	}
 
 	mouseover(d) {
-		d3.select(this).style("fill", "orange");
+		d3.select(this).style("stroke-width", "3");
 		let mousePos = d3.mouse(this);
 		tooltip.show(d.properties, mousePos);
 		// this.tooltip
@@ -136,10 +150,7 @@ export class UsStatesMap {
 	}
 
 	mouseout() {
-		d3.select(this).style("fill", function(d) {
-	   		var value = d.properties[currFilterVar];
-	   		return value ? colorScale(value) : "#ccc";
-	    });
+		d3.select(this).style("stroke-width", "1");
 	    tooltip.hide();
 	}
 

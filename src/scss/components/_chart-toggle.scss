@@ -1,0 +1,13 @@
+.chart-toggle {
+	padding: $desktop-padding 0px;
+	&__icon {
+		fill: palette-get(na-black-40);
+		margin-right: 15px;
+		width: 30px;
+		cursor: pointer;
+
+		&.active {
+			fill: palette-get(na-black);
+		}
+	}
+}

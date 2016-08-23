@@ -2,6 +2,8 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
+import { formatValue } from "./format_value.js";
+
 let tooltip, title, titleVar, tooltipVars, valueFields;
 
 export class Tooltip {
@@ -53,9 +55,11 @@ export class Tooltip {
 
 		title.text(d[titleVar]);
 
-		for (let field of Object.keys(valueFields)) {
-			valueFields[field]
-				.text(d[field]);
+		for (let variable of tooltipVars) {
+			let varName = variable.variable;
+			let varFormat = variable.format;
+			valueFields[varName]
+				.text(formatValue(d[varName], varFormat));
 		} 
 	}
 

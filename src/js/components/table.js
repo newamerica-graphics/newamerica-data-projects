@@ -53,10 +53,11 @@ export class Table {
 
 		// clears previously colored cells
 		d3.selectAll("td")
-			.style("background-color", "white");
+			.style("border-left", "none");
 
 		let sorted = d3.selectAll(".sorting_1")
-			.style("background-color", function() { return colorScale($(this).text());});
+			.style("border-left", "7px solid")
+			.style("border-left-color", function() { return colorScale($(this).text());});
 
 	}
 
