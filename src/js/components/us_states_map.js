@@ -14,7 +14,7 @@ import * as global from "./../utilities.js";
 let d3 = require("d3");
 
 let id, currFilterIndex, currFilterVar, tooltipVars, filterVars;
-let colorScale, tooltip, legend, geometry, dataMin, dataMax;
+let colorScale, tooltip, legend, geometry, dataMin, dataMax, paths;
 
 export class UsStatesMap {
 	
@@ -99,12 +99,12 @@ export class UsStatesMap {
 	}
 
 	buildGraph() {
-		this.paths = this.svg.selectAll("path")
+		paths = this.svg.selectAll("path")
 		   .data(usStates.features)
 		   .enter()
 		   .append("path");
 
-		this.paths.attr("d", this.pathGenerator)
+		paths.attr("d", this.pathGenerator)
 			.classed("map-feature", true)
 		    .style("fill", (d) => {
 		   		var value = d.properties[currFilterVar];
@@ -118,13 +118,13 @@ export class UsStatesMap {
 	setLegend() {
 		let currFilterDisplayName = filterVars[currFilterIndex].displayName;
 		let currFilterFormat = filterVars[currFilterIndex].format;
-		legend.render(currFilterDisplayName, currFilterFormat, colorScale);
+		legend.render(currFilterDisplayName, currFilterFormat, colorScale, this.changeVariableValsShown);
 	}
 
 	
 	resize(w) {
 		this.setDimensions(w);
-		this.paths.attr("d", this.pathGenerator);
+		paths.attr("d", this.pathGenerator);
 	}
 
 	changeFilter(newVarIndex) {
@@ -133,11 +133,26 @@ export class UsStatesMap {
 
 		this.setScale();
 		this.setLegend();
-		this.paths
+		paths
 			.style("fill", (d) => {
 		   		var value = d.properties[currFilterVar];
 		   		return value ? colorScale(value) : "#ccc";
 		    })
+	}
+
+	changeVariableValsShown(valsShown) {
+		console.log(valsShown);
+		paths
+			.style("fill", (d) => {
+		   		var value = d.properties[currFilterVar];
+		   		if (value) {
+		   			let binIndex = colorScale.range().indexOf(colorScale(value));
+		   			if (valsShown.indexOf(binIndex) > -1) {
+		   				return colorScale(value);
+		   			}
+		   		}
+		   		return "#ccc";
+		    });
 	}
 
 	mouseover(d) {
@@ -155,7 +170,6 @@ export class UsStatesMap {
 	}
 
 	toggleVisibility() {
-		console.log("toggling visibility of map!");
 		$(id).toggle();
 	}
 			

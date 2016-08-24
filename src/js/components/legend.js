@@ -6,7 +6,7 @@ import { formatValue } from "./format_value.js";
 
 let d3 = require("d3");
 
-let legend, title, cellContainer, colorScale, dataMin, dataMax, binInterval;
+let legend, title, cellContainer, colorScale, dataMin, dataMax, binInterval, valsShown, numBins, listenerFunction;
 
 export class Legend {
 	constructor(id) {
@@ -20,14 +20,18 @@ export class Legend {
 		cellContainer = legend.append("svg")
 			.attr("width", global.legendWidth + "px")
 			.attr("class", "legend__cell-container");
+
+		
 	}
 
-	render(currFilterDisplayName, valueFormat, scale) {
+	render(currFilterDisplayName, valueFormat, scale, listenerFunc) {
 		colorScale = scale;
+		listenerFunction = listenerFunc;
+		valsShown = [];
 
 		cellContainer.selectAll(".legend__cell").remove();
 
-		let numBins = colorScale.range().length;
+		numBins = colorScale.range().length;
 		cellContainer.attr("height", () => {
 			return (numBins * 25) + "px";
 		});
@@ -39,9 +43,12 @@ export class Legend {
 		title.text(currFilterDisplayName);
 
 		for (let i = 0; i < numBins; i++) {
+			valsShown.push(i);
 			let cell = cellContainer.append("g")
 				.classed("legend__cell", true)
-				.attr("transform", "translate(10," + (i*25 + 10) + ")");
+				.attr("transform", "translate(10," + (i*25 + 10) + ")")
+				.attr("value", i)
+				.on("click", this.toggleValsShown);
 
 			cell.append("circle")
 				.attr("r", 5)
@@ -62,4 +69,29 @@ export class Legend {
 		let binVal = dataMin + (binInterval * i);
 		return Math.round(binVal * 100)/100;
 	}
+
+	toggleValsShown() {
+		let valToggled = Number($(this).attr("value"));
+		let legendCells = $(".legend__cell");
+
+		if (valsShown.length == numBins) {
+			valsShown = [valToggled];
+			legendCells.addClass("disabled");
+			$(legendCells[valToggled]).removeClass("disabled");
+
+		} else {
+			let index = valsShown.indexOf(valToggled);
+			// value is currently shown
+			if (index > -1) {
+				valsShown.splice(index, 1);
+				$(legendCells[valToggled]).addClass("disabled");
+			} else {
+				valsShown.push(valToggled);
+				$(legendCells[valToggled]).removeClass("disabled");
+			}
+		}
+
+		listenerFunction(valsShown);
+	}
+
 }
