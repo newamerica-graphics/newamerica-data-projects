@@ -45,7 +45,7 @@ export class Legend {
 		for (let i = 0; i < numBins; i++) {
 			valsShown.push(i);
 			let cell = cellContainer.append("g")
-				.classed("legend__cell active", true)
+				.classed("legend__cell", true)
 				.attr("transform", "translate(10," + (i*25 + 10) + ")")
 				.attr("value", i)
 				.on("click", this.toggleValsShown);

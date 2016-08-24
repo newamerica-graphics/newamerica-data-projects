@@ -26,10 +26,10 @@
 		cursor: pointer;
 		&.disabled {
 			circle {
-				fill: palette-get(na-black-10) !important;
+				fill: palette-get(na-black-10);
 			}
 			text {
-				fill: palette-get(na-black-10) !important;
+				fill: palette-get(na-black-10);
 			}
 		}
 	}
