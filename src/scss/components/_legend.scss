@@ -22,7 +22,15 @@
 
 	}
 
-	&__cell__color-swatch {
-		/*stroke: black;*/
+	&__cell {
+		cursor: pointer;
+		&.disabled {
+			circle {
+				fill: palette-get(na-black-10) !important;
+			}
+			text {
+				fill: palette-get(na-black-10) !important;
+			}
+		}
 	}
 }

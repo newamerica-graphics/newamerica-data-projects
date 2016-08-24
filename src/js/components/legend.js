@@ -6,7 +6,7 @@ import { formatValue } from "./format_value.js";
 
 let d3 = require("d3");
 
-let legend, title, cellContainer, colorScale, dataMin, dataMax, binInterval;
+let legend, title, cellContainer, cellDOMElements, colorScale, dataMin, dataMax, binInterval, valsShown, numBins;
 
 export class Legend {
 	constructor(id) {
@@ -20,14 +20,16 @@ export class Legend {
 		cellContainer = legend.append("svg")
 			.attr("width", global.legendWidth + "px")
 			.attr("class", "legend__cell-container");
+
+		valsShown = [];
 	}
 
-	render(currFilterDisplayName, valueFormat, scale) {
+	render(currFilterDisplayName, valueFormat, scale, listenerFunc) {
 		colorScale = scale;
 
 		cellContainer.selectAll(".legend__cell").remove();
 
-		let numBins = colorScale.range().length;
+		numBins = colorScale.range().length;
 		cellContainer.attr("height", () => {
 			return (numBins * 25) + "px";
 		});
@@ -38,10 +40,14 @@ export class Legend {
 
 		title.text(currFilterDisplayName);
 
+		cellDOMElements = [];
 		for (let i = 0; i < numBins; i++) {
+			valsShown.push(i);
 			let cell = cellContainer.append("g")
-				.classed("legend__cell", true)
-				.attr("transform", "translate(10," + (i*25 + 10) + ")");
+				.classed("legend__cell active", true)
+				.attr("transform", "translate(10," + (i*25 + 10) + ")")
+				.attr("value", i)
+				.on("click", this.toggleValsShown);
 
 			cell.append("circle")
 				.attr("r", 5)
@@ -55,6 +61,8 @@ export class Legend {
 				.attr("y", 5)
 				.classed("legend__cell__label", true)
 				.text(formatValue(Math.ceil(this.calcBinVal(i)), valueFormat) + " to " + formatValue(Math.floor(this.calcBinVal(i+1)), valueFormat));
+			
+			cellDOMElements.push(cell);
 		}
 	}
 
@@ -62,4 +70,31 @@ export class Legend {
 		let binVal = dataMin + (binInterval * i);
 		return Math.round(binVal * 100)/100;
 	}
+
+	toggleValsShown() {
+		console.log(cellDOMElements);
+		let valToggled = Number($(this).attr("value"));
+		let legendCells = $(".legend__cell");
+		console.log(legendCells[0]);
+
+		if (valsShown.length == numBins) {
+			valsShown = [valToggled];
+			legendCells.addClass("disabled");
+			$(legendCells[valToggled]).removeClass("disabled");
+
+		} else {
+			let index = valsShown.indexOf(valToggled);
+			// value is currently shown
+			if (index > -1) {
+				valsShown.splice(index, 1);
+				$(legendCells[valToggled]).addClass("disabled");
+			} else {
+				valsShown.push(valToggled);
+				$(legendCells[valToggled]).removeClass("disabled");
+			}
+		}
+
+		console.log(valsShown);
+	}
+
 }

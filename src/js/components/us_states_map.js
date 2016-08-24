@@ -118,7 +118,7 @@ export class UsStatesMap {
 	setLegend() {
 		let currFilterDisplayName = filterVars[currFilterIndex].displayName;
 		let currFilterFormat = filterVars[currFilterIndex].format;
-		legend.render(currFilterDisplayName, currFilterFormat, colorScale);
+		legend.render(currFilterDisplayName, currFilterFormat, colorScale, this.changeVariableValsShown);
 	}
 
 	
@@ -140,6 +140,10 @@ export class UsStatesMap {
 		    })
 	}
 
+	changeVariableValsShown() {
+		console.log(this);
+	}
+
 	mouseover(d) {
 		d3.select(this).style("stroke-width", "3");
 		let mousePos = d3.mouse(this);
@@ -155,7 +159,6 @@ export class UsStatesMap {
 	}
 
 	toggleVisibility() {
-		console.log("toggling visibility of map!");
 		$(id).toggle();
 	}
 			
