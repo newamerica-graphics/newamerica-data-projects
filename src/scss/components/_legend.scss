@@ -1,0 +1,28 @@
+@mixin showSideLegend {
+	@media screen and (min-width: 800px) {
+        @content;
+    }
+}
+
+.legend {
+	
+	background: white;
+	padding: 15px;
+
+	@include showSideLegend {
+		position: absolute;
+		bottom: 0px;
+		right: 0px;
+	}
+
+	&__title {
+		font-size: 16px;
+		color: palette-get(na-black);
+		font-weight: bold;
+
+	}
+
+	&__cell__color-swatch {
+		/*stroke: black;*/
+	}
+}

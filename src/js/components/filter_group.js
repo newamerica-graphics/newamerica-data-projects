@@ -2,39 +2,75 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
-let filterContainer, filterList, filterListElems, filterVars;
+let id, filterCategoryContainer, filterVariableContainer, filterList, filterListElems, filterVars, changeListenerFunc;
 
 export class FilterGroup {
 
-	constructor(id, filterVariables, listenerFunc) {
-		filterVars = filterVariables;
+	constructor(id, projectVars) {
+		({filterVars} = projectVars);
 
-		filterContainer = d3.select(id)
+		let filterContainer = d3.select(id)
 			.append("div")
 			.attr("class", "filter-group");
 
-		let categoryList = {};
+		filterCategoryContainer = filterContainer.append("ul")
+			.attr("class", "filter-group__category-container");
 
-		for (let variable of Object.keys(filterVars)) {
-			console.log(filterVars[variable]);
-			let category = filterVars[variable].category;
+		filterVariableContainer = filterContainer.append("ul")
+			.attr("class", "filter-group__variable-container");
+		
+	}
 
-			if (!categoryList.hasOwnProperty(category)) {
-				filterContainer.append("h5")
-					.classed("filter-group__category__name", true)
-					.text(category);
+	render(listenerFunc) {
+		changeListenerFunc = listenerFunc;
 
-				categoryList[category] = filterContainer.append("ul")
-					.classed("filter-group__category__name", true);
+		let categories = {};
+		let i = 0;
+		for (let variable of filterVars) {
+			let category = variable.category;
+
+			if (!categories.hasOwnProperty(category)) {
+				filterCategoryContainer.append("p")
+					.classed("filter-group__category", true)
+					.classed("active", () => { return i == 0 ? true : false; })
+					.attr("id", category)
+					.text(category)
+					.on("click", this.showList);
+
+				categories[category] = filterVariableContainer.append("ul")
+					.classed("filter-group__variable-list", true)
+					.attr("id", category);
 				
 			}
 
-			categoryList[category].append("li")
-				.classed("filter-list__filter", true)
-				.text(variable)
-				.attr("value", variable)
-				.on("click", listenerFunc);
+			categories[category].append("li")
+				.classed("filter-group__variable", true)
+				.classed("active", () => { return i == 0 ? true : false; })
+				.attr("value", i)
+				.on("click", function() {
+					$(".filter-group__variable.active").removeClass("active");
+					$(this).addClass("active");
+					changeListenerFunc(this);
+				})
+				.text(variable.displayName);
+			i++;
 		}
+	}
+
+	showList() {
+		let targetID = $(this).attr("id");
+		$(".filter-group__category.active").removeClass("active");
+		$(this).addClass("active");
+		// hide any open variable list
+		$(".filter-group__variable-list").hide();
+
+		let $varList = $("#" + targetID + ".filter-group__variable-list");
+		
+		$varList.show();
+		$(".filter-group__variable.active").removeClass("active");
+		let firstVar = $varList.children().first().addClass("active");
+		console.log(firstVar);
+		changeListenerFunc(firstVar);
 	}
 
 
