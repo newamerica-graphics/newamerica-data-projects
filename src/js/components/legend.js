@@ -6,7 +6,7 @@ import { formatValue } from "./format_value.js";
 
 let d3 = require("d3");
 
-let legend, title, cellContainer, cellDOMElements, colorScale, dataMin, dataMax, binInterval, valsShown, numBins;
+let legend, title, cellContainer, colorScale, dataMin, dataMax, binInterval, valsShown, numBins, listenerFunction;
 
 export class Legend {
 	constructor(id) {
@@ -21,11 +21,13 @@ export class Legend {
 			.attr("width", global.legendWidth + "px")
 			.attr("class", "legend__cell-container");
 
-		valsShown = [];
+		
 	}
 
 	render(currFilterDisplayName, valueFormat, scale, listenerFunc) {
 		colorScale = scale;
+		listenerFunction = listenerFunc;
+		valsShown = [];
 
 		cellContainer.selectAll(".legend__cell").remove();
 
@@ -40,7 +42,6 @@ export class Legend {
 
 		title.text(currFilterDisplayName);
 
-		cellDOMElements = [];
 		for (let i = 0; i < numBins; i++) {
 			valsShown.push(i);
 			let cell = cellContainer.append("g")
@@ -61,8 +62,6 @@ export class Legend {
 				.attr("y", 5)
 				.classed("legend__cell__label", true)
 				.text(formatValue(Math.ceil(this.calcBinVal(i)), valueFormat) + " to " + formatValue(Math.floor(this.calcBinVal(i+1)), valueFormat));
-			
-			cellDOMElements.push(cell);
 		}
 	}
 
@@ -72,10 +71,8 @@ export class Legend {
 	}
 
 	toggleValsShown() {
-		console.log(cellDOMElements);
 		let valToggled = Number($(this).attr("value"));
 		let legendCells = $(".legend__cell");
-		console.log(legendCells[0]);
 
 		if (valsShown.length == numBins) {
 			valsShown = [valToggled];
@@ -94,7 +91,7 @@ export class Legend {
 			}
 		}
 
-		console.log(valsShown);
+		listenerFunction(valsShown);
 	}
 
 }
