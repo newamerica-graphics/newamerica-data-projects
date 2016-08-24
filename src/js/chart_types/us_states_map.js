@@ -1,61 +1,65 @@
 import $ from 'jquery';
 
-import { Tooltip } from "./tooltip.js";
-import { Legend } from "./legend.js";
+import { Tooltip } from "../components/tooltip.js";
+import { Legend } from "../components/legend.js";
 
-import { getColorScale } from "./get_color_scale.js";
+import { getColorScale } from "../helper_functions/get_color_scale.js";
 
 import { usStates } from '../../geography/us-states.js';
 
-import { formatValue, deformatValue } from "./format_value.js";
+import { formatValue, deformatValue } from "../helper_functions/format_value.js";
 
 import * as global from "./../utilities.js";
 
 let d3 = require("d3");
 
+let svg, w, h;
 let id, currFilterIndex, currFilterVar, tooltipVars, filterVars;
 let colorScale, tooltip, legend, geometry, dataMin, dataMax, paths;
 
 export class UsStatesMap {
 	
-	constructor(divId, projectVars) {
-		id = divId;
-		({tooltipVars, filterVars} = projectVars);
+	constructor(vizSettings) {
+		({id, tooltipVars, filterVars} = vizSettings);
 		currFilterIndex = 0;
 		currFilterVar = filterVars[currFilterIndex].variable;
 
-		this.svg = d3.select(id)
-					.append("svg");
+		
+
+		svg = d3.select(id)
+			.append("svg");
+
+
 
 		tooltip = new Tooltip(id, "state", tooltipVars)
 
 		legend = new Legend(id);
 
-		this.setDimensions($(id).width());
+		this.setDimensions();
 	}
 
-	setDimensions(w) {
-		this.w = w;
-		this.h = w/2;
+	setDimensions() {
+		w = $(id).width();
+		h = w/2;
 
-		this.svg
-			.attr("width", this.w)
-			.attr("height", this.h);
+		svg
+			.attr("width", w)
+			.attr("height", h);
 
-		let translateX = this.w/2;
+		let translateX = w/2;
 
 		w > global.showLegendBreakpoint ? translateX -= global.legendWidth/2 : null;
 		//Define map projection
 		let projection = d3.geoAlbersUsa()
-				.scale(this.w)
-				.translate([translateX, this.h/2]);
+				.scale(w)
+				.translate([translateX, h/2]);
 
 		//Define path generator
 		this.pathGenerator = d3.geoPath()
 						 .projection(projection);
 	}
 
-	initialRender(data) {	
+	render(data) {	
 		this.data = data;
 		console.log(this.data);
 		this.processData();
@@ -99,7 +103,7 @@ export class UsStatesMap {
 	}
 
 	buildGraph() {
-		paths = this.svg.selectAll("path")
+		paths = svg.selectAll("path")
 		   .data(usStates.features)
 		   .enter()
 		   .append("path");
@@ -122,8 +126,8 @@ export class UsStatesMap {
 	}
 
 	
-	resize(w) {
-		this.setDimensions(w);
+	resize() {
+		this.setDimensions();
 		paths.attr("d", this.pathGenerator);
 	}
 

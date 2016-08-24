@@ -3,13 +3,12 @@ require('../../../scss/index.scss');
 import $ from 'jquery';
 let d3 = require("d3");
 
-import { ChartToggle } from "../../components/chart_toggle.js";
-import { UsStatesMap } from "../../components/us_states_map.js";
-import { FilterGroup } from "../../components/filter_group.js";
-import { Table } from "../../components/table.js";
+import { UsStatesMap } from "../../chart_types/us_states_map.js";
+import { ChartTableLayout } from "../../layouts/chart_table_layout.js";
+import { GroupedBarChart } from "../../chart_types/grouped_bar_chart.js";
 
 let state = {"variable":"state", "displayName":"State"};
-let cost_rank = {"variable":"cost_rank", "displayName":"Cost Rank", "format":"number", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":5};
+let cost_rank = {"variable":"cost_rank", "displayName":"Cost Rank", "format":"number", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":4};
 let cost_in_home = {"variable":"cost_in_home", "displayName":"Cost in Home", "format":"price", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":6};
 let cost_in_center = {"variable":"cost_in_center", "displayName":"Cost in Center", "format":"price", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":5};
 let quality_rank = {"variable":"quality_rank", "displayName":"Quality Rank", "format":"number", "category":"Quality", "scaleType":"quantize", "color":"red", "numBins":4};
@@ -17,58 +16,71 @@ let children_5_under = {"variable":"children_5_under", "displayName":"Children 5
 
 let dataSheetNames = ["state_data", "state_data_variables"];
 
-let projectVars = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/bll/care_index.json",
-	filterVars: [ children_5_under, quality_rank, cost_rank, cost_in_home ],
-	tooltipVars: [ children_5_under, cost_rank, cost_in_home ],
-	tableVars: [ state, children_5_under, cost_rank, cost_in_home ]
-}
-
-let projectCharts = [
-	{"type":"map"},
-	{"id":"#table", "type":"table"}
+let vizSettingsList = [
+	{
+		id: "#explore-the-index", 
+		vizType: "chart_table_layout",
+		layoutComponents: ["us_states_map", "table"],
+		filterVars: [ children_5_under, quality_rank, cost_rank, cost_in_home ],
+		tooltipVars: [ children_5_under, cost_rank, cost_in_home ],
+		tableVars: [ state, children_5_under, cost_rank, cost_in_home ]
+	},
+	// {
+	// 	id: "#test1", 
+	// 	vizType: "us_states_map",
+	// 	filterVars: [ children_5_under, quality_rank, cost_rank, cost_in_home ],
+	// 	tooltipVars: [ children_5_under, cost_rank, cost_in_home ],
+	// 	tableVars: [ state, children_5_under, cost_rank, cost_in_home ]
+	// },
 ]
 
-let chartToggle, usMap, filterGroup, table;
+let projectVars = {
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/bll/care_index.json",
+	// vizList = visualizationList
+}
+
+
+let vizList = [];
 
 function initialize() {
 	window.addEventListener('resize', resize);
 
-	chartToggle = new ChartToggle("#test1");
+	for (let vizSettingsObject of vizSettingsList) {
+		let viz;
+		switch (vizSettingsObject.vizType) {
+			case "chart_table_layout":
+				viz = new ChartTableLayout(vizSettingsObject);
+				
+				break;
+			case "us_states_map":
+				viz = new UsStatesMap(vizSettingsObject);
+				
+				break;
+			case "grouped_bar_chart":
+				viz = new GroupedBarChart(vizSettingsObject);
+				
+				break;
+		}
 
-	d3.select("#test1").append("div")
-		.attr("id", "chart");
-	d3.select("#test1").append("div")
-		.attr("id", "table")
-		.style("display", "none");
+		vizList.push(viz);
+	}
 
-
-	filterGroup = new FilterGroup("#chart", projectVars);
-
-	usMap = new UsStatesMap("#chart", projectVars);
-	table = new Table("#table", projectVars);
 }
 
 function render() {
 	d3.json(projectVars.dataUrl, (d) => {
 		let data = d[dataSheetNames[0]];
-		
-		filterGroup.render(changeFilter);
-		usMap.initialRender(data);
-		table.render(data);
 
-		chartToggle.render(projectCharts, usMap.toggleVisibility, table.toggleVisibility);
+		for (let viz of vizList) {
+			viz.render(data);
+		}
 	});
 }
 
 function resize() {
-	let w = $("#chart").width();
-	usMap.resize(w);
-}
-
-function changeFilter(variable) {
-	let newFilterVar = $(variable).attr("value");
-	usMap.changeFilter(newFilterVar);
+	for (let viz of vizList) {
+		viz.resize ? viz.resize() : null;
+	}
 }
 
 initialize();

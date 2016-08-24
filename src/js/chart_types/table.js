@@ -3,17 +3,15 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 let dt = require('datatables.net');
-// let zf = require('datatables.net-responsive');
 
 
-import { getColorScale } from "./get_color_scale.js";
+import { getColorScale } from "../helper_functions/get_color_scale.js";
 
 let table, id, tableVars;
 
 export class Table {
-	constructor(divId, projectVars) {
-		id = divId;
-		({tableVars} = projectVars);
+	constructor(vizSettings) {
+		({id, tableVars} = vizSettings);
 
 		d3.select(id).append("table")
 			.attr("id", "dataTable")

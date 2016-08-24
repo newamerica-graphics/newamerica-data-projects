@@ -7,18 +7,21 @@ let d3 = require("d3");
 let chartToggle; 
 export class ChartToggle {
 	constructor(id) {
+		console.log("in chart toggle constructor");
 		chartToggle = d3.select(id).append("div")
 			.classed("chart-toggle", true);
 	}
 
-	render(projectCharts, toggleIcon1, toggleIcon2) {
+	render(visibilityToggles) {
 		function toggleAll() {
 			if ($(this).hasClass("active")) { return; };
 			
 			$(".chart-toggle__icon").removeClass("active");
 			$(this).addClass("active");
-			toggleIcon1();
-			toggleIcon2();
+			
+			for (let toggleFunc of visibilityToggles) {
+				toggleFunc();
+			}
 		}
 
 

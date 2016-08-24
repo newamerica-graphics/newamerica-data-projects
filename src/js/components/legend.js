@@ -2,7 +2,7 @@ import $ from 'jquery';
 
 import * as global from "./../utilities.js";
 
-import { formatValue } from "./format_value.js";
+import { formatValue } from "../helper_functions/format_value.js";
 
 let d3 = require("d3");
 

@@ -2,7 +2,7 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
-import { formatValue } from "./format_value.js";
+import { formatValue } from "../helper_functions/format_value.js";
 
 let tooltip, title, titleVar, tooltipVars, valueFields;
 
