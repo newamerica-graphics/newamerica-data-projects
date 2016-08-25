@@ -2,6 +2,7 @@ import $ from 'jquery';
 
 import { Tooltip } from "../components/tooltip.js";
 import { Legend } from "../components/legend.js";
+import { FilterGroup } from "../components/filter_group.js";
 
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 
@@ -13,46 +14,45 @@ import * as global from "./../utilities.js";
 
 let d3 = require("d3");
 
-let svg, w, h;
-let id, currFilterIndex, currFilterVar, tooltipVars, filterVars;
-let colorScale, tooltip, legend, geometry, dataMin, dataMax, paths;
-
 export class UsStatesMap {
 	
 	constructor(vizSettings) {
-		({id, tooltipVars, filterVars} = vizSettings);
-		currFilterIndex = 0;
-		currFilterVar = filterVars[currFilterIndex].variable;
 
-		
+		let {id, tooltipVars, filterVars} = vizSettings;
 
-		svg = d3.select(id)
+		this.id = id;
+		this.filterVars = filterVars;
+
+		this.currFilterIndex = 0;
+		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
+
+		this.filterGroup = new FilterGroup(vizSettings);
+
+		this.svg = d3.select(id)
 			.append("svg");
 
+		this.tooltip = new Tooltip(id, "state", tooltipVars)
 
-
-		tooltip = new Tooltip(id, "state", tooltipVars)
-
-		legend = new Legend(id);
+		this.legend = new Legend(id);
 
 		this.setDimensions();
 	}
 
 	setDimensions() {
-		w = $(id).width();
-		h = w/2;
+		this.w = $(this.id).width();
+		this.h = this.w/2;
 
-		svg
-			.attr("width", w)
-			.attr("height", h);
+		this.svg
+			.attr("width", this.w)
+			.attr("height", this.h);
 
-		let translateX = w/2;
+		let translateX = this.w/2;
 
-		w > global.showLegendBreakpoint ? translateX -= global.legendWidth/2 : null;
+		this.w > global.showLegendBreakpoint ? translateX -= global.legendWidth/2 : null;
 		//Define map projection
 		let projection = d3.geoAlbersUsa()
-				.scale(w)
-				.translate([translateX, h/2]);
+				.scale(this.w)
+				.translate([translateX, this.h/2]);
 
 		//Define path generator
 		this.pathGenerator = d3.geoPath()
@@ -60,19 +60,23 @@ export class UsStatesMap {
 	}
 
 	render(data) {	
+
+		console.log(this.paths);
 		this.data = data;
-		console.log(this.data);
 		this.processData();
 		this.setScale();
 		this.bindDataToGeom();
 		this.buildGraph();
 		this.setLegend();
+		this.setFilterGroup();
+
+		console.log(this.paths);
 	}
 
 	processData() {
-		for (let variable of filterVars) {
+		for (let variable of this.filterVars) {
 			for (let d of this.data) {
-				if (d[variable.variable]) {
+				if (d[variable.variable] && !$.isNumeric(d[variable.variable])) {
 					d[variable.variable] = deformatValue(d[variable.variable]);
 				}
 			}
@@ -80,10 +84,10 @@ export class UsStatesMap {
 	}
 
 	setScale() {
-		dataMin = Number(d3.min(this.data, function(d) { return d[currFilterVar] ? d[currFilterVar] : null; })); 
-		dataMax = Number(d3.max(this.data, function(d) { return d[currFilterVar] ? d[currFilterVar] : null; }));
-
-		colorScale = getColorScale(filterVars[currFilterIndex], dataMin, dataMax);
+		let dataMin = Number(d3.min(this.data, (d) => { return d[this.currFilterVar] ? Number(d[this.currFilterVar]) : null; })); 
+		let dataMax = Number(d3.max(this.data, (d) => { return d[this.currFilterVar] ? Number(d[this.currFilterVar]) : null; }));
+		console.log("data bounds: " + dataMin + " " + dataMax);
+		this.colorScale = getColorScale(this.filterVars[this.currFilterIndex], dataMin, dataMax);
 	}
 
 
@@ -103,78 +107,78 @@ export class UsStatesMap {
 	}
 
 	buildGraph() {
-		paths = svg.selectAll("path")
+		this.paths = this.svg.selectAll("path")
 		   .data(usStates.features)
 		   .enter()
 		   .append("path");
 
-		paths.attr("d", this.pathGenerator)
+		this.paths.attr("d", this.pathGenerator)
 			.classed("map-feature", true)
 		    .style("fill", (d) => {
-		   		var value = d.properties[currFilterVar];
-		   		return value ? colorScale(value) : "#ccc";
+		   		var value = d.properties[this.currFilterVar];
+		   		return value ? this.colorScale(value) : "#ccc";
 		    })
+		    .attr("value", function(d,i) { return i; })
 		    .style("stroke", "white")
-		    .on("mouseover", this.mouseover)
-		    .on("mouseout", this.mouseout);
+		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index]); })
+		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); });
 	}
 
 	setLegend() {
-		let currFilterDisplayName = filterVars[currFilterIndex].displayName;
-		let currFilterFormat = filterVars[currFilterIndex].format;
-		legend.render(currFilterDisplayName, currFilterFormat, colorScale, this.changeVariableValsShown);
+		let currFilterDisplayName = this.filterVars[this.currFilterIndex].displayName;
+		let currFilterFormat = this.filterVars[this.currFilterIndex].format;
+		this.legend.render(currFilterDisplayName, currFilterFormat, this.colorScale, this.changeVariableValsShown.bind(this));
+	}
+
+	setFilterGroup() {
+		this.filterGroup.render(this.changeFilter.bind(this));
 	}
 
 	
 	resize() {
 		this.setDimensions();
-		paths.attr("d", this.pathGenerator);
+		this.paths.attr("d", this.pathGenerator);
 	}
 
-	changeFilter(newVarIndex) {
-		currFilterIndex = newVarIndex;
-		currFilterVar = filterVars[currFilterIndex].variable;
+	changeFilter(variableIndex) {
+		this.currFilterIndex = variableIndex;
+		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
 
 		this.setScale();
 		this.setLegend();
-		paths
+		this.paths
 			.style("fill", (d) => {
-		   		var value = d.properties[currFilterVar];
-		   		return value ? colorScale(value) : "#ccc";
+		   		var value = d.properties[this.currFilterVar];
+		   		return value ? this.colorScale(value) : "#ccc";
 		    })
 	}
 
 	changeVariableValsShown(valsShown) {
 		console.log(valsShown);
-		paths
+		this.paths
 			.style("fill", (d) => {
-		   		var value = d.properties[currFilterVar];
+		   		var value = d.properties[this.currFilterVar];
 		   		if (value) {
-		   			let binIndex = colorScale.range().indexOf(colorScale(value));
+		   			let binIndex = this.colorScale.range().indexOf(this.colorScale(value));
 		   			if (valsShown.indexOf(binIndex) > -1) {
-		   				return colorScale(value);
+		   				return this.colorScale(value);
 		   			}
 		   		}
 		   		return "#ccc";
 		    });
 	}
 
-	mouseover(d) {
-		d3.select(this).style("stroke-width", "3");
-		let mousePos = d3.mouse(this);
-		tooltip.show(d.properties, mousePos);
-		// this.tooltip
-		// 	.classed('hidden', false)
-  //           .attr('style', 'left:' + (mouse[0] + 15) + 'px; top:' + (mouse[1] - 35) + 'px');
+	mouseover(datum, path) {
+		d3.select(path).style("stroke-width", "3");
+		console.log(path);
+		let mousePos = d3.mouse(path);
+		console.log(mousePos);
+		this.tooltip.show(datum.properties, mousePos);
 	}
 
-	mouseout() {
-		d3.select(this).style("stroke-width", "1");
-	    tooltip.hide();
-	}
-
-	toggleVisibility() {
-		$(id).toggle();
+	mouseout(path) {
+		d3.select(path).style("stroke-width", "1");
+	    this.tooltip.hide();
 	}
 			
 }

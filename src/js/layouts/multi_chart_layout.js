@@ -4,17 +4,12 @@ let d3 = require("d3");
 
 import { ChartToggle } from "../components/chart_toggle.js";
 import { UsStatesMap } from "../chart_types/us_states_map.js";
-import { FilterGroup } from "../components/filter_group.js";
 import { Table } from "../chart_types/table.js";
 
-let chartToggle, usMap, filterGroup, table;
-
-let vizList = [];
-
-export class ChartTableLayout {
+export class MultiChartLayout {
 	constructor(vizSettings) {
-		chartToggle = new ChartToggle(vizSettings.id);
-
+		this.chartToggle = new ChartToggle(vizSettings.id);
+		this.vizList = [];
 		let i = 0;
 
 		// let filterGroup = new FilterGroup(vizSettings);
@@ -30,11 +25,11 @@ export class ChartTableLayout {
 			switch (chartType) {
 				case "us_states_map":
 					viz = new UsStatesMap(chartSettingsObject);
-					vizList.push(viz);
+					this.vizList.push(viz);
 					break;
 				case "table":
 					viz = new Table(chartSettingsObject);
-					vizList.push(viz);
+					this.vizList.push(viz);
 					break;
 			}
 
@@ -43,24 +38,17 @@ export class ChartTableLayout {
 	}
 
 	render(data) {
-		// filterGroup.render(this.changeFilter);
 		let visibilityToggles = [];
-		for (let viz of vizList) {
+		for (let viz of this.vizList) {
 			viz.render(data);
-			visibilityToggles.push(viz.toggleVisibility);
 		}
 
-		chartToggle.render(visibilityToggles);
+		this.chartToggle.render(this.vizList.length);
 	}
 
 	resize() {
-		for (let viz of vizList) {
+		for (let viz of this.vizList) {
 			viz.resize ? viz.resize() : null;
 		}
-	}
-
-	changeFilter(variable) {
-		let newFilterVar = $(variable).attr("value");
-		usMap.changeFilter(newFilterVar);
 	}
 }

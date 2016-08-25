@@ -6,49 +6,43 @@ import { formatValue } from "../helper_functions/format_value.js";
 
 let d3 = require("d3");
 
-let legend, title, cellContainer, colorScale, dataMin, dataMax, binInterval, valsShown, numBins, listenerFunction;
-
 export class Legend {
 	constructor(id) {
-		legend = d3.select(id)
+		let legend = d3.select(id)
 			.append("div")
 			.attr("class", "legend");
 
-		title = legend.append("h3")
+		this.titleDiv = legend.append("h3")
 			.attr("class", "legend__title");
 
-		cellContainer = legend.append("svg")
+		this.cellContainer = legend.append("svg")
 			.attr("width", global.legendWidth + "px")
 			.attr("class", "legend__cell-container");
-
-		
 	}
 
 	render(currFilterDisplayName, valueFormat, scale, listenerFunc) {
-		colorScale = scale;
-		listenerFunction = listenerFunc;
-		valsShown = [];
+		let colorScale = scale;
+		this.valsShown = [];
 
-		cellContainer.selectAll(".legend__cell").remove();
+		this.cellContainer.selectAll(".legend__cell").remove();
 
-		numBins = colorScale.range().length;
-		cellContainer.attr("height", () => {
-			return (numBins * 25) + "px";
+		this.numBins = colorScale.range().length;
+		this.cellContainer.attr("height", () => {
+			return (this.numBins * 25) + "px";
 		});
 
-		[dataMin, dataMax] = colorScale.domain();
+		let [dataMin, dataMax] = colorScale.domain();
 		let dataSpread = dataMax - dataMin;
-		binInterval = dataSpread/numBins;
+		let binInterval = dataSpread/this.numBins;
 
-		title.text(currFilterDisplayName);
+		this.titleDiv.text(currFilterDisplayName);
 
-		for (let i = 0; i < numBins; i++) {
-			valsShown.push(i);
-			let cell = cellContainer.append("g")
+		for (let i = 0; i < this.numBins; i++) {
+			this.valsShown.push(i);
+			let cell = this.cellContainer.append("g")
 				.classed("legend__cell", true)
 				.attr("transform", "translate(10," + (i*25 + 10) + ")")
-				.attr("value", i)
-				.on("click", this.toggleValsShown);
+				.on("click", () => { this.toggleValsShown(i); listenerFunc(this.valsShown); });
 
 			cell.append("circle")
 				.attr("r", 5)
@@ -61,37 +55,43 @@ export class Legend {
 				.attr("x", 15)
 				.attr("y", 5)
 				.classed("legend__cell__label", true)
-				.text(formatValue(Math.ceil(this.calcBinVal(i)), valueFormat) + " to " + formatValue(Math.floor(this.calcBinVal(i+1)), valueFormat));
+				.text(formatValue(Math.ceil(this.calcBinVal(i, dataMin, binInterval)), valueFormat) + " to " + formatValue(Math.floor(this.calcBinVal(i+1, dataMin, binInterval)), valueFormat));
 		}
 	}
 
-	calcBinVal(i) {
+	calcBinVal(i, dataMin, binInterval) {
 		let binVal = dataMin + (binInterval * i);
 		return Math.round(binVal * 100)/100;
 	}
 
-	toggleValsShown() {
-		let valToggled = Number($(this).attr("value"));
+	toggleValsShown(valToggled) {
 		let legendCells = $(".legend__cell");
 
-		if (valsShown.length == numBins) {
-			valsShown = [valToggled];
+		// if all toggled, just show clicked value
+		if (this.valsShown.length == this.numBins) {
+			this.valsShown = [valToggled];
 			legendCells.addClass("disabled");
 			$(legendCells[valToggled]).removeClass("disabled");
 
 		} else {
-			let index = valsShown.indexOf(valToggled);
+			let index = this.valsShown.indexOf(valToggled);
 			// value is currently shown
 			if (index > -1) {
-				valsShown.splice(index, 1);
+				this.valsShown.splice(index, 1);
 				$(legendCells[valToggled]).addClass("disabled");
 			} else {
-				valsShown.push(valToggled);
+				this.valsShown.push(valToggled);
 				$(legendCells[valToggled]).removeClass("disabled");
 			}
 		}
 
-		listenerFunction(valsShown);
+		// if none toggled, show all values
+		if (this.valsShown.length == 0) {
+			for (let i = 0; i < legendCells.length; i++) {
+				this.valsShown.push(i);
+			}
+			$(legendCells).removeClass("disabled");
+		}
 	}
 
 }

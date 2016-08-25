@@ -4,7 +4,7 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 import { UsStatesMap } from "../../chart_types/us_states_map.js";
-import { ChartTableLayout } from "../../layouts/chart_table_layout.js";
+import { MultiChartLayout } from "../../layouts/multi_chart_layout.js";
 import { GroupedBarChart } from "../../chart_types/grouped_bar_chart.js";
 
 let state = {"variable":"state", "displayName":"State"};
@@ -17,21 +17,26 @@ let children_5_under = {"variable":"children_5_under", "displayName":"Children 5
 let dataSheetNames = ["state_data", "state_data_variables"];
 
 let vizSettingsList = [
-	{
-		id: "#explore-the-index", 
-		vizType: "chart_table_layout",
-		layoutComponents: ["us_states_map", "table"],
-		filterVars: [ children_5_under, quality_rank, cost_rank, cost_in_home ],
-		tooltipVars: [ children_5_under, cost_rank, cost_in_home ],
-		tableVars: [ state, children_5_under, cost_rank, cost_in_home ]
-	},
 	// {
-	// 	id: "#test1", 
-	// 	vizType: "us_states_map",
+	// 	id: "#explore-the-index", 
+	// 	vizType: "chart_table_layout",
+	// 	layoutComponents: ["us_states_map", "table"],
 	// 	filterVars: [ children_5_under, quality_rank, cost_rank, cost_in_home ],
 	// 	tooltipVars: [ children_5_under, cost_rank, cost_in_home ],
 	// 	tableVars: [ state, children_5_under, cost_rank, cost_in_home ]
 	// },
+	{
+		id: "#explore-the-index", 
+		vizType: "us_states_map",
+		filterVars: [ cost_rank, cost_in_home, quality_rank ],
+		tooltipVars: [ children_5_under, cost_rank, cost_in_home ]
+	},
+	{
+		id: "#test1", 
+		vizType: "us_states_map",
+		filterVars: [ quality_rank, cost_rank, cost_in_home ],
+		tooltipVars: [ children_5_under, cost_rank, cost_in_home ]
+	},
 ]
 
 let projectVars = {
@@ -49,7 +54,7 @@ function initialize() {
 		let viz;
 		switch (vizSettingsObject.vizType) {
 			case "chart_table_layout":
-				viz = new ChartTableLayout(vizSettingsObject);
+				viz = new MultiChartLayout(vizSettingsObject);
 				
 				break;
 			case "us_states_map":
