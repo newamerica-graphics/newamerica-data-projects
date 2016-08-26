@@ -37,6 +37,8 @@ export class Legend {
 
 		this.titleDiv.text(currFilterDisplayName);
 
+		this.legendCellDivs = [];
+
 		for (let i = 0; i < this.numBins; i++) {
 			this.valsShown.push(i);
 			let cell = this.cellContainer.append("g")
@@ -56,6 +58,7 @@ export class Legend {
 				.attr("y", 5)
 				.classed("legend__cell__label", true)
 				.text(formatValue(Math.ceil(this.calcBinVal(i, dataMin, binInterval)), valueFormat) + " to " + formatValue(Math.floor(this.calcBinVal(i+1, dataMin, binInterval)), valueFormat));
+			this.legendCellDivs[i] = cell;
 		}
 	}
 
@@ -65,32 +68,31 @@ export class Legend {
 	}
 
 	toggleValsShown(valToggled) {
-		let legendCells = $(".legend__cell");
 
 		// if all toggled, just show clicked value
 		if (this.valsShown.length == this.numBins) {
 			this.valsShown = [valToggled];
-			legendCells.addClass("disabled");
-			$(legendCells[valToggled]).removeClass("disabled");
+			this.legendCellDivs.map( function(item) { item.classed("disabled", true)});
+			this.legendCellDivs[valToggled].classed("disabled", false);
 
 		} else {
 			let index = this.valsShown.indexOf(valToggled);
 			// value is currently shown
 			if (index > -1) {
 				this.valsShown.splice(index, 1);
-				$(legendCells[valToggled]).addClass("disabled");
+				this.legendCellDivs[valToggled].classed("disabled", true);
 			} else {
 				this.valsShown.push(valToggled);
-				$(legendCells[valToggled]).removeClass("disabled");
+				this.legendCellDivs[valToggled].classed("disabled", false);
 			}
 		}
 
 		// if none toggled, show all values
 		if (this.valsShown.length == 0) {
-			for (let i = 0; i < legendCells.length; i++) {
+			for (let i = 0; i < this.numBins; i++) {
 				this.valsShown.push(i);
 			}
-			$(legendCells).removeClass("disabled");
+			this.legendCellDivs.map( function(item) { item.classed("disabled", false)});
 		}
 	}
 
