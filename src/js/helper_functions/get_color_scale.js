@@ -15,7 +15,6 @@ export function getColorScale(variable, dataMin, dataMax) {
 	let {scaleType, color, numBins} = variable;
 	let scale;
 
-	
 
 	if (!scaleType) {
 		console.log("no scale type!");

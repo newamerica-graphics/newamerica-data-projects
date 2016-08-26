@@ -3,17 +3,15 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 let dt = require('datatables.net');
-// let zf = require('datatables.net-responsive');
 
+import { getColorScale } from "../helper_functions/get_color_scale.js";
 
-import { getColorScale } from "./get_color_scale.js";
-
-let table, id, tableVars;
 
 export class Table {
-	constructor(divId, projectVars) {
-		id = divId;
-		({tableVars} = projectVars);
+	constructor(vizSettings) {
+		let {id, tableVars} = vizSettings;
+
+		this.tableVars = tableVars;
 
 		d3.select(id).append("table")
 			.attr("id", "dataTable")
@@ -22,7 +20,7 @@ export class Table {
 
 	render(data) {
 		this.data = data;
-		table = $("#dataTable").DataTable({
+		this.table = $("#dataTable").DataTable({
 			data: data,
 			columns: this.getColumnNames(),
 		    lengthChange: false,
@@ -34,7 +32,7 @@ export class Table {
 
 	getColumnNames() {
 		let columnNames = [];
-		for (let tableVar of tableVars) {
+		for (let tableVar of this.tableVars) {
 			let varObject = {"title": tableVar.displayName, "data": tableVar.variable};
 			columnNames.push(varObject);
 		}
@@ -43,8 +41,8 @@ export class Table {
 	}
 
 	orderChanged() {
-		let orderingIndex = table.order()[0][0];
-		let orderingColumn = tableVars[orderingIndex];
+		let orderingIndex = this.table.order()[0][0];
+		let orderingColumn = this.tableVars[orderingIndex];
 
 		let dataMin = Number(d3.min(this.data, function(d) { return Number(d[orderingColumn.variable]); })); 
 		let dataMax = Number(d3.max(this.data, function(d) { return Number(d[orderingColumn.variable]); }));
@@ -63,11 +61,6 @@ export class Table {
 
 	applyColorScale() {
 		console.log($(".sorting_1"));
-	}
-
-	toggleVisibility() {
-		console.log("toggling visibility of table!");
-		$(id).toggle();
 	}
 }
 
