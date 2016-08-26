@@ -3,6 +3,7 @@ import $ from 'jquery';
 import { Tooltip } from "../components/tooltip.js";
 import { Legend } from "../components/legend.js";
 import { FilterGroup } from "../components/filter_group.js";
+import { Chart } from "../layouts/chart.js"
 
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 
@@ -14,11 +15,12 @@ import * as global from "./../utilities.js";
 
 let d3 = require("d3");
 
-export class UsStatesMap {
+export class UsStatesMap extends Chart {
 	
 	constructor(vizSettings) {
-
 		let {id, tooltipVars, filterVars} = vizSettings;
+		super(id);
+		
 
 		this.id = id;
 		this.filterVars = filterVars;
@@ -28,8 +30,12 @@ export class UsStatesMap {
 
 		this.filterGroup = new FilterGroup(vizSettings);
 
-		this.svg = d3.select(id)
-			.append("svg");
+		let testDiv = d3.select(id)
+			.append("div");
+
+		this.svg = testDiv
+			.append("svg")
+			.attr("id", "downloadSVGtest");
 
 		this.tooltip = new Tooltip(id, "state", tooltipVars)
 
@@ -69,6 +75,8 @@ export class UsStatesMap {
 		this.buildGraph();
 		this.setLegend();
 		this.setFilterGroup();
+
+		super.render();
 
 		console.log(this.paths);
 	}

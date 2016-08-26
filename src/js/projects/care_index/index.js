@@ -69,8 +69,9 @@ function initialize() {
 
 		vizList.push(viz);
 	}
-
 }
+
+
 
 function render() {
 	d3.json(projectVars.dataUrl, (d) => {
