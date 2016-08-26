@@ -24,6 +24,7 @@ export class FilterGroup {
 	render(listenerFunc) {
 
 		this.categoryDivs = {};
+		this.valDivs = [];
 		let i = 0;
 		let self = this;
 		for (let variable of this.filterVars) {
@@ -45,23 +46,21 @@ export class FilterGroup {
 				this.categoryDivs[category].valueListDiv = this.filterVariableContainer.append("ul")
 					.classed("filter-group__variable-list", true)
 					.attr("id", category);
-
-				this.categoryDivs[category].values = [];
 				
 			}
+
 			let valListDiv = this.categoryDivs[category].valueListDiv;
 
-			let value = valListDiv.append("li")
+			this.valDivs[i] = valListDiv.append("li")
 				.classed("filter-group__variable", true)
 				.classed("active", () => { return i == 0 ? true : false; })
 				.attr("value", i)
 				.on("click", function() {
-					let variable = self.toggleVariable($(this).val());
-					listenerFunc(variable);
+					self.toggleVariable($(this).val());
+					listenerFunc($(this).val());
 				})
 				.text(variable.displayName);
 
-			this.categoryDivs[category].values.push(value);
 			i++;
 		}
 	}
@@ -71,30 +70,31 @@ export class FilterGroup {
 		this.categoryDivs[this.currCategory].label.classed("active", false);
 		this.categoryDivs[this.currCategory].valueListDiv.style("display", "none");
 
-
 		this.categoryDivs[newCategory].label
 			.classed("active", true);
 
 		this.categoryDivs[newCategory].valueListDiv
 			.style("display", "inline-block");
 
+
+		let firstVar = this.categoryDivs[newCategory].valueListDiv.select("li")._groups[0];
+		let firstVarIndex = $(firstVar).val();
+
+		this.toggleVariable(firstVarIndex);
+
 		this.currCategory = newCategory;
 
-		let firstVar = this.toggleVariable(0);
-
-		return firstVar;
+		return firstVarIndex;
 	}
 
 	toggleVariable(index) {
 		// remove active class from currently active variable
-		this.categoryDivs[this.currCategory].values.map(function(elem) {
+		this.valDivs.map(function(elem) {
 			elem.classed("active", false);
 		});
 
-		let variable = this.categoryDivs[this.currCategory].values[index]
+		this.valDivs[index]
 			.classed("active", true);
-
-		return variable.attr("value");
 
 	}
 
