@@ -2,35 +2,36 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
+
+// superclass for all chart types, adds download and share buttons to the chart
 export class Chart {
 	constructor(id) {
-		console.log("in super constructor!");
-		console.log(id);
 		this.id = id;
 		this.downloadSVGButton = d3.select(id)
 			.append("a")
-			.text("download SVG")
-			.attr("class", "download-svg");
+			.text("Download SVG")
+			.attr("class", "download-svg")
+			.attr("download", "chart.svg");;
 
 		this.downloadPNGButton = d3.select(id)
 			.append("a")
-			.text("download PNG")
-			.attr("class", "download-png");
+			.text("Download PNG")
+			.attr("class", "download-png")
+			.attr("download", "chart.png");;
 
 		this.canvas = d3.select(id)
 			.append("canvas")
 			.style("display", "none");
-
 	}
 
 	render() {
-		console.log("in super render!", this.id);
+		// sets href link for svg button, triggered on mouseenter to encapsulate current state of the chart
 		this.downloadSVGButton
 			.on("mouseenter", () => { this.setLink("svg"); });
 
+		// sets href link for png button, triggered on mouseenter to encapsulate current state of the chart
 		this.downloadPNGButton
 			.on("mouseenter", () => { this.setLink("png"); });
-			
 	}
 
 	setLink(type) {
@@ -45,14 +46,15 @@ export class Chart {
 		
 		if (type == "svg") {
 			this.downloadSVGButton
-				.attr("href", imgsrc)
-				.attr("download", "map.svg");
+				.attr("href", imgsrc);
 		} else {
+			// for png images, first sets canvas to dimensions of svg, renders the svg as an image on the canvas, then converts 
+			// 	the canvas to a dataURI
 			this.canvas
 				.attr("height", svg.attr("height"))
 				.attr("width", svg.attr("width"));
 
-			var canvas = this.canvas._groups[0][0];
+			let canvas = this.canvas._groups[0][0];
 
 		 	let context = canvas.getContext("2d");
 
@@ -64,8 +66,7 @@ export class Chart {
 				let canvasdata = canvas.toDataURL("image/png");
 
 				this.downloadPNGButton
-					.attr("href", canvasdata)
-					.attr("download", "map.png");
+					.attr("href", canvasdata);
 			};
 		}
 

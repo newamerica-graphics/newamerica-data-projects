@@ -20,7 +20,6 @@ export class UsStatesMap extends Chart {
 	constructor(vizSettings) {
 		let {id, tooltipVars, filterVars} = vizSettings;
 		super(id);
-		
 
 		this.id = id;
 		this.filterVars = filterVars;
@@ -30,12 +29,11 @@ export class UsStatesMap extends Chart {
 
 		this.filterGroup = new FilterGroup(vizSettings);
 
-		let testDiv = d3.select(id)
+		let mapContainer = d3.select(id)
 			.append("div");
 
-		this.svg = testDiv
-			.append("svg")
-			.attr("id", "downloadSVGtest");
+		this.svg = mapContainer
+			.append("svg");
 
 		this.tooltip = new Tooltip(id, "state", tooltipVars)
 

@@ -31,12 +31,12 @@ let vizSettingsList = [
 		filterVars: [ cost_rank, cost_in_home, quality_rank ],
 		tooltipVars: [ children_5_under, cost_rank, cost_in_home ]
 	},
-	{
-		id: "#test1", 
-		vizType: "us_states_map",
-		filterVars: [ quality_rank, cost_rank, cost_in_home ],
-		tooltipVars: [ children_5_under, cost_rank, cost_in_home ]
-	},
+	// {
+	// 	id: "#test1", 
+	// 	vizType: "us_states_map",
+	// 	filterVars: [ quality_rank, cost_rank, cost_in_home ],
+	// 	tooltipVars: [ children_5_under, cost_rank, cost_in_home ]
+	// },
 ]
 
 let projectVars = {
