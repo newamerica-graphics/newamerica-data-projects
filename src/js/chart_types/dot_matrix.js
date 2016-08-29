@@ -1,21 +1,30 @@
 import $ from 'jquery';
 
 let d3 = require("d3");
+
+import { Chart } from "../layouts/chart.js"
+
 import { legendColor } from 'd3-svg-legend';
+
+import { getColorScale } from "../helper_functions/get_color_scale.js";
 
 import { Tooltip } from "../components/tooltip.js"; 
 
 let dotW = 10;
 let dotOffset = 5;
 
-export class DotMatrix {
+export class DotMatrix extends Chart {
 	constructor(vizSettings) {
 		let {id, tooltipVars, filterVars} = vizSettings;
+		super(id);
 
 		this.id = id;
 		this.w = $(id).width();
 
-		this.svg = d3.select(id)
+		let chartContainer = d3.select(id)
+			.append("div");
+
+		this.svg = chartContainer
 			.append("svg")
 			.attr("width", "100%");
 
@@ -39,6 +48,8 @@ export class DotMatrix {
 		this.setScale();
 		this.buildGraph();
 		// this.addLegend();
+
+		super.render();
 	}
 
 	processData(data) {
@@ -71,6 +82,14 @@ export class DotMatrix {
 				let elem1 = a[this.currFilterVar];
 				let elem2 = b[this.currFilterVar];
 
+				if (!elem1) {
+					return 1;
+				}
+
+				if (!elem2) {
+					return -1;
+				}
+
 				if (elem1 < elem2) {
 				    return -1;
 				} else if (elem1 > elem2) {
@@ -83,18 +102,29 @@ export class DotMatrix {
 	}
 
 	setScale() {
-		let data = this.data
-		if (this.currFilter.scaleType === "linear") {
-			let dataMin = d3.min(data, (d) => { return d[this.currFilterVar] ? d[this.currFilterVar] : 10000000; });
-			let dataMax = d3.max(data, (d) => { return d[this.currFilterVar] ? d[this.currFilterVar] : -1; });
+		let colorScaleSettings = {};
 
-			colorScale = d3.scaleLinear()
-				.domain([dataMin, dataMax])
-				.range(["#2ebcb3", "#5ba4da"]);
+		// let data = this.data
+		if (this.currFilter.scaleType === "linear") {
+			// let dataMin = d3.min(data, (d) => { return d[this.currFilterVar] ? d[this.currFilterVar] : 10000000; });
+			// let dataMax = d3.max(data, (d) => { return d[this.currFilterVar] ? d[this.currFilterVar] : -1; });
+
+			// colorScale = d3.scaleLinear()
+			// 	.domain([dataMin, dataMax])
+			// 	.range(["#2ebcb3", "#5ba4da"]);
 
 		} else if (this.currFilter.scaleType == "categorical") {
-			this.colorScale = d3.scaleOrdinal()
-				.range(["#2ebcb3", "#5ba4da", "#a076ac", "#e75c64", "#1a8a84", "#4378a0", "#74557e", "#a64046", "#005753", "#234a67", "#48304f", "#692025"]);
+			let uniqueVals = d3.nest()
+				.key((d) => { return d[this.currFilterVar]; })
+				.map(this.data);
+
+			console.log(uniqueVals.keys());
+
+			colorScaleSettings.scaleType = "categorical";
+			colorScaleSettings.numBins = uniqueVals.keys().length;
+
+			this.colorScale = getColorScale(colorScaleSettings);
+
 		}
 	}
 
@@ -181,7 +211,7 @@ export class DotMatrix {
 		    .attr("x", (d, i) => { return this.calcX(i); })
 		    .attr("y", (d, i) => { return this.calcY(i); })
 		    .attr("fill", (d) => {
-		    	return d[this.currFilterVar] ? this.colorScale(d[this.currFilterVar]) : "red";
+		    	return this.colorScale(d[this.currFilterVar]);
 		    })
 		    .attr("class", (d) => { return d[this.currFilterVar]; })
 		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index]); })
@@ -235,7 +265,7 @@ export class DotMatrix {
 
 	mouseout(path) {
 		d3.select(path).attr("fill", (d) => {
-		    return d[this.currFilterVar] ? this.colorScale(d[this.currFilterVar]) : "red";
+		    return this.colorScale(d[this.currFilterVar]);
 		});
 
 		this.tooltip.hide();

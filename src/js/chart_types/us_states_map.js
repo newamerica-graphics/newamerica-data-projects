@@ -90,10 +90,15 @@ export class UsStatesMap extends Chart {
 	}
 
 	setScale() {
-		let dataMin = Number(d3.min(this.data, (d) => { return d[this.currFilterVar] ? Number(d[this.currFilterVar]) : null; })); 
-		let dataMax = Number(d3.max(this.data, (d) => { return d[this.currFilterVar] ? Number(d[this.currFilterVar]) : null; }));
-		console.log("data bounds: " + dataMin + " " + dataMax);
-		this.colorScale = getColorScale(this.filterVars[this.currFilterIndex], dataMin, dataMax);
+		let colorScaleSettings = {};
+
+		colorScaleSettings.scaleType = this.filterVars[this.currFilterIndex].scaleType;
+		colorScaleSettings.color = this.filterVars[this.currFilterIndex].color;
+		colorScaleSettings.numBins = this.filterVars[this.currFilterIndex].numBins;
+
+		colorScaleSettings.dataMin = Number(d3.min(this.data, (d) => { return d[this.currFilterVar] ? Number(d[this.currFilterVar]) : null; })); 
+		colorScaleSettings.dataMax = Number(d3.max(this.data, (d) => { return d[this.currFilterVar] ? Number(d[this.currFilterVar]) : null; }));
+		this.colorScale = getColorScale(colorScaleSettings);
 	}
 
 
