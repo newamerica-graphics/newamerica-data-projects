@@ -136,9 +136,15 @@ export class UsStatesMap extends Chart {
 	}
 
 	setLegend() {
-		let currFilterDisplayName = this.filterVars[this.currFilterIndex].displayName;
-		let currFilterFormat = this.filterVars[this.currFilterIndex].format;
-		this.legend.render(currFilterDisplayName, currFilterFormat, this.colorScale, this.changeVariableValsShown.bind(this));
+		let legendSettings = {};
+
+		legendSettings.title = this.filterVars[this.currFilterIndex].displayName;
+		legendSettings.format = this.filterVars[this.currFilterIndex].format;
+		legendSettings.scaleType = this.filterVars[this.currFilterIndex].scaleType;
+		legendSettings.colorScale = this.colorScale;
+		legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
+
+		this.legend.render(legendSettings);
 	}
 
 	setFilterGroup() {

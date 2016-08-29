@@ -20,23 +20,28 @@ export class Legend {
 			.attr("class", "legend__cell-container");
 	}
 
-	render(currFilterDisplayName, valueFormat, scale, listenerFunc) {
-		let colorScale = scale;
+	render(legendSettings) {
+		let {scaleType, title, format, colorScale, valChangedFunction} = legendSettings;
+
+		this.titleDiv.text(title);
+
 		this.valsShown = [];
 
 		this.cellContainer.selectAll(".legend__cell").remove();
 
 		this.numBins = colorScale.range().length;
+
 		this.cellContainer.attr("height", () => {
 			return (this.numBins * 25) + "px";
 		});
 
-		let [dataMin, dataMax] = colorScale.domain();
-		let dataSpread = dataMax - dataMin;
-		let binInterval = dataSpread/this.numBins;
+		if (scaleType == "quantize") {
+			let [dataMin, dataMax] = colorScale.domain();
+			let dataSpread = dataMax - dataMin;
+			let binInterval = dataSpread/this.numBins;
+		}
 
-		this.titleDiv.text(currFilterDisplayName);
-
+		console.log(scaleType);
 		this.legendCellDivs = [];
 
 		for (let i = 0; i < this.numBins; i++) {
@@ -44,7 +49,7 @@ export class Legend {
 			let cell = this.cellContainer.append("g")
 				.classed("legend__cell", true)
 				.attr("transform", "translate(10," + (i*25 + 10) + ")")
-				.on("click", () => { this.toggleValsShown(i); listenerFunc(this.valsShown); });
+				.on("click", () => { this.toggleValsShown(i); valChangedFunction(this.valsShown); });
 
 			cell.append("circle")
 				.attr("r", 5)
@@ -53,14 +58,21 @@ export class Legend {
 				.classed("legend__cell__color-swatch", true)
 				.attr("fill", colorScale.range()[i]);
 
-			cell.append("text")
+			let cellText = cell.append("text")
 				.attr("x", 15)
 				.attr("y", 5)
-				.classed("legend__cell__label", true)
-				.text(formatValue(Math.ceil(this.calcBinVal(i, dataMin, binInterval)), valueFormat) + " to " + formatValue(Math.floor(this.calcBinVal(i+1, dataMin, binInterval)), valueFormat));
+				.classed("legend__cell__label", true);
+
+			if (scaleType == "quantize") {
+				cellText.text(formatValue(Math.ceil(this.calcBinVal(i, dataMin, binInterval)), format) + " to " + formatValue(Math.floor(this.calcBinVal(i+1, dataMin, binInterval)), format));
+			} else if (scaleType == "categorical") {
+				cellText.text(colorScale.domain()[i]);
+			}
 			this.legendCellDivs[i] = cell;
 		}
 	}
+
+		
 
 	calcBinVal(i, dataMin, binInterval) {
 		let binVal = dataMin + (binInterval * i);
