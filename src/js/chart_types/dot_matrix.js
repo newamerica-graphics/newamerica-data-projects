@@ -207,16 +207,36 @@ export class DotMatrix extends Chart {
 	// }
 
 	mouseover(datum, path) {
-		d3.select(path).attr("fill", "orange");
+		let elem = d3.select(path);
+		// let prevX = elem.attr("x");
+		// let prevY = elem.attr("y");
+
+		elem
+			// .attr("width", dotW * 2)
+		 //    .attr("height", dotW * 2)
+		 //    .attr("x", prevX - dotW/2)
+		 //    .attr("y", prevY - dotW/2)
+			.attr("stroke", "white")
+			.attr("stroke-width", 3.5);
+			
+		    
+
 		let mousePos = d3.mouse(path);
 		console.log(datum);
 		this.tooltip.show(datum, mousePos);
 	}
 
 	mouseout(path) {
-		d3.select(path).attr("fill", (d) => {
-		    return this.colorScale(d[this.currFilterVar]);
-		});
+		let elem = d3.select(path);
+		// let prevX = Number(elem.attr("x"));
+		// let prevY = Number(elem.attr("y"));
+
+		elem
+			.attr("stroke", "none");
+			// .attr("width", dotW)
+		 //    .attr("height", dotW)
+		 //    .attr("x", prevX + dotW/2)
+		 //    .attr("y", prevY + dotW/2);
 
 		this.tooltip.hide();
 	}
