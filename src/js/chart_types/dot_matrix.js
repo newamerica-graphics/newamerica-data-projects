@@ -38,13 +38,8 @@ export class DotMatrix extends Chart {
 		legendSettings.orientation = "horizontal-center";
 		this.legend = new Legend(legendSettings);
 
-		console.log(filterVars[0]);
 		this.currFilter = filterVars[0];
 		this.currFilterVar = filterVars[0].variable;
-
-		// this.legendSvg = d3.select(id)
-		// 	.append("svg")
-		// 	.attr("width", "100%");
 
 	}
 
@@ -178,78 +173,10 @@ export class DotMatrix extends Chart {
 		legendSettings.scaleType = this.currFilter.scaleType;
 		legendSettings.colorScale = this.colorScale;
 		legendSettings.valCounts = valCounts;
-		// legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
+		legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
 
 		this.legend.render(legendSettings);
-		// let test = d3.nest()
-		// 	.key((d) => { return d[this.currFilterVar]; })
-		// 	.rollup(function(v) { return v.length; })
-		// 	.map(data);
 
-		// console.log(test.keys());
-
-		// console.log(colorScale.domain());
-
-		// let keys = legendList.selectAll('li')
-		// 	.data(colorScale.domain())
-		// 	.enter()
-		// 	.append("li");
-
-		// keys.append("g")
-		// 	.text((d) => { return d; })
-
-
-		// for (var value of colorScale.domain()) {
-		// 	console.log(value);
-		// }
-
-		// this.legendSvg.append("g")
-		//   .attr("class", "legendOrdinal")
-		//   .attr("transform", "translate(20,20)");
-
-		// var legendOrdinal = legendColor()
-		//   .shape("rect")
-		//   .orient("horizontal")
-		//   .shapePadding(100)
-		//   .scale(colorScale);
-
-		// this.legendSvg.select(".legendOrdinal")
-		//   .call(legendOrdinal);
-
-		//  d3.selectAll("g.cell")
-		//  	.append("text")
-		//  	.text((d) => { return test.get(d); });
-
-		// var width = 360;
-  //       var height = 360;
-  //       var radius = Math.min(width, height) / 2;
-  //       var donutWidth = 75;
-  //       var legendRectSize = 18;
-  //       var legendSpacing = 4;
-
-		// var legend = this.legendSvg.selectAll('.legend')
-  //           .data(colorScale.domain())
-  //           .enter()
-  //           .append('g')
-  //           .attr('class', 'legend')
-  //           .attr('transform', function(d, i) {
-  //             var height = legendRectSize + legendSpacing;
-  //             var offset =  height * colorScale.domain().length / 2;
-  //             var horz = 2 * legendRectSize;
-  //             var vert = i * height - offset;
-  //             return 'translate(' + horz + ',' + vert + ')';
-  //           });
-
-  //         legend.append('rect')
-  //           .attr('width', legendRectSize)
-  //           .attr('height', legendRectSize)                                   
-  //           .style('fill', "red")
-  //           .style('stroke', "red");
-            
-  //         legend.append('text')
-  //           .attr('x', legendRectSize + legendSpacing)
-  //           .attr('y', legendRectSize - legendSpacing)
-  //           .text(function(d) { return d; });
 	}
 
 	calcX(i) {
@@ -292,6 +219,21 @@ export class DotMatrix extends Chart {
 		});
 
 		this.tooltip.hide();
+	}
+
+	changeVariableValsShown(valsShown) {
+		console.log(this.cells);
+		this.cells
+			.style("fill", (d) => {
+		   		var value = d[this.currFilterVar];
+		   		// if (value) {
+		   			let binIndex = this.colorScale.range().indexOf(this.colorScale(value));
+		   			if (valsShown.indexOf(binIndex) > -1) {
+		   				return this.colorScale(value);
+		   			}
+		   		// }
+		   		return "#ccc";
+		    });
 	}
 
 }
