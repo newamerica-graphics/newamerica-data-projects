@@ -56,8 +56,10 @@ export class Tooltip {
 		for (let variable of this.tooltipVars) {
 			let varName = variable.variable;
 			let varFormat = variable.format;
+			let value = d[varName] ? formatValue(d[varName], varFormat) : "null";
+
 			this.valueFields[varName]
-				.text(formatValue(d[varName], varFormat));
+				.text(value);
 		} 
 	}
 
