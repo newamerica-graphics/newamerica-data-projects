@@ -12,7 +12,7 @@ import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { Tooltip } from "../components/tooltip.js"; 
 
 let dotW = 10;
-let dotOffset = 5;
+let dotOffset = 3;
 
 export class DotMatrix extends Chart {
 	constructor(vizSettings) {
@@ -30,7 +30,13 @@ export class DotMatrix extends Chart {
 			.attr("width", "100%");
 
 		this.tooltip = new Tooltip(id, "full_name", tooltipVars);
-		this.legend = new Legend(id);
+
+		let legendSettings = {};
+		legendSettings.id = id;
+		legendSettings.showTitle = false;
+		legendSettings.markerSettings = { shape:"rect", size:dotW };
+		legendSettings.orientation = "horizontal-center";
+		this.legend = new Legend(legendSettings);
 
 		console.log(filterVars[0]);
 		this.currFilter = filterVars[0];
@@ -138,8 +144,8 @@ export class DotMatrix extends Chart {
 		this.cells = this.svg.selectAll("rect")
 			.data(data)
 			.enter().append("rect")
-			.attr("width", 10)
-		    .attr("height", 10)
+			.attr("width", dotW)
+		    .attr("height", dotW)
 		    .attr("x", (d, i) => { return this.calcX(i); })
 		    .attr("y", (d, i) => { return this.calcY(i); })
 		    .attr("fill", (d) => {
@@ -162,11 +168,16 @@ export class DotMatrix extends Chart {
 	}
 
 	setLegend() {
+		let valCounts = d3.nest()
+			.key((d) => { return d[this.currFilterVar]; })
+			.rollup(function(v) { return v.length; })
+			.map(this.data);
+
 		let legendSettings = {};
-		legendSettings.title = this.currFilter.displayName;
 		legendSettings.format = this.currFilter.format;
 		legendSettings.scaleType = this.currFilter.scaleType;
 		legendSettings.colorScale = this.colorScale;
+		legendSettings.valCounts = valCounts;
 		// legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
 
 		this.legend.render(legendSettings);

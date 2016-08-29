@@ -7,67 +7,73 @@ import { formatValue } from "../helper_functions/format_value.js";
 let d3 = require("d3");
 
 export class Legend {
-	constructor(id) {
+	constructor(legendSettings) {
+		let {id, markerSettings, showTitle, orientation} = legendSettings;
+		this.showTitle = showTitle;
+		this.markerSettings = markerSettings;
+
 		let legend = d3.select(id)
 			.append("div")
-			.attr("class", "legend");
+			.attr("class", "legend " + orientation);
 
-		this.titleDiv = legend.append("h3")
-			.attr("class", "legend__title");
+		if (showTitle) {
+			let titleContainer = legend.append("div")
+				.attr("class", "legend__title-container");
 
-		this.cellContainer = legend.append("svg")
-			.attr("width", global.legendWidth + "px")
+			this.titleDiv = titleContainer.append("h3")
+				.attr("class", "legend__title");
+
+			this.titleDescriptionDiv = titleContainer.append("p")
+				.attr("class", "legend__title-description")
+				.text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et metus ut lorem viverra mattis. In hac habitasse platea dictumst.");
+		}
+
+		let cellContainer = legend.append("div")
 			.attr("class", "legend__cell-container");
+
+		this.cellList = cellContainer.append("ul")
+			.attr("class", "legend__cell-list");
 	}
 
 	render(legendSettings) {
-		let {scaleType, title, format, colorScale, valChangedFunction} = legendSettings;
+		let {scaleType, title, format, colorScale, valChangedFunction, valCounts} = legendSettings;
 
-		this.titleDiv.text(title);
+		this.colorScale = colorScale;
+
+		this.showTitle ? this.titleDiv.text(title) : null;
 
 		this.valsShown = [];
 
-		this.cellContainer.selectAll(".legend__cell").remove();
+		this.cellList.selectAll(".legend__cell").remove();
 
 		this.numBins = colorScale.range().length;
 
-		this.cellContainer.attr("height", () => {
-			return (this.numBins * 25) + "px";
-		});
+		// this.cellList.attr("height", () => {
+		// 	return (this.numBins * 25) + "px";
+		// });
 
 		if (scaleType == "quantize") {
-			let [dataMin, dataMax] = colorScale.domain();
+			[this.dataMin, this.dataMax] = colorScale.domain();
 			let dataSpread = dataMax - dataMin;
-			let binInterval = dataSpread/this.numBins;
+			this.binInterval = dataSpread/this.numBins;
 		}
 
-		console.log(scaleType);
+		console.log(valCounts);
+		console.log(valCounts.keys());
+		console.log(valCounts.values());
 		this.legendCellDivs = [];
 
 		for (let i = 0; i < this.numBins; i++) {
 			this.valsShown.push(i);
-			let cell = this.cellContainer.append("g")
+			let cell = this.cellList.append("li")
 				.classed("legend__cell", true)
-				.attr("transform", "translate(10," + (i*25 + 10) + ")")
 				.on("click", () => { this.toggleValsShown(i); valChangedFunction(this.valsShown); });
 
-			cell.append("circle")
-				.attr("r", 5)
-				.attr("cx", 0)
-				.attr("cy", 0)
-				.classed("legend__cell__color-swatch", true)
-				.attr("fill", colorScale.range()[i]);
+			this.appendCellMarker(cell, i);
+			valCounts ? this.appendValCount(cell, i, valCounts) : null;
+			this.appendCellText(cell, i, scaleType, format);
 
-			let cellText = cell.append("text")
-				.attr("x", 15)
-				.attr("y", 5)
-				.classed("legend__cell__label", true);
-
-			if (scaleType == "quantize") {
-				cellText.text(formatValue(Math.ceil(this.calcBinVal(i, dataMin, binInterval)), format) + " to " + formatValue(Math.floor(this.calcBinVal(i+1, dataMin, binInterval)), format));
-			} else if (scaleType == "categorical") {
-				cellText.text(colorScale.domain()[i]);
-			}
+			
 			this.legendCellDivs[i] = cell;
 		}
 	}
@@ -77,6 +83,51 @@ export class Legend {
 	calcBinVal(i, dataMin, binInterval) {
 		let binVal = dataMin + (binInterval * i);
 		return Math.round(binVal * 100)/100;
+	}
+
+
+	appendCellMarker(cell, i) {
+		let size = this.markerSettings.size;
+		let shape = this.markerSettings.shape;
+
+		let svg = cell.append("svg")
+			.attr("height", size)
+			.attr("width", size)
+			.attr("class", "legend__cell__color-swatch-container");
+
+		let marker = svg.append(shape)
+			.attr("class", "legend__cell__color-swatch")
+			.attr("fill", this.colorScale.range()[i]);
+
+		if (shape == "circle") {
+			marker.attr("r", size/2)
+				.attr("cx", size/2)
+				.attr("cy", size/2);
+		} else {
+			marker.attr("width", size)
+				.attr("height", size)
+				.attr("x", 0)
+				.attr("y", 0);
+		}
+	}
+
+	appendValCount(cell, i, valCounts) {
+		console.log(valCounts.values()[0]);
+		cell.append("h5")
+			.attr("class", "legend__cell__val-count")
+			.style("color", this.colorScale.range()[i])
+			.text(valCounts.values()[i]);
+	}
+
+	appendCellText(cell, i, scaleType, format) {
+		let cellText = cell.append("h5")
+			.classed("legend__cell__label", true);
+
+		if (scaleType == "quantize") {
+			cellText.text(formatValue(Math.ceil(this.calcBinVal(i, this.dataMin, this.binInterval)), format) + " to " + formatValue(Math.floor(this.calcBinVal(i+1, this.dataMin, this.binInterval)), format));
+		} else if (scaleType == "categorical") {
+			cellText.text(this.colorScale.domain()[i]);
+		}
 	}
 
 	toggleValsShown(valToggled) {
