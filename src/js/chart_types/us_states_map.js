@@ -90,10 +90,15 @@ export class UsStatesMap extends Chart {
 	}
 
 	setScale() {
-		let dataMin = Number(d3.min(this.data, (d) => { return d[this.currFilterVar] ? Number(d[this.currFilterVar]) : null; })); 
-		let dataMax = Number(d3.max(this.data, (d) => { return d[this.currFilterVar] ? Number(d[this.currFilterVar]) : null; }));
-		console.log("data bounds: " + dataMin + " " + dataMax);
-		this.colorScale = getColorScale(this.filterVars[this.currFilterIndex], dataMin, dataMax);
+		let colorScaleSettings = {};
+
+		colorScaleSettings.scaleType = this.filterVars[this.currFilterIndex].scaleType;
+		colorScaleSettings.color = this.filterVars[this.currFilterIndex].color;
+		colorScaleSettings.numBins = this.filterVars[this.currFilterIndex].numBins;
+
+		colorScaleSettings.dataMin = Number(d3.min(this.data, (d) => { return d[this.currFilterVar] ? Number(d[this.currFilterVar]) : null; })); 
+		colorScaleSettings.dataMax = Number(d3.max(this.data, (d) => { return d[this.currFilterVar] ? Number(d[this.currFilterVar]) : null; }));
+		this.colorScale = getColorScale(colorScaleSettings);
 	}
 
 
@@ -131,9 +136,15 @@ export class UsStatesMap extends Chart {
 	}
 
 	setLegend() {
-		let currFilterDisplayName = this.filterVars[this.currFilterIndex].displayName;
-		let currFilterFormat = this.filterVars[this.currFilterIndex].format;
-		this.legend.render(currFilterDisplayName, currFilterFormat, this.colorScale, this.changeVariableValsShown.bind(this));
+		let legendSettings = {};
+
+		legendSettings.title = this.filterVars[this.currFilterIndex].displayName;
+		legendSettings.format = this.filterVars[this.currFilterIndex].format;
+		legendSettings.scaleType = this.filterVars[this.currFilterIndex].scaleType;
+		legendSettings.colorScale = this.colorScale;
+		legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
+
+		this.legend.render(legendSettings);
 	}
 
 	setFilterGroup() {

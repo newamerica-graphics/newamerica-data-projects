@@ -2,6 +2,14 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
+let colorValues = {
+	"turquoise":{ "light": "#2EBCB3", "dark": "#005753"},
+	"blue": { "light": "#5BA4DA","dark": "#234A67"},
+	"red": { "light": "#E75C64","dark": "#692025"},
+	"purple": { "light": "#A076AC","dark": "#48304F"}
+}
+
+
 let colorOptions = {
 	"turquoise":["#2EBCB3","#005753"],
 	"blue":["#5BA4DA","#234A67"],
@@ -9,12 +17,23 @@ let colorOptions = {
 	"purple":["#A076AC","#48304F"]
 }
 
-export function getColorScale(variable, dataMin, dataMax) {
+let ordinalRange = [
+	[],
+	[colorValues.turquoise.light],
+	[colorValues.turquoise.light, colorValues.blue.light],
+	[colorValues.turquoise.light, colorValues.blue.light, colorValues.purple.light],
+	[colorValues.turquoise.light, colorValues.blue.light, colorValues.purple.light, colorValues.red.light],
+	[colorValues.turquoise.dark, colorValues.turquoise.light, colorValues.blue.light, colorValues.purple.light, colorValues.red.light],
+	[colorValues.turquoise.dark, colorValues.turquoise.light, colorValues.blue.dark, colorValues.blue.light, colorValues.purple.light, colorValues.red.light]
+]
 
-	console.log("colorscale datamin is " + dataMin);
-	let {scaleType, color, numBins} = variable;
+export function getColorScale(scaleSettings) {
+
+	console.log(scaleSettings);
+	let {scaleType, color, numBins, dataMin, dataMax} = scaleSettings;
 	let scale;
 
+	console.log(ordinalRange[numBins]);
 
 	if (!scaleType) {
 		console.log("no scale type!");
@@ -27,6 +46,10 @@ export function getColorScale(variable, dataMin, dataMax) {
 		let roundedDomain = setDomain(dataMin, dataMax, numBins);
 		scale.range(colorBins);
 		scale.domain(roundedDomain);
+	} else if (scaleType == "categorical") {
+		scale = d3.scaleOrdinal();
+
+		scale.range(ordinalRange[numBins]);
 	}
 	
 	return scale;

@@ -3,6 +3,7 @@ require('../../../scss/index.scss');
 import $ from 'jquery';
 let d3 = require("d3");
 
+import { DotMatrix } from "../../chart_types/dot_matrix.js";
 import { UsStatesMap } from "../../chart_types/us_states_map.js";
 import { MultiChartLayout } from "../../layouts/multi_chart_layout.js";
 import { GroupedBarChart } from "../../chart_types/grouped_bar_chart.js";
@@ -13,8 +14,9 @@ let cost_in_home = {"variable":"cost_in_home", "displayName":"Cost in Home", "fo
 let cost_in_center = {"variable":"cost_in_center", "displayName":"Cost in Center", "format":"price", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":5};
 let quality_rank = {"variable":"quality_rank", "displayName":"Quality Rank", "format":"number", "category":"Quality", "scaleType":"quantize", "color":"red", "numBins":4};
 let children_5_under = {"variable":"children_5_under", "displayName":"Children 5 & Under", "format":"number", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":5};
-
-let dataSheetNames = ["state_data", "state_data_variables"];
+let field_kids = {"variable":"field_kids", "displayName":"Kids", "format":"string", "scaleType":"categorical", "color":"blue"};
+let field_age = {"variable":"field_age", "displayName":"Age", "format":"number", "scaleType":"linear", "color":"blue"};
+let dataSheetNames = ["Sheet1"];
 
 let vizSettingsList = [
 	// {
@@ -27,9 +29,9 @@ let vizSettingsList = [
 	// },
 	{
 		id: "#explore-the-index", 
-		vizType: "us_states_map",
-		filterVars: [ cost_rank, cost_in_home, quality_rank ],
-		tooltipVars: [ children_5_under, cost_rank, cost_in_home ]
+		vizType: "dot_matrix",
+		filterVars: [ field_kids ],
+		tooltipVars: [ field_kids, field_age ]
 	},
 	// {
 	// 	id: "#test1", 
@@ -40,7 +42,7 @@ let vizSettingsList = [
 ]
 
 let projectVars = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/bll/care_index.json",
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/homegrown.json",
 	// vizList = visualizationList
 }
 
@@ -55,14 +57,19 @@ function initialize() {
 		switch (vizSettingsObject.vizType) {
 			case "chart_table_layout":
 				viz = new MultiChartLayout(vizSettingsObject);
-				
 				break;
-			case "us_states_map":
-				viz = new UsStatesMap(vizSettingsObject);
-				
+
+			case "dot_matrix":
+				viz = new DotMatrix(vizSettingsObject);
 				break;
+			
 			case "grouped_bar_chart":
 				viz = new GroupedBarChart(vizSettingsObject);
+				
+				break;
+
+			case "us_states_map":
+				viz = new UsStatesMap(vizSettingsObject);
 				
 				break;
 		}
@@ -75,7 +82,11 @@ function initialize() {
 
 function render() {
 	d3.json(projectVars.dataUrl, (d) => {
+		console.log(d);
+
 		let data = d[dataSheetNames[0]];
+
+		console.log(data);
 
 		for (let viz of vizList) {
 			viz.render(data);

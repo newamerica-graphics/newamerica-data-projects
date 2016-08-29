@@ -9,6 +9,8 @@ export function formatValue(value, format) {
 		return d3.format("$,.2f")(value);
 	} else if (format == "percent") {
 		return d3.format("%")(value);
+	} else if (format == "string") {
+		return value;
 	}
 }
 

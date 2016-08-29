@@ -1,67 +1,74 @@
 import $ from 'jquery';
 
 let d3 = require("d3");
+
+import { Chart } from "../layouts/chart.js";
+import { Legend } from "../components/legend.js";
+
 import { legendColor } from 'd3-svg-legend';
 
-import { Tooltip } from "./tooltip.js"; 
+import { getColorScale } from "../helper_functions/get_color_scale.js";
+
+import { Tooltip } from "../components/tooltip.js"; 
 
 let dotW = 10;
-let dotOffset = 5;
+let dotOffset = 3;
 
-let colorScale, colorVar, dataUrl, tooltip;
+export class DotMatrix extends Chart {
+	constructor(vizSettings) {
+		let {id, tooltipVars, filterVars} = vizSettings;
+		super(id);
 
-export class dotMatrix {
-	constructor(inputDataUrl, id, colorVariable, scaleType, tooltipTitleVar, tooltipVariables) {
-		dataUrl = inputDataUrl;
+		this.id = id;
 		this.w = $(id).width();
 
-		this.svg = d3.select(id)
+		let chartContainer = d3.select(id)
+			.append("div");
+
+		this.svg = chartContainer
 			.append("svg")
 			.attr("width", "100%");
 
-		tooltip = new Tooltip(id, tooltipTitleVar, tooltipVariables);
+		this.tooltip = new Tooltip(id, "full_name", tooltipVars);
 
-		
-		
+		let legendSettings = {};
+		legendSettings.id = id;
+		legendSettings.showTitle = false;
+		legendSettings.markerSettings = { shape:"rect", size:dotW };
+		legendSettings.orientation = "horizontal-center";
+		this.legend = new Legend(legendSettings);
 
-		// this.legendSvg = d3.select(id)
-		// 	.append("svg")
-		// 	.attr("width", "100%");
+		this.currFilter = filterVars[0];
+		this.currFilterVar = filterVars[0].variable;
 
-		colorVar = colorVariable;
-		this.scaleType = scaleType;
 	}
 
-	initialRender() {
-		d3.json(dataUrl, (d) => {
-			console.log(d);
-			let firstElem = d.Sheet1[0];
-			if ( !firstElem.hasOwnProperty(colorVar) ) {
-				console.log("Dot Matrix dataset has no field named " + colorVar);
-				return;
-			}
-			this.data = this.processData(d);
-			this.sortData();
-			this.setScale();
-			this.buildGraph();
-			// this.addLegend();
-		});
+	render(data) {
+		console.log("rendering");
+		this.data = this.processData(data);
+		this.setDimensions();
+		this.sortData();
+		this.setScale();
+		this.buildGraph();
+		this.setLegend();
+
+		super.render();
 	}
 
-	processData(d) {
-		let data = d.Sheet1;
-
-		if (this.scaleType === "linear") {
+	processData(data) {
+		console.log(this.currFilterVar);
+		if (this.currFilter.scaleType === "linear") {
 			for (var d of data) {
-				if(!$.isNumeric(d[colorVar])) {
-					d[colorVar] = null;
+				if(!$.isNumeric(d[this.currFilterVar])) {
+					d[this.currFilterVar] = null;
 				}
 			}
 
-		} else if (this.scaleType == "categorical") {
+		} else if (this.currFilter.scaleType == "categorical") {
 			for (var d of data) {
+				console.log(d["field_kids"]);
 				// removes leading and trailing whitespace
-				d[colorVar] = d[colorVar].trim();
+				d[this.currFilterVar] ? d[this.currFilterVar] = d[this.currFilterVar].trim() : null;
 			}
 		}
 
@@ -71,12 +78,20 @@ export class dotMatrix {
 	}
 
 	sortData() {
-		if (this.scaleType === "linear") {
-			this.data.sort((a, b) => { return a[colorVar] - b[colorVar];});
-		} else if (this.scaleType == "categorical") {
+		if (this.currFilter.scaleType === "linear") {
+			this.data.sort((a, b) => { return a[this.currFilterVar] - b[this.currFilterVar];});
+		} else if (this.currFilter.scaleType == "categorical") {
 			this.data.sort((a, b) => { 
-				let elem1 = a[colorVar];
-				let elem2 = b[colorVar];
+				let elem1 = a[this.currFilterVar];
+				let elem2 = b[this.currFilterVar];
+
+				if (!elem1) {
+					return 1;
+				}
+
+				if (!elem2) {
+					return -1;
+				}
 
 				if (elem1 < elem2) {
 				    return -1;
@@ -90,120 +105,78 @@ export class dotMatrix {
 	}
 
 	setScale() {
-		let data = this.data
-		if (this.scaleType === "linear") {
-			let dataMin = d3.min(data, (d) => { return d[colorVar] ? d[colorVar] : 10000000; });
-			let dataMax = d3.max(data, (d) => { return d[colorVar] ? d[colorVar] : -1; });
+		let colorScaleSettings = {};
 
-			colorScale = d3.scaleLinear()
-				.domain([dataMin, dataMax])
-				.range(["#2ebcb3", "#5ba4da"]);
+		// let data = this.data
+		if (this.currFilter.scaleType === "linear") {
+			// let dataMin = d3.min(data, (d) => { return d[this.currFilterVar] ? d[this.currFilterVar] : 10000000; });
+			// let dataMax = d3.max(data, (d) => { return d[this.currFilterVar] ? d[this.currFilterVar] : -1; });
 
-		} else if (this.scaleType == "categorical") {
-			colorScale = d3.scaleOrdinal()
-				.range(["#2ebcb3", "#5ba4da", "#a076ac", "#e75c64", "#1a8a84", "#4378a0", "#74557e", "#a64046", "#005753", "#234a67", "#48304f", "#692025"]);
+			// colorScale = d3.scaleLinear()
+			// 	.domain([dataMin, dataMax])
+			// 	.range(["#2ebcb3", "#5ba4da"]);
+
+		} else if (this.currFilter.scaleType == "categorical") {
+			let uniqueVals = d3.nest()
+				.key((d) => { return d[this.currFilterVar]; })
+				.map(this.data);
+
+			console.log(uniqueVals.keys());
+
+			colorScaleSettings.scaleType = "categorical";
+			colorScaleSettings.numBins = uniqueVals.keys().length;
+
+			this.colorScale = getColorScale(colorScaleSettings);
+
 		}
 	}
 
-	addLegend(data) {
-		let test = d3.nest()
-			.key((d) => { return d[colorVar]; })
-			.rollup(function(v) { return v.length; })
-			.map(data);
-
-		console.log(test.keys());
-
-		// console.log(colorScale.domain());
-
-		// let keys = legendList.selectAll('li')
-		// 	.data(colorScale.domain())
-		// 	.enter()
-		// 	.append("li");
-
-		// keys.append("g")
-		// 	.text((d) => { return d; })
-
-
-		for (var value of colorScale.domain()) {
-			console.log(value);
-		}
-
-		this.legendSvg.append("g")
-		  .attr("class", "legendOrdinal")
-		  .attr("transform", "translate(20,20)");
-
-		var legendOrdinal = legendColor()
-		  .shape("rect")
-		  .orient("horizontal")
-		  .shapePadding(100)
-		  .scale(colorScale);
-
-		this.legendSvg.select(".legendOrdinal")
-		  .call(legendOrdinal);
-
-		 d3.selectAll("g.cell")
-		 	.append("text")
-		 	.text((d) => { return test.get(d); });
-
-		// var width = 360;
-  //       var height = 360;
-  //       var radius = Math.min(width, height) / 2;
-  //       var donutWidth = 75;
-  //       var legendRectSize = 18;
-  //       var legendSpacing = 4;
-
-		// var legend = this.legendSvg.selectAll('.legend')
-  //           .data(colorScale.domain())
-  //           .enter()
-  //           .append('g')
-  //           .attr('class', 'legend')
-  //           .attr('transform', function(d, i) {
-  //             var height = legendRectSize + legendSpacing;
-  //             var offset =  height * colorScale.domain().length / 2;
-  //             var horz = 2 * legendRectSize;
-  //             var vert = i * height - offset;
-  //             return 'translate(' + horz + ',' + vert + ')';
-  //           });
-
-  //         legend.append('rect')
-  //           .attr('width', legendRectSize)
-  //           .attr('height', legendRectSize)                                   
-  //           .style('fill', "red")
-  //           .style('stroke', "red");
-            
-  //         legend.append('text')
-  //           .attr('x', legendRectSize + legendSpacing)
-  //           .attr('y', legendRectSize - legendSpacing)
-  //           .text(function(d) { return d; });
-	}
+	
 
 	buildGraph() {
 		let data = this.data;
-		this.setDimensions();
 
 		this.cells = this.svg.selectAll("rect")
 			.data(data)
 			.enter().append("rect")
-			.attr("width", 10)
-		    .attr("height", 10)
+			.attr("width", dotW)
+		    .attr("height", dotW)
 		    .attr("x", (d, i) => { return this.calcX(i); })
 		    .attr("y", (d, i) => { return this.calcY(i); })
 		    .attr("fill", (d) => {
-		    	return d[colorVar] ? colorScale(d[colorVar]) : "red";
+		    	return this.colorScale(d[this.currFilterVar]);
 		    })
-		    .attr("class", (d) => { return d[colorVar]; })
-		    .on("mouseover", this.mouseover)
-		    .on("mouseout", this.mouseout);
+		    .attr("class", (d) => { return d[this.currFilterVar]; })
+		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index]); })
+		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); });
 	}
 
 	setDimensions() {
-		this.numCols = Math.floor(this.w/(dotW + dotOffset));
-		this.dotsPerCol = Math.ceil(this.dataLength/this.numCols);
+		this.w = $(this.id).width();
+		let numCols = Math.floor(this.w/(dotW + dotOffset));
+		this.dotsPerCol = Math.ceil(this.dataLength/numCols);
 
 		this.h = this.dotsPerCol * (dotW + dotOffset);
 
 		this.svg
 			.attr("height", this.h);
+	}
+
+	setLegend() {
+		let valCounts = d3.nest()
+			.key((d) => { return d[this.currFilterVar]; })
+			.rollup(function(v) { return v.length; })
+			.map(this.data);
+
+		let legendSettings = {};
+		legendSettings.format = this.currFilter.format;
+		legendSettings.scaleType = this.currFilter.scaleType;
+		legendSettings.colorScale = this.colorScale;
+		legendSettings.valCounts = valCounts;
+		legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
+
+		this.legend.render(legendSettings);
+
 	}
 
 	calcX(i) {
@@ -214,8 +187,7 @@ export class dotMatrix {
 		return i%this.dotsPerCol * (dotW + dotOffset);
 	}
 
-	resize(w) {
-		this.w = w;
+	resize() {
 		this.setDimensions();
 
 		this.cells
@@ -223,31 +195,65 @@ export class dotMatrix {
 		    .attr("y", (d, i) => { return this.calcY(i); });
 	}
 
-	changeFilter(colorVariable, scaleType) {
-		console.log("changing filter");
-		colorVar = colorVariable;
-		this.scaleType = scaleType;
+	// changeFilter(colorVar, scaleType) {
+	// 	console.log("changing filter");
+	// 	this.currFilterVar = this.currFilterVariable;
+	// 	this.scaleType = scaleType;
 
-		this.sortData();
-		this.setScale();
-		this.cells.remove();
-		this.buildGraph();
+	// 	this.sortData();
+	// 	this.setScale();
+	// 	this.cells.remove();
+	// 	this.buildGraph();
+	// }
+
+	mouseover(datum, path) {
+		let elem = d3.select(path);
+		// let prevX = elem.attr("x");
+		// let prevY = elem.attr("y");
+
+		elem
+			// .attr("width", dotW * 2)
+		 //    .attr("height", dotW * 2)
+		 //    .attr("x", prevX - dotW/2)
+		 //    .attr("y", prevY - dotW/2)
+			.attr("stroke", "white")
+			.attr("stroke-width", 3.5);
+			
+		    
+
+		let mousePos = d3.mouse(path);
+		console.log(datum);
+		this.tooltip.show(datum, mousePos);
 	}
 
-	mouseover(d) {
-		d3.select(this).attr("fill", "orange");
-		let mousePos = d3.mouse(this);
+	mouseout(path) {
+		let elem = d3.select(path);
+		// let prevX = Number(elem.attr("x"));
+		// let prevY = Number(elem.attr("y"));
 
-		tooltip.show(d, mousePos);
+		elem
+			.attr("stroke", "none");
+			// .attr("width", dotW)
+		 //    .attr("height", dotW)
+		 //    .attr("x", prevX + dotW/2)
+		 //    .attr("y", prevY + dotW/2);
+
+		this.tooltip.hide();
 	}
 
-	mouseout() {
-		d3.select(this).attr("fill", function(d) {
-			console.log(d[colorVar]);
-		    return d[colorVar] ? colorScale(d[colorVar]) : "red";
-		});
-
-		tooltip.hide();
+	changeVariableValsShown(valsShown) {
+		console.log(this.cells);
+		this.cells
+			.style("fill", (d) => {
+		   		var value = d[this.currFilterVar];
+		   		// if (value) {
+		   			let binIndex = this.colorScale.range().indexOf(this.colorScale(value));
+		   			if (valsShown.indexOf(binIndex) > -1) {
+		   				return this.colorScale(value);
+		   			}
+		   		// }
+		   		return "#ccc";
+		    });
 	}
 
 }

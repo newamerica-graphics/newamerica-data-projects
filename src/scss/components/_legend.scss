@@ -5,31 +5,89 @@
 }
 
 .legend {
-	
 	background: white;
-	padding: 15px;
+	padding: 15px 0px;
 
 	@include showSideLegend {
-		position: absolute;
+		/*position: absolute;
 		bottom: 0px;
-		right: 0px;
+		right: 0px;*/
 	}
+
+	/*&__title-container, &__cell-container {
+		@include breakpoint()
+		float: left;
+		width: 50%;
+	}*/
+
+	/*&__cell-container {
+		padding-left: $desktop-padding;
+	}*/
+
+
+
 
 	&__title {
 		font-size: 16px;
 		color: palette-get(na-black);
 		font-weight: bold;
+	}
+
+	&__title-description {
+		@include chart-secondary-type;
+	}
+
+	&.horizontal-center {
+		.legend__cell-container {
+			margin: auto;
+			width: 100%;
+			/*max-width: 700px;*/
+		}
+
+		.legend__cell-list {
+			text-align: center;
+		}
+
+		.legend__cell {
+			/*float: left;*/
+		}
+	}
+
+	&__cell-list {
 
 	}
 
 	&__cell {
 		cursor: pointer;
+		padding-right: 45px;
+
+		&__color-swatch-container, &__label, &__val-count {
+			float: left;
+		}
+
+		&__color-swatch-container {
+			margin-top: 5px;
+		}
+
+		&__label {
+			padding-left: 10px;
+			margin-bottom: 5px;
+			@include chart-secondary-type;
+		}
+
+		&__val-count {
+			padding-left: 10px;
+			margin-bottom: 5px;
+			font-size: 16px;
+			font-weight: bold;
+		}
+
 		&.disabled {
-			circle {
+			.legend__cell__color-swatch {
 				fill: palette-get(na-black-10);
 			}
-			text {
-				fill: palette-get(na-black-10);
+			.legend__cell__label, .legend__cell__val-count {
+				color: palette-get(na-black-10) !important;
 			}
 		}
 	}
