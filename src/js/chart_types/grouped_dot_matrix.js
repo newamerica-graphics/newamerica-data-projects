@@ -40,6 +40,13 @@ export class GroupedDotMatrix extends Chart {
 		this.currFilterVar = filterVars[0].variable;
 
 		this.tooltip = new Tooltip(id, "full_name", tooltipVars);
+
+		let legendSettings = {};
+		legendSettings.id = id;
+		legendSettings.showTitle = false;
+		legendSettings.markerSettings = { shape:"rect", size:dotW };
+		legendSettings.orientation = "horizontal-center";
+		this.legend = new Legend(legendSettings);
 	}
 
 	render(data) {
@@ -49,7 +56,7 @@ export class GroupedDotMatrix extends Chart {
 		this.setScale();
 		
 		this.dotMatrixContainers = [];
-		let dotMatrices = [];
+		this.dotMatrices = [];
 		this.dotMatrixHeights = [];
 
 		let vizSettings = {};
@@ -68,13 +75,14 @@ export class GroupedDotMatrix extends Chart {
 				.attr("class", "grouped-dot-matrix" + i);
 
 			vizSettings.id = this.id + " .grouped-dot-matrix" + i;
-			dotMatrices[i] = new DotMatrix(vizSettings);
-			dotMatrices[i].render(this.groupings[i].values)
-			this.dotMatrixHeights[i] = dotMatrices[i].h;
+			this.dotMatrices[i] = new DotMatrix(vizSettings);
+			this.dotMatrices[i].render(this.groupings[i].values)
+			this.dotMatrixHeights[i] = this.dotMatrices[i].h;
 		}
 
 		this.setContainerTransforms();
 		this.appendLabels();
+		this.setLegend();
 	}
 
 	getGroupings() {
@@ -136,6 +144,16 @@ export class GroupedDotMatrix extends Chart {
 		}
 	}
 
+	setLegend() {
+		let legendSettings = {};
+		legendSettings.format = this.currFilter.format;
+		legendSettings.scaleType = this.currFilter.scaleType;
+		legendSettings.colorScale = this.colorScale;
+		legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
+
+		this.legend.render(legendSettings);
+	}
+
 	resize() {
 		this.w = $(this.id).width();
 
@@ -151,5 +169,12 @@ export class GroupedDotMatrix extends Chart {
 
 	calcTransformY(i) {
 		return (this.maxHeight - this.dotMatrixHeights[i]);
+	}
+
+	changeVariableValsShown(valsShown) {
+		for (let i = 0; i < this.numGroupings; i++) {
+			this.dotMatrices[i].changeVariableValsShown(valsShown);
+		}
+		
 	}
 }
