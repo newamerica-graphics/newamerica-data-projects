@@ -42,6 +42,7 @@ let vizSettingsList = [
 		id: "#test1", 
 		vizType: "grouped_dot_matrix",
 		dotsPerRow: 5,
+		distanceBetweenGroups: 20,
 		groupingVars: [ field_year_indicted ],
 		filterVars: [ field_kids ],
 		tooltipVars: [ field_year_indicted, field_kids, field_age ],

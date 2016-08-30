@@ -15,7 +15,7 @@ let dotOffset = 3;
 
 export class GroupedDotMatrix extends Chart {
 	constructor(vizSettings) {
-		let {id, groupingVars, tooltipVars, filterVars, dotsPerRow} = vizSettings;
+		let {id, groupingVars, tooltipVars, filterVars, dotsPerRow, distanceBetweenGroups} = vizSettings;
 
 		super(id, false);
 
@@ -24,6 +24,7 @@ export class GroupedDotMatrix extends Chart {
 		this.tooltipVars = vizSettings.tooltipVars;
 		this.filterVars = vizSettings.filterVars;
 		this.dotsPerRow = vizSettings.dotsPerRow;
+		this.distanceBetweenGroups = vizSettings.distanceBetweenGroups + dotsPerRow * (dotW + dotOffset);
 
 		let chartContainer = d3.select(id)
 			.append("div");
@@ -46,7 +47,6 @@ export class GroupedDotMatrix extends Chart {
 
 		this.getGroupings();
 		this.setScale();
-		this.distanceBetween = this.calcDistanceBetween();
 		
 		this.dotMatrixContainers = [];
 		let dotMatrices = [];
@@ -66,7 +66,6 @@ export class GroupedDotMatrix extends Chart {
 
 			this.dotMatrixContainers[i] = this.svg.append("g")
 				.attr("class", "grouped-dot-matrix" + i);
-
 
 			vizSettings.id = this.id + " .grouped-dot-matrix" + i;
 			dotMatrices[i] = new DotMatrix(vizSettings);
@@ -126,10 +125,6 @@ export class GroupedDotMatrix extends Chart {
 		}
 	}
 
-	calcDistanceBetween() {
-		return this.w/this.numGroupings;
-	}
-
 	setContainerTransforms() {
 		this.maxHeight = Math.max(...this.dotMatrixHeights);
 
@@ -143,7 +138,6 @@ export class GroupedDotMatrix extends Chart {
 
 	resize() {
 		this.w = $(this.id).width();
-		this.distanceBetween = this.calcDistanceBetween();
 
 		for (let i = 0; i < this.numGroupings; i++) {
 			this.dotMatrixContainers[i].attr("transform", "translate(" + this.calcTransformX(i) + ", " + this.calcTransformY(i) + ")");
@@ -152,7 +146,7 @@ export class GroupedDotMatrix extends Chart {
 	}
 
 	calcTransformX(i) {
-		return i*this.distanceBetween;
+		return i*this.distanceBetweenGroups;
 	}
 
 	calcTransformY(i) {
