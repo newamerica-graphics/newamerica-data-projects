@@ -18,6 +18,7 @@ let children_5_under = {"variable":"children_5_under", "displayName":"Children 5
 let field_kids = {"variable":"field_kids", "displayName":"Kids", "format":"string", "scaleType":"categorical", "color":"blue"};
 let field_age = {"variable":"field_age", "displayName":"Age", "format":"number", "scaleType":"linear", "color":"blue"};
 let field_gender = {"variable":"field_gender", "displayName":"Gender", "format":"number", "scaleType":"categorical", "color":"blue"};
+let field_year_indicted = {"variable":"field_year_indicted", "displayName":"Field Indicted", "format":"year", "scaleType":"categorical", "color":"blue"};
 let dataSheetNames = ["Sheet1"];
 
 let vizSettingsList = [
@@ -41,9 +42,9 @@ let vizSettingsList = [
 		id: "#test1", 
 		vizType: "grouped_dot_matrix",
 		dotsPerRow: 5,
-		groupingVars: [ field_gender ],
+		groupingVars: [ field_year_indicted ],
 		filterVars: [ field_kids ],
-		tooltipVars: [ field_kids, field_age ],
+		tooltipVars: [ field_year_indicted, field_kids, field_age ],
 	}
 	// {
 	// 	id: "#test1", 

@@ -14,7 +14,7 @@ let dotOffset = 3;
 
 export class DotMatrix extends Chart {
 	constructor(vizSettings) {
-		let {id, orientation, tooltipVars, filterVars, dotsPerRow, isSubComponent, tooltip} = vizSettings;
+		let {id, orientation, tooltipVars, filterVars, dotsPerRow, isSubComponent, tooltip, colorScale} = vizSettings;
 		
 		super(id, isSubComponent);
 
@@ -29,6 +29,7 @@ export class DotMatrix extends Chart {
 				.attr("width", "100%");
 
 			this.tooltip = tooltip;
+			this.colorScale = colorScale;
 
 		} else {
 			let chartContainer = d3.select(id)
@@ -54,11 +55,13 @@ export class DotMatrix extends Chart {
 	}
 
 	render(data) {
-		console.log("rendering");
+		// console.log("rendering");
 		this.data = this.processData(data);
 		this.setDimensions();
 		this.sortData();
-		this.setScale();
+		if (!this.isSubComponent) {
+			this.setScale();
+		}
 		this.buildGraph();
 		
 		if (!this.isSubComponent) {
@@ -69,7 +72,7 @@ export class DotMatrix extends Chart {
 	}
 
 	processData(data) {
-		console.log(this.currFilterVar);
+		// console.log(this.currFilterVar);
 		if (this.currFilter.scaleType === "linear") {
 			for (var d of data) {
 				if(!$.isNumeric(d[this.currFilterVar])) {
@@ -79,7 +82,6 @@ export class DotMatrix extends Chart {
 
 		} else if (this.currFilter.scaleType == "categorical") {
 			for (var d of data) {
-				console.log(d["field_kids"]);
 				// removes leading and trailing whitespace
 				d[this.currFilterVar] ? d[this.currFilterVar] = d[this.currFilterVar].trim() : null;
 			}
@@ -215,7 +217,7 @@ export class DotMatrix extends Chart {
 
 	calcY(i) {
 		if (this.orientation == "vertical") {
-			return this.h - Math.floor(i/this.dotsPerRow) * (dotW + dotOffset);
+			return this.h - (Math.floor(i/this.dotsPerRow) * (dotW + dotOffset)) - (dotW + dotOffset);
 		} else {
 			return i%this.dotsPerCol * (dotW + dotOffset);
 		}
