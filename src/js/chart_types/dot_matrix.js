@@ -5,8 +5,6 @@ let d3 = require("d3");
 import { Chart } from "../layouts/chart.js";
 import { Legend } from "../components/legend.js";
 
-import { legendColor } from 'd3-svg-legend';
-
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 
 import { Tooltip } from "../components/tooltip.js"; 
@@ -16,27 +14,39 @@ let dotOffset = 3;
 
 export class DotMatrix extends Chart {
 	constructor(vizSettings) {
-		let {id, tooltipVars, filterVars} = vizSettings;
-		super(id);
+		let {id, orientation, tooltipVars, filterVars, dotsPerRow, isSubComponent, tooltip} = vizSettings;
+		
+		super(id, isSubComponent);
 
 		this.id = id;
-		this.w = $(id).width();
+		this.orientation = orientation;
+		this.dotsPerRow = dotsPerRow;
+		this.isSubComponent = isSubComponent;
 
-		let chartContainer = d3.select(id)
-			.append("div");
+		if (isSubComponent) {
+			this.svg = d3.select(id)
+				.append("svg")
+				.attr("width", "100%");
 
-		this.svg = chartContainer
-			.append("svg")
-			.attr("width", "100%");
+			this.tooltip = tooltip;
 
-		this.tooltip = new Tooltip(id, "full_name", tooltipVars);
+		} else {
+			let chartContainer = d3.select(id)
+				.append("div");
 
-		let legendSettings = {};
-		legendSettings.id = id;
-		legendSettings.showTitle = false;
-		legendSettings.markerSettings = { shape:"rect", size:dotW };
-		legendSettings.orientation = "horizontal-center";
-		this.legend = new Legend(legendSettings);
+			this.svg = chartContainer
+				.append("svg")
+				.attr("width", "100%");
+
+			this.tooltip = new Tooltip(id, "full_name", tooltipVars);
+
+			let legendSettings = {};
+			legendSettings.id = id;
+			legendSettings.showTitle = false;
+			legendSettings.markerSettings = { shape:"rect", size:dotW };
+			legendSettings.orientation = "horizontal-center";
+			this.legend = new Legend(legendSettings);
+		}
 
 		this.currFilter = filterVars[0];
 		this.currFilterVar = filterVars[0].variable;
@@ -50,9 +60,12 @@ export class DotMatrix extends Chart {
 		this.sortData();
 		this.setScale();
 		this.buildGraph();
-		this.setLegend();
-
-		super.render();
+		
+		if (!this.isSubComponent) {
+			this.setLegend();
+			super.render();
+		}
+		
 	}
 
 	processData(data) {
@@ -131,8 +144,6 @@ export class DotMatrix extends Chart {
 		}
 	}
 
-	
-
 	buildGraph() {
 		let data = this.data;
 
@@ -147,19 +158,33 @@ export class DotMatrix extends Chart {
 		    	return this.colorScale(d[this.currFilterVar]);
 		    })
 		    .attr("class", (d) => { return d[this.currFilterVar]; })
-		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index]); })
+		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], event); })
 		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); });
 	}
 
 	setDimensions() {
-		this.w = $(this.id).width();
-		let numCols = Math.floor(this.w/(dotW + dotOffset));
-		this.dotsPerCol = Math.ceil(this.dataLength/numCols);
+		if (this.orientation == "vertical") {
+			this.w = this.dotsPerRow * (dotW + dotOffset);
+			let numRows = Math.ceil(this.dataLength/this.dotsPerRow);
 
-		this.h = this.dotsPerCol * (dotW + dotOffset);
+			this.h = numRows * (dotW + dotOffset);
+
+		} else {
+			this.w = $(this.id).width();
+			let numCols = Math.floor(this.w/(dotW + dotOffset));
+			this.dotsPerCol = Math.ceil(this.dataLength/numCols);
+
+			this.h = this.dotsPerCol * (dotW + dotOffset);		
+		}
+
+		if (this.svg) {
+			this.svg
+				.attr("height", this.h);
+		}
 
 		this.svg
 			.attr("height", this.h);
+		
 	}
 
 	setLegend() {
@@ -180,19 +205,32 @@ export class DotMatrix extends Chart {
 	}
 
 	calcX(i) {
-		return Math.floor(i/this.dotsPerCol) * (dotW + dotOffset);
+		if (this.orientation == "vertical") {
+			return i%this.dotsPerRow * (dotW + dotOffset);
+		} else {
+			console.log(this.dotsPerRow);
+			return Math.floor(i/this.dotsPerCol) * (dotW + dotOffset);
+		}
 	}
 
 	calcY(i) {
-		return i%this.dotsPerCol * (dotW + dotOffset);
+		if (this.orientation == "vertical") {
+			return this.h - Math.floor(i/this.dotsPerRow) * (dotW + dotOffset);
+		} else {
+			return i%this.dotsPerCol * (dotW + dotOffset);
+		}
 	}
 
 	resize() {
-		this.setDimensions();
+		if (this.orientation == "vertical") {
+			return;
+		} else {
+			this.setDimensions();
 
-		this.cells
-			.attr("x", (d, i) => { return this.calcX(i); })
-		    .attr("y", (d, i) => { return this.calcY(i); });
+			this.cells
+				.attr("x", (d, i) => { return this.calcX(i); })
+			    .attr("y", (d, i) => { return this.calcY(i); });
+		}
 	}
 
 	// changeFilter(colorVar, scaleType) {
@@ -206,7 +244,11 @@ export class DotMatrix extends Chart {
 	// 	this.buildGraph();
 	// }
 
-	mouseover(datum, path) {
+	mouseover(datum, path, eventObject) {
+		let mousePos = [];
+		mousePos[0] = eventObject.pageX;
+		mousePos[1] = eventObject.pageY;
+
 		let elem = d3.select(path);
 		// let prevX = elem.attr("x");
 		// let prevY = elem.attr("y");
@@ -219,10 +261,6 @@ export class DotMatrix extends Chart {
 			.attr("stroke", "white")
 			.attr("stroke-width", 3.5);
 			
-		    
-
-		let mousePos = d3.mouse(path);
-		console.log(datum);
 		this.tooltip.show(datum, mousePos);
 	}
 
