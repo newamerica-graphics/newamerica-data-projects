@@ -4,6 +4,7 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 import { DotMatrix } from "../../chart_types/dot_matrix.js";
+import { DotHistogram } from "../../chart_types/dot_histogram.js";
 import { GroupedDotMatrix } from "../../chart_types/grouped_dot_matrix.js";
 import { UsStatesMap } from "../../chart_types/us_states_map.js";
 import { MultiChartLayout } from "../../layouts/multi_chart_layout.js";
@@ -39,13 +40,22 @@ let vizSettingsList = [
 		tooltipVars: [ field_kids, field_age ],
 	},
 	{
-		id: "#test1", 
+		id: "#test0", 
 		vizType: "grouped_dot_matrix",
 		dotsPerRow: 5,
 		distanceBetweenGroups: 20,
 		groupingVars: [ field_year_indicted ],
 		filterVars: [ field_kids ],
 		tooltipVars: [ field_year_indicted, field_kids, field_age ],
+		labelSettings: { interval: 1, showNumVals: true}
+	},
+	{
+		id: "#test1", 
+		vizType: "dot_histogram",
+		groupingVars: [ field_year_indicted ],
+		filterVars: [ field_kids ],
+		tooltipVars: [ field_year_indicted, field_kids, field_age ],
+		labelSettings: { interval: 5}
 	}
 	// {
 	// 	id: "#test1", 
@@ -77,6 +87,9 @@ function initialize() {
 				viz = new DotMatrix(vizSettingsObject);
 				break;
 
+			case "dot_histogram":
+				viz = new DotHistogram(vizSettingsObject);
+				break;
 			
 			case "grouped_bar_chart":
 				viz = new GroupedBarChart(vizSettingsObject);

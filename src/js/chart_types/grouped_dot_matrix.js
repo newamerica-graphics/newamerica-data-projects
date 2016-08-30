@@ -15,7 +15,7 @@ let dotOffset = 3;
 
 export class GroupedDotMatrix extends Chart {
 	constructor(vizSettings) {
-		let {id, groupingVars, tooltipVars, filterVars, dotsPerRow, distanceBetweenGroups} = vizSettings;
+		let {id, groupingVars, tooltipVars, filterVars, dotsPerRow, distanceBetweenGroups, labelSettings} = vizSettings;
 
 		super(id, false);
 
@@ -25,6 +25,7 @@ export class GroupedDotMatrix extends Chart {
 		this.filterVars = vizSettings.filterVars;
 		this.dotsPerRow = vizSettings.dotsPerRow;
 		this.distanceBetweenGroups = vizSettings.distanceBetweenGroups + dotsPerRow * (dotW + dotOffset);
+		this.labelSettings = labelSettings;
 
 		let chartContainer = d3.select(id)
 			.append("div");
@@ -115,7 +116,7 @@ export class GroupedDotMatrix extends Chart {
 			.attr("class", "grouped-dot-matrix__label-container")
 			.attr("transform",  "translate(0," + (this.maxHeight + labelOffset)+ ")");
 
-		for (let i = 0; i < this.numGroupings; i++) {
+		for (let i = 0; i < this.numGroupings; i = i + this.labelSettings.interval) {
 			let elem = labelWrapper.append("g")
 				.attr("transform", "translate(" + this.calcTransformX(i) + ")");
 
@@ -124,10 +125,12 @@ export class GroupedDotMatrix extends Chart {
 				.attr("text-anchor", "left")
 				.attr("font-weight", "bold");
 
-			elem.append("text")
-				.text(this.groupings[i].values.length)
-				.attr("y", labelTextSize + labelOffset)
-				.attr("text-anchor", "left");
+			if (this.labelSettings.showNumVals) {
+				elem.append("text")
+					.text(this.groupings[i].values.length)
+					.attr("y", labelTextSize + labelOffset)
+					.attr("text-anchor", "left");
+			}
 
 			this.labelContainers[i] = elem;
 		}
@@ -155,12 +158,12 @@ export class GroupedDotMatrix extends Chart {
 	}
 
 	resize() {
-		this.w = $(this.id).width();
+		// this.w = $(this.id).width();
 
-		for (let i = 0; i < this.numGroupings; i++) {
-			this.dotMatrixContainers[i].attr("transform", "translate(" + this.calcTransformX(i) + ", " + this.calcTransformY(i) + ")");
-			this.labelContainers[i].attr("transform", "translate(" + this.calcTransformX(i) + ")");
-		}
+		// for (let i = 0; i < this.numGroupings; i++) {
+			// this.dotMatrixContainers[i].attr("transform", "translate(" + this.calcTransformX(i) + ", " + this.calcTransformY(i) + ")");
+			// this.labelContainers[i].attr("transform", "translate(" + this.calcTransformX(i) + ")");
+		// }
 	}
 
 	calcTransformX(i) {
