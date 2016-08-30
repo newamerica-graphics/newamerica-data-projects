@@ -58,9 +58,6 @@ export class Legend {
 			this.binInterval = dataSpread/this.numBins;
 		}
 
-		console.log(valCounts);
-		console.log(valCounts.keys());
-		console.log(valCounts.values());
 		this.legendCellDivs = [];
 
 		for (let i = 0; i < this.numBins; i++) {
@@ -126,7 +123,7 @@ export class Legend {
 		if (scaleType == "quantize") {
 			cellText.text(formatValue(Math.ceil(this.calcBinVal(i, this.dataMin, this.binInterval)), format) + " to " + formatValue(Math.floor(this.calcBinVal(i+1, this.dataMin, this.binInterval)), format));
 		} else if (scaleType == "categorical") {
-			cellText.text(this.colorScale.domain()[i]);
+			cellText.text(this.colorScale.domain()[i] ? this.colorScale.domain()[i] : "null" );
 		}
 	}
 

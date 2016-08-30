@@ -4,6 +4,7 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 import { DotMatrix } from "../../chart_types/dot_matrix.js";
+import { GroupedDotMatrix } from "../../chart_types/grouped_dot_matrix.js";
 import { UsStatesMap } from "../../chart_types/us_states_map.js";
 import { MultiChartLayout } from "../../layouts/multi_chart_layout.js";
 import { GroupedBarChart } from "../../chart_types/grouped_bar_chart.js";
@@ -16,6 +17,8 @@ let quality_rank = {"variable":"quality_rank", "displayName":"Quality Rank", "fo
 let children_5_under = {"variable":"children_5_under", "displayName":"Children 5 & Under", "format":"number", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":5};
 let field_kids = {"variable":"field_kids", "displayName":"Kids", "format":"string", "scaleType":"categorical", "color":"blue"};
 let field_age = {"variable":"field_age", "displayName":"Age", "format":"number", "scaleType":"linear", "color":"blue"};
+let field_gender = {"variable":"field_gender", "displayName":"Gender", "format":"number", "scaleType":"categorical", "color":"blue"};
+let field_year_indicted = {"variable":"field_year_indicted", "displayName":"Field Indicted", "format":"year", "scaleType":"categorical", "color":"blue"};
 let dataSheetNames = ["Sheet1"];
 
 let vizSettingsList = [
@@ -30,9 +33,20 @@ let vizSettingsList = [
 	{
 		id: "#explore-the-index", 
 		vizType: "dot_matrix",
+		dotsPerRow: 5,
+		orientation: "horizontal",
 		filterVars: [ field_kids ],
-		tooltipVars: [ field_kids, field_age ]
+		tooltipVars: [ field_kids, field_age ],
 	},
+	{
+		id: "#test1", 
+		vizType: "grouped_dot_matrix",
+		dotsPerRow: 5,
+		distanceBetweenGroups: 20,
+		groupingVars: [ field_year_indicted ],
+		filterVars: [ field_kids ],
+		tooltipVars: [ field_year_indicted, field_kids, field_age ],
+	}
 	// {
 	// 	id: "#test1", 
 	// 	vizType: "us_states_map",
@@ -62,10 +76,15 @@ function initialize() {
 			case "dot_matrix":
 				viz = new DotMatrix(vizSettingsObject);
 				break;
+
 			
 			case "grouped_bar_chart":
 				viz = new GroupedBarChart(vizSettingsObject);
 				
+				break;
+
+			case "grouped_dot_matrix":
+				viz = new GroupedDotMatrix(vizSettingsObject);
 				break;
 
 			case "us_states_map":

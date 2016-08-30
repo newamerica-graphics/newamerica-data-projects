@@ -8,7 +8,7 @@ export class Tooltip {
 	constructor(id, titleVariable, tooltipVariables) {
 		this.titleVar = titleVariable;
 		this.tooltipVars = tooltipVariables;
-		this.tooltip = d3.select(id)
+		this.tooltip = d3.select("body")
 			.append("div")
 			.attr("class", "tooltip hidden");
 
@@ -47,9 +47,10 @@ export class Tooltip {
 	}
 
 	show(d, mouse) {
+		console.log(mouse);
 		this.tooltip
 			.classed('hidden', false)
-            .attr('style', 'left:' + (mouse[0] + 20) + 'px; top:' + (mouse[1] - 30) + 'px');
+            .attr('style', 'left:' + (mouse[0]) + 'px; top:' + (mouse[1]) + 'px');
 
 		this.title.text(d[this.titleVar]);
 

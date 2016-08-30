@@ -5,8 +5,13 @@ let d3 = require("d3");
 
 // superclass for all chart types, adds download and share buttons to the chart
 export class Chart {
-	constructor(id) {
+	constructor(id, isSubComponent) {
 		this.id = id;
+		this.isSubComponent = isSubComponent;
+		if (isSubComponent) {
+			return;
+		}
+
 		this.downloadSVGButton = d3.select(id)
 			.append("a")
 			.text("Download SVG")
@@ -25,6 +30,9 @@ export class Chart {
 	}
 
 	render() {
+		if (this.isSubComponent) {
+			return;
+		}
 		// sets href link for svg button, triggered on mouseenter to encapsulate current state of the chart
 		this.downloadSVGButton
 			.on("mouseenter", () => { this.setLink("svg"); });
