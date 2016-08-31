@@ -1,0 +1,47 @@
+.fact-box {
+	height: 100px;
+	float: left;
+	margin-bottom: 15px;
+	margin-right: 35px;
+
+	&__left, &__right {
+		display: table-cell;
+	}
+
+	&__right {
+		vertical-align: middle;
+	}
+
+	&__value-container {
+		height: 100px;
+		width: 100px;
+	}
+
+	&__label-container {
+
+	}
+
+	&__value, &__label {
+
+		font-weight: bold;
+	}
+
+	&__value {
+		text-align: center;
+		color: white;
+		font-size: 40px;
+		width: 100px;
+		height: 100px;
+		line-height: 100px;
+	}
+
+	&__label {
+		vertical-align: middle;
+		padding-left: 15px;
+		margin-bottom: 0px;
+	}
+}
+
+.fact-box-container {
+	width: 100%;
+}

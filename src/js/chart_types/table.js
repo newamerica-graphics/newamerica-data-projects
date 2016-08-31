@@ -9,9 +9,10 @@ import { getColorScale } from "../helper_functions/get_color_scale.js";
 
 export class Table {
 	constructor(vizSettings) {
-		let {id, tableVars} = vizSettings;
+		let {id, tableVars, colorScaling} = vizSettings;
 
 		this.tableVars = tableVars;
+		this.colorScaling = colorScaling;
 
 		d3.select(id).append("table")
 			.attr("id", "dataTable")
@@ -25,7 +26,11 @@ export class Table {
 			columns: this.getColumnNames(),
 		    lengthChange: false,
 		    paging: false,
-		}).on('order.dt', this.orderChanged.bind(this));
+		});
+
+		if (this.colorScaling) {
+			this.table.on('order.dt', this.orderChanged.bind(this));
+		}
 
 
 	}
@@ -46,6 +51,12 @@ export class Table {
 
 		let dataMin = Number(d3.min(this.data, function(d) { return Number(d[orderingColumn.variable]); })); 
 		let dataMax = Number(d3.max(this.data, function(d) { return Number(d[orderingColumn.variable]); }));
+
+		// scaleType, color, numBins, dataMin, dataMax
+		// let colorScaleSettings = {};
+		// colorScaleSettings.scaleType = orderingColumn.scaleType;
+		// colorScaleSettings.color = orderingColumn.color;
+
 
 		let colorScale = getColorScale(orderingColumn, dataMin, dataMax);
 

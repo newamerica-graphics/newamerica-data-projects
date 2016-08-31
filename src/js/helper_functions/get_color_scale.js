@@ -2,13 +2,7 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
-let colorValues = {
-	"turquoise":{ "light": "#2EBCB3", "dark": "#005753"},
-	"blue": { "light": "#5BA4DA","dark": "#234A67"},
-	"red": { "light": "#E75C64","dark": "#692025"},
-	"purple": { "light": "#A076AC","dark": "#48304F"}
-}
-
+import { colors } from "./colors.js";
 
 let colorOptions = {
 	"turquoise":["#2EBCB3","#005753"],
@@ -19,12 +13,12 @@ let colorOptions = {
 
 let ordinalRange = [
 	[],
-	[colorValues.turquoise.light],
-	[colorValues.turquoise.light, colorValues.blue.light],
-	[colorValues.turquoise.light, colorValues.blue.light, colorValues.purple.light],
-	[colorValues.turquoise.light, colorValues.blue.light, colorValues.purple.light, colorValues.red.light],
-	[colorValues.turquoise.dark, colorValues.turquoise.light, colorValues.blue.light, colorValues.purple.light, colorValues.red.light],
-	[colorValues.turquoise.dark, colorValues.turquoise.light, colorValues.blue.dark, colorValues.blue.light, colorValues.purple.light, colorValues.red.light]
+	[colors.turquoise.light],
+	[colors.turquoise.light, colors.blue.light],
+	[colors.turquoise.light, colors.blue.light, colors.purple.light],
+	[colors.turquoise.light, colors.blue.light, colors.purple.light, colors.red.light],
+	[colors.turquoise.dark, colors.turquoise.light, colors.blue.light, colors.purple.light, colors.red.light],
+	[colors.turquoise.dark, colors.turquoise.light, colors.blue.dark, colors.blue.light, colors.purple.light, colors.red.light]
 ]
 
 export function getColorScale(scaleSettings) {
