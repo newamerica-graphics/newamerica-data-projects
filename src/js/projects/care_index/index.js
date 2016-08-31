@@ -10,6 +10,7 @@ import { UsStatesMap } from "../../chart_types/us_states_map.js";
 import { MultiChartLayout } from "../../layouts/multi_chart_layout.js";
 import { GroupedBarChart } from "../../chart_types/grouped_bar_chart.js";
 import { Table } from "../../chart_types/table.js";
+import { FactBox } from "../../chart_types/fact_box.js";
 
 let state = {"variable":"state", "displayName":"State"};
 let cost_rank = {"variable":"cost_rank", "displayName":"Cost Rank", "format":"number", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":4};
@@ -20,8 +21,8 @@ let children_5_under = {"variable":"children_5_under", "displayName":"Children 5
 
 let full_name = {"variable":"full_name", "displayName":"Name"};
 let field_kids = {"variable":"field_kids", "displayName":"Kids", "format":"string", "scaleType":"categorical", "color":"blue"};
-let field_age = {"variable":"field_age", "displayName":"Age", "format":"number", "scaleType":"linear", "color":"blue"};
-let field_gender = {"variable":"field_gender", "displayName":"Gender", "format":"number", "scaleType":"categorical", "color":"blue"};
+let field_age = {"variable":"field_age", "displayName":"Age", "format":"number", "scaleType":"linear", "color":"turquoise"};
+let field_gender = {"variable":"field_gender", "displayName":"Gender", "format":"number", "scaleType":"categorical", "color":"red"};
 let field_year_indicted = {"variable":"field_year_indicted", "displayName":"Field Indicted", "format":"year", "scaleType":"categorical", "color":"blue"};
 
 let dataSheetNames = ["Sheet1"];
@@ -67,10 +68,20 @@ let vizSettingsList = [
 	// 	filterVars: [ quality_rank, cost_rank, cost_in_home ],
 	// 	tooltipVars: [ children_5_under, cost_rank, cost_in_home ]
 	// },
+	// {
+	// 	id: "#explore-the-index", 
+	// 	vizType: "table",
+	// 	tableVars: [ full_name, field_age, field_gender ],
+	// 	colorScaling: false
+	// },
 	{
 		id: "#explore-the-index", 
-		vizType: "table",
-		tableVars: [ full_name, field_age, field_gender ]
+		vizType: "fact_box",
+		factBoxVals: [ 
+			{ variable: field_age, value: "25", type:"count", text:"Jihadists are 25 years old or younger"},
+			{ variable: field_gender, value: "0", type:"percent", text:"Jihadists are female" },
+			{ variable: field_gender, value: "1", type:"percent", text:"Jihadists are male" } 
+		],
 	}
 ]
 
@@ -98,6 +109,10 @@ function initialize() {
 
 			case "dot_histogram":
 				viz = new DotHistogram(vizSettingsObject);
+				break;
+
+			case "fact_box":
+				viz = new FactBox(vizSettingsObject);
 				break;
 			
 			case "grouped_bar_chart":
