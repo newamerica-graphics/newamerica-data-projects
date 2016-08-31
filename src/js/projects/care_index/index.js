@@ -1,16 +1,4 @@
-require('../../../scss/index.scss');
-
-import $ from 'jquery';
-let d3 = require("d3");
-
-import { DotMatrix } from "../../chart_types/dot_matrix.js";
-import { DotHistogram } from "../../chart_types/dot_histogram.js";
-import { GroupedDotMatrix } from "../../chart_types/grouped_dot_matrix.js";
-import { UsStatesMap } from "../../chart_types/us_states_map.js";
-import { MultiChartLayout } from "../../layouts/multi_chart_layout.js";
-import { GroupedBarChart } from "../../chart_types/grouped_bar_chart.js";
-import { Table } from "../../chart_types/table.js";
-import { FactBox } from "../../chart_types/fact_box.js";
+import { setupProject } from "../../viz_controller.js";
 
 let state = {"variable":"state", "displayName":"State"};
 let cost_rank = {"variable":"cost_rank", "displayName":"Cost Rank", "format":"number", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":4};
@@ -24,8 +12,6 @@ let field_kids = {"variable":"field_kids", "displayName":"Kids", "format":"strin
 let field_age = {"variable":"field_age", "displayName":"Age", "format":"number", "scaleType":"linear", "color":"turquoise"};
 let field_gender = {"variable":"field_gender", "displayName":"Gender", "format":"number", "scaleType":"categorical", "color":"red"};
 let field_year_indicted = {"variable":"field_year_indicted", "displayName":"Field Indicted", "format":"year", "scaleType":"categorical", "color":"blue"};
-
-let dataSheetNames = ["Sheet1"];
 
 let vizSettingsList = [
 	// {
@@ -75,7 +61,7 @@ let vizSettingsList = [
 	// 	colorScaling: false
 	// },
 	{
-		id: "#explore-the-index", 
+		id: "#test1", 
 		vizType: "fact_box",
 		factBoxVals: [ 
 			{ variable: field_age, value: "25", type:"count", text:"Jihadists are 25 years old or younger"},
@@ -85,80 +71,11 @@ let vizSettingsList = [
 	}
 ]
 
-let projectVars = {
+let projectSettings = {
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/homegrown.json",
-	// vizList = visualizationList
+	dataSheetNames:["Sheet1"],
+	vizSettingsList: vizSettingsList
 }
 
+setupProject(projectSettings);
 
-let vizList = [];
-
-function initialize() {
-	window.addEventListener('resize', resize);
-
-	for (let vizSettingsObject of vizSettingsList) {
-		let viz;
-		switch (vizSettingsObject.vizType) {
-			case "chart_table_layout":
-				viz = new MultiChartLayout(vizSettingsObject);
-				break;
-
-			case "dot_matrix":
-				viz = new DotMatrix(vizSettingsObject);
-				break;
-
-			case "dot_histogram":
-				viz = new DotHistogram(vizSettingsObject);
-				break;
-
-			case "fact_box":
-				viz = new FactBox(vizSettingsObject);
-				break;
-			
-			case "grouped_bar_chart":
-				viz = new GroupedBarChart(vizSettingsObject);
-				
-				break;
-
-			case "grouped_dot_matrix":
-				viz = new GroupedDotMatrix(vizSettingsObject);
-				break;
-
-			case "table":
-				viz = new Table(vizSettingsObject);
-				break;
-
-			case "us_states_map":
-				viz = new UsStatesMap(vizSettingsObject);
-				
-				break;
-		}
-
-		vizList.push(viz);
-	}
-}
-
-
-
-function render() {
-	d3.json(projectVars.dataUrl, (d) => {
-		console.log(d);
-
-		let data = d[dataSheetNames[0]];
-
-		console.log(data);
-
-		for (let viz of vizList) {
-			viz.render(data);
-		}
-	});
-}
-
-function resize() {
-	for (let viz of vizList) {
-		viz.resize ? viz.resize() : null;
-	}
-}
-
-initialize();
-render();
