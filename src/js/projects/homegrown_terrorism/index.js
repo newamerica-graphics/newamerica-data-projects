@@ -1,35 +1,61 @@
-// require('../../../scss/index.scss');
+import { setupProject } from "../../viz_controller.js";
 
-// import $ from 'jquery';
-// import { usStatesMap } from "../../components/us_states_map.js";
-// import { dotMatrix } from "../../components/dot_matrix.js";
+let variables = {
+	full_name: {"variable":"full_name", "displayName":"Name"},
+	field_kids: {"variable":"field_kids", "displayName":"Kids", "format":"string", "scaleType":"categorical", "color":"blue"},
+	field_age: {"variable":"field_age", "displayName":"Age", "format":"number", "scaleType":"linear", "color":"turquoise"},
+	field_gender: {"variable":"field_gender", "displayName":"Gender", "format":"number", "scaleType":"categorical", "color":"red"},
+	field_year_indicted: {"variable":"field_year_indicted", "displayName":"Field Indicted", "format":"year", "scaleType":"categorical", "color":"blue"},
+}
 
+let vizSettingsList = [
+	{
+		id: "#test0", 
+		vizType: "dot_matrix",
+		dotsPerRow: 5,
+		orientation: "horizontal",
+		filterVars: [ variables.field_kids ],
+		tooltipVars: [ variables.field_kids, variables.field_age ],
+	},
+	{
+		id: "#test1", 
+		vizType: "grouped_dot_matrix",
+		dotsPerRow: 5,
+		distanceBetweenGroups: 20,
+		groupingVars: [ variables.field_year_indicted ],
+		filterVars: [ variables.field_kids ],
+		tooltipVars: [ variables.field_year_indicted, variables.field_kids, variables.field_age ],
+		labelSettings: { interval: 1, showNumVals: true}
+	},
+	{
+		id: "#test2", 
+		vizType: "dot_histogram",
+		groupingVars: [ variables.field_year_indicted ],
+		filterVars: [ variables.field_kids ],
+		tooltipVars: [ variables.field_year_indicted, variables.field_kids, variables.field_age ],
+		labelSettings: { interval: 5}
+	},
+	{
+		id: "#test3", 
+		vizType: "table",
+		tableVars: [ variables.full_name, variables.field_age, variables.field_gender ],
+		colorScaling: false
+	},
+	{
+		id: "#test4", 
+		vizType: "fact_box",
+		factBoxVals: [ 
+			{ variable: variables.field_age, value: "25", type:"count", text:"Jihadists are 25 years old or younger"},
+			{ variable: variables.field_gender, value: "0", type:"percent", text:"Jihadists are female" },
+			{ variable: variables.field_gender, value: "1", type:"percent", text:"Jihadists are male" } 
+		],
+	},
+]
 
+let projectSettings = {
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/homegrown.json",
+	dataSheetNames:["Sheet1"],
+	vizSettingsList: vizSettingsList
+}
 
-// export class HomegrownTerrorism {
-// 	constructor() {
-// 		let dataUrl = "https://na-data-projects.s3.amazonaws.com/data/isp/homegrown.json"
-// 		// let dataUrl = "https://na-data-projects.s3.amazonaws.com/data/test/ag.json";
-// 		this.id = "#test1";
-// 		// this.usMap = new usStatesMap(dataUrl, this.id);
-// 		// this.usMap.initialRender();
-// 		this.dotMatrix = new dotMatrix(dataUrl, this.id, "field_citizenship", "categorical", "full_name", ["field_age", "field_citizenship"]);
-// 		this.dotMatrix.initialRender();
-// 		window.addEventListener('resize', this.resize.bind(this));
-
-// 		// $.get("http://data-projects.herokuapp.com/1wx-GeuiSCFm8g5iAy0HKb57jCS-h4xt_pfAR6cU-KvU/versions/s3://na-data-projects/data/isp/homegrown.json", function(d) {
-// 		// 	console.log("success!");
-// 		// });
-// 	}
-
-// 	resize() {
-// 		let w = $(this.id).width();
-// 		// this.usMap.resize(w);
-// 		// this.usMap.changeFilter()
-// 		this.dotMatrix.resize(w);
-// 		this.dotMatrix.changeFilter("field_age", "categorical");
-// 	}
-// }
-
-// let homegrown = new HomegrownTerrorism();
-
+setupProject(projectSettings);
