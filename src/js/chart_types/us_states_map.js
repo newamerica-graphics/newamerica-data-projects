@@ -35,7 +35,7 @@ export class UsStatesMap extends Chart {
 		this.svg = mapContainer
 			.append("svg");
 
-		this.tooltip = new Tooltip(id, "state", tooltipVars)
+		this.tooltip = new Tooltip(id, tooltipVars)
 
 		this.legend = new Legend(id);
 

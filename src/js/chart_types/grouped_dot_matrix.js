@@ -40,7 +40,7 @@ export class GroupedDotMatrix extends Chart {
 		this.currFilter = filterVars[0];
 		this.currFilterVar = filterVars[0].variable;
 
-		this.tooltip = new Tooltip(id, "full_name", tooltipVars);
+		this.tooltip = new Tooltip(id, tooltipVars);
 
 		let legendSettings = {};
 		legendSettings.id = id;
@@ -89,10 +89,14 @@ export class GroupedDotMatrix extends Chart {
 	}
 
 	getGroupings() {
+		// assigns -1 to null values
 		this.groupings = d3.nest()
-			.key((d) => { return Number(d[this.currGroupingVar]); })
+			.key((d) => { return d[this.currGroupingVar] ? Number(d[this.currGroupingVar]) : -1; })
 			.sortKeys(d3.ascending)
 			.entries(this.data);
+
+		// removes values associated with -1 key (null values)
+		this.groupings[0].key == "-1" ? this.groupings.shift() : null;
 
 		this.numGroupings = this.groupings.length;
 	}
@@ -102,6 +106,8 @@ export class GroupedDotMatrix extends Chart {
 		let uniqueVals = d3.nest()
 			.key((d) => { return d[this.currFilterVar]; })
 			.map(this.data);
+
+		uniqueVals.remove("null");
 		
 		colorScaleSettings.scaleType = "categorical";
 		colorScaleSettings.numBins = uniqueVals.keys().length;

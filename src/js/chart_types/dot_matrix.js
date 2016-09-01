@@ -40,7 +40,7 @@ export class DotMatrix extends Chart {
 				.append("svg")
 				.attr("width", "100%");
 
-			this.tooltip = new Tooltip(id, "full_name", tooltipVars);
+			this.tooltip = new Tooltip(id, tooltipVars);
 
 			let legendSettings = {};
 			legendSettings.id = id;
@@ -73,6 +73,7 @@ export class DotMatrix extends Chart {
 	}
 
 	processData(data) {
+		data = data.filter((d) => { return d[this.currFilterVar] != null });
 		// console.log(this.currFilterVar);
 		if (this.currFilter.scaleType === "linear") {
 			for (var d of data) {
@@ -134,10 +135,10 @@ export class DotMatrix extends Chart {
 
 		} else if (this.currFilter.scaleType == "categorical") {
 			let uniqueVals = d3.nest()
-				.key((d) => { return d[this.currFilterVar]; })
+				.key((d) => { return d[this.currFilterVar] })
 				.map(this.data);
 
-			console.log(uniqueVals.keys());
+			uniqueVals.remove("null");
 
 			colorScaleSettings.scaleType = "categorical";
 			colorScaleSettings.numBins = uniqueVals.keys().length;
