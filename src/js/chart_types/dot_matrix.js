@@ -33,7 +33,8 @@ export class DotMatrix extends Chart {
 
 		} else {
 			let chartContainer = d3.select(id)
-				.append("div");
+				.append("div")
+				.attr("class", "chart-wrapper");
 
 			this.svg = chartContainer
 				.append("svg")
@@ -140,10 +141,13 @@ export class DotMatrix extends Chart {
 
 			colorScaleSettings.scaleType = "categorical";
 			colorScaleSettings.numBins = uniqueVals.keys().length;
+			colorScaleSettings.domain = uniqueVals.keys();
 
 			this.colorScale = getColorScale(colorScaleSettings);
 
 		}
+
+		console.log(this.colorScale.domain());
 	}
 
 	buildGraph() {
@@ -177,11 +181,6 @@ export class DotMatrix extends Chart {
 			this.dotsPerCol = Math.ceil(this.dataLength/numCols);
 
 			this.h = this.dotsPerCol * (dotW + dotOffset);		
-		}
-
-		if (this.svg) {
-			this.svg
-				.attr("height", this.h);
 		}
 
 		this.svg

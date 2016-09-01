@@ -48,6 +48,8 @@ export class Legend {
 
 		this.numBins = colorScale.range().length;
 
+		console.log(this.numBins);
+
 		// this.cellList.attr("height", () => {
 		// 	return (this.numBins * 25) + "px";
 		// });

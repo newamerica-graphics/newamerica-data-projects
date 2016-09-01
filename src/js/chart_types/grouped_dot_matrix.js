@@ -24,15 +24,15 @@ export class GroupedDotMatrix extends Chart {
 		this.tooltipVars = vizSettings.tooltipVars;
 		this.filterVars = vizSettings.filterVars;
 		this.dotsPerRow = vizSettings.dotsPerRow;
-		this.distanceBetweenGroups = vizSettings.distanceBetweenGroups + dotsPerRow * (dotW + dotOffset);
+		this.fullGroupingWidth = vizSettings.distanceBetweenGroups + dotsPerRow * (dotW + dotOffset);
 		this.labelSettings = labelSettings;
 
 		let chartContainer = d3.select(id)
-			.append("div");
+			.append("div")
+			.attr("class", "chart-wrapper");
 
 		this.svg = chartContainer
 			.append("svg")
-			.attr("width", "100%")
 			.attr("class", "grouped-dot-matrix");
 
 		this.currGrouping = groupingVars[0];
@@ -55,6 +55,8 @@ export class GroupedDotMatrix extends Chart {
 
 		this.getGroupings();
 		this.setScale();
+
+		this.svg.attr("width", this.fullGroupingWidth * this.numGroupings);
 		
 		this.dotMatrixContainers = [];
 		this.dotMatrices = [];
@@ -88,7 +90,7 @@ export class GroupedDotMatrix extends Chart {
 
 	getGroupings() {
 		this.groupings = d3.nest()
-			.key((d) => { console.log(Number(d[this.currGroupingVar])); return Number(d[this.currGroupingVar]); })
+			.key((d) => { return Number(d[this.currGroupingVar]); })
 			.sortKeys(d3.ascending)
 			.entries(this.data);
 
@@ -100,13 +102,14 @@ export class GroupedDotMatrix extends Chart {
 		let uniqueVals = d3.nest()
 			.key((d) => { return d[this.currFilterVar]; })
 			.map(this.data);
-
-		console.log(uniqueVals.keys());
-
+		
 		colorScaleSettings.scaleType = "categorical";
 		colorScaleSettings.numBins = uniqueVals.keys().length;
+		colorScaleSettings.domain = uniqueVals.keys();
 
 		this.colorScale = getColorScale(colorScaleSettings);
+
+		console.log(this.colorScale.domain());
 	}
 
 	appendLabels() {
@@ -149,6 +152,7 @@ export class GroupedDotMatrix extends Chart {
 
 	setLegend() {
 		let legendSettings = {};
+
 		legendSettings.format = this.currFilter.format;
 		legendSettings.scaleType = this.currFilter.scaleType;
 		legendSettings.colorScale = this.colorScale;
@@ -167,7 +171,7 @@ export class GroupedDotMatrix extends Chart {
 	}
 
 	calcTransformX(i) {
-		return i*this.distanceBetweenGroups;
+		return i*this.fullGroupingWidth;
 	}
 
 	calcTransformY(i) {
