@@ -40,7 +40,7 @@ export class GroupedDotMatrix extends Chart {
 		this.currFilter = filterVars[0];
 		this.currFilterVar = filterVars[0].variable;
 
-		this.tooltip = new Tooltip(id, "full_name", tooltipVars);
+		this.tooltip = new Tooltip(id, tooltipVars);
 
 		let legendSettings = {};
 		legendSettings.id = id;

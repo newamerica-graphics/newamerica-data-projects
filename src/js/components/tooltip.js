@@ -5,8 +5,9 @@ let d3 = require("d3");
 import { formatValue } from "../helper_functions/format_value.js";
 
 export class Tooltip {
-	constructor(id, titleVariable, tooltipVariables) {
-		this.titleVar = titleVariable;
+	constructor(id, tooltipVariables) {
+		//removes first variable to be used as title
+		this.titleVar = tooltipVariables.shift().variable;
 		this.tooltipVars = tooltipVariables;
 		this.tooltip = d3.select("body")
 			.append("div")
@@ -21,6 +22,9 @@ export class Tooltip {
 		let categories = {};
 
 		for (let variable of this.tooltipVars) {
+			if (!variable) {
+				console.log("this variable was not defined!");
+			}
 			let category = variable.category;
 
 			if (!categories.hasOwnProperty(category)) {

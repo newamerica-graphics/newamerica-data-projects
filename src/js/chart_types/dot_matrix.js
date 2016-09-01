@@ -40,7 +40,7 @@ export class DotMatrix extends Chart {
 				.append("svg")
 				.attr("width", "100%");
 
-			this.tooltip = new Tooltip(id, "full_name", tooltipVars);
+			this.tooltip = new Tooltip(id, tooltipVars);
 
 			let legendSettings = {};
 			legendSettings.id = id;
