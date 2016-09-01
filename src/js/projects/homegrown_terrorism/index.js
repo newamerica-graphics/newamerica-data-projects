@@ -3,45 +3,54 @@ import { setupProject } from "../../viz_controller.js";
 let variables = {
 	year_charged_or_deceased: {"variable":"year_charged_or_deceased", "displayName":"Year", "format":"year", "scaleType":"categorical", "color":"blue"},
 	charged_or_deceased: {"variable":"charged_or_deceased", "displayName":"Charged or Deceased", "format":"string", "scaleType":"categorical", "color":"blue"},
-	last_name: {"variable":"last_name", "displayName":"Last Name", "format":"string"},
+	full_name: {"variable":"full_name", "displayName":"Full Name", "format":"string"},
 	date_charged: {"variable":"date_charged", "displayName":"Date Charged", "format":"string"},
 	terror_plot: {"variable":"terror_plot", "displayName":"Terror Plot", "format":"string"},
 	citizenship_status: {"variable":"citizenship_status", "displayName":"Citizenship Status", "format":"string", "scaleType":"categorical"},
-	full_name: {"variable":"full_name", "displayName":"Name"},
+	char_awlaki: {"variable":"char_awlaki", "displayName":"Involvement with Awlaki", "format":"string", "scaleType":"categorical"},
 	field_kids: {"variable":"field_kids", "displayName":"Kids", "format":"string", "scaleType":"categorical", "color":"blue"},
-	field_age: {"variable":"field_age", "displayName":"Age", "format":"number", "scaleType":"linear", "color":"turquoise"},
-	field_gender: {"variable":"field_gender", "displayName":"Gender", "format":"number", "scaleType":"categorical", "color":"red"},
+	age: {"variable":"age", "displayName":"Age", "format":"number", "scaleType":"categorical", "color":"turquoise"},
+	marital_status: {"variable":"marital_status", "displayName":"Marital Status", "scaleType":"categorical", "format":"string"},
+	gender: {"variable":"gender", "displayName":"Gender", "format":"number", "scaleType":"categorical", "color":"red"},
 	field_year_indicted: {"variable":"field_year_indicted", "displayName":"Field Indicted", "format":"year", "scaleType":"categorical", "color":"blue"},
 }
 
 let vizSettingsList = [
-	// {
-	// 	id: "#homegrown__outcome-for-extremist", 
-	// 	vizType: "grouped_dot_matrix",
-	// 	dotsPerRow: 5,
-	// 	distanceBetweenGroups: 15,
-	// 	groupingVars: [ variables.year_charged_or_deceased ],
-	// 	filterVars: [ variables.charged_or_deceased ],
-	// 	tooltipVars: [ variables.last_name, variables.charged_or_deceased, variables.date_charged, variables.terror_plot],
-	// 	labelSettings: { interval: 1, showNumVals: true}
-	// },
+	{
+		id: "#homegrown__outcome-for-extremist", 
+		vizType: "grouped_dot_matrix",
+		dotsPerRow: 5,
+		distanceBetweenGroups: 15,
+		groupingVars: [ variables.year_charged_or_deceased ],
+		filterVars: [ variables.charged_or_deceased ],
+		tooltipVars: [ variables.full_name, variables.charged_or_deceased, variables.date_charged, variables.terror_plot],
+		labelSettings: { interval: 1, showNumVals: true}
+	},
 	// {
 	// 	id: "#homegrown__awlaki-over-time", 
 	// 	vizType: "grouped_dot_matrix",
 	// 	dotsPerRow: 5,
 	// 	distanceBetweenGroups: 15,
 	// 	groupingVars: [ variables.year_charged_or_deceased ],
-	// 	filterVars: [ variables.charged_or_deceased ],
-	// 	tooltipVars: [ variables.last_name, variables.charged_or_deceased, variables.date_charged, variables.terror_plot],
+	// 	filterVars: [ variables.char_awlaki ],
+	// 	tooltipVars: [ variables.full_name, variables.char_awlaki, variables.terror_plot],
 	// 	labelSettings: { interval: 1, showNumVals: true}
 	// },
-	{
-		id: "#homegrown__citizenship-status", 
-		vizType: "dot_matrix",
-		orientation: "horizontal",
-		filterVars: [ variables.citizenship_status ],
-		tooltipVars: [ variables.last_name, variables.citizenship_status ],
-	},
+	// {
+	// 	id: "#homegrown__citizenship-status", 
+	// 	vizType: "dot_matrix",
+	// 	orientation: "horizontal",
+	// 	filterVars: [ variables.citizenship_status ],
+	// 	tooltipVars: [ variables.full_name, variables.citizenship_status ],
+	// },
+	// {
+	// 	id: "#homegrown__age-of-extremists", 
+	// 	vizType: "dot_histogram",
+	// 	groupingVars: [ variables.age ],
+	// 	filterVars: [ variables.marital_status ],
+	// 	tooltipVars: [ variables.full_name, variables.age, variables.marital_status, variables.terror_plot ],
+	// 	labelSettings: { interval: 5}
+	// },
 	// {
 	// 	id: "#test2", 
 	// 	vizType: "dot_histogram",

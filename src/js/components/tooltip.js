@@ -40,13 +40,15 @@ export class Tooltip {
 			let listElem = categories[category].append("li")
 				.classed("tooltip__category__list-item", true);
 
-			listElem.append("h3")
+			let valueField = {};
+			valueField.label = listElem.append("h3")
 				.classed("tooltip__category__list-item__label", true)
 				.text(variable.displayName + ":");
 
-			this.valueFields[variable.variable] = listElem.append("h3")
+			valueField.value = listElem.append("h3")
 				.classed("tooltip__category__list-item__value", true)
 				
+			this.valueFields[variable.variable] = valueField;
 		}
 	}
 
@@ -61,10 +63,27 @@ export class Tooltip {
 		for (let variable of this.tooltipVars) {
 			let varName = variable.variable;
 			let varFormat = variable.format;
-			let value = d[varName] ? formatValue(d[varName], varFormat) : "null";
+			let value = d[varName] ? formatValue(d[varName], varFormat) : null;
 
-			this.valueFields[varName]
-				.text(value);
+			console.log(value);
+
+			if (value) {
+				this.valueFields[varName].label
+					.style("display", "inline-block");
+
+				this.valueFields[varName].value
+					.style("display", "inline-block")
+					.text(value);
+			} else  {
+				this.valueFields[varName].label
+					.style("display", "none");
+
+				this.valueFields[varName].value
+					.style("display", "none");
+
+			}
+
+			
 		} 
 	}
 

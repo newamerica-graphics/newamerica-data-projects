@@ -18,7 +18,13 @@ let ordinalRange = [
 	[colors.turquoise.light, colors.blue.light, colors.purple.light],
 	[colors.turquoise.light, colors.blue.light, colors.purple.light, colors.red.light],
 	[colors.turquoise.dark, colors.turquoise.light, colors.blue.light, colors.purple.light, colors.red.light],
-	[colors.turquoise.dark, colors.turquoise.light, colors.blue.dark, colors.blue.light, colors.purple.light, colors.red.light]
+	[colors.turquoise.dark, colors.turquoise.light, colors.blue.dark, colors.blue.light, colors.purple.light, colors.red.light],
+	[colors.turquoise.dark, colors.turquoise.light, colors.blue.dark, colors.blue.light, colors.purple.dark, colors.purple.light, colors.red.light],
+	[colors.turquoise.dark, colors.turquoise.light, colors.blue.dark, colors.blue.light, colors.purple.dark, colors.purple.light, colors.red.dark, colors.red.light],
+	[colors.turquoise.dark, colors.turquoise.medium, colors.turquoise.light, colors.blue.dark, colors.blue.light, colors.purple.dark, colors.purple.light, colors.red.dark, colors.red.light],
+	[colors.turquoise.dark, colors.turquoise.medium, colors.turquoise.light, colors.blue.dark, colors.blue.medium, colors.blue.light, colors.purple.dark, colors.purple.light, colors.red.dark, colors.red.light],
+	[colors.turquoise.dark, colors.turquoise.medium, colors.turquoise.light, colors.blue.dark, colors.blue.medium, colors.blue.light, colors.purple.dark, colors.purple.medium, colors.purple.light, colors.red.dark, colors.red.light],
+	[colors.turquoise.dark, colors.turquoise.medium, colors.turquoise.light, colors.blue.dark, colors.blue.medium, colors.blue.light, colors.purple.dark, colors.purple.medium, colors.purple.light, colors.red.dark, colors.red.medium, colors.red.light],
 ]
 
 export function getColorScale(scaleSettings) {
@@ -26,6 +32,10 @@ export function getColorScale(scaleSettings) {
 	console.log(scaleSettings);
 	let {scaleType, color, numBins, dataMin, dataMax, domain} = scaleSettings;
 	let scale;
+
+	if (numBins > 12) {
+		console.log("get_color_scale: too many color bins");
+	}
 
 	console.log(ordinalRange[numBins]);
 

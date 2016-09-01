@@ -6,40 +6,40 @@ let d3 = require("d3");
 // superclass for all chart types, adds download and share buttons to the chart
 export class Chart {
 	constructor(id, isSubComponent) {
-		this.id = id;
-		this.isSubComponent = isSubComponent;
-		if (isSubComponent) {
-			return;
-		}
+		// this.id = id;
+		// this.isSubComponent = isSubComponent;
+		// if (isSubComponent) {
+		// 	return;
+		// }
 
-		this.downloadSVGButton = d3.select(id)
-			.append("a")
-			.text("Download SVG")
-			.attr("class", "download-svg")
-			.attr("download", "chart.svg");;
+		// this.downloadSVGButton = d3.select(id)
+		// 	.append("a")
+		// 	.text("Download SVG")
+		// 	.attr("class", "download-svg")
+		// 	.attr("download", "chart.svg");;
 
-		this.downloadPNGButton = d3.select(id)
-			.append("a")
-			.text("Download PNG")
-			.attr("class", "download-png")
-			.attr("download", "chart.png");;
+		// this.downloadPNGButton = d3.select(id)
+		// 	.append("a")
+		// 	.text("Download PNG")
+		// 	.attr("class", "download-png")
+		// 	.attr("download", "chart.png");;
 
-		this.canvas = d3.select(id)
-			.append("canvas")
-			.style("display", "none");
+		// this.canvas = d3.select(id)
+		// 	.append("canvas")
+		// 	.style("display", "none");
 	}
 
 	render() {
-		if (this.isSubComponent) {
-			return;
-		}
-		// sets href link for svg button, triggered on mouseenter to encapsulate current state of the chart
-		this.downloadSVGButton
-			.on("mouseenter", () => { this.setLink("svg"); });
+		// if (this.isSubComponent) {
+		// 	return;
+		// }
+		// // sets href link for svg button, triggered on mouseenter to encapsulate current state of the chart
+		// this.downloadSVGButton
+		// 	.on("mouseenter", () => { this.setLink("svg"); });
 
-		// sets href link for png button, triggered on mouseenter to encapsulate current state of the chart
-		this.downloadPNGButton
-			.on("mouseenter", () => { this.setLink("png"); });
+		// // sets href link for png button, triggered on mouseenter to encapsulate current state of the chart
+		// this.downloadPNGButton
+		// 	.on("mouseenter", () => { this.setLink("png"); });
 	}
 
 	setLink(type) {
