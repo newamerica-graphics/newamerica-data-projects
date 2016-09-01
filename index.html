@@ -6,6 +6,18 @@
     <body>
         <div class="block-dataviz">
           <div class="dataviz">
+            <a class="dataviz__download-link" id="homegrown__outcome-for-extremist__download-link">{% include 'ui_elements/svg/download.html' %}</a>
+            <div class="dataviz__download-popup">
+                <ul>
+                    <li class="dataviz__download-popup__title">Download Options:</li>
+                    <li class="dataviz__download-popup__item">
+                        <a id="homegrown__outcome-for-extremist__download-svg">Download as SVG</a>
+                    </li>
+                    <li class="dataviz__download-popup__item">
+                        <a id="homegrown__outcome-for-extremist__download-png">Download as PNG</a>
+                    </li>
+                </ul>
+            </div>
             <div class="dataviz__chart-area" id="homegrown__outcome-for-extremist"></div>
             <div class="dataviz__chart-area" id="homegrown__awlaki-over-time"></div>
             <div class="dataviz__chart-area" id="homegrown__citizenship-status"></div>

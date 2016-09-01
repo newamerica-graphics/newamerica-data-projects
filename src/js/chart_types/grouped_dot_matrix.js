@@ -86,6 +86,8 @@ export class GroupedDotMatrix extends Chart {
 		this.setContainerTransforms();
 		this.appendLabels();
 		this.setLegend();
+
+		super.render();
 	}
 
 	getGroupings() {
@@ -132,7 +134,8 @@ export class GroupedDotMatrix extends Chart {
 			elem.append("text")
 				.text(this.groupings[i].key)
 				.attr("text-anchor", "left")
-				.attr("font-weight", "bold");
+				.attr("font-weight", "bold")
+				.attr("font-family", "Simplon");
 
 			if (this.labelSettings.showNumVals) {
 				elem.append("text")
