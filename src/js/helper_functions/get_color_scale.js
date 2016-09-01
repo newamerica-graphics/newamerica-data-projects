@@ -24,7 +24,7 @@ let ordinalRange = [
 export function getColorScale(scaleSettings) {
 
 	console.log(scaleSettings);
-	let {scaleType, color, numBins, dataMin, dataMax} = scaleSettings;
+	let {scaleType, color, numBins, dataMin, dataMax, domain} = scaleSettings;
 	let scale;
 
 	console.log(ordinalRange[numBins]);
@@ -44,6 +44,7 @@ export function getColorScale(scaleSettings) {
 		scale = d3.scaleOrdinal();
 
 		scale.range(ordinalRange[numBins]);
+		scale.domain(domain);
 	}
 	
 	return scale;

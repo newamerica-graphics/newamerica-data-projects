@@ -15,81 +15,76 @@ import { FactBox } from "./chart_types/fact_box.js";
 export function setupProject(projectSettings) {
 	let { vizSettingsList } = projectSettings;
 
-	let vizList = initialize(vizSettingsList);
-		console.log(vizList);
-
-	render(projectSettings, vizList);
-
-	window.addEventListener('resize', resize(vizList));
-}
-
-function initialize(vizSettingsList) {
 	let vizList = [];
 
-	for (let vizSettingsObject of vizSettingsList) {
-		let viz;
-		switch (vizSettingsObject.vizType) {
-			case "chart_table_layout":
-				viz = new MultiChartLayout(vizSettingsObject);
-				break;
+	initialize();
 
-			case "dot_matrix":
-				viz = new DotMatrix(vizSettingsObject);
-				break;
+	window.addEventListener('resize', resize);
 
-			case "dot_histogram":
-				viz = new DotHistogram(vizSettingsObject);
-				break;
+	render();
 
-			case "fact_box":
-				viz = new FactBox(vizSettingsObject);
-				break;
-			
-			case "grouped_bar_chart":
-				viz = new GroupedBarChart(vizSettingsObject);
+	function initialize() {
+
+		for (let vizSettingsObject of vizSettingsList) {
+			let viz;
+			switch (vizSettingsObject.vizType) {
+				case "chart_table_layout":
+					viz = new MultiChartLayout(vizSettingsObject);
+					break;
+
+				case "dot_matrix":
+					viz = new DotMatrix(vizSettingsObject);
+					break;
+
+				case "dot_histogram":
+					viz = new DotHistogram(vizSettingsObject);
+					break;
+
+				case "fact_box":
+					viz = new FactBox(vizSettingsObject);
+					break;
 				
-				break;
+				case "grouped_bar_chart":
+					viz = new GroupedBarChart(vizSettingsObject);
+					
+					break;
 
-			case "grouped_dot_matrix":
-				viz = new GroupedDotMatrix(vizSettingsObject);
-				break;
+				case "grouped_dot_matrix":
+					viz = new GroupedDotMatrix(vizSettingsObject);
+					break;
 
-			case "table":
-				viz = new Table(vizSettingsObject);
-				break;
+				case "table":
+					viz = new Table(vizSettingsObject);
+					break;
 
-			case "us_states_map":
-				viz = new UsStatesMap(vizSettingsObject);
-				
-				break;
+				case "us_states_map":
+					viz = new UsStatesMap(vizSettingsObject);
+					
+					break;
+			}
+
+			vizList.push(viz);
 		}
-
-		vizList.push(viz);
 	}
 
-	return vizList;
-}
+	function render() {
+		console.log(vizList);
+		d3.json(projectSettings.dataUrl, (d) => {
+			console.log(d);
 
+			let data = d[projectSettings.dataSheetNames[0]];
 
+			console.log(data);
 
-function render(projectSettings, vizList) {
-	console.log(vizList);
-	d3.json(projectSettings.dataUrl, (d) => {
-		console.log(d);
+			for (let viz of vizList) {
+				viz.render(data);
+			}
+		});
+	}
 
-		let data = d[projectSettings.dataSheetNames[0]];
-
-		console.log(data);
-
+	function resize() {
 		for (let viz of vizList) {
-			viz.render(data);
+			viz.resize ? viz.resize() : null;
 		}
-	});
-}
-
-function resize(vizList) {
-	for (let viz of vizList) {
-		viz.resize ? viz.resize() : null;
 	}
 }
-
