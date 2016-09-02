@@ -46,6 +46,7 @@ export function getColorScale(data, filterVar) {
 		let range = setCategoricalRange(filterVar, uniqueVals);
 		scale.domain(domain);
 		scale.range(range);
+		console.log(scale.domain());
 
 	} else if (scaleType == "quantize") {
 		// scale = d3.scaleQuantize();
@@ -62,7 +63,7 @@ function setCategoricalDomain(filterVar, uniqueVals) {
 	if (filterVar.customDomain) {
 		return filterVar.customDomain;
 	} else {
-		return uniqueVals.keys();
+		return uniqueVals.keys().sort(d3.ascending);
 	}
 }
 

@@ -150,7 +150,7 @@ export class GroupedDotMatrix extends Chart {
 
 			if (this.labelSettings.showNumVals) {
 				elem.append("text")
-					.text(this.grouping[i].values.length)
+					.text(this.groupings[i].values.length)
 					.attr("y", labelTextSize + labelOffset)
 					.attr("class", "label__value")
 					.attr("text-anchor", "left");
