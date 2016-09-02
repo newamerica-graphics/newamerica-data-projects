@@ -12,7 +12,7 @@ let labelOffset = 20;
 let labelTextSize = 10;
 let dotW = 10;
 let dotOffset = 3;
-let dividingLinePadding = 25;
+let dividingLineTextOffset = 20;
 
 export class GroupedDotMatrix extends Chart {
 	constructor(vizSettings, imageFolderId) {
@@ -26,8 +26,13 @@ export class GroupedDotMatrix extends Chart {
 		this.filterVars = filterVars;
 		this.dotsPerRow = dotsPerRow;
 		this.dividingLine = dividingLine;
+		if (dividingLine) {
+			this.dividingLineTextHeight = this.dividingLine.descriptionLines.length * dividingLineTextOffset + 30;
+		}
+		
 		this.fullGroupingWidth = distanceBetweenGroups + dotsPerRow * (dotW + dotOffset);
 		this.labelSettings = labelSettings;
+		this.distanceBetweenGroups = distanceBetweenGroups;
 
 		let chartContainer = d3.select(id)
 			.append("div")
@@ -60,7 +65,7 @@ export class GroupedDotMatrix extends Chart {
 
 		let w = this.fullGroupingWidth * this.numGroupings;
 
-		w += this.dividingLine ? dividingLinePadding : 0;
+		w += this.dividingLine ? this.distanceBetweenGroups : 0;
 		this.svg.attr("width", w);
 		
 		this.dotMatrixContainers = [];
@@ -91,6 +96,9 @@ export class GroupedDotMatrix extends Chart {
 		this.setContainerTransforms();
 		this.appendLabels();
 		this.setLegend();
+		if (this.dividingLine) {
+			this.addDividingLine();
+		}
 	}
 
 	getGroupings() {
@@ -131,11 +139,15 @@ export class GroupedDotMatrix extends Chart {
 	}
 
 	appendLabels() {
-		// let groupingWidth = this.dotsPerRow * (dotW + dotOffset);
+		let transformY = this.maxHeight + labelOffset;
+
+		if (this.dividingLine) {
+			transformY += this.dividingLineTextHeight;
+		}
 		this.labelContainers = [];
 		let labelWrapper = this.svg.append("g")
 			.attr("class", "grouped-dot-matrix__label-container")
-			.attr("transform",  "translate(0," + (this.maxHeight + labelOffset)+ ")");
+			.attr("transform",  "translate(0," + transformY + ")");
 
 		for (let i = 0; i < this.numGroupings; i = i + this.labelSettings.interval) {
 			let elem = labelWrapper.append("g")
@@ -143,13 +155,14 @@ export class GroupedDotMatrix extends Chart {
 
 			elem.append("text")
 				.text(this.groupings.keys()[i])
-				.attr("text-anchor", "left")
-				.attr("font-weight", "bold");
+				.attr("class", "label__title")
+				.attr("text-anchor", "left");
 
 			if (this.labelSettings.showNumVals) {
 				elem.append("text")
 					.text(this.groupings.values()[i].length)
 					.attr("y", labelTextSize + labelOffset)
+					.attr("class", "label__value")
 					.attr("text-anchor", "left");
 			}
 
@@ -160,7 +173,12 @@ export class GroupedDotMatrix extends Chart {
 	setContainerTransforms() {
 		this.maxHeight = Math.max(...this.dotMatrixHeights);
 
-		this.svg.attr("height", (this.maxHeight + 2*labelOffset + labelTextSize));
+		this.h = (this.maxHeight + 2*labelOffset + labelTextSize);
+		if (this.dividingLine) {
+			this.h += this.dividingLineTextHeight;
+		}
+
+		this.svg.attr("height", this.h);
 
 		for (let i = 0; i < this.numGroupings; i++) {
 			this.dotMatrixContainers[i]
@@ -179,6 +197,39 @@ export class GroupedDotMatrix extends Chart {
 		this.legend.render(legendSettings);
 	}
 
+	addDividingLine() {
+		let transformX = this.calcTransformX(this.dividingLineIndex) + this.fullGroupingWidth;
+
+		this.svg.append("line")
+			.attr("transform", "translate(" + transformX + ")")
+			.attr("class", "dividing-line")
+			.attr("x1", 0)
+			.attr("x2", 0)
+			.attr("y1", 0)
+			.attr("y2", this.h);
+
+		let textContainer = this.svg.append("g")
+			.attr("transform", "translate(" + (transformX + this.distanceBetweenGroups) + ")");
+
+		textContainer.append("text")
+			.attr("transform", "translate(0," + dividingLineTextOffset + ")")
+			.attr("class", "dividing-line__title")
+			.text(this.dividingLine.title);
+
+		let descriptionContainer = textContainer.append("text")
+			.attr("transform", "translate(0," + 2*dividingLineTextOffset + ")");
+
+		let i = 0;
+		for (let descriptionLine of this.dividingLine.descriptionLines)	{
+			descriptionContainer.append("tspan")
+				.attr("x", 0)
+				.attr("y", i * dividingLineTextOffset)
+				.attr("class", "dividing-line__description")
+				.text(descriptionLine);
+			i++;
+		}
+	}
+
 	resize() {
 		// this.w = $(this.id).width();
 
@@ -192,14 +243,20 @@ export class GroupedDotMatrix extends Chart {
 		let transform = i*this.fullGroupingWidth;
 
 		if (this.dividingLineIndex && i > this.dividingLineIndex) {
-			transform = transform + dividingLinePadding;
+			transform = transform + this.distanceBetweenGroups;
 		}
 
 		return transform;
 	}
 
 	calcTransformY(i) {
-		return (this.maxHeight - this.dotMatrixHeights[i]);
+		let transform = this.maxHeight - this.dotMatrixHeights[i];
+
+		if (this.dividingLine) {
+			transform += this.dividingLineTextHeight;
+		}
+
+		return transform;
 	}
 
 	changeVariableValsShown(valsShown) {

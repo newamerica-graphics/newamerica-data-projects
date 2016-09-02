@@ -1,4 +1,12 @@
-@mixin chart-secondary-type {
+@mixin chart-primary-text {
+	color: palette-get(na-black);
+	fill: palette-get(na-black);
+	font-weight: bold;
+	font-size: 16px;
+}
+
+@mixin chart-secondary-text {
 	color: palette-get(na-black-40);
+	fill: palette-get(na-black-40);
 	font-size: 16px;
 }

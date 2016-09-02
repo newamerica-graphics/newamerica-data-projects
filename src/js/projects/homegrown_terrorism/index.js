@@ -23,7 +23,7 @@ let vizSettingsList = [
 		dotsPerRow: 5,
 		distanceBetweenGroups: 15,
 		groupingVars: [ variables.year_charged_or_deceased ],
-		dividingLine: { value: "2011", title: "Post al-Awlaki", description: "Anwar al-Awlaki killed in drone strike on September 30, 2011"},
+		dividingLine: { value: "2011", title: "Post al-Awlaki", descriptionLines: ["Anwar al-Awlaki killed in drone strike on", "September 30, 2011"]},
 		filterVars: [ variables.charged_or_deceased ],
 		tooltipVars: [ variables.full_name, variables.charged_or_deceased, variables.date_charged, variables.terror_plot],
 		tooltipImageVar: variables.headshot,
