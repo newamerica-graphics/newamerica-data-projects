@@ -1,13 +1,15 @@
 import { setupProject } from "../../viz_controller.js";
 
+import { colors } from "../../helper_functions/colors.js";
+
 let variables = {
 	year_charged_or_deceased: {"variable":"year_charged_or_deceased", "displayName":"Year", "format":"year", "scaleType":"categorical", "color":"blue"},
-	charged_or_deceased: {"variable":"charged_or_deceased", "displayName":"Charged or Deceased", "format":"string", "scaleType":"categorical", "color":"blue"},
+	charged_or_deceased: {"variable":"charged_or_deceased", "displayName":"Charged or Deceased", "format":"string", "scaleType":"categorical", "color":"blue", "customDomain":["Charged", "Charged outside U.S.", "Deceased"], "customRange":[colors.turquoise.medium, colors.turquoise.light, colors.red.light]},
 	full_name: {"variable":"full_name", "displayName":"Full Name", "format":"string"},
 	date_charged: {"variable":"date_charged", "displayName":"Date Charged", "format":"string"},
 	terror_plot: {"variable":"terror_plot", "displayName":"Terror Plot", "format":"string"},
 	citizenship_status: {"variable":"citizenship_status", "displayName":"Citizenship Status", "format":"string", "scaleType":"categorical"},
-	char_awlaki: {"variable":"char_awlaki", "displayName":"Involvement with Awlaki", "format":"string", "scaleType":"categorical"},
+	char_awlaki: {"variable":"char_awlaki", "displayName":"Involvement with Awlaki", "format":"string", "scaleType":"categorical", "customDomain":["Ties", "Contact", "None"], "customRange":[colors.red.light, colors.purple.light, colors.grey.light]},
 	field_kids: {"variable":"field_kids", "displayName":"Kids", "format":"string", "scaleType":"categorical", "color":"blue"},
 	age: {"variable":"age", "displayName":"Age", "format":"number", "scaleType":"categorical", "color":"turquoise"},
 	marital_status: {"variable":"marital_status", "displayName":"Marital Status", "scaleType":"categorical", "format":"string"},
@@ -23,37 +25,40 @@ let vizSettingsList = [
 		dotsPerRow: 5,
 		distanceBetweenGroups: 15,
 		groupingVars: [ variables.year_charged_or_deceased ],
-		dividingLine: { value: "2011", title: "Post al-Awlaki", descriptionLines: ["Anwar al-Awlaki killed in drone strike on", "September 30, 2011"]},
 		filterVars: [ variables.charged_or_deceased ],
 		tooltipVars: [ variables.full_name, variables.charged_or_deceased, variables.date_charged, variables.terror_plot],
 		tooltipImageVar: variables.headshot,
 		labelSettings: { interval: 1, showNumVals: true}
 	},
-	// {
-	// 	id: "#homegrown__awlaki-over-time", 
-	// 	vizType: "grouped_dot_matrix",
-	// 	dotsPerRow: 5,
-	// 	distanceBetweenGroups: 15,
-	// 	groupingVars: [ variables.year_charged_or_deceased ],
-	// 	filterVars: [ variables.char_awlaki ],
-	// 	tooltipVars: [ variables.full_name, variables.char_awlaki, variables.terror_plot],
-	// 	labelSettings: { interval: 1, showNumVals: true}
-	// },
-	// {
-	// 	id: "#homegrown__citizenship-status", 
-	// 	vizType: "dot_matrix",
-	// 	orientation: "horizontal",
-	// 	filterVars: [ variables.citizenship_status ],
-	// 	tooltipVars: [ variables.full_name, variables.citizenship_status ],
-	// },
-	// {
-	// 	id: "#homegrown__age-of-extremists", 
-	// 	vizType: "dot_histogram",
-	// 	groupingVars: [ variables.age ],
-	// 	filterVars: [ variables.marital_status ],
-	// 	tooltipVars: [ variables.full_name, variables.age, variables.marital_status, variables.terror_plot ],
-	// 	labelSettings: { interval: 5}
-	// },
+	{
+		id: "#homegrown__awlaki-over-time", 
+		vizType: "grouped_dot_matrix",
+		dotsPerRow: 5,
+		distanceBetweenGroups: 15,
+		groupingVars: [ variables.year_charged_or_deceased ],
+		dividingLine: { value: "2011", title: "Post al-Awlaki", descriptionLines: ["Anwar al-Awlaki killed in drone strike on", "September 30, 2011"]},
+		filterVars: [ variables.char_awlaki ],
+		tooltipVars: [ variables.full_name, variables.char_awlaki, variables.terror_plot],
+		tooltipImageVar: variables.headshot,
+		labelSettings: { interval: 1, showNumVals: true}
+	},
+	{
+		id: "#homegrown__citizenship-status", 
+		vizType: "dot_matrix",
+		orientation: "horizontal",
+		filterVars: [ variables.citizenship_status ],
+		tooltipVars: [ variables.full_name, variables.citizenship_status ],
+		tooltipImageVar: variables.headshot,
+	},
+	{
+		id: "#homegrown__age-of-extremists", 
+		vizType: "dot_histogram",
+		groupingVars: [ variables.age ],
+		filterVars: [ variables.marital_status ],
+		tooltipVars: [ variables.full_name, variables.age, variables.marital_status, variables.terror_plot ],
+		tooltipImageVar: variables.headshot,
+		labelSettings: { interval: 5 }
+	},
 	// {
 	// 	id: "#test2", 
 	// 	vizType: "dot_histogram",

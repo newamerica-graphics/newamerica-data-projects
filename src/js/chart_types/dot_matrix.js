@@ -98,57 +98,54 @@ export class DotMatrix extends Chart {
 		if (this.currFilter.scaleType === "linear") {
 			this.data.sort((a, b) => { return a[this.currFilterVar] - b[this.currFilterVar];});
 		} else if (this.currFilter.scaleType == "categorical") {
-			this.data.sort((a, b) => { 
-				let elem1 = a[this.currFilterVar];
-				let elem2 = b[this.currFilterVar];
+			if (this.currFilter.customDomain) {
+				this.data.sort((a, b) => {
+					let elem1 = this.currFilter.customDomain.indexOf(a[this.currFilterVar]);
+					let elem2 = this.currFilter.customDomain.indexOf(b[this.currFilterVar]);
 
-				if (!elem1) {
-					return 1;
-				}
+					if (elem1 == -1) {
+						return 1;
+					}
 
-				if (!elem2) {
-					return -1;
-				}
+					if (elem2 == -1) {
+						return -1;
+					}
 
-				if (elem1 < elem2) {
-				    return -1;
-				} else if (elem1 > elem2) {
-					return 1;
-				} else {
-					return 0;
-				}
-			});
+					if (elem1 < elem2) {
+					    return -1;
+					} else if (elem1 > elem2) {
+						return 1;
+					} else {
+						return 0;
+					}
+				});
+			} else {
+				this.data.sort((a, b) => { 
+					let elem1 = a[this.currFilterVar];
+					let elem2 = b[this.currFilterVar];
+
+					if (!elem1) {
+						return 1;
+					}
+
+					if (!elem2) {
+						return -1;
+					}
+
+					if (elem1 < elem2) {
+					    return -1;
+					} else if (elem1 > elem2) {
+						return 1;
+					} else {
+						return 0;
+					}
+				});
+			}
 		}
 	}
 
 	setScale() {
-		let colorScaleSettings = {};
-
-		// let data = this.data
-		if (this.currFilter.scaleType === "linear") {
-			// let dataMin = d3.min(data, (d) => { return d[this.currFilterVar] ? d[this.currFilterVar] : 10000000; });
-			// let dataMax = d3.max(data, (d) => { return d[this.currFilterVar] ? d[this.currFilterVar] : -1; });
-
-			// colorScale = d3.scaleLinear()
-			// 	.domain([dataMin, dataMax])
-			// 	.range(["#2ebcb3", "#5ba4da"]);
-
-		} else if (this.currFilter.scaleType == "categorical") {
-			let uniqueVals = d3.nest()
-				.key((d) => { return d[this.currFilterVar] })
-				.map(this.data);
-
-			uniqueVals.remove("null");
-
-			colorScaleSettings.scaleType = "categorical";
-			colorScaleSettings.numBins = uniqueVals.keys().length;
-			colorScaleSettings.domain = uniqueVals.keys();
-
-			this.colorScale = getColorScale(colorScaleSettings);
-
-		}
-
-		console.log(this.colorScale.domain());
+		this.colorScale = getColorScale(this.data, this.currFilter);
 	}
 
 	buildGraph() {

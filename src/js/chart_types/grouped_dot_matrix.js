@@ -122,20 +122,7 @@ export class GroupedDotMatrix extends Chart {
 	}
 
 	setScale() {
-		let colorScaleSettings = {};
-		let uniqueVals = d3.nest()
-			.key((d) => { return d[this.currFilterVar]; })
-			.map(this.data);
-
-		uniqueVals.remove("null");
-		
-		colorScaleSettings.scaleType = "categorical";
-		colorScaleSettings.numBins = uniqueVals.keys().length;
-		colorScaleSettings.domain = uniqueVals.keys();
-
-		this.colorScale = getColorScale(colorScaleSettings);
-
-		console.log(this.colorScale.domain());
+		this.colorScale = getColorScale(this.data, this.currFilter);
 	}
 
 	appendLabels() {
