@@ -27,43 +27,78 @@ let ordinalRange = [
 	[colors.turquoise.dark, colors.turquoise.medium, colors.turquoise.light, colors.blue.dark, colors.blue.medium, colors.blue.light, colors.purple.dark, colors.purple.medium, colors.purple.light, colors.red.dark, colors.red.medium, colors.red.light],
 ]
 
-export function getColorScale(scaleSettings) {
-
-	console.log(scaleSettings);
-	let {scaleType, color, numBins, dataMin, dataMax, domain, customRange} = scaleSettings;
+export function getColorScale(data, filterVar) {
+	let {scaleType, color, numBins, customDomain, customRange} = filterVar;
+	// dataMin, dataMax, 
 	let scale;
-
-	if (numBins > 12) {
-		console.log("get_color_scale: too many color bins");
-	}
-
-	console.log(ordinalRange[numBins]);
 
 	if (!scaleType) {
 		console.log("no scale type!");
 		return d3.scaleQuantize().range(["#ffffff", "#ffffff"]);
 	}
 
-	if (scaleType == "quantize") {
-		scale = d3.scaleQuantize();
-		let colorBins = setColorBins(numBins, colorOptions[color]);
-		let roundedDomain = setDomain(dataMin, dataMax, numBins);
-		scale.range(colorBins);
-		scale.domain(roundedDomain);
-	} else if (scaleType == "categorical") {
+	if (scaleType == "categorical") {
 		scale = d3.scaleOrdinal();
 
-		scale.domain(domain);
+		// if both are ot custom, get unique values
+		let uniqueVals = !(filterVar.customDomain && filterVar.customRange) ? getUniqueVals(data) : null;
 
-		if (customRange) {
-			scale.range(customRange);
-		} else {
-			scale.range(ordinalRange[numBins]);
-		}
+		let domain = setCategoricalDomain(filterVar, uniqueVals);
+		let range = setCategoricalRange(filterVar, uniqueVals);
+		scale.domain(domain);
+		scale.range(range);
+
+	} else if (scaleType == "quantize") {
+		// scale = d3.scaleQuantize();
+		// let colorBins = setColorBins(numBins, colorOptions[color]);
+		// let roundedDomain = setDomain(dataMin, dataMax, numBins);
+		// scale.range(colorBins);
+		// scale.domain(roundedDomain);
 	}
 	
 	return scale;
 }
+
+function setCategoricalDomain(filterVar, uniqueVals) {
+	if (filterVar.customDomain) {
+		return filterVar.customDomain;
+	} else {
+		return uniqueVals.keys();
+	}
+}
+
+function setCategoricalRange(filterVar, uniqueVals) {
+	if (filterVar.customRange) {
+		return filterVar.customRange;
+	} else {
+		let numBins = uniqueVals.keys().length;
+
+		numBins >= ordinalRange.length ? console.log("get_color_scale: too many color bins") : null;
+
+		return ordinalRange[numBins];
+	}
+}
+
+function getUniqueVals(data) {
+	let uniqueVals = d3.nest()
+		.key((d) => { return d[filterVar.variable] })
+		.map(data);
+
+	uniqueVals.remove("null");
+
+	return uniqueVals;
+}
+
+
+		// if (this.currFilter.customRange) {
+		// 	colorScaleSettings.customRange = this.currFilter.customRange;
+		// }
+
+		// colorScaleSettings.numBins = colorScaleSettings.domain.length;
+
+		// this.colorScale = getColorScale(colorScaleSettings);
+
+		// console.log(this.colorScale.domain());
 
 function setDomain(dataMin, dataMax, numBins) {
 	// let dataMagnitude = Math.floor(Math.log10(dataMin));

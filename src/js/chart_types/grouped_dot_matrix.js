@@ -122,30 +122,7 @@ export class GroupedDotMatrix extends Chart {
 	}
 
 	setScale() {
-		let colorScaleSettings = {};
-		colorScaleSettings.scaleType = "categorical";
-			
-		if (this.currFilter.customDomain) {
-			colorScaleSettings.domain = this.currFilter.customDomain;
-		} else {
-			let uniqueVals = d3.nest()
-			.key((d) => { return d[this.currFilterVar] })
-			.map(this.data);
-
-			uniqueVals.remove("null");
-
-			colorScaleSettings.domain = uniqueVals.keys();
-		}
-
-		if (this.currFilter.customRange) {
-			colorScaleSettings.customRange = this.currFilter.customRange;
-		}
-
-		colorScaleSettings.numBins = colorScaleSettings.domain.length;
-
-		this.colorScale = getColorScale(colorScaleSettings);
-
-		console.log(this.colorScale.domain());
+		this.colorScale = getColorScale(this.data, this.currFilter);
 	}
 
 	appendLabels() {

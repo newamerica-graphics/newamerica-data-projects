@@ -145,45 +145,7 @@ export class DotMatrix extends Chart {
 	}
 
 	setScale() {
-		let colorScaleSettings = {};
-
-		// let data = this.data
-		if (this.currFilter.scaleType === "linear") {
-			// let dataMin = d3.min(data, (d) => { return d[this.currFilterVar] ? d[this.currFilterVar] : 10000000; });
-			// let dataMax = d3.max(data, (d) => { return d[this.currFilterVar] ? d[this.currFilterVar] : -1; });
-
-			// colorScale = d3.scaleLinear()
-			// 	.domain([dataMin, dataMax])
-			// 	.range(["#2ebcb3", "#5ba4da"]);
-
-		} else if (this.currFilter.scaleType == "categorical") {
-			
-
-			colorScaleSettings.scaleType = "categorical";
-			
-			if (this.currFilter.customDomain) {
-				colorScaleSettings.domain = this.currFilter.customDomain;
-			} else {
-				let uniqueVals = d3.nest()
-				.key((d) => { return d[this.currFilterVar] })
-				.map(this.data);
-
-				uniqueVals.remove("null");
-
-				colorScaleSettings.domain = uniqueVals.keys();
-			}
-
-			if (this.currFilter.customRange) {
-				colorScaleSettings.customRange = this.currFilter.customRange;
-			}
-
-			colorScaleSettings.numBins = colorScaleSettings.domain.length;
-
-			this.colorScale = getColorScale(colorScaleSettings);
-
-		}
-
-		console.log(this.colorScale.domain());
+		this.colorScale = getColorScale(this.data, this.currFilter);
 	}
 
 	buildGraph() {

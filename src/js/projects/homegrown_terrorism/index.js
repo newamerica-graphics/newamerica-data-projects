@@ -9,7 +9,7 @@ let variables = {
 	date_charged: {"variable":"date_charged", "displayName":"Date Charged", "format":"string"},
 	terror_plot: {"variable":"terror_plot", "displayName":"Terror Plot", "format":"string"},
 	citizenship_status: {"variable":"citizenship_status", "displayName":"Citizenship Status", "format":"string", "scaleType":"categorical"},
-	char_awlaki: {"variable":"char_awlaki", "displayName":"Involvement with Awlaki", "format":"string", "scaleType":"categorical", "customDomain":["Contact", "Ties", "None"], "customRange":[colors.purple.light, colors.red.light, colors.grey.light]},
+	char_awlaki: {"variable":"char_awlaki", "displayName":"Involvement with Awlaki", "format":"string", "scaleType":"categorical", "customDomain":["Ties", "Contact", "None"], "customRange":[colors.red.light, colors.purple.light, colors.grey.light]},
 	field_kids: {"variable":"field_kids", "displayName":"Kids", "format":"string", "scaleType":"categorical", "color":"blue"},
 	age: {"variable":"age", "displayName":"Age", "format":"number", "scaleType":"categorical", "color":"turquoise"},
 	marital_status: {"variable":"marital_status", "displayName":"Marital Status", "scaleType":"categorical", "format":"string"},
