@@ -12,10 +12,11 @@ let labelOffset = 20;
 let labelTextSize = 10;
 let dotW = 10;
 let dotOffset = 3;
+let dividingLinePadding = 25;
 
 export class GroupedDotMatrix extends Chart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, groupingVars, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, distanceBetweenGroups, labelSettings} = vizSettings;
+		let {id, groupingVars, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, distanceBetweenGroups, labelSettings, dividingLine} = vizSettings;
 
 		super(id, false);
 
@@ -24,6 +25,7 @@ export class GroupedDotMatrix extends Chart {
 		this.tooltipVars = tooltipVars;
 		this.filterVars = filterVars;
 		this.dotsPerRow = dotsPerRow;
+		this.dividingLine = dividingLine;
 		this.fullGroupingWidth = distanceBetweenGroups + dotsPerRow * (dotW + dotOffset);
 		this.labelSettings = labelSettings;
 
@@ -56,7 +58,10 @@ export class GroupedDotMatrix extends Chart {
 		this.getGroupings();
 		this.setScale();
 
-		this.svg.attr("width", this.fullGroupingWidth * this.numGroupings);
+		let w = this.fullGroupingWidth * this.numGroupings;
+
+		w += this.dividingLine ? dividingLinePadding : 0;
+		this.svg.attr("width", w);
 		
 		this.dotMatrixContainers = [];
 		this.dotMatrices = [];
@@ -79,7 +84,7 @@ export class GroupedDotMatrix extends Chart {
 
 			vizSettings.id = this.id + " .grouped-dot-matrix" + i;
 			this.dotMatrices[i] = new DotMatrix(vizSettings);
-			this.dotMatrices[i].render(this.groupings[i].values)
+			this.dotMatrices[i].render(this.groupings.values()[i])
 			this.dotMatrixHeights[i] = this.dotMatrices[i].h;
 		}
 
@@ -91,14 +96,21 @@ export class GroupedDotMatrix extends Chart {
 	getGroupings() {
 		// assigns -1 to null values
 		this.groupings = d3.nest()
-			.key((d) => { return d[this.currGroupingVar] ? Number(d[this.currGroupingVar]) : -1; })
+			.key((d) => { return d[this.currGroupingVar] ? Number(d[this.currGroupingVar]) : null; })
 			.sortKeys(d3.ascending)
-			.entries(this.data);
+			.map(this.data);
+		console.log(this.groupings.keys()[0]);
+		console.log(this.groupings.values()[0]);
 
-		// removes values associated with -1 key (null values)
-		this.groupings[0].key == "-1" ? this.groupings.shift() : null;
+		this.groupings.remove(null);
 
-		this.numGroupings = this.groupings.length;
+		console.log(this.dividingLine);
+		if (this.dividingLine) {
+			this.dividingLineIndex = this.groupings.keys().indexOf(this.dividingLine.value);
+			console.log(this.dividingLineIndex);
+		}
+
+		this.numGroupings = this.groupings.keys().length;
 	}
 
 	setScale() {
@@ -130,13 +142,13 @@ export class GroupedDotMatrix extends Chart {
 				.attr("transform", "translate(" + this.calcTransformX(i) + ")");
 
 			elem.append("text")
-				.text(this.groupings[i].key)
+				.text(this.groupings.keys()[i])
 				.attr("text-anchor", "left")
 				.attr("font-weight", "bold");
 
 			if (this.labelSettings.showNumVals) {
 				elem.append("text")
-					.text(this.groupings[i].values.length)
+					.text(this.groupings.values()[i].length)
 					.attr("y", labelTextSize + labelOffset)
 					.attr("text-anchor", "left");
 			}
@@ -177,7 +189,13 @@ export class GroupedDotMatrix extends Chart {
 	}
 
 	calcTransformX(i) {
-		return i*this.fullGroupingWidth;
+		let transform = i*this.fullGroupingWidth;
+
+		if (this.dividingLineIndex && i > this.dividingLineIndex) {
+			transform = transform + dividingLinePadding;
+		}
+
+		return transform;
 	}
 
 	calcTransformY(i) {
