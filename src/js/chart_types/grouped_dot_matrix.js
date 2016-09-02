@@ -14,17 +14,17 @@ let dotW = 10;
 let dotOffset = 3;
 
 export class GroupedDotMatrix extends Chart {
-	constructor(vizSettings) {
-		let {id, groupingVars, tooltipVars, filterVars, dotsPerRow, distanceBetweenGroups, labelSettings} = vizSettings;
+	constructor(vizSettings, imageFolderId) {
+		let {id, groupingVars, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, distanceBetweenGroups, labelSettings} = vizSettings;
 
 		super(id, false);
 
 		this.id = id;
 		this.w = $(this.id).width();
-		this.tooltipVars = vizSettings.tooltipVars;
-		this.filterVars = vizSettings.filterVars;
-		this.dotsPerRow = vizSettings.dotsPerRow;
-		this.fullGroupingWidth = vizSettings.distanceBetweenGroups + dotsPerRow * (dotW + dotOffset);
+		this.tooltipVars = tooltipVars;
+		this.filterVars = filterVars;
+		this.dotsPerRow = dotsPerRow;
+		this.fullGroupingWidth = distanceBetweenGroups + dotsPerRow * (dotW + dotOffset);
 		this.labelSettings = labelSettings;
 
 		let chartContainer = d3.select(id)
@@ -40,7 +40,7 @@ export class GroupedDotMatrix extends Chart {
 		this.currFilter = filterVars[0];
 		this.currFilterVar = filterVars[0].variable;
 
-		this.tooltip = new Tooltip(id, tooltipVars);
+		this.tooltip = new Tooltip(id, tooltipVars, tooltipImageVar, imageFolderId);
 
 		let legendSettings = {};
 		legendSettings.id = id;

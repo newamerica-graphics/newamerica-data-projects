@@ -13,7 +13,7 @@ import { Table } from "./chart_types/table.js";
 import { FactBox } from "./chart_types/fact_box.js";
 
 export function setupProject(projectSettings) {
-	let { vizSettingsList } = projectSettings;
+	let { vizSettingsList, imageFolderId } = projectSettings;
 
 	let vizList = [];
 
@@ -33,11 +33,11 @@ export function setupProject(projectSettings) {
 					break;
 
 				case "dot_matrix":
-					viz = new DotMatrix(vizSettingsObject);
+					viz = new DotMatrix(vizSettingsObject, imageFolderId);
 					break;
 
 				case "dot_histogram":
-					viz = new DotHistogram(vizSettingsObject);
+					viz = new DotHistogram(vizSettingsObject, imageFolderId);
 					break;
 
 				case "fact_box":
@@ -50,7 +50,7 @@ export function setupProject(projectSettings) {
 					break;
 
 				case "grouped_dot_matrix":
-					viz = new GroupedDotMatrix(vizSettingsObject);
+					viz = new GroupedDotMatrix(vizSettingsObject, imageFolderId);
 					break;
 
 				case "table":
@@ -80,6 +80,7 @@ export function setupProject(projectSettings) {
 				viz.render(data);
 			}
 		});
+
 	}
 
 	function resize() {
