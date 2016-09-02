@@ -12,10 +12,11 @@ let labelOffset = 20;
 let labelTextSize = 10;
 let dotW = 10;
 let dotOffset = 3;
+let dividingLineTextOffset = 20;
 
 export class GroupedDotMatrix extends Chart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, groupingVars, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, distanceBetweenGroups, labelSettings} = vizSettings;
+		let {id, groupingVars, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, distanceBetweenGroups, labelSettings, dividingLine} = vizSettings;
 
 		super(id, false);
 
@@ -24,8 +25,14 @@ export class GroupedDotMatrix extends Chart {
 		this.tooltipVars = tooltipVars;
 		this.filterVars = filterVars;
 		this.dotsPerRow = dotsPerRow;
+		this.dividingLine = dividingLine;
+		if (dividingLine) {
+			this.dividingLineTextHeight = this.dividingLine.descriptionLines.length * dividingLineTextOffset + 30;
+		}
+		
 		this.fullGroupingWidth = distanceBetweenGroups + dotsPerRow * (dotW + dotOffset);
 		this.labelSettings = labelSettings;
+		this.distanceBetweenGroups = distanceBetweenGroups;
 
 		let chartContainer = d3.select(id)
 			.append("div")
@@ -56,7 +63,10 @@ export class GroupedDotMatrix extends Chart {
 		this.getGroupings();
 		this.setScale();
 
-		this.svg.attr("width", this.fullGroupingWidth * this.numGroupings);
+		let w = this.fullGroupingWidth * this.numGroupings;
+
+		w += this.dividingLine ? this.distanceBetweenGroups : 0;
+		this.svg.attr("width", w);
 		
 		this.dotMatrixContainers = [];
 		this.dotMatrices = [];
@@ -79,26 +89,36 @@ export class GroupedDotMatrix extends Chart {
 
 			vizSettings.id = this.id + " .grouped-dot-matrix" + i;
 			this.dotMatrices[i] = new DotMatrix(vizSettings);
-			this.dotMatrices[i].render(this.groupings[i].values)
+			this.dotMatrices[i].render(this.groupings.values()[i])
 			this.dotMatrixHeights[i] = this.dotMatrices[i].h;
 		}
 
 		this.setContainerTransforms();
 		this.appendLabels();
 		this.setLegend();
+		if (this.dividingLine) {
+			this.addDividingLine();
+		}
 	}
 
 	getGroupings() {
 		// assigns -1 to null values
 		this.groupings = d3.nest()
-			.key((d) => { return d[this.currGroupingVar] ? Number(d[this.currGroupingVar]) : -1; })
+			.key((d) => { return d[this.currGroupingVar] ? Number(d[this.currGroupingVar]) : null; })
 			.sortKeys(d3.ascending)
-			.entries(this.data);
+			.map(this.data);
+		console.log(this.groupings.keys()[0]);
+		console.log(this.groupings.values()[0]);
 
-		// removes values associated with -1 key (null values)
-		this.groupings[0].key == "-1" ? this.groupings.shift() : null;
+		this.groupings.remove(null);
 
-		this.numGroupings = this.groupings.length;
+		console.log(this.dividingLine);
+		if (this.dividingLine) {
+			this.dividingLineIndex = this.groupings.keys().indexOf(this.dividingLine.value);
+			console.log(this.dividingLineIndex);
+		}
+
+		this.numGroupings = this.groupings.keys().length;
 	}
 
 	setScale() {
@@ -119,25 +139,30 @@ export class GroupedDotMatrix extends Chart {
 	}
 
 	appendLabels() {
-		// let groupingWidth = this.dotsPerRow * (dotW + dotOffset);
+		let transformY = this.maxHeight + labelOffset;
+
+		if (this.dividingLine) {
+			transformY += this.dividingLineTextHeight;
+		}
 		this.labelContainers = [];
 		let labelWrapper = this.svg.append("g")
 			.attr("class", "grouped-dot-matrix__label-container")
-			.attr("transform",  "translate(0," + (this.maxHeight + labelOffset)+ ")");
+			.attr("transform",  "translate(0," + transformY + ")");
 
 		for (let i = 0; i < this.numGroupings; i = i + this.labelSettings.interval) {
 			let elem = labelWrapper.append("g")
 				.attr("transform", "translate(" + this.calcTransformX(i) + ")");
 
 			elem.append("text")
-				.text(this.groupings[i].key)
-				.attr("text-anchor", "left")
-				.attr("font-weight", "bold");
+				.text(this.groupings.keys()[i])
+				.attr("class", "label__title")
+				.attr("text-anchor", "left");
 
 			if (this.labelSettings.showNumVals) {
 				elem.append("text")
-					.text(this.groupings[i].values.length)
+					.text(this.groupings.values()[i].length)
 					.attr("y", labelTextSize + labelOffset)
+					.attr("class", "label__value")
 					.attr("text-anchor", "left");
 			}
 
@@ -148,7 +173,12 @@ export class GroupedDotMatrix extends Chart {
 	setContainerTransforms() {
 		this.maxHeight = Math.max(...this.dotMatrixHeights);
 
-		this.svg.attr("height", (this.maxHeight + 2*labelOffset + labelTextSize));
+		this.h = (this.maxHeight + 2*labelOffset + labelTextSize);
+		if (this.dividingLine) {
+			this.h += this.dividingLineTextHeight;
+		}
+
+		this.svg.attr("height", this.h);
 
 		for (let i = 0; i < this.numGroupings; i++) {
 			this.dotMatrixContainers[i]
@@ -167,6 +197,39 @@ export class GroupedDotMatrix extends Chart {
 		this.legend.render(legendSettings);
 	}
 
+	addDividingLine() {
+		let transformX = this.calcTransformX(this.dividingLineIndex) + this.fullGroupingWidth;
+
+		this.svg.append("line")
+			.attr("transform", "translate(" + transformX + ")")
+			.attr("class", "dividing-line")
+			.attr("x1", 0)
+			.attr("x2", 0)
+			.attr("y1", 0)
+			.attr("y2", this.h);
+
+		let textContainer = this.svg.append("g")
+			.attr("transform", "translate(" + (transformX + this.distanceBetweenGroups) + ")");
+
+		textContainer.append("text")
+			.attr("transform", "translate(0," + dividingLineTextOffset + ")")
+			.attr("class", "dividing-line__title")
+			.text(this.dividingLine.title);
+
+		let descriptionContainer = textContainer.append("text")
+			.attr("transform", "translate(0," + 2*dividingLineTextOffset + ")");
+
+		let i = 0;
+		for (let descriptionLine of this.dividingLine.descriptionLines)	{
+			descriptionContainer.append("tspan")
+				.attr("x", 0)
+				.attr("y", i * dividingLineTextOffset)
+				.attr("class", "dividing-line__description")
+				.text(descriptionLine);
+			i++;
+		}
+	}
+
 	resize() {
 		// this.w = $(this.id).width();
 
@@ -177,11 +240,23 @@ export class GroupedDotMatrix extends Chart {
 	}
 
 	calcTransformX(i) {
-		return i*this.fullGroupingWidth;
+		let transform = i*this.fullGroupingWidth;
+
+		if (this.dividingLineIndex && i > this.dividingLineIndex) {
+			transform = transform + this.distanceBetweenGroups;
+		}
+
+		return transform;
 	}
 
 	calcTransformY(i) {
-		return (this.maxHeight - this.dotMatrixHeights[i]);
+		let transform = this.maxHeight - this.dotMatrixHeights[i];
+
+		if (this.dividingLine) {
+			transform += this.dividingLineTextHeight;
+		}
+
+		return transform;
 	}
 
 	changeVariableValsShown(valsShown) {

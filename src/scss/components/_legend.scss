@@ -34,7 +34,7 @@
 	}
 
 	&__title-description {
-		@include chart-secondary-type;
+		@include chart-secondary-text;
 	}
 
 	&.horizontal-center {
@@ -72,7 +72,7 @@
 		&__label {
 			padding-left: 10px;
 			margin-bottom: 5px;
-			@include chart-secondary-type;
+			@include chart-secondary-text;
 		}
 
 		&__val-count {
