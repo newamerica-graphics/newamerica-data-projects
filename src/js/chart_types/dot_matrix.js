@@ -98,26 +98,49 @@ export class DotMatrix extends Chart {
 		if (this.currFilter.scaleType === "linear") {
 			this.data.sort((a, b) => { return a[this.currFilterVar] - b[this.currFilterVar];});
 		} else if (this.currFilter.scaleType == "categorical") {
-			this.data.sort((a, b) => { 
-				let elem1 = a[this.currFilterVar];
-				let elem2 = b[this.currFilterVar];
+			if (this.currFilter.customDomain) {
+				this.data.sort((a, b) => {
+					let elem1 = this.currFilter.customDomain.indexOf(a[this.currFilterVar]);
+					let elem2 = this.currFilter.customDomain.indexOf(b[this.currFilterVar]);
 
-				if (!elem1) {
-					return 1;
-				}
+					if (elem1 == -1) {
+						return 1;
+					}
 
-				if (!elem2) {
-					return -1;
-				}
+					if (elem2 == -1) {
+						return -1;
+					}
 
-				if (elem1 < elem2) {
-				    return -1;
-				} else if (elem1 > elem2) {
-					return 1;
-				} else {
-					return 0;
-				}
-			});
+					if (elem1 < elem2) {
+					    return -1;
+					} else if (elem1 > elem2) {
+						return 1;
+					} else {
+						return 0;
+					}
+				});
+			} else {
+				this.data.sort((a, b) => { 
+					let elem1 = a[this.currFilterVar];
+					let elem2 = b[this.currFilterVar];
+
+					if (!elem1) {
+						return 1;
+					}
+
+					if (!elem2) {
+						return -1;
+					}
+
+					if (elem1 < elem2) {
+					    return -1;
+					} else if (elem1 > elem2) {
+						return 1;
+					} else {
+						return 0;
+					}
+				});
+			}
 		}
 	}
 
@@ -134,15 +157,27 @@ export class DotMatrix extends Chart {
 			// 	.range(["#2ebcb3", "#5ba4da"]);
 
 		} else if (this.currFilter.scaleType == "categorical") {
-			let uniqueVals = d3.nest()
+			
+
+			colorScaleSettings.scaleType = "categorical";
+			
+			if (this.currFilter.customDomain) {
+				colorScaleSettings.domain = this.currFilter.customDomain;
+			} else {
+				let uniqueVals = d3.nest()
 				.key((d) => { return d[this.currFilterVar] })
 				.map(this.data);
 
-			uniqueVals.remove("null");
+				uniqueVals.remove("null");
 
-			colorScaleSettings.scaleType = "categorical";
-			colorScaleSettings.numBins = uniqueVals.keys().length;
-			colorScaleSettings.domain = uniqueVals.keys();
+				colorScaleSettings.domain = uniqueVals.keys();
+			}
+
+			if (this.currFilter.customRange) {
+				colorScaleSettings.customRange = this.currFilter.customRange;
+			}
+
+			colorScaleSettings.numBins = colorScaleSettings.domain.length;
 
 			this.colorScale = getColorScale(colorScaleSettings);
 

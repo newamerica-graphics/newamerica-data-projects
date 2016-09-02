@@ -30,7 +30,7 @@ let ordinalRange = [
 export function getColorScale(scaleSettings) {
 
 	console.log(scaleSettings);
-	let {scaleType, color, numBins, dataMin, dataMax, domain} = scaleSettings;
+	let {scaleType, color, numBins, dataMin, dataMax, domain, customRange} = scaleSettings;
 	let scale;
 
 	if (numBins > 12) {
@@ -53,8 +53,13 @@ export function getColorScale(scaleSettings) {
 	} else if (scaleType == "categorical") {
 		scale = d3.scaleOrdinal();
 
-		scale.range(ordinalRange[numBins]);
 		scale.domain(domain);
+
+		if (customRange) {
+			scale.range(customRange);
+		} else {
+			scale.range(ordinalRange[numBins]);
+		}
 	}
 	
 	return scale;
