@@ -13,6 +13,7 @@ let variables = {
 	marital_status: {"variable":"marital_status", "displayName":"Marital Status", "scaleType":"categorical", "format":"string"},
 	gender: {"variable":"gender", "displayName":"Gender", "format":"number", "scaleType":"categorical", "color":"red"},
 	field_year_indicted: {"variable":"field_year_indicted", "displayName":"Field Indicted", "format":"year", "scaleType":"categorical", "color":"blue"},
+	headshot: {"variable":"headshot", "format":"image"}
 }
 
 let vizSettingsList = [
@@ -24,33 +25,34 @@ let vizSettingsList = [
 		groupingVars: [ variables.year_charged_or_deceased ],
 		filterVars: [ variables.charged_or_deceased ],
 		tooltipVars: [ variables.full_name, variables.charged_or_deceased, variables.date_charged, variables.terror_plot],
+		tooltipImageVar: variables.headshot,
 		labelSettings: { interval: 1, showNumVals: true}
 	},
-	{
-		id: "#homegrown__awlaki-over-time", 
-		vizType: "grouped_dot_matrix",
-		dotsPerRow: 5,
-		distanceBetweenGroups: 15,
-		groupingVars: [ variables.year_charged_or_deceased ],
-		filterVars: [ variables.char_awlaki ],
-		tooltipVars: [ variables.full_name, variables.char_awlaki, variables.terror_plot],
-		labelSettings: { interval: 1, showNumVals: true}
-	},
-	{
-		id: "#homegrown__citizenship-status", 
-		vizType: "dot_matrix",
-		orientation: "horizontal",
-		filterVars: [ variables.citizenship_status ],
-		tooltipVars: [ variables.full_name, variables.citizenship_status ],
-	},
-	{
-		id: "#homegrown__age-of-extremists", 
-		vizType: "dot_histogram",
-		groupingVars: [ variables.age ],
-		filterVars: [ variables.marital_status ],
-		tooltipVars: [ variables.full_name, variables.age, variables.marital_status, variables.terror_plot ],
-		labelSettings: { interval: 5}
-	},
+	// {
+	// 	id: "#homegrown__awlaki-over-time", 
+	// 	vizType: "grouped_dot_matrix",
+	// 	dotsPerRow: 5,
+	// 	distanceBetweenGroups: 15,
+	// 	groupingVars: [ variables.year_charged_or_deceased ],
+	// 	filterVars: [ variables.char_awlaki ],
+	// 	tooltipVars: [ variables.full_name, variables.char_awlaki, variables.terror_plot],
+	// 	labelSettings: { interval: 1, showNumVals: true}
+	// },
+	// {
+	// 	id: "#homegrown__citizenship-status", 
+	// 	vizType: "dot_matrix",
+	// 	orientation: "horizontal",
+	// 	filterVars: [ variables.citizenship_status ],
+	// 	tooltipVars: [ variables.full_name, variables.citizenship_status ],
+	// },
+	// {
+	// 	id: "#homegrown__age-of-extremists", 
+	// 	vizType: "dot_histogram",
+	// 	groupingVars: [ variables.age ],
+	// 	filterVars: [ variables.marital_status ],
+	// 	tooltipVars: [ variables.full_name, variables.age, variables.marital_status, variables.terror_plot ],
+	// 	labelSettings: { interval: 5}
+	// },
 	// {
 	// 	id: "#test2", 
 	// 	vizType: "dot_histogram",
@@ -79,6 +81,7 @@ let vizSettingsList = [
 let projectSettings = {
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/troubleshoot.json",
 	dataSheetNames:["people"],
+	imageFolderId: "0B2KbJlQb9jlgeG5hOXZqbURpRUE",
 	vizSettingsList: vizSettingsList
 }
 

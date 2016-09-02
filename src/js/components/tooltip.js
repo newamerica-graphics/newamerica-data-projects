@@ -5,15 +5,32 @@ let d3 = require("d3");
 import { formatValue } from "../helper_functions/format_value.js";
 
 export class Tooltip {
-	constructor(id, tooltipVariables) {
+	constructor(id, tooltipVars, tooltipImageVar, imageFolderId) {
 		//removes first variable to be used as title
-		this.titleVar = tooltipVariables.shift().variable;
-		this.tooltipVars = tooltipVariables;
+		this.titleVar = tooltipVars.shift().variable;
+		this.tooltipVars = tooltipVars;
+		this.tooltipImageVar = tooltipImageVar;
+		this.imageFolderId = imageFolderId;
+
 		this.tooltip = d3.select("body")
 			.append("div")
 			.attr("class", "tooltip hidden");
 
-		this.title = this.tooltip
+		let titleContainer = this.tooltip
+			.append("div")
+			.attr("class", "tooltip__title-container");
+
+		if (tooltipImageVar) {
+			this.imageContainer = titleContainer
+				.append("div")
+				.attr("class", "person__icon");
+
+			this.image = this.imageContainer
+				.append("div")
+				.attr("class", "person__icon__photo");
+		}
+
+		this.title = titleContainer
 			.append("h1")
 			.classed("tooltip__title", true);
 
@@ -26,19 +43,23 @@ export class Tooltip {
 				console.log("this variable was not defined!");
 			}
 			let category = variable.category;
+			if (category) {
+				if (!categories.hasOwnProperty(category)) {
+					this.tooltip.append("h5")
+						.classed("tooltip__category__name", true)
+						.text(category);
 
-			if (!categories.hasOwnProperty(category)) {
-				this.tooltip.append("h5")
-					.classed("tooltip__category__name", true)
-					.text(category);
-
-				categories[category] = this.tooltip.append("ul")
-					.classed("tooltip__category__list", true);
+					categories[category] = this.tooltip.append("ul")
+						.classed("tooltip__category__list", true);
+				}
+				
+				var listElem = categories[category].append("li")
+					.classed("tooltip__category__list-item", true);
+			} else {
+				var listElem = this.tooltip.append("li")
+					.classed("tooltip__category__list-item", true);
 			}
-			
 
-			let listElem = categories[category].append("li")
-				.classed("tooltip__category__list-item", true);
 
 			let valueField = {};
 			valueField.label = listElem.append("h3")
@@ -58,6 +79,22 @@ export class Tooltip {
 			.classed('hidden', false)
             .attr('style', 'left:' + (mouse[0]) + 'px; top:' + (mouse[1]) + 'px');
 
+        console.log(this.imageFolderId);
+
+        if (this.tooltipImageVar) {
+        	if (d[this.tooltipImageVar.variable]) {
+        		this.title
+        			.classed("has-image", true)
+        		this.imageContainer
+        			.style("display", "table-cell");
+        		this.image
+        			.style("background", "no-repeat center/100% url(https://googledrive.com/host/" + this.imageFolderId + "/" + d[this.tooltipImageVar.variable] + ")");
+        	} else {
+        		this.imageContainer.style("display", "none");
+        		this.title
+        			.classed("has-image", false)
+        	}
+        }
 		this.title.text(d[this.titleVar]);
 
 		for (let variable of this.tooltipVars) {
@@ -82,8 +119,6 @@ export class Tooltip {
 					.style("display", "none");
 
 			}
-
-			
 		} 
 	}
 

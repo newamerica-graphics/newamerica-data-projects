@@ -1,8 +1,8 @@
 .tooltip {
-	width: 300px;
+	width: 330px;
 	position:absolute;
 	background-color: white;
-	padding: 15px;
+	padding: $desktop-padding;
 	border: 1px solid palette-get(na-black-10);
 	@include standard-shadow;
 
@@ -10,9 +10,25 @@
 		display: none;
 	}
 
+	&__title-container {
+		padding-bottom: 15px;
+		.person__icon {
+			margin: 0px !important;
+			display: table-cell;
+
+		}
+	}
+
 	&__title {
 		font-weight: bold;
 		font-size: 18px;
+		display: table-cell;
+		vertical-align: middle;
+		
+
+		&.has-image {
+			padding-left: 15px;
+		}
 	}
 
 	&__category {
@@ -30,6 +46,7 @@
 		}
 
 		&__list-item {
+			display: block;
 			&__label, &__value {
 				font-size: 16px;
 				display: inline-block;
@@ -37,7 +54,7 @@
 			&__label {
 				font-weight: bold;
 				padding-right: 5px;
-				padding-left: 10px;
+				
 			}
 
 			&__value {
