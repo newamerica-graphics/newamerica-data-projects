@@ -19,37 +19,37 @@ let variables = {
 }
 
 let vizSettingsList = [
-	{
-		id: "#homegrown__outcome-for-extremist", 
-		vizType: "grouped_dot_matrix",
-		dotsPerRow: 5,
-		distanceBetweenGroups: 15,
-		groupingVars: [ variables.year_charged_or_deceased ],
-		filterVars: [ variables.charged_or_deceased ],
-		tooltipVars: [ variables.full_name, variables.charged_or_deceased, variables.date_charged, variables.terror_plot],
-		tooltipImageVar: variables.headshot,
-		labelSettings: { interval: 1, showNumVals: true}
-	},
-	{
-		id: "#homegrown__awlaki-over-time", 
-		vizType: "grouped_dot_matrix",
-		dotsPerRow: 5,
-		distanceBetweenGroups: 15,
-		groupingVars: [ variables.year_charged_or_deceased ],
-		dividingLine: { value: "2011", title: "Post al-Awlaki", descriptionLines: ["Anwar al-Awlaki killed in drone strike on", "September 30, 2011"]},
-		filterVars: [ variables.char_awlaki ],
-		tooltipVars: [ variables.full_name, variables.char_awlaki, variables.terror_plot],
-		tooltipImageVar: variables.headshot,
-		labelSettings: { interval: 1, showNumVals: true}
-	},
-	{
-		id: "#homegrown__citizenship-status", 
-		vizType: "dot_matrix",
-		orientation: "horizontal",
-		filterVars: [ variables.citizenship_status ],
-		tooltipVars: [ variables.full_name, variables.citizenship_status ],
-		tooltipImageVar: variables.headshot,
-	},
+	// {
+	// 	id: "#homegrown__outcome-for-extremist", 
+	// 	vizType: "grouped_dot_matrix",
+	// 	dotsPerRow: 5,
+	// 	distanceBetweenGroups: 15,
+	// 	groupingVars: [ variables.year_charged_or_deceased ],
+	// 	filterVars: [ variables.charged_or_deceased ],
+	// 	tooltipVars: [ variables.full_name, variables.charged_or_deceased, variables.date_charged, variables.terror_plot],
+	// 	tooltipImageVar: variables.headshot,
+	// 	labelSettings: { interval: 1, showNumVals: true}
+	// },
+	// {
+	// 	id: "#homegrown__awlaki-over-time", 
+	// 	vizType: "grouped_dot_matrix",
+	// 	dotsPerRow: 5,
+	// 	distanceBetweenGroups: 15,
+	// 	groupingVars: [ variables.year_charged_or_deceased ],
+	// 	dividingLine: { value: "2011", title: "Post al-Awlaki", descriptionLines: ["Anwar al-Awlaki killed in drone strike on", "September 30, 2011"]},
+	// 	filterVars: [ variables.char_awlaki ],
+	// 	tooltipVars: [ variables.full_name, variables.char_awlaki, variables.terror_plot],
+	// 	tooltipImageVar: variables.headshot,
+	// 	labelSettings: { interval: 1, showNumVals: true}
+	// },
+	// {
+	// 	id: "#homegrown__citizenship-status", 
+	// 	vizType: "dot_matrix",
+	// 	orientation: "horizontal",
+	// 	filterVars: [ variables.citizenship_status ],
+	// 	tooltipVars: [ variables.full_name, variables.citizenship_status ],
+	// 	tooltipImageVar: variables.headshot,
+	// },
 	{
 		id: "#homegrown__age-of-extremists", 
 		vizType: "dot_histogram",

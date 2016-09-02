@@ -14,7 +14,7 @@ let dotOffset = 3;
 
 export class DotMatrix extends Chart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, orientation, tooltipVars, filterVars, dotsPerRow, isSubComponent, tooltip, colorScale} = vizSettings;
+		let {id, orientation, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, isSubComponent, tooltip, colorScale} = vizSettings;
 		
 		super(id, isSubComponent);
 
@@ -40,7 +40,7 @@ export class DotMatrix extends Chart {
 				.append("svg")
 				.attr("width", "100%");
 
-			this.tooltip = new Tooltip(id, tooltipVars, imageFolderId);
+			this.tooltip = new Tooltip(id, tooltipVars, tooltipImageVar, imageFolderId);
 
 			let legendSettings = {};
 			legendSettings.id = id;
