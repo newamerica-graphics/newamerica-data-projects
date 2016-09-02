@@ -89,7 +89,7 @@ export class GroupedDotMatrix extends Chart {
 
 			vizSettings.id = this.id + " .grouped-dot-matrix" + i;
 			this.dotMatrices[i] = new DotMatrix(vizSettings);
-			this.dotMatrices[i].render(this.groupings.values()[i])
+			this.dotMatrices[i].render(this.groupings[i].values)
 			this.dotMatrixHeights[i] = this.dotMatrices[i].h;
 		}
 
@@ -102,23 +102,26 @@ export class GroupedDotMatrix extends Chart {
 	}
 
 	getGroupings() {
-		// assigns -1 to null values
 		this.groupings = d3.nest()
-			.key((d) => { return d[this.currGroupingVar] ? Number(d[this.currGroupingVar]) : null; })
+			.key((d) => { return d[this.currGroupingVar] ? Number(d[this.currGroupingVar]) : -1; })
 			.sortKeys(d3.ascending)
-			.map(this.data);
-		console.log(this.groupings.keys()[0]);
-		console.log(this.groupings.values()[0]);
+			.entries(this.data);
 
-		this.groupings.remove(null);
+		// removes values associated with -1 key (null values)
+		this.groupings[0].key == "-1" ? this.groupings.shift() : null;
 
-		console.log(this.dividingLine);
 		if (this.dividingLine) {
-			this.dividingLineIndex = this.groupings.keys().indexOf(this.dividingLine.value);
-			console.log(this.dividingLineIndex);
+			let i = 0;
+			for (let grouping of this.groupings) {
+				if (grouping.key == this.dividingLine.value) {
+					this.dividingLineIndex = i;
+					break;
+				}
+				i++;
+			}
 		}
 
-		this.numGroupings = this.groupings.keys().length;
+		this.numGroupings = this.groupings.length;
 	}
 
 	setScale() {
@@ -141,13 +144,13 @@ export class GroupedDotMatrix extends Chart {
 				.attr("transform", "translate(" + this.calcTransformX(i) + ")");
 
 			elem.append("text")
-				.text(this.groupings.keys()[i])
+				.text(this.groupings[i].key)
 				.attr("class", "label__title")
 				.attr("text-anchor", "left");
 
 			if (this.labelSettings.showNumVals) {
 				elem.append("text")
-					.text(this.groupings.values()[i].length)
+					.text(this.grouping[i].values.length)
 					.attr("y", labelTextSize + labelOffset)
 					.attr("class", "label__value")
 					.attr("text-anchor", "left");
