@@ -28,8 +28,7 @@ let ordinalRange = [
 ]
 
 export function getColorScale(data, filterVar) {
-	let {scaleType, color, numBins, customDomain, customRange} = filterVar;
-	// dataMin, dataMax, 
+	let { scaleType } = filterVar;
 	let scale;
 
 	if (!scaleType) {
@@ -41,7 +40,7 @@ export function getColorScale(data, filterVar) {
 		scale = d3.scaleOrdinal();
 
 		// if both are ot custom, get unique values
-		let uniqueVals = !(filterVar.customDomain && filterVar.customRange) ? getUniqueVals(data) : null;
+		let uniqueVals = !(filterVar.customDomain && filterVar.customRange) ? getUniqueVals(data, filterVar) : null;
 
 		let domain = setCategoricalDomain(filterVar, uniqueVals);
 		let range = setCategoricalRange(filterVar, uniqueVals);
@@ -79,7 +78,7 @@ function setCategoricalRange(filterVar, uniqueVals) {
 	}
 }
 
-function getUniqueVals(data) {
+function getUniqueVals(data, filterVar) {
 	let uniqueVals = d3.nest()
 		.key((d) => { return d[filterVar.variable] })
 		.map(data);
