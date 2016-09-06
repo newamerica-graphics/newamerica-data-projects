@@ -2,7 +2,7 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
-import { getDefaultColor } from "../helper_functions/colors.js";
+import { colors } from "../helper_functions/colors.js";
 
 
 export class FactBox {
@@ -25,8 +25,6 @@ export class FactBox {
 		for (let factBoxVal of this.factBoxVals) {
 			let value = this.getValue(factBoxVal);
 
-			let colorCode = factBoxVal.variable.color;
-
 			let factBoxDiv = this.chartContainer.append("div")
 				.attr("class", "fact-box")
 				// .style("width", 100/this.numBoxes + "%");
@@ -36,7 +34,7 @@ export class FactBox {
 
 			factBoxLeft.append("div")
 				.attr("class", "fact-box__value-container")
-				.style("background-color", getDefaultColor(colorCode))
+				.style("background-color", () => { return factBoxVal.color ? factBoxVal.color : colors.turquoise.light; })
 			  .append("h5")
 			   	.attr("class", "fact-box__value")
 			   	.text(value);

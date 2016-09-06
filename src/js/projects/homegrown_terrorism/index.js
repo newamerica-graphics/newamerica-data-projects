@@ -13,7 +13,7 @@ let variables = {
 	field_kids: {"variable":"field_kids", "displayName":"Kids", "format":"string", "scaleType":"categorical", "color":"blue"},
 	age: {"variable":"age", "displayName":"Age", "format":"number", "scaleType":"categorical", "color":"turquoise"},
 	marital_status: {"variable":"marital_status", "displayName":"Marital Status", "scaleType":"categorical", "format":"string"},
-	gender: {"variable":"gender", "displayName":"Gender", "format":"number", "scaleType":"categorical", "color":"red"},
+	gender: {"variable":"gender", "displayName":"Gender", "format":"string", "scaleType":"categorical", "color":"red"},
 	field_year_indicted: {"variable":"field_year_indicted", "displayName":"Field Indicted", "format":"year", "scaleType":"categorical", "color":"blue"},
 	headshot: {"variable":"headshot", "format":"image"}
 }
@@ -30,18 +30,29 @@ let vizSettingsList = [
 	// 	tooltipImageVar: variables.headshot,
 	// 	labelSettings: { interval: 1, showNumVals: true}
 	// },
-	{
-		id: "#homegrown__awlaki-over-time", 
-		vizType: "grouped_dot_matrix",
-		dotsPerRow: 5,
-		distanceBetweenGroups: 15,
-		groupingVars: [ variables.year_charged_or_deceased ],
-		dividingLine: { value: "2011", title: "Post al-Awlaki", descriptionLines: ["Anwar al-Awlaki killed in drone strike on", "September 30, 2011"]},
-		filterVars: [ variables.char_awlaki ],
-		tooltipVars: [ variables.full_name, variables.char_awlaki, variables.terror_plot],
-		tooltipImageVar: variables.headshot,
-		labelSettings: { interval: 1, showNumVals: true}
-	},
+	// {
+	// 	id: "#homegrown__awlaki-over-time", 
+	// 	vizType: "grouped_dot_matrix",
+	// 	dotsPerRow: 5,
+	// 	distanceBetweenGroups: 15,
+	// 	groupingVars: [ variables.year_charged_or_deceased ],
+	// 	dividingLine: { value: "2011", title: "Post al-Awlaki", descriptionLines: ["Anwar al-Awlaki killed in drone strike on", "September 30, 2011"]},
+	// 	filterVars: [ variables.char_awlaki ],
+	// 	tooltipVars: [ variables.full_name, variables.char_awlaki, variables.terror_plot],
+	// 	tooltipImageVar: variables.headshot,
+	// 	labelSettings: { interval: 1, showNumVals: true}
+	// },
+	// {
+	// 	id: "#homegrown__gender-of-extremists", 
+	// 	vizType: "grouped_dot_matrix",
+	// 	dotsPerRow: 5,
+	// 	distanceBetweenGroups: 15,
+	// 	groupingVars: [ variables.year_charged_or_deceased ],
+	// 	filterVars: [ variables.gender ],
+	// 	tooltipVars: [ variables.full_name, variables.charged_or_deceased, variables.gender, variables.date_charged, variables.terror_plot],
+	// 	tooltipImageVar: variables.headshot,
+	// 	labelSettings: { interval: 1, showNumVals: true}
+	// },
 	// {
 	// 	id: "#homegrown__citizenship-status", 
 	// 	vizType: "dot_matrix",
@@ -50,15 +61,22 @@ let vizSettingsList = [
 	// 	tooltipVars: [ variables.full_name, variables.citizenship_status ],
 	// 	tooltipImageVar: variables.headshot,
 	// },
-	{
-		id: "#homegrown__age-of-extremists", 
-		vizType: "dot_histogram",
-		groupingVars: [ variables.age ],
-		filterVars: [ variables.marital_status ],
-		tooltipVars: [ variables.full_name, variables.age, variables.marital_status, variables.terror_plot ],
-		tooltipImageVar: variables.headshot,
-		labelSettings: { interval: 5 }
-	},
+	// {
+	// 	id: "#homegrown__age-of-extremists", 
+	// 	vizType: "dot_histogram",
+	// 	groupingVars: [ variables.age ],
+	// 	filterVars: [ variables.marital_status ],
+	// 	tooltipVars: [ variables.full_name, variables.age, variables.marital_status, variables.terror_plot ],
+	// 	tooltipImageVar: variables.headshot,
+	// 	labelSettings: { interval: 5 }
+	// },
+	// {
+	// 	id: "#homegrown__extremist-data-table", 
+	// 	vizType: "table",
+	// 	tableVars: [ variables.full_name, variables.age, variables.gender ],
+	// 	colorScaling: false
+	// },
+
 	// {
 	// 	id: "#test2", 
 	// 	vizType: "dot_histogram",
@@ -73,15 +91,24 @@ let vizSettingsList = [
 	// 	tableVars: [ variables.full_name, variables.field_age, variables.field_gender ],
 	// 	colorScaling: false
 	// },
-	// {
-	// 	id: "#test4", 
-	// 	vizType: "fact_box",
-	// 	factBoxVals: [ 
-	// 		{ variable: variables.field_age, value: "25", type:"count", text:"Jihadists are 25 years old or younger"},
-	// 		{ variable: variables.field_gender, value: "0", type:"percent", text:"Jihadists are female" },
-	// 		{ variable: variables.field_gender, value: "1", type:"percent", text:"Jihadists are male" } 
-	// 	],
-	// },
+	{
+		id: "#homegrown__fact-box__association-with-awlaki", 
+		vizType: "fact_box",
+		factBoxVals: [ 
+			{ variable: variables.char_awlaki, value: "Ties", type:"percent", color:colors.turquoise.light, text:"Ties with Awlaki"},
+			{ variable: variables.char_awlaki, value: "Contact", type:"percent", color:colors.blue.light, text:"Direct contact with Awlaki"},
+
+		],
+	},
+	{
+		id: "#homegrown__fact-box__gender-of-extremists", 
+		vizType: "fact_box",
+		factBoxVals: [ 
+			{ variable: variables.gender, value: "Male", type:"percent", color:colors.turquoise.light, text:"Male"},
+			{ variable: variables.gender, value: "Female", type:"percent", color:colors.blue.light, text:"Female"},
+
+		],
+	},
 ]
 
 let projectSettings = {
