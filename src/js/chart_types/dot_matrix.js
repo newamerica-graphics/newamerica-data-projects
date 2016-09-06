@@ -5,6 +5,8 @@ let d3 = require("d3");
 import { Chart } from "../layouts/chart.js";
 import { Legend } from "../components/legend.js";
 
+import { colors } from "../helper_functions/colors.js";
+
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 
 import { Tooltip } from "../components/tooltip.js"; 
@@ -289,7 +291,7 @@ export class DotMatrix extends Chart {
 		   				return this.colorScale(value);
 		   			}
 		   		// }
-		   		return "#ccc";
+		   		return colors.grey.light;
 		    });
 	}
 
