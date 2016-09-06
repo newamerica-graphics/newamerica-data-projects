@@ -73,7 +73,7 @@ function setCategoricalRange(filterVar, uniqueVals) {
 	} else {
 		let numBins = uniqueVals.keys().length;
 
-		numBins >= ordinalRange.length ? console.log("get_color_scale: too many color bins") : null;
+		numBins >= ordinalRange.length ? console.log("get_color_scale: too many color bins " + filterVar.variable) : null;
 
 		return ordinalRange[numBins];
 	}

@@ -44,4 +44,10 @@
 
 .fact-box-container {
 	width: 100%;
+	&::after {
+	    content:"";
+	    display:block;
+	    clear:both;
+	}
+
 }
