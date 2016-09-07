@@ -12,9 +12,9 @@ var AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
 var DATA_PROJECTS_S3_BUCKET_NAME = process.env.DATA_PROJECTS_S3_BUCKET_NAME;
 
 function getProjectEntryPoints() {
-	let entryPoints = {};
+	var entryPoints = {};
 
-	let projectList = ['homegrown_terrorism', 'care_index'];
+	var projectList = ['homegrown_terrorism', 'care_index'];
 
 	for (var project of projectList) {
 		entryPoints[project] = PROJECT_DIR + "/js/projects/" + project + '/index.js';
