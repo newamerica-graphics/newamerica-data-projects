@@ -31,60 +31,60 @@ let vizSettingsList = [
 		tooltipImageVar: variables.headshot,
 		labelSettings: { interval: 1, showNumVals: true}
 	},
-	{
-		id: "#homegrown__awlaki-over-time", 
-		vizType: "grouped_dot_matrix",
-		dotsPerRow: 5,
-		distanceBetweenGroups: 15,
-		groupingVars: [ variables.year_charged_or_deceased ],
-		dividingLine: { value: "2011", title: "Post al-Awlaki", descriptionLines: ["Anwar al-Awlaki killed in drone strike on", "September 30, 2011"]},
-		filterVars: [ variables.char_awlaki ],
-		tooltipVars: [ variables.full_name, variables.char_awlaki, variables.terror_plot],
-		tooltipImageVar: variables.headshot,
-		labelSettings: { interval: 1, showNumVals: true}
-	},
-	{
-		id: "#homegrown__gender-of-extremists", 
-		vizType: "grouped_dot_matrix",
-		dotsPerRow: 5,
-		distanceBetweenGroups: 15,
-		groupingVars: [ variables.year_charged_or_deceased ],
-		filterVars: [ variables.gender ],
-		tooltipVars: [ variables.full_name, variables.charged_or_deceased, variables.gender, variables.date_charged, variables.terror_plot],
-		tooltipImageVar: variables.headshot,
-		labelSettings: { interval: 1, showNumVals: true}
-	},
-	{
-		id: "#homegrown__citizenship-status", 
-		vizType: "dot_matrix",
-		orientation: "horizontal",
-		filterVars: [ variables.citizenship_status ],
-		tooltipVars: [ variables.full_name, variables.citizenship_status ],
-		tooltipImageVar: variables.headshot,
-	},
-	{
-		id: "#homegrown__age-of-extremists", 
-		vizType: "dot_histogram",
-		groupingVars: [ variables.age ],
-		filterVars: [ variables.marital_status ],
-		tooltipVars: [ variables.full_name, variables.age, variables.marital_status, variables.terror_plot ],
-		tooltipImageVar: variables.headshot,
-		labelSettings: { interval: 5 }
-	},
-	{
-		id: "#homegrown__extremist-data-table", 
-		vizType: "table",
-		tableVars: [ variables.full_name, variables.age, variables.gender ],
-		colorScaling: false
-	},
-	{
-		id: "#homegrown__fact-box__method-of-radicalization", 
-		vizType: "fact_box",
-		factBoxVals: [ 
-			{ variable: variables.char_online_radicalization, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Radicalized Online"},
-			{ variable: variables.char_online_radicalization, value: "No", type:"percent", color:colors.blue.light, text:"Not Radicalized Online"},
-		],
-	},
+	// {
+	// 	id: "#homegrown__awlaki-over-time", 
+	// 	vizType: "grouped_dot_matrix",
+	// 	dotsPerRow: 5,
+	// 	distanceBetweenGroups: 15,
+	// 	groupingVars: [ variables.year_charged_or_deceased ],
+	// 	dividingLine: { value: "2011", title: "Post al-Awlaki", descriptionLines: ["Anwar al-Awlaki killed in drone strike on", "September 30, 2011"]},
+	// 	filterVars: [ variables.char_awlaki ],
+	// 	tooltipVars: [ variables.full_name, variables.char_awlaki, variables.terror_plot],
+	// 	tooltipImageVar: variables.headshot,
+	// 	labelSettings: { interval: 1, showNumVals: true}
+	// },
+	// {
+	// 	id: "#homegrown__gender-of-extremists", 
+	// 	vizType: "grouped_dot_matrix",
+	// 	dotsPerRow: 5,
+	// 	distanceBetweenGroups: 15,
+	// 	groupingVars: [ variables.year_charged_or_deceased ],
+	// 	filterVars: [ variables.gender ],
+	// 	tooltipVars: [ variables.full_name, variables.charged_or_deceased, variables.gender, variables.date_charged, variables.terror_plot],
+	// 	tooltipImageVar: variables.headshot,
+	// 	labelSettings: { interval: 1, showNumVals: true}
+	// },
+	// {
+	// 	id: "#homegrown__citizenship-status", 
+	// 	vizType: "dot_matrix",
+	// 	orientation: "horizontal",
+	// 	filterVars: [ variables.citizenship_status ],
+	// 	tooltipVars: [ variables.full_name, variables.citizenship_status ],
+	// 	tooltipImageVar: variables.headshot,
+	// },
+	// {
+	// 	id: "#homegrown__age-of-extremists", 
+	// 	vizType: "dot_histogram",
+	// 	groupingVars: [ variables.age ],
+	// 	filterVars: [ variables.marital_status ],
+	// 	tooltipVars: [ variables.full_name, variables.age, variables.marital_status, variables.terror_plot ],
+	// 	tooltipImageVar: variables.headshot,
+	// 	labelSettings: { interval: 5 }
+	// },
+	// {
+	// 	id: "#homegrown__extremist-data-table", 
+	// 	vizType: "table",
+	// 	tableVars: [ variables.full_name, variables.age, variables.gender ],
+	// 	colorScaling: false
+	// },
+	// {
+	// 	id: "#homegrown__fact-box__method-of-radicalization", 
+	// 	vizType: "fact_box",
+	// 	factBoxVals: [ 
+	// 		{ variable: variables.char_online_radicalization, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Radicalized Online"},
+	// 		{ variable: variables.char_online_radicalization, value: "No", type:"percent", color:colors.blue.light, text:"Not Radicalized Online"},
+	// 	],
+	// },
 	// {
 	// 	id: "#homegrown__fact-box__method-of-radicalization", 
 	// 	vizType: "fact_box",

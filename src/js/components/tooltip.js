@@ -2,6 +2,9 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
+let tooltipWidth = 330;
+let xPadding = 15;
+
 import { formatValue } from "../helper_functions/format_value.js";
 
 export class Tooltip {
@@ -75,11 +78,6 @@ export class Tooltip {
 
 	show(d, mouse) {
 		console.log(mouse);
-		this.tooltip
-			.classed('hidden', false)
-            .attr('style', 'left:' + (mouse[0]) + 'px; top:' + (mouse[1]) + 'px');
-
-        console.log(this.imageFolderId);
 
         if (this.tooltipImageVar) {
         	if (d[this.tooltipImageVar.variable]) {
@@ -102,8 +100,6 @@ export class Tooltip {
 			let varFormat = variable.format;
 			let value = d[varName] ? formatValue(d[varName], varFormat) : null;
 
-			console.log(value);
-
 			if (value) {
 				this.valueFields[varName].label
 					.style("display", "inline-block");
@@ -119,11 +115,33 @@ export class Tooltip {
 					.style("display", "none");
 
 			}
-		} 
+		}
+
+		let tooltipCoords = this.getTooltipCoords(mouse);
+		this.tooltip
+			.classed('hidden', false)
+            .attr('style', 'left:' + (tooltipCoords[0]) + 'px; top:' + (tooltipCoords[1]) + 'px'); 
 	}
 
 	hide() {
 		this.tooltip.classed('hidden', true);
+	}
+
+	getTooltipCoords(mouse) {
+		let retCoords = mouse;
+		let windowWidth = $(window).width();
+		let tooltipHeight = $(this.tooltip._groups[0]).height();
+
+		if (mouse[0] > (windowWidth - tooltipWidth - xPadding)) {
+			retCoords[0] = mouse[0] - tooltipWidth;
+			retCoords[0] -= xPadding;
+		} else {
+			retCoords[0] += xPadding;
+		}
+
+		retCoords[1] -= (tooltipHeight/2 + 15);
+
+		return retCoords;
 	}
 
 }
