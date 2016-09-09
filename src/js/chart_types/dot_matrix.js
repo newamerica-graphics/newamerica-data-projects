@@ -9,7 +9,7 @@ import { colors } from "../helper_functions/colors.js";
 
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 
-import { Tooltip } from "../components/tooltip.js"; 
+import { Tooltip } from "../components/tooltip.js";
 
 let dotW = 10;
 let dotOffset = 3;
@@ -26,6 +26,8 @@ export class DotMatrix extends Chart {
 		this.dotsPerRow = dotsPerRow;
 		this.isSubComponent = isSubComponent;
 		this.split = split;
+
+		this.split ? this.appendSplitLabels() : null;
 
 		if (isSubComponent) {
 			this.svg = d3.select(id)
@@ -67,6 +69,8 @@ export class DotMatrix extends Chart {
 		if (!this.isSubComponent) {
 			this.setScale();
 		}
+		this.split ? this.setSplitLabels() : null;
+
 		this.buildGraph();
 		
 		if (!this.isSubComponent) {
@@ -155,8 +159,6 @@ export class DotMatrix extends Chart {
 	buildGraph() {
 		let data = this.data;
 
-		this.split ? this.setSplitIndex() : null;
-
 		this.cells = this.svg.selectAll("rect")
 			.data(data)
 			.enter().append("rect")
@@ -221,7 +223,6 @@ export class DotMatrix extends Chart {
 		} else {
 			let xCoord = Math.floor(i/this.dotsPerCol) * (dotW + dotOffset);
 			if (this.split) {
-				console.log(d[this.currFilterVar]);
 				let variableVal = d[this.currFilterVar];
 				let variableValIndex = this.colorScale.domain().indexOf(variableVal);
 				if (variableValIndex > this.splitIndex) {
@@ -312,6 +313,66 @@ export class DotMatrix extends Chart {
 		   		// }
 		   		return colors.grey.light;
 		    });
+	}
+
+	appendSplitLabels() {
+		let splitLabels = d3.select(this.id)
+			.append("div")
+			.attr("class", "dot-matrix__split-label__container");
+
+		let splitLabelLeft = splitLabels
+			.append("div")
+			.attr("class", "dot-matrix__split-label__left");
+
+		let splitLabelRight = splitLabels
+			.append("div")
+			.attr("class", "dot-matrix__split-label__right");
+
+		splitLabelLeft.append("h5")
+			.attr("class", "dot-matrix__split-label__title")
+			.text(this.split.leftLabel);
+
+		splitLabelRight.append("h5")
+			.attr("class", "dot-matrix__split-label__title")
+			.text(this.split.rightLabel);
+
+		this.splitLabelLeftVal = splitLabelLeft.append("h5")
+			.attr("class", "dot-matrix__split-label__value");
+
+		this.splitLabelRightVal = splitLabelRight.append("h5")
+			.attr("class", "dot-matrix__split-label__value");
+
+	}
+
+	setSplitLabels() {
+		this.setSplitIndex();
+		let counts = d3.nest()
+			.key((d) => { return d[this.split.splitFilterVar.variable]; })
+			.rollup(function(v) { return v.length; })
+			.entries(this.data);
+
+		let leftValCounts = 0;
+		let rightValCounts = 0;
+
+		for (let i in counts) {
+			if (i <= this.splitIndex) {
+				leftValCounts += counts[i].value;
+			} else {
+				rightValCounts += counts[i].value;
+			}
+		}
+		console.log(counts);
+
+		if (this.split.splitAggregate == "count") {
+			this.splitLabelLeftVal.text(leftValCounts);
+			this.splitLabelRightVal.text(rightValCounts);
+		} else {
+			let valCountsTotal = leftValCounts + rightValCounts;
+			this.splitLabelLeftVal.text(Math.round(leftValCounts/valCountsTotal * 100) + "%");
+			this.splitLabelRightVal.text(Math.round(rightValCounts/valCountsTotal * 100) + "%");
+		}
+
+		
 	}
 
 }
