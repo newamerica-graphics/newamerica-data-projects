@@ -38,11 +38,11 @@ export class DotMatrix extends Chart {
 			this.colorScale = colorScale;
 
 		} else {
-			let chartContainer = d3.select(id)
-				.append("div")
-				.attr("class", "chart-wrapper");
+			// let chartContainer = d3.select(id)
+			// 	.append("div")
+			// 	.attr("class", "chart-wrapper");
 
-			this.svg = chartContainer
+			this.svg = d3.select(id)
 				.append("svg")
 				.attr("width", "100%");
 
@@ -187,7 +187,8 @@ export class DotMatrix extends Chart {
 			this.h = numRows * (dotW + dotOffset);
 
 		} else {
-			this.w = $(this.svg._groups[0]).width();
+			this.w = $(this.id).width();
+			console.log(this.svg);
 			let numCols = Math.floor(this.w/(dotW + dotOffset));
 			this.split ? numCols -= splitDistance : null;
 			this.dotsPerCol = Math.ceil(this.dataLength/numCols);

@@ -1,7 +1,6 @@
 .dot-matrix {
 	&__split-label {
 		&__container {
-			height: 100%;
 		}
 		&__left {
 			width: 50%;
@@ -19,11 +18,13 @@
 		&__title {
 			font-weight: bold;
 			margin-bottom: 0px;
+			color: palette-get(na-black);
 		}
 		&__value {
 			font-weight: bold;
 			font-size: 2rem;
 			color: palette-get(na-black-30);
+			padding-bottom: 15px;
 			margin-bottom: 0px;
 
 		}
