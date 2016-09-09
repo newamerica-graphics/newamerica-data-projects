@@ -25,6 +25,8 @@ export function setupProject(projectSettings) {
 
 	function initialize() {
 
+		setDownloadLinks();
+
 		for (let vizSettingsObject of vizSettingsList) {
 			let viz;
 			switch (vizSettingsObject.vizType) {
@@ -65,6 +67,11 @@ export function setupProject(projectSettings) {
 
 			vizList.push(viz);
 		}
+	}
+
+	function setDownloadLinks() {
+		$("#in-depth__download__xls").attr("href", projectSettings.downloadDataLink + "export?format=xlsx");
+		$("#in-depth__download__json").attr("href", projectSettings.dataUrl);
 	}
 
 	function render() {
