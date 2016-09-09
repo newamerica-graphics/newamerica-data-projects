@@ -61,6 +61,7 @@ let vizSettingsList = [
 		filterVars: [ variables.citizenship_status ],
 		tooltipVars: [ variables.full_name, variables.citizenship_status ],
 		tooltipImageVar: variables.headshot,
+		split: { splitFilterVar:variables.citizenship_status, splitVal: "Permanent Resident", leftLabel: "Citizens and Permanent Residents", rightLabel: "Non-residents and Unknown", splitAggregate: "percent"}
 	},
 	{
 		id: "#homegrown__age-of-extremists", 

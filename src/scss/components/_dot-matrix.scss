@@ -1,0 +1,32 @@
+.dot-matrix {
+	&__split-label {
+		&__container {
+		}
+		&__left {
+			width: 50%;
+			float: left;
+
+		}
+
+		&__right {
+			width: 50%;
+			float: right;
+			& > * {
+				text-align: right;
+			}
+		}
+		&__title {
+			font-weight: bold;
+			margin-bottom: 0px;
+			color: palette-get(na-black);
+		}
+		&__value {
+			font-weight: bold;
+			font-size: 2rem;
+			color: palette-get(na-black-30);
+			padding-bottom: 15px;
+			margin-bottom: 0px;
+
+		}
+	}
+}
