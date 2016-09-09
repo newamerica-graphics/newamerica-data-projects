@@ -16,7 +16,7 @@ let dividingLineTextOffset = 20;
 
 export class GroupedDotMatrix extends Chart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, groupingVars, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, distanceBetweenGroups, labelSettings, dividingLine} = vizSettings;
+		let {id, groupingVars, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, distanceBetweenGroups, labelSettings, dividingLine, legendShowVals} = vizSettings;
 
 		super(id, false);
 
@@ -26,6 +26,8 @@ export class GroupedDotMatrix extends Chart {
 		this.filterVars = filterVars;
 		this.dotsPerRow = dotsPerRow;
 		this.dividingLine = dividingLine;
+		this.legendShowVals = legendShowVals;
+
 		if (dividingLine) {
 			this.dividingLineTextHeight = this.dividingLine.descriptionLines.length * dividingLineTextOffset + 30;
 		}
@@ -178,6 +180,13 @@ export class GroupedDotMatrix extends Chart {
 
 	setLegend() {
 		let legendSettings = {};
+		
+		if ( this.legendShowVals ) {
+			legendSettings.valCounts = d3.nest()
+				.key((d) => { return d[this.currFilterVar]; })
+				.rollup(function(v) { return v.length; })
+				.map(this.data);
+		}
 
 		legendSettings.format = this.currFilter.format;
 		legendSettings.scaleType = this.currFilter.scaleType;
