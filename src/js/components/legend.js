@@ -111,11 +111,12 @@ export class Legend {
 	}
 
 	appendValCount(cell, i, valCounts) {
-		console.log(valCounts.values()[0]);
+		let valKey = this.colorScale.domain()[i];
+
 		cell.append("h5")
 			.attr("class", "legend__cell__val-count")
 			.style("color", this.colorScale.range()[i])
-			.text(valCounts.values()[i]);
+			.text(valCounts.get(valKey));
 	}
 
 	appendCellText(cell, i, scaleType, format) {

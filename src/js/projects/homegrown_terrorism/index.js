@@ -41,7 +41,8 @@ let vizSettingsList = [
 		filterVars: [ variables.char_awlaki ],
 		tooltipVars: [ variables.full_name, variables.char_awlaki, variables.terror_plot],
 		tooltipImageVar: variables.headshot,
-		labelSettings: { interval: 1, showNumVals: true}
+		labelSettings: { interval: 1, showNumVals: true},
+		legendShowVals: true
 	},
 	{
 		id: "#homegrown__gender-of-extremists", 
