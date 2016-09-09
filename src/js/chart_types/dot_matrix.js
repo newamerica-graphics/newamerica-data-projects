@@ -13,10 +13,11 @@ import { Tooltip } from "../components/tooltip.js";
 
 let dotW = 10;
 let dotOffset = 3;
+let splitDistance = 3; //number of dots between split components
 
 export class DotMatrix extends Chart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, orientation, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, isSubComponent, tooltip, colorScale} = vizSettings;
+		let {id, orientation, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, isSubComponent, tooltip, colorScale, split} = vizSettings;
 		
 		super(id, isSubComponent);
 
@@ -24,6 +25,7 @@ export class DotMatrix extends Chart {
 		this.orientation = orientation;
 		this.dotsPerRow = dotsPerRow;
 		this.isSubComponent = isSubComponent;
+		this.split = split;
 
 		if (isSubComponent) {
 			this.svg = d3.select(id)
@@ -153,12 +155,14 @@ export class DotMatrix extends Chart {
 	buildGraph() {
 		let data = this.data;
 
+		this.split ? this.setSplitIndex() : null;
+
 		this.cells = this.svg.selectAll("rect")
 			.data(data)
 			.enter().append("rect")
 			.attr("width", dotW)
 		    .attr("height", dotW)
-		    .attr("x", (d, i) => { return this.calcX(i); })
+		    .attr("x", (d, i) => { return this.calcX(d, i); })
 		    .attr("y", (d, i) => { return this.calcY(i); })
 		    .attr("fill", (d) => {
 		    	return this.colorScale(d[this.currFilterVar]);
@@ -166,6 +170,11 @@ export class DotMatrix extends Chart {
 		    .attr("class", (d) => { return d[this.currFilterVar]; })
 		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], event); })
 		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); });
+	}
+
+	setSplitIndex() {
+		let splitVal = this.split.splitVal;
+		this.splitIndex = this.colorScale.domain().indexOf(splitVal);
 	}
 
 	setDimensions() {
@@ -176,8 +185,9 @@ export class DotMatrix extends Chart {
 			this.h = numRows * (dotW + dotOffset);
 
 		} else {
-			this.w = $(this.id).width();
+			this.w = $(this.svg._groups[0]).width();
 			let numCols = Math.floor(this.w/(dotW + dotOffset));
+			this.split ? numCols -= splitDistance : null;
 			this.dotsPerCol = Math.ceil(this.dataLength/numCols);
 
 			this.h = this.dotsPerCol * (dotW + dotOffset);		
@@ -205,12 +215,21 @@ export class DotMatrix extends Chart {
 
 	}
 
-	calcX(i) {
+	calcX(d, i) {
 		if (this.orientation == "vertical") {
 			return i%this.dotsPerRow * (dotW + dotOffset);
 		} else {
-			console.log(this.dotsPerRow);
-			return Math.floor(i/this.dotsPerCol) * (dotW + dotOffset);
+			let xCoord = Math.floor(i/this.dotsPerCol) * (dotW + dotOffset);
+			if (this.split) {
+				console.log(d[this.currFilterVar]);
+				let variableVal = d[this.currFilterVar];
+				let variableValIndex = this.colorScale.domain().indexOf(variableVal);
+				if (variableValIndex > this.splitIndex) {
+					xCoord += splitDistance * (dotW + dotOffset);
+				}
+			}
+
+			return xCoord;
 		}
 	}
 
@@ -229,7 +248,7 @@ export class DotMatrix extends Chart {
 			this.setDimensions();
 
 			this.cells
-				.attr("x", (d, i) => { return this.calcX(i); })
+				.attr("x", (d, i) => { return this.calcX(d, i); })
 			    .attr("y", (d, i) => { return this.calcY(i); });
 		}
 	}
