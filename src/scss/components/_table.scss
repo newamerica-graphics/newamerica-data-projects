@@ -5,9 +5,17 @@
 }
 
 .dataTables_filter {
-	float: left !important;
+	float: right !important;
 	text-align: left !important;
 	width: 300px;
+	label {
+		font-size: 0;
+
+		input {
+			font-size: 1rem;
+			margin-bottom: 10px;
+		}
+	}
 }
 
 table.dataTable {
@@ -20,3 +28,37 @@ table.dataTable {
 		}
 	}
 }
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+	border: none !important;
+	background: none !important;
+	width: 40px;
+	color: palette-get(na-black-40) !important;
+
+	&:hover {
+		color: palette-get(na-turquoise) !important;
+		font-weight: bold !important;
+	}
+
+	&:focus {
+		border: none !important;
+    	outline: none !important;
+	}
+
+	&.previous {
+		width: 85px;
+		cursor: pointer !important;
+
+		&:hover {
+			color: palette-get(na-turquoise) !important;
+		}
+	}
+
+	&.next {
+		width: 50px;
+	}
+	&.current {
+		font-weight: bold;
+	}
+}
+
