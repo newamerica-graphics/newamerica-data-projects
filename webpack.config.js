@@ -13,8 +13,13 @@ var DATA_PROJECTS_S3_BUCKET_NAME = process.env.DATA_PROJECTS_S3_BUCKET_NAME;
 
 function getProjectEntryPoints() {
 	var entryPoints = {};
+  var whichProject = process.env.npm_config_project;
 
-	var projectList = ['homegrown_terrorism', 'care_index'];
+  if (whichProject) {
+    var projectList = [whichProject];
+  } else {
+    var projectList = ['homegrown_terrorism', 'care_index'];
+  }
 
 	for (var project of projectList) {
 		entryPoints[project] = PROJECT_DIR + "/js/projects/" + project + '/index.js';
