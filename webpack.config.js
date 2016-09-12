@@ -2,7 +2,6 @@ var webpack = require('webpack');
 var path = require('path');
 var S3Plugin = require('webpack-s3-plugin');
 
-
 var BUILD_DIR = path.resolve(__dirname, 'build/');
 var PROJECT_DIR = path.resolve(__dirname, 'src');
 
@@ -44,7 +43,10 @@ var config = {
       {
         test: /\.scss$/,
         loaders: [ 'style', 'css', 'sass' ]
-      }
+      },
+      { 
+        test: /\.png$/, 
+        loader: "url-loader?limit=100000" },
     ]
   },
   sassLoader: {
