@@ -83,8 +83,7 @@ let vizSettingsList = [
 		id: "#homegrown__fact-box__method-of-radicalization", 
 		vizType: "fact_box",
 		factBoxVals: [ 
-			{ variable: variables.char_online_radicalization, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Radicalized Online"},
-			{ variable: variables.char_online_radicalization, value: "No", type:"percent", color:colors.blue.light, text:"Not Radicalized Online"},
+			{ variable: variables.char_online_radicalization, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Maintained social media profile with jihadist material or utilized encryption for plotting"},
 		],
 	},
 	// {
