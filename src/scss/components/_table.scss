@@ -1,7 +1,5 @@
 .table {
 	width: 100% !important;
-
-
 }
 
 .dataTables_filter {
@@ -27,12 +25,15 @@ table.dataTable {
 			font-weight: bold;
 		}
 	}
+
+	tr {
+		background-color: transparent;
+	}
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button {
 	border: none !important;
 	background: none !important;
-	width: 40px;
 	color: palette-get(na-black-40) !important;
 
 	&:hover {
@@ -46,7 +47,6 @@ table.dataTable {
 	}
 
 	&.previous {
-		width: 85px;
 		cursor: pointer !important;
 
 		&:hover {
@@ -54,9 +54,6 @@ table.dataTable {
 		}
 	}
 
-	&.next {
-		width: 50px;
-	}
 	&.current {
 		font-weight: bold;
 	}

@@ -76,7 +76,7 @@ let vizSettingsList = [
 	{
 		id: "#homegrown__extremist-data-table", 
 		vizType: "table",
-		tableVars: [ variables.full_name, variables.age, variables.gender ],
+		tableVars: [ variables.full_name, variables.gender, variables.age],
 		defaultOrdering: [0, "asc"],
 		pagination: true,
 		numPerPage: 25,
