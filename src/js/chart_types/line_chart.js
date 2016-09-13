@@ -210,6 +210,13 @@ export class LineChart {
 		for (let key of Object.keys(this.dataLines)) {
 			this.dataLines[key].attr("d", this.line);
 		}
+
+		this.dataPoints
+			.attr("x", (d) => { return this.xScale(d[this.currXVarName]) - dataPointWidth/2})
+			.attr("y", (d) => {
+				let scaledVal = this.yScaleType == "cumulative" ? d.cumulativeVal : d[this.currYVarName]; 
+				return this.yScale(scaledVal) - dataPointWidth/2;
+			})
 	}
 
 	changeVariableValsShown(valsShown) {
