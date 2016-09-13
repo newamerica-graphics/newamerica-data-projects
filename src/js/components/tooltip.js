@@ -3,7 +3,7 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 let tooltipWidth = 330;
-let xPadding = 15;
+let xPadding = 2;
 
 import { formatValue } from "../helper_functions/format_value.js";
 
