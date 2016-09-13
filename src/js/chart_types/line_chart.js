@@ -2,9 +2,11 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
+import { getColorScale } from "../helper_functions/get_color_scale.js";
+
 let margin = {top: 20, right: 20, bottom: 30, left: 50};
 
-let dataPointWidth = 4;
+let dataPointWidth = 8;
 
 export class LineChart {
 	constructor(vizSettings) {
@@ -41,9 +43,14 @@ export class LineChart {
 		this.data = this.processData(data);
 
 		this.setCumulativeValues();
+
 		  
 		this.xScale.domain(d3.extent(this.data, (d) => { return d[this.currXVarName]; }));
 		this.yScale.domain(d3.extent(this.data, (d) => { return d.cumulativeVal; }));
+
+		this.setColorScale();
+
+		console.log(this.colorScale.domain())
 
 		this.renderAxes();
 
@@ -53,7 +60,8 @@ export class LineChart {
        		let dataLine = this.renderingArea.append("path")
 				.datum(d.values)
 				.attr("class", "line")
-				.attr("d", this.line);
+				.attr("d", this.line)
+				.attr("stroke", this.colorScale(d.key));
 
 		    this.dataLines.push(dataLine);
 	  	})
@@ -66,7 +74,7 @@ export class LineChart {
 			.attr("width", dataPointWidth)
 			.attr("height", dataPointWidth)
 			.attr("stroke-width", "none")
-			.attr("fill", "orange" );
+			.attr("fill", (d) => { return this.colorScale(d[this.currColorVarName])});
 	}
 
 	setDimensions() {
@@ -85,6 +93,10 @@ export class LineChart {
 		this.xScale.range([0, this.w]);
 
 		this.yScale.range([this.h, 0]);
+	}
+
+	setColorScale() {
+		this.colorScale = getColorScale(this.data, this.currColorVar);
 	}
 
 	setLineScaleFunction() {
@@ -142,8 +154,6 @@ export class LineChart {
 	    		console.log(datapoint[this.currXVarName], datapoint.cumulativeVal);
 	    	}
 	    }
-
-	    console.log(this.dataNest);
 	}
 
 	resize() {
