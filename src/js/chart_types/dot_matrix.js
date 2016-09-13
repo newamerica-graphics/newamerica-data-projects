@@ -303,7 +303,6 @@ export class DotMatrix extends Chart {
 	}
 
 	changeVariableValsShown(valsShown) {
-		console.log(this.cells);
 		this.cells
 			.style("fill", (d) => {
 		   		var value = d[this.currFilterVar];

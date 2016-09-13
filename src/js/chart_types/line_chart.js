@@ -4,6 +4,7 @@ let d3 = require("d3");
 
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { Legend } from "../components/legend.js";
+import { Tooltip } from "../components/tooltip.js";
 
 let parseDate = d3.timeParse("%B %d, %Y");
 
@@ -12,8 +13,8 @@ let margin = {top: 20, right: 20, bottom: 30, left: 50};
 let dataPointWidth = 8;
 
 export class LineChart {
-	constructor(vizSettings) {
-		let {id, tooltipVars, xVars, yVars, colorVars, yScaleType, primaryDataSheet, interpolation} = vizSettings;
+	constructor(vizSettings, imageFolderId) {
+		let {id, tooltipVars, tooltipImageVar, xVars, yVars, colorVars, yScaleType, primaryDataSheet, interpolation} = vizSettings;
 		console.log(id);
 		this.id = id;
 		this.interpolation = interpolation;
@@ -45,6 +46,8 @@ export class LineChart {
 		legendSettings.markerSettings = { shape:"rect", size:dataPointWidth };
 		legendSettings.orientation = "horizontal-center";
 		this.legend = new Legend(legendSettings);
+
+		this.tooltip = new Tooltip(id, tooltipVars, tooltipImageVar, imageFolderId);
 		
 	}
 
@@ -146,7 +149,9 @@ export class LineChart {
 			.attr("width", dataPointWidth)
 			.attr("height", dataPointWidth)
 			.attr("stroke-width", "none")
-			.attr("fill", (d) => { return this.colorScale(d[this.currColorVarName])});
+			.attr("fill", (d) => { return this.colorScale(d[this.currColorVarName])})
+			.on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], event); })
+		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); });
 	}
 
 	processData(data) {
@@ -239,6 +244,41 @@ export class LineChart {
 		   			}
 		   		return "grey";
 		    });
+	}
+
+	mouseover(datum, path, eventObject) {
+		let mousePos = [];
+		mousePos[0] = eventObject.pageX;
+		mousePos[1] = eventObject.pageY;
+
+		let elem = d3.select(path);
+		// let prevX = elem.attr("x");
+		// let prevY = elem.attr("y");
+
+		elem
+			// .attr("width", dotW * 2)
+		 //    .attr("height", dotW * 2)
+		 //    .attr("x", prevX - dotW/2)
+		 //    .attr("y", prevY - dotW/2)
+			.attr("stroke", "white")
+			.attr("stroke-width", 3.5);
+			
+		this.tooltip.show(datum, mousePos);
+	}
+
+	mouseout(path) {
+		let elem = d3.select(path);
+		// let prevX = Number(elem.attr("x"));
+		// let prevY = Number(elem.attr("y"));
+
+		elem
+			.attr("stroke", "none");
+			// .attr("width", dotW)
+		 //    .attr("height", dotW)
+		 //    .attr("x", prevX + dotW/2)
+		 //    .attr("y", prevY + dotW/2);
+
+		this.tooltip.hide();
 	}
 
 }

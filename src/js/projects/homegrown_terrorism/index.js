@@ -17,9 +17,13 @@ let variables = {
 	field_year_indicted: {"variable":"field_year_indicted", "displayName":"Field Indicted", "format":"year", "scaleType":"categorical", "color":"blue"},
 	char_online_radicalization: {"variable":"char_online_radicalization", "format": "string"},
 	headshot: {"variable":"headshot", "format":"image"},
+	
 	deadly_attack_date: {"variable":"deadly_attack_date", "displayName":"Deadly Attack Date", "format":"date"},
 	victims_killed: {"variable":"victims_killed", "displayName":"Victims Killed", "format":"number"},
+	victims_wounded: {"variable": "victims_wounded", "displayName":"Victims Wounded", "format":"string"},
 	ideology: {"variable":"ideology", "displayName":"Ideology", "format":"string", "scaleType":"categorical", "customDomain": ["Jihadist", "Right Wing", "Left Wing"], "customRange": [colors.red.light, colors.turquoise.light, colors.blue.light]},
+	attack_name: {"variable": "name", "displayName":"Attack Name", "format":"string"},
+	attack_description: {"variable": "description", "displayName":"Summary", "format":"string"},
 }
 
 let vizSettingsList = [
@@ -104,7 +108,8 @@ let vizSettingsList = [
 		primaryDataSheet: "terror_plots",
 		xVars: [ variables.deadly_attack_date ],
 		yVars: [ variables.victims_killed ],
-		colorVars: [ variables.ideology ]
+		colorVars: [ variables.ideology ],
+		tooltipVars: [ variables.attack_name, variables.ideology, variables.victims_wounded, variables.victims_killed, variables.attack_description ]
 
 	}
 	// {
