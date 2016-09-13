@@ -1,0 +1,28 @@
+.axis {
+	font-size: 12px;
+	font-weight: bold;
+	& path,
+	& line {
+	  fill: none;
+	  stroke: palette-get(na-black-10);
+	  stroke-width: 1.5px;
+	  shape-rendering: crispEdges;
+	}
+
+	.tick line {
+		stroke: palette-get(na-black-10);
+		/*display: none;*/
+	}
+
+	&-x, &-y {
+		.tick:nth-child(even) {
+		    display: none;
+		}
+
+		@include breakpoint(medium) {
+			.tick:nth-child(even) {
+			    display: initial;
+			}
+		}
+	}
+}

@@ -21,7 +21,7 @@ export class LineChart {
 		this.primaryDataSheet = primaryDataSheet;
 		this.yScaleType = yScaleType;
 
-		this.svg = d3.select(id).append("svg");
+		this.svg = d3.select(id).append("svg").attr("class", "line-chart");
 
 		this.renderingArea = this.svg.append("g");
 
@@ -106,13 +106,13 @@ export class LineChart {
 
 	renderAxes() {
 		this.xAxis = this.renderingArea.append("g")
-			.attr("class", "axis axis--x")
+			.attr("class", "axis axis-x")
 			.attr("transform", "translate(0," + this.h + ")")
-			.call(d3.axisBottom(this.xScale));
+			.call(d3.axisBottom(this.xScale).tickPadding(10));
 
 		this.yAxis = this.renderingArea.append("g")
-			.attr("class", "axis axis--y")
-			.call(d3.axisLeft(this.yScale));
+			.attr("class", "axis axis-y")
+			.call(d3.axisLeft(this.yScale).tickPadding(10));
 
 		this.yAxis.append("text")
 			.attr("class", "axis-title")
@@ -129,7 +129,7 @@ export class LineChart {
         this.dataNest.forEach((d) => {
        		let dataLine = this.renderingArea.append("path")
 				.datum(d.values)
-				.attr("class", "line")
+				.attr("class", "line-chart__line")
 				.attr("d", this.line)
 				.attr("stroke", this.colorScale(d.key));
 
@@ -141,6 +141,7 @@ export class LineChart {
 		this.dataPoints = this.renderingArea.selectAll("rect")
 			.data(this.data)
 			.enter().append("svg:rect")
+			.attr("class", "line-chart__point")
 			.attr("x", (d) => { return this.xScale(d[this.currXVarName]) - dataPointWidth/2})
 			.attr("y", (d) => {
 				let scaledVal = this.yScaleType == "cumulative" ? d.cumulativeVal : d[this.currYVarName]; 
@@ -252,14 +253,8 @@ export class LineChart {
 		mousePos[1] = eventObject.pageY;
 
 		let elem = d3.select(path);
-		// let prevX = elem.attr("x");
-		// let prevY = elem.attr("y");
 
 		elem
-			// .attr("width", dotW * 2)
-		 //    .attr("height", dotW * 2)
-		 //    .attr("x", prevX - dotW/2)
-		 //    .attr("y", prevY - dotW/2)
 			.attr("stroke", "white")
 			.attr("stroke-width", 3.5);
 			
@@ -268,15 +263,9 @@ export class LineChart {
 
 	mouseout(path) {
 		let elem = d3.select(path);
-		// let prevX = Number(elem.attr("x"));
-		// let prevY = Number(elem.attr("y"));
 
 		elem
 			.attr("stroke", "none");
-			// .attr("width", dotW)
-		 //    .attr("height", dotW)
-		 //    .attr("x", prevX + dotW/2)
-		 //    .attr("y", prevY + dotW/2);
 
 		this.tooltip.hide();
 	}
