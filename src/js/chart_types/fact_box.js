@@ -11,7 +11,6 @@ export class FactBox {
 
 		this.factBoxVals = factBoxVals;
 		this.numBoxes = factBoxVals.length;
-		this.primaryDataSheet = primaryDataSheet;
 
 		this.chartContainer = d3.select(id)
 			.append("div")

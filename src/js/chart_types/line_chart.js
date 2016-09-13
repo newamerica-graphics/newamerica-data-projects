@@ -3,6 +3,9 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 import { getColorScale } from "../helper_functions/get_color_scale.js";
+import { Legend } from "../components/legend.js";
+
+let parseDate = d3.timeParse("%B %d, %Y");
 
 let margin = {top: 20, right: 20, bottom: 30, left: 50};
 
@@ -10,11 +13,12 @@ let dataPointWidth = 8;
 
 export class LineChart {
 	constructor(vizSettings) {
-		let {id, tooltipVars, xVars, yVars, colorVars, primaryDataSheet, interpolation} = vizSettings;
+		let {id, tooltipVars, xVars, yVars, colorVars, yScaleType, primaryDataSheet, interpolation} = vizSettings;
 		console.log(id);
 		this.id = id;
 		this.interpolation = interpolation;
 		this.primaryDataSheet = primaryDataSheet;
+		this.yScaleType = yScaleType;
 
 		this.svg = d3.select(id).append("svg");
 
@@ -34,47 +38,33 @@ export class LineChart {
 		this.currYVarName = yVars[0].variable;
 		this.currColorVar = colorVars[0];
 		this.currColorVarName = colorVars[0].variable;
+
+		let legendSettings = {};
+		legendSettings.id = id;
+		legendSettings.showTitle = false;
+		legendSettings.markerSettings = { shape:"rect", size:dataPointWidth };
+		legendSettings.orientation = "horizontal-center";
+		this.legend = new Legend(legendSettings);
 		
 	}
 
 	render(data) {
-		this.parseDate = d3.timeParse("%B %d, %Y");
-
 		this.data = this.processData(data);
 
-		this.setCumulativeValues();
-
+		this.yScaleType == "cumulative" ? this.setCumulativeValues() : null;
 		  
 		this.xScale.domain(d3.extent(this.data, (d) => { return d[this.currXVarName]; }));
-		this.yScale.domain(d3.extent(this.data, (d) => { return d.cumulativeVal; }));
+		this.yScale.domain(d3.extent(this.data, (d) => { 
+			return this.yScaleType == "cumulative" ? d.cumulativeVal : d[this.currYVarName]; 
+		}));
 
 		this.setColorScale();
 
-		console.log(this.colorScale.domain())
-
 		this.renderAxes();
+        this.renderLines();
+        this.renderPoints();
 
-        this.dataLines = [];
-
-        this.dataNest.forEach((d) => {
-       		let dataLine = this.renderingArea.append("path")
-				.datum(d.values)
-				.attr("class", "line")
-				.attr("d", this.line)
-				.attr("stroke", this.colorScale(d.key));
-
-		    this.dataLines.push(dataLine);
-	  	})
-
-		this.renderingArea.selectAll("rect")
-			.data(this.data)
-			.enter().append("svg:rect")
-			.attr("x", (d) => { return this.xScale(d[this.currXVarName]) - dataPointWidth/2})
-			.attr("y", (d) => { return this.yScale(d.cumulativeVal) - dataPointWidth/2})
-			.attr("width", dataPointWidth)
-			.attr("height", dataPointWidth)
-			.attr("stroke-width", "none")
-			.attr("fill", (d) => { return this.colorScale(d[this.currColorVarName])});
+        this.setLegend();
 	}
 
 	setDimensions() {
@@ -103,7 +93,10 @@ export class LineChart {
 		console.log(this.xScale.domain());
 		this.line = d3.line()
 		    .x((d) => { return this.xScale(d[this.currXVarName]); })
-		    .y((d) => { return this.yScale(d.cumulativeVal); });
+		    .y((d) => { 
+		    	let scaledVal = this.yScaleType == "cumulative" ? d.cumulativeVal : d[this.currYVarName];
+		    	return this.yScale(scaledVal); 
+		    });
 
 		this.interpolation == "step" ? this.line.curve(d3.curveStepAfter) : null;
 	}
@@ -127,11 +120,40 @@ export class LineChart {
 			.text("Price ($)");
 	}
 
+	renderLines() {
+		this.dataLines = {};
+
+        this.dataNest.forEach((d) => {
+       		let dataLine = this.renderingArea.append("path")
+				.datum(d.values)
+				.attr("class", "line")
+				.attr("d", this.line)
+				.attr("stroke", this.colorScale(d.key));
+
+		    this.dataLines[d.key] = dataLine;
+	  	})
+	}
+
+	renderPoints() {
+		this.dataPoints = this.renderingArea.selectAll("rect")
+			.data(this.data)
+			.enter().append("svg:rect")
+			.attr("x", (d) => { return this.xScale(d[this.currXVarName]) - dataPointWidth/2})
+			.attr("y", (d) => {
+				let scaledVal = this.yScaleType == "cumulative" ? d.cumulativeVal : d[this.currYVarName]; 
+				return this.yScale(scaledVal) - dataPointWidth/2;
+			})
+			.attr("width", dataPointWidth)
+			.attr("height", dataPointWidth)
+			.attr("stroke-width", "none")
+			.attr("fill", (d) => { return this.colorScale(d[this.currColorVarName])});
+	}
+
 	processData(data) {
 		let retArray = [];
 		for (let d of data) {
 			if (d[this.currXVarName] && d[this.currYVarName] && d[this.currColorVarName]) {
-				d[this.currXVarName] = this.parseDate(d[this.currXVarName]);
+				d[this.currXVarName] = parseDate(d[this.currXVarName]);
 				retArray.push(d);
 			}
 		}
@@ -156,6 +178,24 @@ export class LineChart {
 	    }
 	}
 
+	setLegend() {
+		let valCounts = d3.nest()
+			.key((d) => { return d[this.currColorVarName]; })
+			.rollup((v) => { 
+				return d3.sum(v, (d) => { return Number(d[this.currYVarName]); });
+			})
+			.map(this.data);
+
+		let legendSettings = {};
+		legendSettings.format = this.currColorVar.format;
+		legendSettings.scaleType = this.currColorVar.scaleType;
+		legendSettings.colorScale = this.colorScale;
+		legendSettings.valCounts = valCounts;
+		legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
+
+		this.legend.render(legendSettings);
+	}
+
 	resize() {
 		this.setDimensions();
 		this.setScales();
@@ -167,10 +207,31 @@ export class LineChart {
 
 		this.yAxis.call(d3.axisLeft(this.yScale));
 
-		for (let dataLine of this.dataLines) {
-			dataLine.attr("d", this.line);
+		for (let key of Object.keys(this.dataLines)) {
+			this.dataLines[key].attr("d", this.line);
 		}
 	}
 
+	changeVariableValsShown(valsShown) {
+		for (let key of Object.keys(this.dataLines)) {
+			let binIndex = this.colorScale.domain().indexOf(key);
+
+   			if (valsShown.indexOf(binIndex) > -1) {
+   				this.dataLines[key].attr("stroke", this.colorScale(key));
+   			} else {
+   				this.dataLines[key].attr("stroke", "grey");
+   			}
+		}
+
+		this.dataPoints
+			.style("fill", (d) => {
+		   		var value = d[this.currColorVarName];
+		   			let binIndex = this.colorScale.domain().indexOf(value);
+		   			if (valsShown.indexOf(binIndex) > -1) {
+		   				return this.colorScale(value);
+		   			}
+		   		return "grey";
+		    });
+	}
 
 }
