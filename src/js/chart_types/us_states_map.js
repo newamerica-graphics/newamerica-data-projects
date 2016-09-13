@@ -18,11 +18,12 @@ let d3 = require("d3");
 export class UsStatesMap extends Chart {
 	
 	constructor(vizSettings) {
-		let {id, tooltipVars, filterVars} = vizSettings;
+		let {id, tooltipVars, filterVars, primaryDataSheet } = vizSettings;
 		super(id);
 
 		this.id = id;
 		this.filterVars = filterVars;
+		this.primaryDataSheet = primaryDataSheet;
 
 		this.currFilterIndex = 0;
 		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;

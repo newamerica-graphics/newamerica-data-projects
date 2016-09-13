@@ -9,10 +9,11 @@ import { getColorScale } from "../helper_functions/get_color_scale.js";
 
 export class Table {
 	constructor(vizSettings) {
-		let {id, tableVars, colorScaling} = vizSettings;
+		let {id, tableVars, colorScaling, primaryDataSheet } = vizSettings;
 
 		this.tableVars = tableVars;
 		this.colorScaling = colorScaling;
+		this.primaryDataSheet = primaryDataSheet;
 
 		d3.select(id).append("table")
 			.attr("id", "dataTable")

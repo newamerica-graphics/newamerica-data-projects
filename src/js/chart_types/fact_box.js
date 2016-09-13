@@ -7,7 +7,7 @@ import { colors } from "../helper_functions/colors.js";
 
 export class FactBox {
 	constructor(vizSettings) {
-		let { id, factBoxVals } = vizSettings;
+		let { id, factBoxVals, primaryDataSheet } = vizSettings;
 
 		this.factBoxVals = factBoxVals;
 		this.numBoxes = factBoxVals.length;
