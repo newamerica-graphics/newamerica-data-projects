@@ -11,7 +11,7 @@ import { MultiChartLayout } from "./layouts/multi_chart_layout.js";
 import { GroupedBarChart } from "./chart_types/grouped_bar_chart.js";
 import { Table } from "./chart_types/table.js";
 import { FactBox } from "./chart_types/fact_box.js";
-import { StepChart } from "./chart_types/step_chart.js";
+import { LineChart } from "./chart_types/line_chart.js";
 
 export function setupProject(projectSettings) {
 	let { vizSettingsList, imageFolderId } = projectSettings;
@@ -55,8 +55,8 @@ export function setupProject(projectSettings) {
 					viz = new GroupedDotMatrix(vizSettingsObject, imageFolderId);
 					break;
 
-				case "step_chart":
-					viz = new StepChart(vizSettingsObject);
+				case "line_chart":
+					viz = new LineChart(vizSettingsObject);
 					break;
 
 				case "table":

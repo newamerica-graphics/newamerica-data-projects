@@ -16,7 +16,10 @@ let variables = {
 	gender: {"variable":"gender", "displayName":"Gender", "format":"string", "scaleType":"categorical", "color":"red", "customDomain":["Female", "Male"], "customRange":[colors.red.light, colors.turquoise.light]},
 	field_year_indicted: {"variable":"field_year_indicted", "displayName":"Field Indicted", "format":"year", "scaleType":"categorical", "color":"blue"},
 	char_online_radicalization: {"variable":"char_online_radicalization", "format": "string"},
-	headshot: {"variable":"headshot", "format":"image"}
+	headshot: {"variable":"headshot", "format":"image"},
+	deadly_attack_date: {"variable":"deadly_attack_date", "displayName":"Deadly Attack Date", "format":"date"},
+	victims_killed: {"variable":"victims_killed", "displayName":"Victims Killed", "format":"number"},
+	ideology: {"variable":"ideology", "displayName":"Ideology", "format":"string"},
 }
 
 let vizSettingsList = [
@@ -95,8 +98,14 @@ let vizSettingsList = [
 	// },
 	{
 		id: "#homegrown__deadly-attacks",
-		vizType: "step_chart",
+		vizType: "line_chart",
+		interpolation: "step",
+		yScaleType: "cumulative",
 		primaryDataSheet: "terror_plots",
+		xVars: [ variables.deadly_attack_date ],
+		yVars: [ variables.victims_killed ],
+		colorVars: [ variables.ideology ]
+
 	}
 	// {
 	// 	id: "#homegrown__fact-box__method-of-radicalization", 
