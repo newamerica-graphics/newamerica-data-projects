@@ -17,7 +17,7 @@ let splitDistance = 3; //number of dots between split components
 
 export class DotMatrix extends Chart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, orientation, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, isSubComponent, tooltip, colorScale, split} = vizSettings;
+		let {id, orientation, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, isSubComponent, tooltip, colorScale, split, primaryDataSheet} = vizSettings;
 		
 		super(id, isSubComponent);
 
@@ -26,6 +26,7 @@ export class DotMatrix extends Chart {
 		this.dotsPerRow = dotsPerRow;
 		this.isSubComponent = isSubComponent;
 		this.split = split;
+		this.primaryDataSheet = primaryDataSheet;
 
 		this.split ? this.appendSplitLabels() : null;
 

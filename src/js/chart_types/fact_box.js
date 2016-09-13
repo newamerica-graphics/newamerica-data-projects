@@ -7,10 +7,11 @@ import { colors } from "../helper_functions/colors.js";
 
 export class FactBox {
 	constructor(vizSettings) {
-		let { id, factBoxVals } = vizSettings;
+		let { id, factBoxVals, primaryDataSheet } = vizSettings;
 
 		this.factBoxVals = factBoxVals;
 		this.numBoxes = factBoxVals.length;
+		this.primaryDataSheet = primaryDataSheet;
 
 		this.chartContainer = d3.select(id)
 			.append("div")

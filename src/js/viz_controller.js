@@ -11,6 +11,7 @@ import { MultiChartLayout } from "./layouts/multi_chart_layout.js";
 import { GroupedBarChart } from "./chart_types/grouped_bar_chart.js";
 import { Table } from "./chart_types/table.js";
 import { FactBox } from "./chart_types/fact_box.js";
+import { StepChart } from "./chart_types/step_chart.js";
 
 export function setupProject(projectSettings) {
 	let { vizSettingsList, imageFolderId } = projectSettings;
@@ -48,11 +49,14 @@ export function setupProject(projectSettings) {
 				
 				case "grouped_bar_chart":
 					viz = new GroupedBarChart(vizSettingsObject);
-					
 					break;
 
 				case "grouped_dot_matrix":
 					viz = new GroupedDotMatrix(vizSettingsObject, imageFolderId);
+					break;
+
+				case "step_chart":
+					viz = new StepChart(vizSettingsObject);
 					break;
 
 				case "table":
@@ -61,7 +65,6 @@ export function setupProject(projectSettings) {
 
 				case "us_states_map":
 					viz = new UsStatesMap(vizSettingsObject);
-					
 					break;
 			}
 
@@ -77,13 +80,10 @@ export function setupProject(projectSettings) {
 	function render() {
 		console.log(vizList);
 		d3.json(projectSettings.dataUrl, (d) => {
-			console.log(d);
-
-			let data = d[projectSettings.dataSheetNames[0]];
-
-			console.log(data);
 
 			for (let viz of vizList) {
+				let data = d[viz.primaryDataSheet];
+				console.log(d["terror_plots"]);
 				viz.render(data);
 			}
 		});
