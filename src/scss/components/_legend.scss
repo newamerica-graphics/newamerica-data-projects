@@ -1,5 +1,5 @@
 @mixin showSideLegend {
-	@media screen and (min-width: 800px) {
+	@media screen and (min-width: 801px) {
         @content;
     }
 }
@@ -22,9 +22,6 @@
 	/*&__cell-container {
 		padding-left: $desktop-padding;
 	}*/
-
-
-
 
 	&__title {
 		font-size: 16px;
@@ -49,6 +46,20 @@
 
 		.legend__cell {
 			/*float: left;*/
+		}
+	}
+
+	&.vertical-right {
+
+		@include showSideLegend {
+			width: calc(100%/4);
+			position: absolute;
+			right: 0px;
+			bottom: 0;
+
+			.legend__cell {
+				width: 100%;
+			}
 		}
 	}
 

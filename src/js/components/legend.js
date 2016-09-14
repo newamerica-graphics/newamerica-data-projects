@@ -56,7 +56,7 @@ export class Legend {
 
 		if (scaleType == "quantize") {
 			[this.dataMin, this.dataMax] = colorScale.domain();
-			let dataSpread = dataMax - dataMin;
+			let dataSpread = this.dataMax - this.dataMin;
 			this.binInterval = dataSpread/this.numBins;
 		}
 

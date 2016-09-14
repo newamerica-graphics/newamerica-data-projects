@@ -83,7 +83,6 @@ export function setupProject(projectSettings) {
 
 			for (let viz of vizList) {
 				let data = d[viz.primaryDataSheet];
-				console.log(d["terror_plots"]);
 				viz.render(data);
 			}
 		});
