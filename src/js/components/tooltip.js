@@ -19,7 +19,7 @@ export class Tooltip {
 
 		this.tooltip = d3.select("body")
 			.append("div")
-			.attr("class", "tooltip")
+			.attr("class", "tooltip hidden")
 			.on("mouseleave", this.mouseleave.bind(this));
 
 		this.tooltip
