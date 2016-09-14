@@ -3,7 +3,7 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 let tooltipWidth = 330;
-let xPadding = 15;
+let xPadding = 2;
 
 import { formatValue } from "../helper_functions/format_value.js";
 
@@ -15,13 +15,28 @@ export class Tooltip {
 		this.tooltipImageVar = tooltipImageVar;
 		this.imageFolderId = imageFolderId;
 
+		this.isHovered = false;
+
 		this.tooltip = d3.select("body")
 			.append("div")
-			.attr("class", "tooltip hidden");
+			.attr("class", "tooltip")
+			.on("mouseleave", this.mouseleave.bind(this));
 
-		let titleContainer = this.tooltip
+		this.tooltip
+			.append("div")
+			.attr("class", "tooltip__fadeout__top");
+		this.tooltip
+			.append("div")
+			.attr("class", "tooltip__fadeout__bottom");
+
+		let contentContainer = this.tooltip
+			.append("div")
+			.attr("class", "tooltip__content-container");
+
+		let titleContainer = contentContainer
 			.append("div")
 			.attr("class", "tooltip__title-container");
+			
 
 		if (tooltipImageVar) {
 			this.imageContainer = titleContainer
@@ -49,18 +64,18 @@ export class Tooltip {
 			let category = variable.category;
 			if (category) {
 				if (!categories.hasOwnProperty(category)) {
-					this.tooltip.append("h5")
+					contentContainer.append("h5")
 						.classed("tooltip__category__name", true)
 						.text(category);
 
-					categories[category] = this.tooltip.append("ul")
+					categories[category] = contentContainer.append("ul")
 						.classed("tooltip__category__list", true);
 				}
 				
 				var listElem = categories[category].append("li")
 					.classed("tooltip__category__list-item", true);
 			} else {
-				var listElem = this.tooltip.append("li")
+				var listElem = contentContainer.append("li")
 					.classed("tooltip__category__list-item", true);
 			}
 
@@ -121,11 +136,14 @@ export class Tooltip {
 		let tooltipCoords = this.getTooltipCoords(mouse);
 		this.tooltip
 			.classed('hidden', false)
-            .attr('style', 'left:' + (tooltipCoords[0]) + 'px; top:' + (tooltipCoords[1]) + 'px'); 
+            .attr('style', 'left:' + (tooltipCoords[0]) + 'px; top:' + (tooltipCoords[1]) + 'px');
+
+        this.isHovered = true;
 	}
 
 	hide() {
-		this.tooltip.classed('hidden', true);
+		this.isHovered = $(this.tooltip._groups[0][0]).is(":hover");
+		this.isHovered ? null : this.tooltip.classed('hidden', true);
 	}
 
 	getTooltipCoords(mouse) {
@@ -143,6 +161,12 @@ export class Tooltip {
 		retCoords[1] -= (tooltipHeight/2 + 15);
 
 		return retCoords;
+	}
+
+	mouseleave() {
+		console.log("mouseleaving!")
+		this.isHovered = false;
+		this.hide();
 	}
 
 }
