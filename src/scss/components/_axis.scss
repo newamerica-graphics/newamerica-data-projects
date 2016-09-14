@@ -1,5 +1,6 @@
 .axis {
-	font-size: 12px;
+	font-size: 16px;
+	font-family: "Simplon";
 	font-weight: bold;
 	& path,
 	& line {
@@ -11,12 +12,12 @@
 
 	.tick line {
 		stroke: palette-get(na-black-10);
-		/*display: none;*/
 	}
 
 	&__title {
-		fill: palette-get(na-black);
-		font-size: 12px;
+		fill: palette-get(na-black-40);
+		font-weight: normal;
+		font-size: 16px;
 	}
 
 	&-x, &-y {

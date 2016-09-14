@@ -130,7 +130,7 @@ export class LineChart {
 			.attr("class", "axis__title")
 			.attr("transform", "rotate(-90)")
 			.attr("x", -this.h/2)
-			.attr("y", -50)
+			.attr("y", -60)
 			.attr("dy", ".71em")
 			.style("text-anchor", "middle")
 			.text(this.currYVar.displayName);
