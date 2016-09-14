@@ -14,6 +14,11 @@
 		/*display: none;*/
 	}
 
+	&__title {
+		fill: palette-get(na-black);
+		font-size: 12px;
+	}
+
 	&-x, &-y {
 		.tick:nth-child(even) {
 		    display: none;

@@ -8,9 +8,9 @@ import { Tooltip } from "../components/tooltip.js";
 
 let parseDate = d3.timeParse("%B %d, %Y");
 
-let margin = {top: 20, right: 20, bottom: 30, left: 50};
+let margin = {top: 20, right: 20, bottom: 30, left: 75};
 
-let dataPointWidth = 8;
+let dataPointWidth = 7;
 
 export class LineChart {
 	constructor(vizSettings, imageFolderId) {
@@ -60,6 +60,8 @@ export class LineChart {
 		this.yScale.domain(d3.extent(this.data, (d) => { 
 			return this.yScaleType == "cumulative" ? d.cumulativeVal : d[this.currYVarName]; 
 		}));
+
+		console.log(this.yScale.domain());
 
 		this.setColorScale();
 
@@ -114,13 +116,14 @@ export class LineChart {
 			.attr("class", "axis axis-y")
 			.call(d3.axisLeft(this.yScale).tickPadding(10));
 
-		this.yAxis.append("text")
-			.attr("class", "axis-title")
+		this.yAxisLabel = this.yAxis.append("text")
+			.attr("class", "axis__title")
 			.attr("transform", "rotate(-90)")
-			.attr("y", 6)
+			.attr("x", -this.h/2)
+			.attr("y", -50)
 			.attr("dy", ".71em")
-			.style("text-anchor", "end")
-			.text("Price ($)");
+			.style("text-anchor", "middle")
+			.text(this.currYVar.displayName);
 	}
 
 	renderLines() {
@@ -209,9 +212,10 @@ export class LineChart {
 
 		this.xAxis
 			.attr("transform", "translate(0," + this.h + ")")
-			.call(d3.axisBottom(this.xScale));
+			.call(d3.axisBottom(this.xScale).tickPadding(10));
 
-		this.yAxis.call(d3.axisLeft(this.yScale));
+		this.yAxis.call(d3.axisLeft(this.yScale).tickPadding(10));
+		this.yAxisLabel.attr("x", -this.h/2);
 
 		for (let key of Object.keys(this.dataLines)) {
 			this.dataLines[key].attr("d", this.line);
