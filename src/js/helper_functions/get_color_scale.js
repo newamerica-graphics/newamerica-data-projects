@@ -28,7 +28,7 @@ let ordinalRange = [
 ]
 
 export function getColorScale(data, filterVar) {
-	let { scaleType } = filterVar;
+	let { scaleType, numBins, customRange } = filterVar;
 	let scale;
 
 	if (!scaleType) {
@@ -49,10 +49,12 @@ export function getColorScale(data, filterVar) {
 		console.log(scale.domain());
 
 	} else if (scaleType == "quantize") {
-		// scale = d3.scaleQuantize();
-		// let colorBins = setColorBins(numBins, colorOptions[color]);
+		scale = d3.scaleQuantize();
+		let colorBins = setColorBins(numBins, customRange);
+		let domain = setQuantizeDomain(filterVar, data);
 		// let roundedDomain = setDomain(dataMin, dataMax, numBins);
-		// scale.range(colorBins);
+		scale.range(colorBins);
+		scale.domain(domain);
 		// scale.domain(roundedDomain);
 	}
 	
@@ -99,6 +101,14 @@ function getUniqueVals(data, filterVar) {
 		// this.colorScale = getColorScale(colorScaleSettings);
 
 		// console.log(this.colorScale.domain());
+function setQuantizeDomain(filterVar, data) {
+	let filterName = filterVar.variable;
+	let dataMin = Number(d3.min(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; })); 
+	let dataMax = Number(d3.max(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; }));
+	
+	return [dataMin, dataMax];
+}
+
 
 function setDomain(dataMin, dataMax, numBins) {
 	// let dataMagnitude = Math.floor(Math.log10(dataMin));

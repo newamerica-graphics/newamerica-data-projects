@@ -10,7 +10,7 @@ export function formatValue(value, format) {
 	} else if (format == "price") {
 		return d3.format("$,.2f")(value);
 	} else if (format == "percent") {
-		return d3.format("%")(value);
+		return d3.format(".0%")(value);
 	} else if (format == "string") {
 		return value.replace(/<\/?[^>]+(>|$)/g, "");
 	}

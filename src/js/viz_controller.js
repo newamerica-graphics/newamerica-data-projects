@@ -80,10 +80,9 @@ export function setupProject(projectSettings) {
 	function render() {
 		console.log(vizList);
 		d3.json(projectSettings.dataUrl, (d) => {
-
+			console.log(d);
 			for (let viz of vizList) {
 				let data = d[viz.primaryDataSheet];
-				console.log(d["terror_plots"]);
 				viz.render(data);
 			}
 		});

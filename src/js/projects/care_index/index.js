@@ -1,17 +1,22 @@
 import { setupProject } from "../../viz_controller.js";
 
-let state = {"variable":"state", "displayName":"State"};
-let cost_rank = {"variable":"cost_rank", "displayName":"Cost Rank", "format":"number", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":4};
-let cost_in_home = {"variable":"cost_in_home", "displayName":"Cost in Home", "format":"price", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":6};
-let cost_in_center = {"variable":"cost_in_center", "displayName":"Cost in Center", "format":"price", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":5};
-let quality_rank = {"variable":"quality_rank", "displayName":"Quality Rank", "format":"number", "category":"Quality", "scaleType":"quantize", "color":"red", "numBins":4};
-let children_5_under = {"variable":"children_5_under", "displayName":"Children 5 & Under", "format":"number", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":5};
+import { colors } from "../../helper_functions/colors.js";
 
-let full_name = {"variable":"full_name", "displayName":"Name"};
-let field_kids = {"variable":"field_kids", "displayName":"Kids", "format":"string", "scaleType":"categorical", "color":"blue"};
-let field_age = {"variable":"field_age", "displayName":"Age", "format":"number", "scaleType":"linear", "color":"turquoise"};
-let field_gender = {"variable":"field_gender", "displayName":"Gender", "format":"number", "scaleType":"categorical", "color":"red"};
-let field_year_indicted = {"variable":"field_year_indicted", "displayName":"Field Indicted", "format":"year", "scaleType":"categorical", "color":"blue"};
+
+let variables = {
+	state: {"variable":"state", "displayName":"State"},
+	cost_rank: {"variable":"cost_rank", "displayName":"Cost Rank", "format":"number", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":4},
+	cost_in_home_yearly: {"variable":"cost_in_home_yearly", "displayName":"Cost in Home", "format":"price", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":6},
+	cost_in_center_yearly: {"variable":"cost_in_center_yearly", "displayName":"Cost in Center", "format":"price", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":5},
+	average_cost: {"variable":"average_cost", "displayName":"Average Cost", "format":"price", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":5},
+	cost_as_proportion_of_hhi: {"variable":"cost_as_proportion_of_hhi", "displayName":"Cost as % of Household Income", "format":"percent", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":5},
+	cost_as_proportion_of_min_wage: {"variable":"cost_as_proportion_of_min_wage", "displayName":"Cost as % of Minimum Wage", "format":"percent", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":5},
+	quality_rank: {"variable":"quality_rank", "displayName":"Quality Rank", "format":"number", "category":"Quality", "scaleType":"quantize", "customRange":[colors.purple.light, colors.purple.dark], "numBins":4},
+	quality_total_norm: {"variable":"quality_total_norm", "displayName":"Quality", "format":"number", "category":"Quality", "scaleType":"quantize", "customRange":[colors.purple.light, colors.purple.dark], "numBins":5},
+	availability_total_norm: {"variable":"availability_total_norm", "displayName":"Availability", "format":"number", "category":"Availability", "scaleType":"quantize", "customRange":[colors.blue.light, colors.blue.dark], "numBins":5},
+	care_index_combined: {"variable":"care_index_combined", "displayName":"Care Index Score", "format":"number", "category":"Care Index Score", "scaleType":"quantize", "customRange":[colors.turquoise.light, colors.turquoise.dark], "numBins":5},
+	children_5_under: {"variable":"children_5_under", "displayName":"Children 5 & Under", "format":"number", "category":"Cost", "scaleType":"quantize", "customRange":[colors.blue.light, colors.blue.dark], "numBins":5},
+}
 
 let vizSettingsList = [
 	// {
@@ -48,32 +53,25 @@ let vizSettingsList = [
 	// 	tooltipVars: [ field_year_indicted, field_kids, field_age ],
 	// 	labelSettings: { interval: 5}
 	// }
-	// {
-	// 	id: "#test1", 
-	// 	vizType: "us_states_map",
-	// 	filterVars: [ quality_rank, cost_rank, cost_in_home ],
-	// 	tooltipVars: [ children_5_under, cost_rank, cost_in_home ]
-	// },
+	{
+		id: "#care-index__explore-the-index", 
+		vizType: "us_states_map",
+		primaryDataSheet: "state_data",
+		filterVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ],
+		tooltipVars: [ variables.state, variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined  ]
+	},
 	// {
 	// 	id: "#explore-the-index", 
 	// 	vizType: "table",
 	// 	tableVars: [ full_name, field_age, field_gender ],
 	// 	colorScaling: false
 	// },
-	{
-		id: "#test1", 
-		vizType: "fact_box",
-		factBoxVals: [ 
-			{ variable: field_age, value: "25", type:"count", text:"Jihadists are 25 years old or younger"},
-			{ variable: field_gender, value: "0", type:"percent", text:"Jihadists are female" },
-			{ variable: field_gender, value: "1", type:"percent", text:"Jihadists are male" } 
-		],
-	}
 ]
 
 let projectSettings = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/homegrown.json",
-	dataSheetNames:["Sheet1"],
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/bll/care_index.json",
+	downloadDataLink: "https://docs.google.com/spreadsheets/d/18WEcJVDByP5bCPACgt2s9-sYIOItweq9fI9PCMIpUjY/",
+	dataSheetNames:["state_data"],
 	vizSettingsList: vizSettingsList
 }
 

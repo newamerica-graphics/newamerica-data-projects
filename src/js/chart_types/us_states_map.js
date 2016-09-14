@@ -37,26 +37,37 @@ export class UsStatesMap extends Chart {
 			.append("svg");
 
 		this.tooltip = new Tooltip(id, tooltipVars)
+		let legendSettings = {};
+		legendSettings.id = id;
+		legendSettings.showTitle = true;
+		legendSettings.markerSettings = { shape:"circle", size:10 };
+		legendSettings.orientation = "vertical-right";
 
-		this.legend = new Legend(id);
+		this.legend = new Legend(legendSettings);
 
 		this.setDimensions();
 	}
 
 	setDimensions() {
 		this.w = $(this.id).width();
-		this.h = this.w/2;
+		this.h = 3*this.w/5;
+
+		let translateX = this.w/2;
+		let scalingFactor = 5*this.w/4;
+
+		if (this.w > global.showLegendBreakpoint) {
+			translateX -= global.legendWidth/2;
+			this.h = this.w/2;
+			scalingFactor = this.w;
+		}
 
 		this.svg
 			.attr("width", this.w)
 			.attr("height", this.h);
 
-		let translateX = this.w/2;
-
-		this.w > global.showLegendBreakpoint ? translateX -= global.legendWidth/2 : null;
 		//Define map projection
 		let projection = d3.geoAlbersUsa()
-				.scale(this.w)
+				.scale(scalingFactor)
 				.translate([translateX, this.h/2]);
 
 		//Define path generator
@@ -65,8 +76,6 @@ export class UsStatesMap extends Chart {
 	}
 
 	render(data) {	
-
-		console.log(this.paths);
 		this.data = data;
 		this.processData();
 		this.setScale();
@@ -77,7 +86,7 @@ export class UsStatesMap extends Chart {
 
 		super.render();
 
-		console.log(this.paths);
+		// console.log(this.paths);
 	}
 
 	processData() {
@@ -91,15 +100,7 @@ export class UsStatesMap extends Chart {
 	}
 
 	setScale() {
-		let colorScaleSettings = {};
-
-		colorScaleSettings.scaleType = this.filterVars[this.currFilterIndex].scaleType;
-		colorScaleSettings.color = this.filterVars[this.currFilterIndex].color;
-		colorScaleSettings.numBins = this.filterVars[this.currFilterIndex].numBins;
-
-		colorScaleSettings.dataMin = Number(d3.min(this.data, (d) => { return d[this.currFilterVar] ? Number(d[this.currFilterVar]) : null; })); 
-		colorScaleSettings.dataMax = Number(d3.max(this.data, (d) => { return d[this.currFilterVar] ? Number(d[this.currFilterVar]) : null; }));
-		this.colorScale = getColorScale(colorScaleSettings);
+		this.colorScale = getColorScale(this.data, this.filterVars[this.currFilterIndex]);
 	}
 
 
@@ -146,6 +147,8 @@ export class UsStatesMap extends Chart {
 		legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
 
 		this.legend.render(legendSettings);
+
+		
 	}
 
 	setFilterGroup() {
