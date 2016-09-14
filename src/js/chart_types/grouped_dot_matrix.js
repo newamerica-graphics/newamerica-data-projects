@@ -16,7 +16,7 @@ let dividingLineTextOffset = 20;
 
 export class GroupedDotMatrix extends Chart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, groupingVars, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, distanceBetweenGroups, labelSettings, dividingLine, legendShowVals} = vizSettings;
+		let {id, groupingVars, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, distanceBetweenGroups, labelSettings, dividingLine, legendShowVals, primaryDataSheet } = vizSettings;
 
 		super(id, false);
 
@@ -27,6 +27,7 @@ export class GroupedDotMatrix extends Chart {
 		this.dotsPerRow = dotsPerRow;
 		this.dividingLine = dividingLine;
 		this.legendShowVals = legendShowVals;
+		this.primaryDataSheet = primaryDataSheet;
 
 		if (dividingLine) {
 			this.dividingLineTextHeight = this.dividingLine.descriptionLines.length * dividingLineTextOffset + 30;

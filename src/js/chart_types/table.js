@@ -9,7 +9,7 @@ import { getColorScale } from "../helper_functions/get_color_scale.js";
 
 export class Table {
 	constructor(vizSettings) {
-		let {id, tableVars, colorScaling, pagination, numPerPage, defaultOrdering} = vizSettings;
+		let {id, tableVars, colorScaling, primaryDataSheet, pagination, numPerPage, defaultOrdering} = vizSettings;
 
 		this.id = id;
 		this.tableVars = tableVars;
@@ -17,6 +17,7 @@ export class Table {
 		this.pagination = pagination;
 		this.numPerPage = numPerPage;
 		this.defaultOrdering = defaultOrdering;
+		this.primaryDataSheet = primaryDataSheet;
 
 		d3.select(id).append("table")
 			.attr("id", "dataTable")

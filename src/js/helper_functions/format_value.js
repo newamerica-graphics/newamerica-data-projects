@@ -12,7 +12,7 @@ export function formatValue(value, format) {
 	} else if (format == "percent") {
 		return d3.format("%")(value);
 	} else if (format == "string") {
-		return value;
+		return value.replace(/<\/?[^>]+(>|$)/g, "");
 	}
 }
 

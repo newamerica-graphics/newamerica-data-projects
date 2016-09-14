@@ -42,6 +42,7 @@ export class Tooltip {
 		let categories = {};
 
 		for (let variable of this.tooltipVars) {
+			console.log(variable);
 			if (!variable) {
 				console.log("this variable was not defined!");
 			}
