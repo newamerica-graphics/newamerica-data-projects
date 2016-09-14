@@ -23,9 +23,9 @@ export class Legend {
 			this.titleDiv = titleContainer.append("h3")
 				.attr("class", "legend__title");
 
-			this.titleDescriptionDiv = titleContainer.append("p")
-				.attr("class", "legend__title-description")
-				.text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et metus ut lorem viverra mattis. In hac habitasse platea dictumst.");
+			// this.titleDescriptionDiv = titleContainer.append("p")
+			// 	.attr("class", "legend__title-description")
+			// 	.text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et metus ut lorem viverra mattis. In hac habitasse platea dictumst.");
 		}
 
 		let cellContainer = legend.append("div")

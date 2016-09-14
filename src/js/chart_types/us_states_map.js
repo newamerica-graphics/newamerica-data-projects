@@ -34,9 +34,10 @@ export class UsStatesMap extends Chart {
 			.append("div");
 
 		this.svg = mapContainer
-			.append("svg");
+			.append("svg")
+			.attr("width", "100%");
 
-		this.tooltip = new Tooltip(id, tooltipVars)
+		this.tooltip = new Tooltip(id, tooltipVars, null, null);
 		let legendSettings = {};
 		legendSettings.id = id;
 		legendSettings.showTitle = true;
@@ -62,7 +63,6 @@ export class UsStatesMap extends Chart {
 		}
 
 		this.svg
-			.attr("width", this.w)
 			.attr("height", this.h);
 
 		//Define map projection
@@ -133,7 +133,7 @@ export class UsStatesMap extends Chart {
 		    })
 		    .attr("value", function(d,i) { return i; })
 		    .style("stroke", "white")
-		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index]); })
+		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], event); })
 		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); });
 	}
 
@@ -189,11 +189,12 @@ export class UsStatesMap extends Chart {
 		    });
 	}
 
-	mouseover(datum, path) {
+	mouseover(datum, path, eventObject) {
 		d3.select(path).style("stroke-width", "3");
-		console.log(path);
-		let mousePos = d3.mouse(path);
-		console.log(mousePos);
+		
+		let mousePos = [];
+		mousePos[0] = eventObject.pageX;
+		mousePos[1] = eventObject.pageY;
 		this.tooltip.show(datum.properties, mousePos);
 	}
 

@@ -1,5 +1,5 @@
 @mixin showSideLegend {
-	@media screen and (min-width: 801px) {
+	@media screen and (min-width: 900px) {
         @content;
     }
 }
@@ -24,9 +24,10 @@
 	}*/
 
 	&__title {
-		font-size: 16px;
+		font-size: 17px;
 		color: palette-get(na-black);
 		font-weight: bold;
+		padding-bottom: 5px;
 	}
 
 	&__title-description {
