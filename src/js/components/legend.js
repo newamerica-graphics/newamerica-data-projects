@@ -92,6 +92,7 @@ export class Legend {
 		let svg = cell.append("svg")
 			.attr("height", size)
 			.attr("width", size)
+			.style("margin-top", 14 - size)
 			.attr("class", "legend__cell__color-swatch-container");
 
 		let marker = svg.append(shape)

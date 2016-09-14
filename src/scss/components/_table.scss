@@ -1,29 +1,19 @@
 .table {
 	width: 100% !important;
-
-
 }
 
 .dataTables_filter {
-	float: left !important;
+	float: right !important;
 	text-align: left !important;
 	width: 300px;
-}
+	label {
+		font-size: 0;
 
-table.dataTable thead .sorting {
-  background-image: url("/src/images/sort_both.png");
-}
-table.dataTable thead .sorting_asc {
-  background-image: url("/src/images/sort_asc.png");
-}
-table.dataTable thead .sorting_desc {
-  background-image: url("/src/images/sort_desc.png");
-}
-table.dataTable thead .sorting_asc_disabled {
-  background-image: url("/src/images/sort_asc_disabled.png");
-}
-table.dataTable thead .sorting_desc_disabled {
-  background-image: url("/src/images/sort_desc_disabled.png");
+		input {
+			font-size: 1rem;
+			margin-bottom: 10px;
+		}
+	}
 }
 
 table.dataTable {
@@ -35,4 +25,37 @@ table.dataTable {
 			font-weight: bold;
 		}
 	}
+
+	tr {
+		background-color: transparent;
+	}
 }
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+	border: none !important;
+	background: none !important;
+	color: palette-get(na-black-40) !important;
+
+	&:hover {
+		color: palette-get(na-turquoise) !important;
+		font-weight: bold !important;
+	}
+
+	&:focus {
+		border: none !important;
+    	outline: none !important;
+	}
+
+	&.previous {
+		cursor: pointer !important;
+
+		&:hover {
+			color: palette-get(na-turquoise) !important;
+		}
+	}
+
+	&.current {
+		font-weight: bold;
+	}
+}
+
