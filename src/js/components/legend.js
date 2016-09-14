@@ -39,6 +39,7 @@ export class Legend {
 		let {scaleType, title, format, colorScale, valChangedFunction, valCounts} = legendSettings;
 
 		this.colorScale = colorScale;
+		console.log(colorScale.domain());
 
 		this.showTitle ? this.titleDiv.text(title) : null;
 
@@ -125,7 +126,11 @@ export class Legend {
 			.classed("legend__cell__label", true);
 
 		if (scaleType == "quantize") {
-			cellText.text(formatValue(Math.ceil(this.calcBinVal(i, this.dataMin, this.binInterval)), format) + " to " + formatValue(Math.floor(this.calcBinVal(i+1, this.dataMin, this.binInterval)), format));
+			if (format == "percent") {
+				cellText.text(formatValue(Math.ceil(100*this.calcBinVal(i, this.dataMin, this.binInterval))/100, format) + " to " + formatValue(Math.floor(100*this.calcBinVal(i+1, this.dataMin, this.binInterval))/100, format));
+			} else {
+				cellText.text(formatValue(Math.ceil(this.calcBinVal(i, this.dataMin, this.binInterval)), format) + " to " + formatValue(Math.floor(this.calcBinVal(i+1, this.dataMin, this.binInterval)), format));
+			}
 		} else if (scaleType == "categorical") {
 			cellText.text(this.colorScale.domain()[i] ? this.colorScale.domain()[i] : "null" );
 		}
