@@ -82,7 +82,7 @@ export class UsStatesMap extends Chart {
 		this.bindDataToGeom();
 		this.buildGraph();
 		this.setLegend();
-		// this.setFilterGroup();
+		this.setFilterGroup();
 
 		super.render();
 
