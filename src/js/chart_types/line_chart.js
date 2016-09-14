@@ -57,12 +57,7 @@ export class LineChart {
 
 		this.yScaleType == "cumulative" ? this.setCumulativeValues() : null;
 		  
-		this.xScale.domain(d3.extent(this.data, (d) => { return d[this.currXVarName]; }));
-		this.yScale.domain(d3.extent(this.data, (d) => { 
-			return this.yScaleType == "cumulative" ? d.cumulativeVal : d[this.currYVarName]; 
-		}));
-
-		console.log(this.yScale.domain());
+		this.setXYScaleDomains();
 
 		this.setColorScale();
 
@@ -96,12 +91,25 @@ export class LineChart {
 	}
 
 	setLineScaleFunction() {
-		console.log(this.xScale.domain());
 		this.line = d3.line()
-		    .x((d) => { return this.xScale(d[this.currXVarName]); })
-		    .y((d) => { 
-		    	let scaledVal = this.yScaleType == "cumulative" ? d.cumulativeVal : d[this.currYVarName];
-		    	return this.yScale(scaledVal); 
+		    .x((d, i) => { 
+		    	if (d.falseMin) {	
+		     		return 0;
+		     	} else if (d.falseMax) {
+		     		return this.xScale(this.newXMax)
+		     	} else {
+		     		return this.xScale(d[this.currXVarName]); 
+		     	}
+		 	})
+		    .y((d, i) => { 
+		    	if (d.falseMin) {	
+		     		return this.yScale(0);
+		     	} else if (d.falseMax) {
+		     		return this.yScale(d.lastYVal);
+		     	} else {
+		    		let scaledVal = this.yScaleType == "cumulative" ? d.cumulativeVal : d[this.currYVarName];
+		    		return this.yScale(scaledVal); 
+		    	}
 		    });
 
 		this.interpolation == "step" ? this.line.curve(d3.curveStepAfter) : null;
@@ -137,6 +145,8 @@ export class LineChart {
 				.attr("d", this.line)
 				.attr("stroke", this.colorScale(d.key));
 
+			console.log(dataLine);
+
 		    this.dataLines[d.key] = dataLine;
 	  	})
 	}
@@ -169,6 +179,31 @@ export class LineChart {
 		}
 
 		return retArray;
+	}
+
+	setXYScaleDomains() {
+		let xExtents = d3.extent(this.data, (d) => { return d[this.currXVarName]; });
+		let xMinYear = xExtents[0].getFullYear();
+
+		this.newXMin = new Date("January 1, " + (xMinYear - 1) + " 00:00:00");
+		this.newXMax = Date.now();
+		this.xScale.domain([this.newXMin, this.newXMax]);
+
+		let yExtents = d3.extent(this.data, (d) => { 
+			return this.yScaleType == "cumulative" ? d.cumulativeVal : d[this.currYVarName]; 
+		});
+
+		this.yScale.domain([0, yExtents[1]]);
+
+		for (let nestObject of this.dataNest) {
+			let newMinDatapoint = { falseMin: true };
+			let newMaxDatapoint = { falseMax: true };
+			let lastVal = nestObject.values[nestObject.values.length - 1];
+
+			newMaxDatapoint.lastYVal = this.yScaleType == "cumulative" ? lastVal.cumulativeVal : lastVal[this.currYVarName];
+			nestObject.values.unshift(newMinDatapoint);
+			nestObject.values.push(newMaxDatapoint);
+		}
 	}
 
 	setCumulativeValues() {
