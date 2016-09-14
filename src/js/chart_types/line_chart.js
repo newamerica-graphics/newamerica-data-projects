@@ -70,7 +70,8 @@ export class LineChart {
 
 	setDimensions() {
 		this.w = $(this.id).width() - margin.left - margin.right;
-		this.h = this.w/2 - margin.top - margin.bottom;
+		this.h = this.w < 400 ? 2*this.w/3 : this.w/2;
+		this.h = this.h - margin.top - margin.bottom;
 
 		this.svg
 			.attr("width", "100%")
