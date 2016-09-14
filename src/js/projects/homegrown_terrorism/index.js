@@ -17,6 +17,9 @@ let variables = {
 	field_year_indicted: {"variable":"field_year_indicted", "displayName":"Field Indicted", "format":"year", "scaleType":"categorical", "color":"blue"},
 	char_online_radicalization: {"variable":"char_online_radicalization", "format": "string"},
 	headshot: {"variable":"headshot", "format":"image"},
+	inv_informant: {"variable":"inv_informant", "format":"string"},
+	inv_community_or_family_tip: {"variable":"inv_community_or_family_tip", "format":"string"},
+	inv_public_tip: {"variable":"inv_public_tip", "format":"string"},
 	
 	deadly_attack_date: {"variable":"deadly_attack_date", "displayName":"Deadly Attack Date", "format":"date"},
 	victims_killed: {"variable":"victims_killed", "displayName":"Victims Killed", "format":"number"},
@@ -114,7 +117,17 @@ let vizSettingsList = [
 		colorVars: [ variables.ideology ],
 		tooltipVars: [ variables.attack_name, variables.ideology, variables.victims_wounded, variables.victims_killed, variables.attack_description ]
 
-	}
+	},
+	{
+		id: "#homegrown__fact-box__prevention-method", 
+		vizType: "fact_box",
+		primaryDataSheet: "people",
+		factBoxVals: [ 
+			{ variable: variables.inv_informant, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Percent monitored by an informant"},
+			{ variable: variables.inv_community_or_family_tip, value: "Yes", type:"percent", color:colors.blue.light, text:"Percent implicated by tip from family members or community"},
+			{ variable: variables.inv_public_tip, value: "Yes", type:"percent", color:colors.purple.light, text:"Percent implicated by tip from general public"},
+		],
+	},
 ]
 
 let projectSettings = {
