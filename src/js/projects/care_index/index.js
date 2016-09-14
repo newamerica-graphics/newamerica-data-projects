@@ -7,12 +7,6 @@ let cost_in_center = {"variable":"cost_in_center", "displayName":"Cost in Center
 let quality_rank = {"variable":"quality_rank", "displayName":"Quality Rank", "format":"number", "category":"Quality", "scaleType":"quantize", "color":"red", "numBins":4};
 let children_5_under = {"variable":"children_5_under", "displayName":"Children 5 & Under", "format":"number", "category":"Cost", "scaleType":"quantize", "color":"blue", "numBins":5};
 
-let full_name = {"variable":"full_name", "displayName":"Name"};
-let field_kids = {"variable":"field_kids", "displayName":"Kids", "format":"string", "scaleType":"categorical", "color":"blue"};
-let field_age = {"variable":"field_age", "displayName":"Age", "format":"number", "scaleType":"linear", "color":"turquoise"};
-let field_gender = {"variable":"field_gender", "displayName":"Gender", "format":"number", "scaleType":"categorical", "color":"red"};
-let field_year_indicted = {"variable":"field_year_indicted", "displayName":"Field Indicted", "format":"year", "scaleType":"categorical", "color":"blue"};
-
 let vizSettingsList = [
 	// {
 	// 	id: "#explore-the-index", 
@@ -48,32 +42,25 @@ let vizSettingsList = [
 	// 	tooltipVars: [ field_year_indicted, field_kids, field_age ],
 	// 	labelSettings: { interval: 5}
 	// }
-	// {
-	// 	id: "#test1", 
-	// 	vizType: "us_states_map",
-	// 	filterVars: [ quality_rank, cost_rank, cost_in_home ],
-	// 	tooltipVars: [ children_5_under, cost_rank, cost_in_home ]
-	// },
+	{
+		id: "#explore-the-index", 
+		vizType: "us_states_map",
+		primaryDataSheet: "state_data",
+		filterVars: [ quality_rank, cost_rank, cost_in_home ],
+		tooltipVars: [ children_5_under, cost_rank, cost_in_home ]
+	},
 	// {
 	// 	id: "#explore-the-index", 
 	// 	vizType: "table",
 	// 	tableVars: [ full_name, field_age, field_gender ],
 	// 	colorScaling: false
 	// },
-	{
-		id: "#test1", 
-		vizType: "fact_box",
-		factBoxVals: [ 
-			{ variable: field_age, value: "25", type:"count", text:"Jihadists are 25 years old or younger"},
-			{ variable: field_gender, value: "0", type:"percent", text:"Jihadists are female" },
-			{ variable: field_gender, value: "1", type:"percent", text:"Jihadists are male" } 
-		],
-	}
 ]
 
 let projectSettings = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/homegrown.json",
-	dataSheetNames:["Sheet1"],
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/bll/care_index.json",
+	downloadDataLink: "https://docs.google.com/spreadsheets/d/18WEcJVDByP5bCPACgt2s9-sYIOItweq9fI9PCMIpUjY/",
+	dataSheetNames:["state_data"],
 	vizSettingsList: vizSettingsList
 }
 
