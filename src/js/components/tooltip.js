@@ -15,13 +15,17 @@ export class Tooltip {
 		this.tooltipImageVar = tooltipImageVar;
 		this.imageFolderId = imageFolderId;
 
+		this.isHovered = false;
+
 		this.tooltip = d3.select("body")
 			.append("div")
-			.attr("class", "tooltip hidden");
+			.attr("class", "tooltip hidden")
+			.on("mouseleave", this.mouseleave.bind(this));
 
 		let titleContainer = this.tooltip
 			.append("div")
 			.attr("class", "tooltip__title-container");
+			
 
 		if (tooltipImageVar) {
 			this.imageContainer = titleContainer
@@ -121,11 +125,14 @@ export class Tooltip {
 		let tooltipCoords = this.getTooltipCoords(mouse);
 		this.tooltip
 			.classed('hidden', false)
-            .attr('style', 'left:' + (tooltipCoords[0]) + 'px; top:' + (tooltipCoords[1]) + 'px'); 
+            .attr('style', 'left:' + (tooltipCoords[0]) + 'px; top:' + (tooltipCoords[1]) + 'px');
+
+        this.isHovered = true;
 	}
 
 	hide() {
-		this.tooltip.classed('hidden', true);
+		this.isHovered = $(this.tooltip._groups[0][0]).is(":hover");
+		this.isHovered ? null : this.tooltip.classed('hidden', true);
 	}
 
 	getTooltipCoords(mouse) {
@@ -143,6 +150,12 @@ export class Tooltip {
 		retCoords[1] -= (tooltipHeight/2 + 15);
 
 		return retCoords;
+	}
+
+	mouseleave() {
+		console.log("mouseleaving!")
+		this.isHovered = false;
+		this.hide();
 	}
 
 }
