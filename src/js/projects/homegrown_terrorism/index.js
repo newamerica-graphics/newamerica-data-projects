@@ -88,8 +88,11 @@ let vizSettingsList = [
 	{
 		id: "#homegrown__extremist-data-table", 
 		vizType: "table",
+		tableVars: [ variables.full_name, variables.gender, variables.age],
+		defaultOrdering: [0, "asc"],
+		pagination: true,
+		numPerPage: 25,
 		primaryDataSheet: "people",
-		tableVars: [ variables.full_name, variables.age, variables.gender ],
 		colorScaling: false
 	},
 	{
@@ -112,31 +115,6 @@ let vizSettingsList = [
 		tooltipVars: [ variables.attack_name, variables.ideology, variables.victims_wounded, variables.victims_killed, variables.attack_description ]
 
 	}
-	// {
-	// 	id: "#homegrown__fact-box__method-of-radicalization", 
-	// 	vizType: "fact_box",
-	// 	factBoxVals: [ 
-	// 		{ variable: variables.char_online_radicalization, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Radicalized Online"},
-	// 		{ variable: variables.char_online_radicalization, value: "No", type:"percent", color:colors.blue.light, text:"Not Radicalized Online"},
-	// 	],
-	// },
-	// {
-	// 	id: "#homegrown__fact-box__association-with-awlaki", 
-	// 	vizType: "fact_box",
-	// 	factBoxVals: [ 
-	// 		{ variable: variables.char_awlaki, value: "Ties", type:"percent", color:colors.turquoise.light, text:"Ties with Awlaki"},
-	// 		{ variable: variables.char_awlaki, value: "Contact", type:"percent", color:colors.blue.light, text:"Direct contact with Awlaki"},
-	// 	],
-	// },
-	// {
-	// 	id: "#homegrown__fact-box__gender-of-extremists", 
-	// 	vizType: "fact_box",
-	// 	factBoxVals: [ 
-	// 		{ variable: variables.gender, value: "Male", type:"percent", color:colors.turquoise.light, text:"Male"},
-	// 		{ variable: variables.gender, value: "Female", type:"percent", color:colors.blue.light, text:"Female"},
-
-	// 	],
-	// },
 ]
 
 let projectSettings = {
