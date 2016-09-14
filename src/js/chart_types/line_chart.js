@@ -2,6 +2,7 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
+import { colors } from "../helper_functions/colors.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { Legend } from "../components/legend.js";
 import { Tooltip } from "../components/tooltip.js";
@@ -77,7 +78,7 @@ export class LineChart {
 		this.h = this.w/2 - margin.top - margin.bottom;
 
 		this.svg
-			.attr("width", this.w + margin.left + margin.right)
+			.attr("width", "100%")
 		    .attr("height", this.h + margin.top + margin.bottom);
 
 		this.renderingArea
@@ -236,7 +237,7 @@ export class LineChart {
    			if (valsShown.indexOf(binIndex) > -1) {
    				this.dataLines[key].attr("stroke", this.colorScale(key));
    			} else {
-   				this.dataLines[key].attr("stroke", "grey");
+   				this.dataLines[key].attr("stroke", colors.grey.light);
    			}
 		}
 
@@ -247,7 +248,7 @@ export class LineChart {
 		   			if (valsShown.indexOf(binIndex) > -1) {
 		   				return this.colorScale(value);
 		   			}
-		   		return "grey";
+		   		return colors.grey.light;
 		    });
 	}
 
