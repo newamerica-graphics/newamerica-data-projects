@@ -60,6 +60,13 @@ let vizSettingsList = [
 		filterVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ],
 		tooltipVars: [ variables.state, variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined  ]
 	},
+	{
+		id: "#care-index__explore-the-index__availability", 
+		vizType: "us_states_map",
+		primaryDataSheet: "state_data",
+		filterVars: [ variables.availability_total_norm ],
+		tooltipVars: [ variables.state, variables.availability_total_norm]
+	},
 	// {
 	// 	id: "#explore-the-index", 
 	// 	vizType: "table",
