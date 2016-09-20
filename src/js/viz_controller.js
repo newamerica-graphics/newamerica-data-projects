@@ -13,6 +13,7 @@ import { GroupedBarChart } from "./chart_types/grouped_bar_chart.js";
 import { Table } from "./chart_types/table.js";
 import { FactBox } from "./chart_types/fact_box.js";
 import { LineChart } from "./chart_types/line_chart.js";
+import { SummaryBox } from "./chart_types/summary_box.js";
 
 export function setupProject(projectSettings) {
 	let { vizSettingsList, imageFolderId } = projectSettings;
@@ -62,6 +63,10 @@ export function setupProject(projectSettings) {
 
 				case "line_chart":
 					viz = new LineChart(vizSettingsObject);
+					break;
+
+				case "summary_box":
+					viz = new SummaryBox(vizSettingsObject);
 					break;
 
 				case "table":

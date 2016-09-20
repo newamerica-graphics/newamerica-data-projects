@@ -1,0 +1,84 @@
+.summary-box {
+	background-color: white;
+	padding: 10px $desktop-padding;
+	border: 1px solid palette-get(na-black-10);
+	@include standard-shadow;
+
+	&__title-container {
+		padding-bottom: 15px;
+		.person__icon {
+			margin: 0px !important;
+			display: table-cell;
+
+		}
+	}
+
+	&__title {
+		font-weight: bold;
+		font-size: 18px;
+		display: table-cell;
+		vertical-align: middle;
+	}
+
+	&__category-name, &__category-list {
+		padding-left: 10px;
+	}
+	
+	&__category-name {
+		color: palette-get(na-black-40);
+		font-weight: normal;
+		font-size: 16px;
+	}
+
+	&__category-list {
+		.summary-box__list-item {
+			padding-left: 10px;
+		}
+	}
+
+	&__list-item {
+		display: table;
+		&__val-container, &__color-scale {
+			display: table-cell;
+		}
+
+		&__val-container {
+			width: 300px;
+		}
+		&__label {
+			@include chart-primary-text;
+			padding-right: 5px;
+			
+		}
+
+		&__value {
+			@include chart-secondary-text;
+		}
+
+		&__color-scale {
+			position: relative;
+			height: 6px;
+			width: 300px;
+			&__bin {
+				height: 6px;
+				display: inline-block;
+			}
+
+			&__marker-container {
+				width: 20px;
+				height: 20px;
+				position: absolute;
+				top: 5px;
+			}
+
+			&__marker {
+				fill: white;
+				stroke-width: 2;
+				stroke: palette-get(na-black-10);
+			}
+		}
+	}
+
+
+
+}
