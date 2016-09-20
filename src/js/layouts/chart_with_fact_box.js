@@ -57,12 +57,11 @@ export class ChartWithFactBox {
 	}
 
 	render(data) {
-		console.log(data);
 		this.factBox.render(data);
 		this.chart.render(data);
 	}
 
 	resize() {
-		// viz.resize ? viz.resize() : null;
+		this.chart.resize ? this.chart.resize() : null;
 	}
 }
