@@ -103,7 +103,7 @@ let vizSettingsList = [
 		vizType: "fact_box",
 		primaryDataSheet: "people",
 		factBoxVals: [ 
-			{ variable: variables.char_online_radicalization, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Maintained social media profile with jihadist material or utilized encryption for plotting"},
+			{ variable: variables.char_online_radicalization, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Maintained a social media profile with jihadist material or utilized encryption for plotting"},
 		],
 	},
 	{
@@ -123,9 +123,9 @@ let vizSettingsList = [
 		vizType: "fact_box",
 		primaryDataSheet: "people",
 		factBoxVals: [ 
-			{ variable: variables.inv_informant, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Percent monitored by an informant"},
-			{ variable: variables.inv_community_or_family_tip, value: "Yes", type:"percent", color:colors.blue.light, text:"Percent implicated by tip from family members or community"},
-			{ variable: variables.inv_public_tip, value: "Yes", type:"percent", color:colors.purple.light, text:"Percent implicated by tip from general public"},
+			{ variable: variables.inv_informant, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Percent of jihadists monitored by an informant"},
+			{ variable: variables.inv_community_or_family_tip, value: "Yes", type:"percent", color:colors.blue.light, text:"Percent of jihadists implicated by a tip from family members or the community"},
+			{ variable: variables.inv_public_tip, value: "Yes", type:"percent", color:colors.purple.light, text:"Percent of jihadists implicated by a tip from the general public"},
 		],
 	},
 ]
