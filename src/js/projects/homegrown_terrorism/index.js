@@ -58,15 +58,25 @@ let vizSettingsList = [
 	},
 	{
 		id: "#homegrown__gender-of-extremists", 
-		vizType: "grouped_dot_matrix",
+		vizType: "chart_with_fact_box",
 		primaryDataSheet: "people",
-		dotsPerRow: 5,
-		distanceBetweenGroups: 15,
-		groupingVars: [ variables.year_charged_or_deceased ],
-		filterVars: [ variables.gender ],
-		tooltipVars: [ variables.full_name, variables.charged_or_deceased, variables.gender, variables.date_charged, variables.terror_plot],
-		tooltipImageVar: variables.headshot,
-		labelSettings: { interval: 1, showNumVals: true}
+		chartSettings: {
+			vizType: "grouped_dot_matrix",
+			dotsPerRow: 5,
+			distanceBetweenGroups: 15,
+			groupingVars: [ variables.year_charged_or_deceased ],
+			filterVars: [ variables.gender ],
+			tooltipVars: [ variables.full_name, variables.charged_or_deceased, variables.gender, variables.date_charged, variables.terror_plot],
+			tooltipImageVar: variables.headshot,
+			labelSettings: { interval: 1, showNumVals: true}
+		},
+		factBoxSettings: {
+			alignment: "left-aligned",
+			factBoxVals: [ 
+				{ variable: variables.gender, value: "Male", type:"percent", text: "Male"},
+				{ variable: variables.gender, value: "Female", type:"percent", text:"Female"},
+			],
+		},
 	},
 	{
 		id: "#homegrown__citizenship-status", 
@@ -79,29 +89,40 @@ let vizSettingsList = [
 		split: { splitFilterVar:variables.citizenship_status, splitVal: "Permanent Resident", leftLabel: "Citizens and Permanent Residents", rightLabel: "Non-residents and Unknown", splitAggregate: "percent"}
 	},
 	{
-		id: "#homegrown__age-of-extremists", 
-		vizType: "dot_histogram",
+		id: "#homegrown__age-of-extremists",
+		vizType: "chart_with_fact_box",
 		primaryDataSheet: "people",
-		groupingVars: [ variables.age ],
-		filterVars: [ variables.marital_status ],
-		tooltipVars: [ variables.full_name, variables.age, variables.marital_status, variables.terror_plot ],
-		tooltipImageVar: variables.headshot,
-		labelSettings: { interval: 5 }
+		chartSettings: {
+			vizType: "dot_histogram",
+			groupingVars: [ variables.age ],
+			filterVars: [ variables.marital_status ],
+			tooltipVars: [ variables.full_name, variables.age, variables.marital_status, variables.terror_plot ],
+			tooltipImageVar: variables.headshot,
+			labelSettings: { interval: 5 }
+		},
+		factBoxSettings: {
+			alignment: "right-aligned",
+			factBoxVals: [ 
+				{ variable: variables.age, type:"average", text: "Average Age"},
+				{ variable: variables.marital_status, value: "Married", type:"percent", text:"Married"},
+			],
+		},
 	},
-	{
-		id: "#homegrown__extremist-data-table", 
-		vizType: "table",
-		tableVars: [ variables.full_name, variables.gender, variables.age],
-		defaultOrdering: [0, "asc"],
-		pagination: true,
-		numPerPage: 25,
-		primaryDataSheet: "people",
-		colorScaling: false
-	},
+	// {
+	// 	id: "#homegrown__extremist-data-table", 
+	// 	vizType: "table",
+	// 	tableVars: [ variables.full_name, variables.gender, variables.age],
+	// 	defaultOrdering: [0, "asc"],
+	// 	pagination: true,
+	// 	numPerPage: 25,
+	// 	primaryDataSheet: "people",
+	// 	colorScaling: false
+	// },
 	{
 		id: "#homegrown__fact-box__method-of-radicalization", 
 		vizType: "fact_box",
 		primaryDataSheet: "people",
+		factBoxType: "colored_boxes",
 		factBoxVals: [ 
 			{ variable: variables.char_online_radicalization, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Maintained a social media profile with jihadist material or utilized encryption for plotting"},
 		],
@@ -122,6 +143,7 @@ let vizSettingsList = [
 		id: "#homegrown__fact-box__prevention-method", 
 		vizType: "fact_box",
 		primaryDataSheet: "people",
+	 factBoxType: "colored_boxes",
 		factBoxVals: [ 
 			{ variable: variables.inv_informant, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Percent of jihadists monitored by an informant"},
 			{ variable: variables.inv_community_or_family_tip, value: "Yes", type:"percent", color:colors.blue.light, text:"Percent of jihadists implicated by a tip from family members or the community"},

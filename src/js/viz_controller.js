@@ -8,6 +8,7 @@ import { DotHistogram } from "./chart_types/dot_histogram.js";
 import { GroupedDotMatrix } from "./chart_types/grouped_dot_matrix.js";
 import { UsStatesMap } from "./chart_types/us_states_map.js";
 import { MultiChartLayout } from "./layouts/multi_chart_layout.js";
+import { ChartWithFactBox } from "./layouts/chart_with_fact_box.js";
 import { GroupedBarChart } from "./chart_types/grouped_bar_chart.js";
 import { Table } from "./chart_types/table.js";
 import { FactBox } from "./chart_types/fact_box.js";
@@ -33,6 +34,10 @@ export function setupProject(projectSettings) {
 			switch (vizSettingsObject.vizType) {
 				case "chart_table_layout":
 					viz = new MultiChartLayout(vizSettingsObject);
+					break;
+
+				case "chart_with_fact_box":
+					viz = new ChartWithFactBox(vizSettingsObject, imageFolderId);
 					break;
 
 				case "dot_matrix":
@@ -83,6 +88,7 @@ export function setupProject(projectSettings) {
 			console.log(d);
 			for (let viz of vizList) {
 				let data = d[viz.primaryDataSheet];
+				console.log(viz);
 				viz.render(data);
 			}
 		});
