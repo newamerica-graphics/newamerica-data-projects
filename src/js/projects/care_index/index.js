@@ -14,7 +14,7 @@ let variables = {
 	quality_rank: {"variable":"quality_rank", "displayName":"Quality Rank", "format":"number", "category":"Quality", "scaleType":"quantize", "customRange":[colors.purple.light, colors.purple.dark], "numBins":4},
 	quality_total_norm: {"variable":"quality_total_norm", "displayName":"Quality", "format":"number", "category":"Quality", "scaleType":"quantize", "customRange":[colors.purple.light, colors.purple.dark], "numBins":5},
 	availability_total_norm: {"variable":"availability_total_norm", "displayName":"Availability", "format":"number", "category":"Availability", "scaleType":"quantize", "customRange":[colors.blue.light, colors.blue.dark], "numBins":5},
-	care_index_combined: {"variable":"care_index_combined", "displayName":"Care Index Score", "format":"number", "category":"Care Index Score", "scaleType":"quantize", "customRange":[colors.turquoise.light, colors.turquoise.dark], "numBins":5},
+	care_index_combined: {"variable":"care_index_combined", "displayName":"Care Index Score", "format":"number", "category":"Overall", "scaleType":"quantize", "customRange":[colors.turquoise.light, colors.turquoise.dark], "numBins":5},
 	children_5_under: {"variable":"children_5_under", "displayName":"Children 5 & Under", "format":"number", "category":"Cost", "scaleType":"quantize", "customRange":[colors.blue.light, colors.blue.dark], "numBins":5},
 	in_center_pct_accred_statewide: {"variable":"in_center_pct_accred_statewide", "displayName":"Proportion of Accredited Child Care Centers", "format":"percent", "scaleType":"quantize", "customRange":[colors.turquoise.light, colors.turquoise.dark], "numBins":5},
 }

@@ -8,6 +8,11 @@
 		}
 		color: palette-get(na-black-40);
 		cursor: pointer;
+		font-size: 1rem;
+
+		@include breakpoint(medium) {
+			font-size: 16px;
+		}
 
 		&.active {
 			background-color: palette-get(na-black);
@@ -28,16 +33,20 @@
 	}
 
 	&__variable {
-		display: inline-block;
+		display: block;
 		margin-right: $desktop-padding;
 		cursor: pointer;
 		color: palette-get(na-black-40);
+		font-size: 1rem;
+
+		@include breakpoint(medium) {
+			font-size: 16px;
+			display: inline-block;
+		}
 
 		&.active {
 			color:palette-get(na-black);
 		    font-weight: 800;
-		    border-bottom: $standard-border;
-		    padding-bottom: 2px;
 		    opacity: 1;
 		}
 	}
