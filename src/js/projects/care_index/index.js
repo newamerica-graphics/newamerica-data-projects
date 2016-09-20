@@ -16,6 +16,7 @@ let variables = {
 	availability_total_norm: {"variable":"availability_total_norm", "displayName":"Availability", "format":"number", "category":"Availability", "scaleType":"quantize", "customRange":[colors.blue.light, colors.blue.dark], "numBins":5},
 	care_index_combined: {"variable":"care_index_combined", "displayName":"Care Index Score", "format":"number", "category":"Care Index Score", "scaleType":"quantize", "customRange":[colors.turquoise.light, colors.turquoise.dark], "numBins":5},
 	children_5_under: {"variable":"children_5_under", "displayName":"Children 5 & Under", "format":"number", "category":"Cost", "scaleType":"quantize", "customRange":[colors.blue.light, colors.blue.dark], "numBins":5},
+	in_center_pct_accred_statewide: {"variable":"in_center_pct_accred_statewide", "displayName":"Proportion of Accredited Child Care Centers", "format":"percent", "scaleType":"quantize", "customRange":[colors.turquoise.light, colors.turquoise.dark], "numBins":5},
 }
 
 let vizSettingsList = [
@@ -60,6 +61,21 @@ let vizSettingsList = [
 		filterVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ],
 		tooltipVars: [ variables.state, variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined  ]
 	},
+	{
+		id: "#care-index__explore-the-index__availability", 
+		vizType: "us_states_map",
+		primaryDataSheet: "state_data",
+		filterVars: [ variables.availability_total_norm ],
+		tooltipVars: [ variables.state, variables.availability_total_norm]
+	},
+	{
+		id: "#care-index__child-care-accredidation", 
+		vizType: "us_states_map",
+		primaryDataSheet: "state_data",
+		filterVars: [ variables.in_center_pct_accred_statewide ],
+		tooltipVars: [ variables.state, variables.in_center_pct_accred_statewide]
+	},
+	
 	// {
 	// 	id: "#explore-the-index", 
 	// 	vizType: "table",

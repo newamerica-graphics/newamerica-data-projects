@@ -28,7 +28,7 @@ export class UsStatesMap extends Chart {
 		this.currFilterIndex = 0;
 		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
 
-		this.filterGroup = new FilterGroup(vizSettings);
+		this.filterGroup = filterVars.length > 1 ? new FilterGroup(vizSettings) : null;
 
 		let mapContainer = d3.select(id)
 			.append("div");
@@ -82,7 +82,7 @@ export class UsStatesMap extends Chart {
 		this.bindDataToGeom();
 		this.buildGraph();
 		this.setLegend();
-		this.setFilterGroup();
+		this.filterGroup ? this.setFilterGroup() : null;
 
 		super.render();
 
