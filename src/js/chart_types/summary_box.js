@@ -7,7 +7,7 @@ import { colors } from "../helper_functions/colors.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { formatValue } from "../helper_functions/format_value.js";
 
-let colorScaleContainerWidth = 450;
+let colorScaleContainerWidth = 400;
 let colorScaleWidth = 200;
 let colorScaleMarkerSize = 8;
 
@@ -107,7 +107,7 @@ export class SummaryBox {
 			let natl_average_value = natl_average[varName] ? natl_average[varName] : null;
 
 			if (value) {
-				this.appendValue(variable, value);
+				this.appendValue(variable, value, natl_average_value, i);
 				this.appendColorScale(variable, value, natl_average_value, i);
 				// this.appendRank(variable, datapoint);
 			} else  {
@@ -123,13 +123,21 @@ export class SummaryBox {
 		
 	}
 
-	appendValue(variable, value) {
+	appendValue(variable, value, natl_average_value, i) {
+		let averageString = ""
+		if (i >= 5) {
+			if (value > natl_average_value) {
+				averageString = " (Above Average)";
+			} else {
+				averageString = " (Below Average)";
+			}
+		}
 		this.valueFields[variable.variable].label
 			.style("display", "inline-block");
 
 		this.valueFields[variable.variable].value
 			.style("display", "inline-block")
-			.text(formatValue(value, variable.format));
+			.text(formatValue(value, variable.format) + averageString);
 	}
 
 	appendColorScale(variable, value, natl_average_value, i) {
@@ -137,11 +145,20 @@ export class SummaryBox {
 		let colorScaleOuterWrapper = this.valueFields[variable.variable].colorScaleBox;
 		let colorScale = getColorScale(this.data, variable);
 		let numBins = variable.numBins;
-		console.log(colorScale.domain());
+		
+		let minVal = colorScale.domain()[0];
+		let maxVal = colorScale.domain()[1];
+
+		if (variable.format == "price") {
+			minVal = Math.floor(minVal/1000)*1000;
+			maxVal = Math.ceil(maxVal/1000)*1000;
+
+			colorScale.domain([minVal, maxVal]);
+		}
 
 		colorScaleOuterWrapper.append("h3")
 			.attr("class", "summary-box__list-item__color-scale__label-left")
-			.text(formatValue(colorScale.domain()[0], variable.format));
+			.text(formatValue(minVal, variable.format));
 
 		let colorScaleContainer = colorScaleOuterWrapper.append("div")
 			.attr("class", "summary-box__list-item__color-scale__container")
@@ -176,7 +193,7 @@ export class SummaryBox {
 
 		colorScaleOuterWrapper.append("h3")
 			.attr("class", "summary-box__list-item__color-scale__label-right")
-			.text(formatValue(colorScale.domain()[1], variable.format));
+			.text(formatValue(maxVal, variable.format));
 	}
 
 	appendRank(variable, datapoint) {
