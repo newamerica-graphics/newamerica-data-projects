@@ -99,9 +99,13 @@ export class GroupedDotMatrix extends Chart {
 		this.setContainerTransforms();
 		this.appendLabels();
 		this.setLegend();
+
+		
 		if (this.dividingLine) {
 			this.addDividingLine();
 		}
+
+		super.render();
 	}
 
 	getGroupings() {

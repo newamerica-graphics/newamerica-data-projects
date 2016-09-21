@@ -35,6 +35,7 @@ export class UsStatesMap extends Chart {
 
 		this.svg = mapContainer
 			.append("svg")
+			.attr("id", "map-svg")
 			.attr("width", "100%");
 
 		this.tooltip = new Tooltip(id, tooltipVars, null, null);
