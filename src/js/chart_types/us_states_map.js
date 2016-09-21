@@ -126,7 +126,6 @@ export class UsStatesMap extends Chart {
 		   .append("path");
 
 		this.paths.attr("d", this.pathGenerator)
-			.classed("map-feature", true)
 		    .style("fill", (d) => {
 		   		var value = d.properties[this.currFilterVar];
 		   		return value ? this.colorScale(value) : "#ccc";
