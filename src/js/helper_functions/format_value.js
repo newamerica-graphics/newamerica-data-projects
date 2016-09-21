@@ -14,6 +14,10 @@ export function formatValue(value, format) {
 		return d3.format(".0%")(value);
 	} else if (format == "string") {
 		return value.replace(/<\/?[^>]+(>|$)/g, "");
+	} else if (format == "rank") {
+	    let s = ["th","st","nd","rd"];
+		let v = value%100;
+	    return value+(s[(v-20)%10]||s[v]||s[0]);
 	}
 }
 

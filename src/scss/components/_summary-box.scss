@@ -1,33 +1,32 @@
 .summary-box {
+	width: 675px;
 	background-color: white;
-	padding: 10px $desktop-padding;
+	padding: $desktop-padding;
 	border: 1px solid palette-get(na-black-10);
 	@include standard-shadow;
 
 	&__title-container {
-		padding-bottom: 15px;
-		.person__icon {
-			margin: 0px !important;
-			display: table-cell;
+		padding-bottom: 10px;
+	}
 
-		}
+	&__title-label {
+		@include chart-secondary-text;
+		color: palette-get(na-black);
+		margin-bottom: 0px;
 	}
 
 	&__title {
 		font-weight: bold;
-		font-size: 18px;
+		font-size: 24px;
 		display: table-cell;
 		vertical-align: middle;
-	}
-
-	&__category-name, &__category-list {
-		padding-left: 10px;
 	}
 	
 	&__category-name {
 		color: palette-get(na-black-40);
 		font-weight: normal;
 		font-size: 16px;
+		padding: 5px 0px;
 	}
 
 	&__category-list {
@@ -53,6 +52,7 @@
 
 		&__value {
 			@include chart-secondary-text;
+			color: palette-get(na-black);
 		}
 
 		&__color-scale {
@@ -65,10 +65,10 @@
 			}
 
 			&__marker-container {
-				width: 20px;
-				height: 20px;
+				width: 30px;
+				height: 30px;
 				position: absolute;
-				top: 5px;
+				top: 4px;
 			}
 
 			&__marker {
@@ -76,6 +76,12 @@
 				stroke-width: 2;
 				stroke: palette-get(na-black-10);
 			}
+		}
+
+		&__rank {
+			@include chart-secondary-text;
+			color: palette-get(na-black);
+			padding-left: 20px;
 		}
 	}
 

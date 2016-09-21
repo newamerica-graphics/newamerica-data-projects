@@ -7,9 +7,11 @@ import { colors } from "../helper_functions/colors.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { formatValue } from "../helper_functions/format_value.js";
 
+let colorScaleWidth = 250;
+
 export class SummaryBox {
 	constructor(vizSettings) {
-		let {id, vizVars, titleVar, titleVarValue, columns, primaryDataSheet} = vizSettings;
+		let {id, vizVars, titleLabel, titleVar, titleVarValue, columns, primaryDataSheet} = vizSettings;
 
 		this.titleVar = titleVar;
 		this.titleVarValue = titleVarValue;
@@ -24,7 +26,12 @@ export class SummaryBox {
 			.append("div")
 			.attr("class", "summary-box__title-container");
 
-		this.title = titleContainer
+		titleContainer
+			.append("h3")
+			.text(titleLabel)
+			.classed("summary-box__title-label", true);
+
+		titleContainer
 			.append("h1")
 			.text(titleVarValue)
 			.classed("summary-box__title", true);
@@ -64,7 +71,11 @@ export class SummaryBox {
 					.classed("summary-box__list-item__value", true);
 
 				valueField.colorScaleBox = listElem.append("div")
-					.classed("summary-box__list-item__color-scale", true);
+					.classed("summary-box__list-item__color-scale", true)
+					.style("width", colorScaleWidth + "px");
+
+				valueField.rank = listElem.append("h3")
+					.classed("summary-box__list-item__rank", true);
 					
 				this.valueFields[variable.variable] = valueField;
 			}
@@ -75,7 +86,6 @@ export class SummaryBox {
 		this.data = data;
 		console.log("rendering");
 		let datapoint = data.filter( (d) => { return d[this.titleVar.variable] == this.titleVarValue })[0];
-		console.log(datapoint);
 
 		for (let variable of this.vizVars) {
 			let varName = variable.variable;
@@ -86,6 +96,7 @@ export class SummaryBox {
 			if (value) {
 				this.appendValue(variable, value);
 				this.appendColorScale(variable, value);
+				this.appendRank(variable, datapoint);
 			} else  {
 				this.valueFields[varName].label
 					.style("display", "none");
@@ -116,7 +127,7 @@ export class SummaryBox {
 		for (let i = 0; i < numBins; i++) {
 			colorScaleContainer.append("div")
 				.attr("class", "summary-box__list-item__color-scale__bin")
-				.style("width", 300/numBins + "px")
+				.style("width", colorScaleWidth/numBins + "px")
 				.style("background-color", colorScale.range()[i]);
 		}
 
@@ -124,12 +135,19 @@ export class SummaryBox {
 			.attr("class", "summary-box__list-item__color-scale__marker-container")
 			.style("left", this.calcMarkerPosition(colorScale, value))
 		   .append("svg:circle")
-			.attr("r", 7)
-			.attr("cx", 10)
-			.attr("cy", 10)
+			.attr("r", 8)
+			.attr("cx", 11)
+			.attr("cy", 11)
 			.attr("class", "summary-box__list-item__color-scale__marker");
 		
 		console.log(colorScale);
+	}
+
+	appendRank(variable, datapoint) {
+		let sortedData = this.data.sort((a, b) => {  return a[variable.variable] - b[variable.variable];})
+		let rank = sortedData.indexOf(datapoint) + 1;
+		this.valueFields[variable.variable].rank
+			.text(formatValue(rank, "rank"));
 	}
 
 	calcMarkerPosition(colorScale, value) {
