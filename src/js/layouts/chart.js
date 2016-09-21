@@ -39,9 +39,9 @@ export class Chart {
 	// }
 
 	setPngLink() {
-		this.id = this.id.replace("#", "");
+		let DOMId = this.id.replace("#", "");
 		
-		let node = document.getElementById(this.id);
+		let node = document.getElementById(DOMId);
 
 		domtoimage.toPng(node)
 		    .then((dataUrl) => {
