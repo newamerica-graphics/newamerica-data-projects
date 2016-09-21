@@ -6,7 +6,7 @@ import { colors } from "../../helper_functions/colors.js";
 let variables = {
 	state: {"variable":"state", "displayName":"State"},
 	cost_rank: {"variable":"cost_rank", "displayName":"Cost Rank", "format":"number", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":4},
-	cost_in_home_yearly: {"variable":"cost_in_home_yearly", "displayName":"Cost in Home", "format":"price", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":6},
+	cost_in_home_yearly: {"variable":"cost_in_home_yearly", "displayName":"Cost in Home", "format":"price", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":5},
 	cost_in_center_yearly: {"variable":"cost_in_center_yearly", "displayName":"Cost in Center", "format":"price", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":5},
 	average_cost: {"variable":"average_cost", "displayName":"Average Cost", "format":"price", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":5},
 	cost_as_proportion_of_hhi: {"variable":"cost_as_proportion_of_hhi", "displayName":"Cost as % of Household Income", "format":"percent", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":5},
@@ -75,13 +75,46 @@ let vizSettingsList = [
 		filterVars: [ variables.in_center_pct_accred_statewide ],
 		tooltipVars: [ variables.state, variables.in_center_pct_accred_statewide]
 	},
-	
-	// {
-	// 	id: "#explore-the-index", 
-	// 	vizType: "table",
-	// 	tableVars: [ full_name, field_age, field_gender ],
-	// 	colorScaling: false
-	// },
+	{
+		id: "#care-index__summary-box__new-mexico", 
+		vizType: "summary_box",
+		primaryDataSheet: "state_data",
+		titleLabel: "State Overview",
+		titleVar: variables.state,
+		titleVarValue: "New Mexico",
+		columns: ["value", "color_slider", "rank"],
+		vizVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ]
+	},
+	{
+		id: "#care-index__summary-box__georgia", 
+		vizType: "summary_box",
+		primaryDataSheet: "state_data",
+		titleLabel: "State Overview",
+		titleVar: variables.state,
+		titleVarValue: "Georgia",
+		columns: ["value", "color_slider", "rank"],
+		vizVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ]
+	},
+	{
+		id: "#care-index__summary-box__illinois", 
+		vizType: "summary_box",
+		primaryDataSheet: "state_data",
+		titleLabel: "State Overview",
+		titleVar: variables.state,
+		titleVarValue: "Illinois",
+		columns: ["value", "color_slider", "rank"],
+		vizVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ]
+	},
+	{
+		id: "#care-index__summary-box__massachusetts", 
+		vizType: "summary_box",
+		primaryDataSheet: "state_data",
+		titleLabel: "State Overview",
+		titleVar: variables.state,
+		titleVarValue: "Massachusetts",
+		columns: ["value", "color_slider", "rank"],
+		vizVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ]
+	},
 ]
 
 let projectSettings = {
