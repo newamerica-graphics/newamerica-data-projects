@@ -1,9 +1,16 @@
 .summary-box {
-	width: 675px;
+	max-width: 675px;
+	width: 100%;
+	overflow-x: scroll;
 	background-color: white;
 	padding: $desktop-padding;
+	margin: $desktop-padding 0px;
 	border: 1px solid palette-get(na-black-10);
 	@include standard-shadow;
+
+	&__content-container {
+		width: 675px - 2*$desktop-padding;
+	}
 
 	&__title-container {
 		padding-bottom: 10px;

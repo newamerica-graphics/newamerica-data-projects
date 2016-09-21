@@ -19,9 +19,17 @@ export class SummaryBox {
 		this.vizVars = vizVars;
 		this.primaryDataSheet = primaryDataSheet;
 
-		this.summaryBox = d3.select(id)
+		let chartWrapper = d3.select(id)
+			.append("div")
+			.attr("class", "chart-wrapper");
+
+		let summaryBoxOuterWrapper = chartWrapper
 			.append("div")
 			.attr("class", "summary-box");
+
+		this.summaryBox = summaryBoxOuterWrapper
+			.append("div")
+			.attr("class", "summary-box__content-container");
 
 		let titleContainer = this.summaryBox
 			.append("div")
