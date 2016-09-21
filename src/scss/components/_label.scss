@@ -1,0 +1,9 @@
+.label {
+	&__title {
+		@include chart-primary-text;
+	}
+
+	&__value {
+		@include chart-secondary-text;
+	}
+}

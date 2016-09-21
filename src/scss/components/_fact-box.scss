@@ -4,6 +4,18 @@
 	margin-bottom: 15px;
 	margin-right: 35px;
 
+	&.simple {
+		height: auto;
+		margin: 10px 40px 10px 0px;
+	}
+
+	.right-aligned & {
+		float: right;
+		&:first-child {
+			margin-right: 15px;
+		}
+	}
+
 	&__left, &__right {
 		display: table-cell;
 	}
@@ -15,14 +27,14 @@
 	&__value-container {
 		height: 100px;
 		width: 100px;
-	}
 
-	&__label-container {
-
+		.simple & {
+			width: auto;
+			height: auto;
+		}
 	}
 
 	&__value, &__label {
-
 		font-weight: bold;
 	}
 
@@ -33,15 +45,41 @@
 		width: 100px;
 		height: 100px;
 		line-height: 100px;
+
+		.simple & {
+			font-size: 36px;
+			text-align: left;
+			width: auto;
+			height: auto;
+			line-height: 100%;
+			color: palette-get(na-black-30);
+		}
 	}
 
 	&__label {
 		vertical-align: middle;
 		padding-left: 15px;
 		margin-bottom: 0px;
+		color: palette-get(na-black);
+
+		.simple & {
+			padding: 0px;
+			margin-bottom: 2px;
+			font-size: 16px;
+		}
 	}
 }
 
 .fact-box-container {
 	width: 100%;
+	&::after {
+	    content:"";
+	    display:block;
+	    clear:both;
+	}
+
+	&.simple {
+		max-width: 800px;
+		margin: auto;
+	}
 }

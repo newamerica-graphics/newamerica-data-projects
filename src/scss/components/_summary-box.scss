@@ -1,0 +1,97 @@
+.summary-box {
+	max-width: 675px;
+	width: 100%;
+	overflow-x: scroll;
+	background-color: white;
+	padding: $desktop-padding;
+	margin: $desktop-padding 0px;
+	border: 1px solid palette-get(na-black-10);
+	@include standard-shadow;
+
+	&__content-container {
+		width: 675px - 2*$desktop-padding;
+	}
+
+	&__title-container {
+		padding-bottom: 10px;
+	}
+
+	&__title-label {
+		@include chart-secondary-text;
+		color: palette-get(na-black);
+		margin-bottom: 0px;
+	}
+
+	&__title {
+		font-weight: bold;
+		font-size: 24px;
+		display: table-cell;
+		vertical-align: middle;
+	}
+	
+	&__category-name {
+		color: palette-get(na-black-40);
+		font-weight: normal;
+		font-size: 16px;
+		padding: 5px 0px;
+	}
+
+	&__category-list {
+		.summary-box__list-item {
+			padding-left: 10px;
+		}
+	}
+
+	&__list-item {
+		display: table;
+		&__val-container, &__color-scale {
+			display: table-cell;
+		}
+
+		&__val-container {
+			width: 300px;
+		}
+		&__label {
+			@include chart-primary-text;
+			padding-right: 5px;
+			
+		}
+
+		&__value {
+			@include chart-secondary-text;
+			color: palette-get(na-black);
+		}
+
+		&__color-scale {
+			position: relative;
+			height: 6px;
+			width: 300px;
+			&__bin {
+				height: 6px;
+				display: inline-block;
+			}
+
+			&__marker-container {
+				width: 20px;
+				height: 20px;
+				position: absolute;
+				top: 4px;
+			}
+
+			&__marker {
+				fill: white;
+				stroke-width: 2;
+				stroke: palette-get(na-black-10);
+			}
+		}
+
+		&__rank {
+			@include chart-secondary-text;
+			color: palette-get(na-black);
+			padding-left: 20px;
+		}
+	}
+
+
+
+}

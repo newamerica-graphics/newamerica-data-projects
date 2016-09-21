@@ -2,30 +2,67 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
-import { getDefaultColor } from "../helper_functions/colors.js";
+import { colors } from "../helper_functions/colors.js";
 
 
 export class FactBox {
 	constructor(vizSettings) {
-		let { id, factBoxVals } = vizSettings;
+		let { id, factBoxType, factBoxVals, primaryDataSheet, alignment } = vizSettings;
 
+		this.factBoxType = factBoxType;
 		this.factBoxVals = factBoxVals;
 		this.numBoxes = factBoxVals.length;
+		this.primaryDataSheet = primaryDataSheet;
 
 		this.chartContainer = d3.select(id)
 			.append("div")
-			.attr("class", "fact-box-container " + this.numBoxes + "-boxes");
+			.attr("class", "fact-box-container "+ factBoxType + " " + alignment);
 
 	}
 
 	render(data) {
 		this.data = data;
+
+		if (this.factBoxType == "simple") {
+			this.renderSimple();
+		} else {
+			this.renderColored();
+		}
+		
+		
+	}
+
+	renderSimple() {
 		this.factBoxDivs = [];
 
 		for (let factBoxVal of this.factBoxVals) {
 			let value = this.getValue(factBoxVal);
 
-			let colorCode = factBoxVal.variable.color;
+			let factBoxDiv = this.chartContainer.append("div")
+				.attr("class", "fact-box simple")
+				// .style("width", 100/this.numBoxes + "%");
+
+			factBoxDiv.append("div")
+				.attr("class", "fact-box__label-container")	
+			  .append("h5")
+			   	.attr("class", "fact-box__label")
+			   	.text(factBoxVal.text);
+
+			factBoxDiv.append("div")
+				.attr("class", "fact-box__value-container")
+			  .append("h5")
+			   	.attr("class", "fact-box__value")
+			   	.text(value);
+
+			this.factBoxDivs.push(factBoxDiv);
+		}
+	}
+
+	renderColored() {
+		this.factBoxDivs = [];
+
+		for (let factBoxVal of this.factBoxVals) {
+			let value = this.getValue(factBoxVal);
 
 			let factBoxDiv = this.chartContainer.append("div")
 				.attr("class", "fact-box")
@@ -36,7 +73,7 @@ export class FactBox {
 
 			factBoxLeft.append("div")
 				.attr("class", "fact-box__value-container")
-				.style("background-color", getDefaultColor(colorCode))
+				.style("background-color", () => { return factBoxVal.color ? factBoxVal.color : colors.turquoise.light; })
 			  .append("h5")
 			   	.attr("class", "fact-box__value")
 			   	.text(value);
@@ -52,9 +89,7 @@ export class FactBox {
 			   	.text(factBoxVal.text);
 
 			this.factBoxDivs.push(factBoxDiv);
-
 		}
-		
 	}
 
 	getValue(factBoxVal) {
@@ -64,7 +99,9 @@ export class FactBox {
 			let count = this.count(factBoxVal);
 			let percent = Math.round((count/this.data.length) * 100);
 			return percent + "%";
-
+		} else if (factBoxVal.type == "average") {
+			let mean = d3.mean(this.data, (d) => { return d[factBoxVal.variable.variable] ? d[factBoxVal.variable.variable] : null; });
+			return Math.round(mean);
 		}
 	}
 

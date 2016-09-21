@@ -18,44 +18,56 @@ let d3 = require("d3");
 export class UsStatesMap extends Chart {
 	
 	constructor(vizSettings) {
-		let {id, tooltipVars, filterVars} = vizSettings;
+		let {id, tooltipVars, filterVars, primaryDataSheet } = vizSettings;
 		super(id);
 
 		this.id = id;
 		this.filterVars = filterVars;
+		this.primaryDataSheet = primaryDataSheet;
 
 		this.currFilterIndex = 0;
 		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
 
-		this.filterGroup = new FilterGroup(vizSettings);
+		this.filterGroup = filterVars.length > 1 ? new FilterGroup(vizSettings) : null;
 
 		let mapContainer = d3.select(id)
 			.append("div");
 
 		this.svg = mapContainer
-			.append("svg");
+			.append("svg")
+			.attr("width", "100%");
 
-		this.tooltip = new Tooltip(id, tooltipVars)
+		this.tooltip = new Tooltip(id, tooltipVars, null, null);
+		let legendSettings = {};
+		legendSettings.id = id;
+		legendSettings.showTitle = true;
+		legendSettings.markerSettings = { shape:"circle", size:10 };
+		legendSettings.orientation = "vertical-right";
 
-		this.legend = new Legend(id);
+		this.legend = new Legend(legendSettings);
 
 		this.setDimensions();
 	}
 
 	setDimensions() {
 		this.w = $(this.id).width();
-		this.h = this.w/2;
-
-		this.svg
-			.attr("width", this.w)
-			.attr("height", this.h);
+		this.h = 3*this.w/5;
 
 		let translateX = this.w/2;
+		let scalingFactor = 5*this.w/4;
 
-		this.w > global.showLegendBreakpoint ? translateX -= global.legendWidth/2 : null;
+		if (this.w > global.showLegendBreakpoint) {
+			translateX -= global.legendWidth/2;
+			this.h = this.w/2;
+			scalingFactor = this.w;
+		}
+
+		this.svg
+			.attr("height", this.h);
+
 		//Define map projection
 		let projection = d3.geoAlbersUsa()
-				.scale(this.w)
+				.scale(scalingFactor)
 				.translate([translateX, this.h/2]);
 
 		//Define path generator
@@ -64,19 +76,17 @@ export class UsStatesMap extends Chart {
 	}
 
 	render(data) {	
-
-		console.log(this.paths);
 		this.data = data;
 		this.processData();
 		this.setScale();
 		this.bindDataToGeom();
 		this.buildGraph();
 		this.setLegend();
-		this.setFilterGroup();
+		this.filterGroup ? this.setFilterGroup() : null;
 
 		super.render();
 
-		console.log(this.paths);
+		// console.log(this.paths);
 	}
 
 	processData() {
@@ -90,15 +100,7 @@ export class UsStatesMap extends Chart {
 	}
 
 	setScale() {
-		let colorScaleSettings = {};
-
-		colorScaleSettings.scaleType = this.filterVars[this.currFilterIndex].scaleType;
-		colorScaleSettings.color = this.filterVars[this.currFilterIndex].color;
-		colorScaleSettings.numBins = this.filterVars[this.currFilterIndex].numBins;
-
-		colorScaleSettings.dataMin = Number(d3.min(this.data, (d) => { return d[this.currFilterVar] ? Number(d[this.currFilterVar]) : null; })); 
-		colorScaleSettings.dataMax = Number(d3.max(this.data, (d) => { return d[this.currFilterVar] ? Number(d[this.currFilterVar]) : null; }));
-		this.colorScale = getColorScale(colorScaleSettings);
+		this.colorScale = getColorScale(this.data, this.filterVars[this.currFilterIndex]);
 	}
 
 
@@ -131,7 +133,7 @@ export class UsStatesMap extends Chart {
 		    })
 		    .attr("value", function(d,i) { return i; })
 		    .style("stroke", "white")
-		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index]); })
+		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], event); })
 		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); });
 	}
 
@@ -145,6 +147,8 @@ export class UsStatesMap extends Chart {
 		legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
 
 		this.legend.render(legendSettings);
+
+		
 	}
 
 	setFilterGroup() {
@@ -185,11 +189,12 @@ export class UsStatesMap extends Chart {
 		    });
 	}
 
-	mouseover(datum, path) {
+	mouseover(datum, path, eventObject) {
 		d3.select(path).style("stroke-width", "3");
-		console.log(path);
-		let mousePos = d3.mouse(path);
-		console.log(mousePos);
+		
+		let mousePos = [];
+		mousePos[0] = eventObject.pageX;
+		mousePos[1] = eventObject.pageY;
 		this.tooltip.show(datum.properties, mousePos);
 	}
 

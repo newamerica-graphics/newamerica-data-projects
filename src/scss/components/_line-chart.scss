@@ -1,0 +1,11 @@
+.line-chart {
+
+	&__line {
+	  fill: none;
+	  stroke-width: 2px;
+	}
+
+	.axis-x path {
+	  /*display: none;*/
+	}
+}

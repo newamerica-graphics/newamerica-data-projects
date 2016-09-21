@@ -1,0 +1,11 @@
+.dividing-line {
+	stroke: palette-get(na-black-40);
+
+	&__title {
+		@include chart-primary-text;
+	}
+
+	&__description {
+		@include chart-secondary-text;
+	}
+}

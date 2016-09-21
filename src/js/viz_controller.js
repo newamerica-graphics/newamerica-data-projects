@@ -8,12 +8,15 @@ import { DotHistogram } from "./chart_types/dot_histogram.js";
 import { GroupedDotMatrix } from "./chart_types/grouped_dot_matrix.js";
 import { UsStatesMap } from "./chart_types/us_states_map.js";
 import { MultiChartLayout } from "./layouts/multi_chart_layout.js";
+import { ChartWithFactBox } from "./layouts/chart_with_fact_box.js";
 import { GroupedBarChart } from "./chart_types/grouped_bar_chart.js";
 import { Table } from "./chart_types/table.js";
 import { FactBox } from "./chart_types/fact_box.js";
+import { LineChart } from "./chart_types/line_chart.js";
+import { SummaryBox } from "./chart_types/summary_box.js";
 
 export function setupProject(projectSettings) {
-	let { vizSettingsList } = projectSettings;
+	let { vizSettingsList, imageFolderId } = projectSettings;
 
 	let vizList = [];
 
@@ -25,6 +28,8 @@ export function setupProject(projectSettings) {
 
 	function initialize() {
 
+		setDownloadLinks();
+
 		for (let vizSettingsObject of vizSettingsList) {
 			let viz;
 			switch (vizSettingsObject.vizType) {
@@ -32,12 +37,16 @@ export function setupProject(projectSettings) {
 					viz = new MultiChartLayout(vizSettingsObject);
 					break;
 
+				case "chart_with_fact_box":
+					viz = new ChartWithFactBox(vizSettingsObject, imageFolderId);
+					break;
+
 				case "dot_matrix":
-					viz = new DotMatrix(vizSettingsObject);
+					viz = new DotMatrix(vizSettingsObject, imageFolderId);
 					break;
 
 				case "dot_histogram":
-					viz = new DotHistogram(vizSettingsObject);
+					viz = new DotHistogram(vizSettingsObject, imageFolderId);
 					break;
 
 				case "fact_box":
@@ -46,11 +55,18 @@ export function setupProject(projectSettings) {
 				
 				case "grouped_bar_chart":
 					viz = new GroupedBarChart(vizSettingsObject);
-					
 					break;
 
 				case "grouped_dot_matrix":
-					viz = new GroupedDotMatrix(vizSettingsObject);
+					viz = new GroupedDotMatrix(vizSettingsObject, imageFolderId);
+					break;
+
+				case "line_chart":
+					viz = new LineChart(vizSettingsObject);
+					break;
+
+				case "summary_box":
+					viz = new SummaryBox(vizSettingsObject);
 					break;
 
 				case "table":
@@ -59,7 +75,6 @@ export function setupProject(projectSettings) {
 
 				case "us_states_map":
 					viz = new UsStatesMap(vizSettingsObject);
-					
 					break;
 			}
 
@@ -67,19 +82,22 @@ export function setupProject(projectSettings) {
 		}
 	}
 
+	function setDownloadLinks() {
+		$("#in-depth__download__xls").attr("href", projectSettings.downloadDataLink + "export?format=xlsx");
+		$("#in-depth__download__json").attr("href", projectSettings.dataUrl);
+	}
+
 	function render() {
 		console.log(vizList);
 		d3.json(projectSettings.dataUrl, (d) => {
 			console.log(d);
-
-			let data = d[projectSettings.dataSheetNames[0]];
-
-			console.log(data);
-
 			for (let viz of vizList) {
+				let data = d[viz.primaryDataSheet];
+				console.log(viz);
 				viz.render(data);
 			}
 		});
+
 	}
 
 	function resize() {

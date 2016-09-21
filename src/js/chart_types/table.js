@@ -9,10 +9,15 @@ import { getColorScale } from "../helper_functions/get_color_scale.js";
 
 export class Table {
 	constructor(vizSettings) {
-		let {id, tableVars, colorScaling} = vizSettings;
+		let {id, tableVars, colorScaling, primaryDataSheet, pagination, numPerPage, defaultOrdering} = vizSettings;
 
+		this.id = id;
 		this.tableVars = tableVars;
 		this.colorScaling = colorScaling;
+		this.pagination = pagination;
+		this.numPerPage = numPerPage;
+		this.defaultOrdering = defaultOrdering;
+		this.primaryDataSheet = primaryDataSheet;
 
 		d3.select(id).append("table")
 			.attr("id", "dataTable")
@@ -21,18 +26,21 @@ export class Table {
 
 	render(data) {
 		this.data = data;
-		this.table = $("#dataTable").DataTable({
+		this.table = $(this.id + " #dataTable").DataTable({
 			data: data,
 			columns: this.getColumnNames(),
 		    lengthChange: false,
-		    paging: false,
+		    paging: this.pagination ? true : false,
+		    pageLength: this.numPerPage,
+		    scrollX: true,
+		    order: this.defaultOrdering ? this.defaultOrdering : ["0", "asc"]
 		});
 
 		if (this.colorScaling) {
 			this.table.on('order.dt', this.orderChanged.bind(this));
 		}
 
-
+		$(this.id + ' input').addClass("search-box__input").attr("placeholder", "Search");
 	}
 
 	getColumnNames() {
