@@ -7,7 +7,8 @@ import { colors } from "../helper_functions/colors.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { formatValue } from "../helper_functions/format_value.js";
 
-let colorScaleWidth = 250;
+let colorScaleContainerWidth = 450;
+let colorScaleWidth = 200;
 let colorScaleMarkerSize = 8;
 
 export class SummaryBox {
@@ -81,7 +82,7 @@ export class SummaryBox {
 
 				valueField.colorScaleBox = listElem.append("div")
 					.classed("summary-box__list-item__color-scale", true)
-					.style("width", colorScaleWidth + "px");
+					.style("width", colorScaleContainerWidth + "px");
 
 				valueField.rank = listElem.append("h3")
 					.classed("summary-box__list-item__rank", true);
@@ -95,17 +96,20 @@ export class SummaryBox {
 		this.data = data;
 		console.log("rendering");
 		let datapoint = data.filter( (d) => { return d[this.titleVar.variable] == this.titleVarValue })[0];
+		let natl_average = data.filter( (d) => { return d[this.titleVar.variable] == "United States" })[0];
 
+		let i = 0;
 		for (let variable of this.vizVars) {
 			let varName = variable.variable;
 			let varFormat = variable.format;
 			console.log(datapoint[varName]);
 			let value = datapoint[varName] ? datapoint[varName] : null;
+			let natl_average_value = natl_average[varName] ? natl_average[varName] : null;
 
 			if (value) {
 				this.appendValue(variable, value);
-				this.appendColorScale(variable, value);
-				this.appendRank(variable, datapoint);
+				this.appendColorScale(variable, value, natl_average_value, i);
+				// this.appendRank(variable, datapoint);
 			} else  {
 				this.valueFields[varName].label
 					.style("display", "none");
@@ -114,6 +118,7 @@ export class SummaryBox {
 					.style("display", "none");
 
 			}
+			i++;
 		}
 		
 	}
@@ -127,12 +132,20 @@ export class SummaryBox {
 			.text(formatValue(value, variable.format));
 	}
 
-	appendColorScale(variable, value) {
+	appendColorScale(variable, value, natl_average_value, i) {
 		console.log(variable);
-		let colorScaleContainer = this.valueFields[variable.variable].colorScaleBox;
+		let colorScaleOuterWrapper = this.valueFields[variable.variable].colorScaleBox;
 		let colorScale = getColorScale(this.data, variable);
 		let numBins = variable.numBins;
 		console.log(colorScale.domain());
+
+		colorScaleOuterWrapper.append("h3")
+			.attr("class", "summary-box__list-item__color-scale__label-left")
+			.text(formatValue(colorScale.domain()[0], variable.format));
+
+		let colorScaleContainer = colorScaleOuterWrapper.append("div")
+			.attr("class", "summary-box__list-item__color-scale__container")
+
 		for (let i = 0; i < numBins; i++) {
 			colorScaleContainer.append("div")
 				.attr("class", "summary-box__list-item__color-scale__bin")
@@ -140,16 +153,30 @@ export class SummaryBox {
 				.style("background-color", colorScale.range()[i]);
 		}
 
+		colorScaleContainer.append("div")
+			.style("left", this.calcMarkerPosition(colorScale, natl_average_value) + "px")
+			.attr("class", "summary-box__list-item__color-scale__average-line");
+
+		if (i == 0) {
+			colorScaleContainer.append("h3")
+				.style("left", (this.calcMarkerPosition(colorScale, natl_average_value) - 45) + "px")
+				.attr("class", "summary-box__list-item__color-scale__average-line-label")
+				.text("U.S. Average");
+		}
+		
 		colorScaleContainer.append("svg")
 			.attr("class", "summary-box__list-item__color-scale__marker-container")
-			.style("left", this.calcMarkerPosition(colorScale, value))
+			.style("left", this.calcMarkerPosition(colorScale, value) + "px")
 		   .append("svg:circle")
 			.attr("r", colorScaleMarkerSize)
 			.attr("cx", 10)
 			.attr("cy", 10)
+			.style("stroke", colorScale(value))
 			.attr("class", "summary-box__list-item__color-scale__marker");
-		
-		console.log(colorScale.domain());
+
+		colorScaleOuterWrapper.append("h3")
+			.attr("class", "summary-box__list-item__color-scale__label-right")
+			.text(formatValue(colorScale.domain()[1], variable.format));
 	}
 
 	appendRank(variable, datapoint) {
@@ -167,7 +194,7 @@ export class SummaryBox {
 		valueScale.range([0, colorScaleWidth - colorScaleMarkerSize]);
 
 		console.log(colorScale.domain());
-		return valueScale(value) + "px";
+		return valueScale(value);
 
 	}
 
