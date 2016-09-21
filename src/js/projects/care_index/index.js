@@ -75,36 +75,36 @@ let vizSettingsList = [
 	// 	filterVars: [ variables.in_center_pct_accred_statewide ],
 	// 	tooltipVars: [ variables.state, variables.in_center_pct_accred_statewide]
 	// },
-	{
-		id: "#care-index__summary-box__new-mexico", 
-		vizType: "summary_box",
-		primaryDataSheet: "state_data",
-		titleLabel: "State Overview",
-		titleVar: variables.state,
-		titleVarValue: "New Mexico",
-		columns: ["value", "color_slider", "rank"],
-		vizVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ]
-	},
-	{
-		id: "#care-index__summary-box__georgia", 
-		vizType: "summary_box",
-		primaryDataSheet: "state_data",
-		titleLabel: "State Overview",
-		titleVar: variables.state,
-		titleVarValue: "Georgia",
-		columns: ["value", "color_slider", "rank"],
-		vizVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ]
-	},
-	{
-		id: "#care-index__summary-box__illinois", 
-		vizType: "summary_box",
-		primaryDataSheet: "state_data",
-		titleLabel: "State Overview",
-		titleVar: variables.state,
-		titleVarValue: "Illinois",
-		columns: ["value", "color_slider", "rank"],
-		vizVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ]
-	},
+	// {
+	// 	id: "#care-index__summary-box__new-mexico", 
+	// 	vizType: "summary_box",
+	// 	primaryDataSheet: "state_data",
+	// 	titleLabel: "State Overview",
+	// 	titleVar: variables.state,
+	// 	titleVarValue: "New Mexico",
+	// 	columns: ["value", "color_slider", "rank"],
+	// 	vizVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ]
+	// },
+	// {
+	// 	id: "#care-index__summary-box__georgia", 
+	// 	vizType: "summary_box",
+	// 	primaryDataSheet: "state_data",
+	// 	titleLabel: "State Overview",
+	// 	titleVar: variables.state,
+	// 	titleVarValue: "Georgia",
+	// 	columns: ["value", "color_slider", "rank"],
+	// 	vizVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ]
+	// },
+	// {
+	// 	id: "#care-index__summary-box__illinois", 
+	// 	vizType: "summary_box",
+	// 	primaryDataSheet: "state_data",
+	// 	titleLabel: "State Overview",
+	// 	titleVar: variables.state,
+	// 	titleVarValue: "Illinois",
+	// 	columns: ["value", "color_slider", "rank"],
+	// 	vizVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ]
+	// },
 	{
 		id: "#care-index__summary-box__massachusetts", 
 		vizType: "summary_box",

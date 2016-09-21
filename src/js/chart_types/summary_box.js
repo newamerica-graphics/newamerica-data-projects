@@ -8,6 +8,7 @@ import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { formatValue } from "../helper_functions/format_value.js";
 
 let colorScaleWidth = 250;
+let colorScaleMarkerSize = 8;
 
 export class SummaryBox {
 	constructor(vizSettings) {
@@ -135,17 +136,19 @@ export class SummaryBox {
 			.attr("class", "summary-box__list-item__color-scale__marker-container")
 			.style("left", this.calcMarkerPosition(colorScale, value))
 		   .append("svg:circle")
-			.attr("r", 8)
-			.attr("cx", 11)
-			.attr("cy", 11)
+			.attr("r", colorScaleMarkerSize)
+			.attr("cx", 10)
+			.attr("cy", 10)
 			.attr("class", "summary-box__list-item__color-scale__marker");
 		
-		console.log(colorScale);
+		console.log(colorScale.domain());
 	}
 
 	appendRank(variable, datapoint) {
-		let sortedData = this.data.sort((a, b) => {  return a[variable.variable] - b[variable.variable];})
+		let sortedData = this.data.sort((a, b) => { return a[variable.variable] - b[variable.variable];})
 		let rank = sortedData.indexOf(datapoint) + 1;
+
+		sortedData.forEach(function(d) { console.log(d[variable.variable]);});
 		this.valueFields[variable.variable].rank
 			.text(formatValue(rank, "rank"));
 	}
@@ -153,10 +156,10 @@ export class SummaryBox {
 	calcMarkerPosition(colorScale, value) {
 		let valueScale = d3.scaleLinear();
 		valueScale.domain(colorScale.domain());
-		valueScale.range([0, 100]);
+		valueScale.range([0, colorScaleWidth - colorScaleMarkerSize]);
 
 		console.log(colorScale.domain());
-		return valueScale(value) + "%";
+		return valueScale(value) + "px";
 
 	}
 
