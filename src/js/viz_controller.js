@@ -17,7 +17,7 @@ import { SummaryBox } from "./chart_types/summary_box.js";
 import { PieChart } from "./chart_types/pie_chart.js";
 
 export function setupProject(projectSettings) {
-	let { vizSettingsList, imageFolderId } = projectSettings;
+	let { vizSettingsList, imageFolderId, dataSheetNames } = projectSettings;
 
 	let vizList = [];
 
@@ -28,8 +28,6 @@ export function setupProject(projectSettings) {
 	render();
 
 	function initialize() {
-
-		setDownloadLinks();
 
 		for (let vizSettingsObject of vizSettingsList) {
 			let viz;
@@ -87,7 +85,14 @@ export function setupProject(projectSettings) {
 		}
 	}
 
-	function setDownloadLinks() {
+	function setDownloadLinks(data) {
+		let publicData = {};
+		for (let sheetName of dataSheetNames) {
+			publicData[sheetName] = data[sheetName];
+		}
+
+		console.log(publicData);
+
 		$("#in-depth__download__xls").attr("href", projectSettings.downloadDataLink + "export?format=xlsx");
 		$("#in-depth__download__json").attr("href", projectSettings.dataUrl);
 	}
@@ -101,6 +106,7 @@ export function setupProject(projectSettings) {
 				console.log(viz);
 				viz.render(data);
 			}
+			setDownloadLinks(d);
 		});
 
 	}
