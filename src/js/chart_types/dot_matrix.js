@@ -171,7 +171,7 @@ export class DotMatrix extends Chart {
 		    	return this.colorScale(d[this.currFilterVar]);
 		    })
 		    .attr("class", (d) => { return d[this.currFilterVar]; })
-		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], event); })
+		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event); })
 		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); });
 	}
 

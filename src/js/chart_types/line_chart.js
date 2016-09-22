@@ -166,7 +166,7 @@ export class LineChart {
 			.attr("height", dataPointWidth)
 			.attr("stroke-width", "none")
 			.attr("fill", (d) => { return this.colorScale(d[this.currColorVarName])})
-			.on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], event); })
+			.on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event); })
 		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); });
 	}
 
