@@ -174,8 +174,10 @@ export class LineChart {
 		let retArray = [];
 		for (let d of data) {
 			if (d[this.currXVarName] && d[this.currYVarName] && d[this.currColorVarName]) {
-				d[this.currXVarName] = parseDate(d[this.currXVarName]);
-				retArray.push(d);
+				if (d[this.currYVarName] != 0) {
+					d[this.currXVarName] = parseDate(d[this.currXVarName]);
+					retArray.push(d);
+				}
 			}
 		}
 
