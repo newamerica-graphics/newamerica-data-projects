@@ -7,18 +7,22 @@ import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { Legend } from "../components/legend.js";
 
 
+import { formatValue } from "../helper_functions/format_value.js";
+
+
 let legendWidth = 250;
 let margin = {top: 0, right: legendWidth + 40, bottom: 0, left: 0};
 
 export class PieChart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, primaryDataSheet, dataVars, labelVars} = vizSettings;
+		let {id, primaryDataSheet, dataVars, labelVars, legendShowVals} = vizSettings;
 
 		this.id = id;
 		
 		this.primaryDataSheet = primaryDataSheet;
 		this.currLabelVar = labelVars[0];
-		this.dataVar = dataVars[0];
+		this.currDataVar = dataVars[0];
+		this.legendShowVals = legendShowVals;
 
 		this.svg = d3.select(id).append("svg").attr("class", "pie-chart");
 		this.renderingArea = this.svg.append("g");
@@ -43,8 +47,7 @@ export class PieChart {
 		this.setLegend();
 
 		var pie = d3.pie()
-		    .sort(null)
-		    .value((d) => { return d[this.dataVar.variable]; });
+		    .value((d) => { return d[this.currDataVar.variable]; });
 
 		var g = this.renderingArea.selectAll(".arc")
 		      .data(pie(data))
@@ -84,11 +87,18 @@ export class PieChart {
 	setLegend() {
 		let legendSettings = {};
 
+		let valCounts = new Map();
+		for (let d of this.data) {
+			let value = formatValue(d[this.currDataVar.variable], this.currDataVar.format)
+			valCounts.set(d[this.currLabelVar.variable], value);
+		}
+
 		legendSettings.title = this.currLabelVar.displayName;
 		legendSettings.format = this.currLabelVar.format;
 		legendSettings.scaleType = this.currLabelVar.scaleType;
 		legendSettings.colorScale = this.colorScale;
 		legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
+		legendSettings.valCounts = valCounts;
 
 		this.legend.render(legendSettings);
 	}
@@ -98,9 +108,7 @@ export class PieChart {
 		this.paths
 			.style("fill", (d) => {
 		   		var value = d.data[this.currLabelVar.variable];
-		   			console.log(value);
 		   			let binIndex = this.colorScale.domain().indexOf(value);
-		   			console.log(binIndex);
 		   			if (valsShown.indexOf(binIndex) > -1) {
 		   				return this.colorScale(value);
 		   			}

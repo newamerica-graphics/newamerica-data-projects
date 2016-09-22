@@ -18,7 +18,7 @@ let variables = {
 	children_5_under: {"variable":"children_5_under", "displayName":"Children 5 & Under", "format":"number", "category":"Cost", "scaleType":"quantize", "customRange":[colors.blue.light, colors.blue.dark], "numBins":5},
 	in_center_pct_accred_statewide: {"variable":"in_center_pct_accred_statewide", "displayName":"Proportion of Accredited Child Care Centers", "format":"percent", "scaleType":"quantize", "customRange":[colors.turquoise.light, colors.turquoise.dark], "numBins":5},
 
-	who_pays_for_care_source: {"variable":"source", "displayName":"Who Pays For Care?", "format":"string", "scaleType": "categorical"},
+	who_pays_for_care_source: {"variable":"source", "displayName":"Who Pays For Care?", "format":"string", "scaleType": "categorical", "customDomain":["Parents", "Federal, State, and Local Government", "Philanthropy"], "customRange":[colors.turquoise.light, colors.blue.medium, colors.purple.light]},
 	who_pays_for_care_value: {"variable":"value", "displayName":"Who Pays For Care?", "format":"percent", "scaleType": "categorical"},
 }
 
@@ -98,6 +98,7 @@ let vizSettingsList = [
 		primaryDataSheet: "who_pays_for_care",
 		labelVars: [variables.who_pays_for_care_source],
 		dataVars: [variables.who_pays_for_care_value],
+		legendShowVals: true,
 	}
 ]
 

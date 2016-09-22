@@ -73,6 +73,26 @@
 
 		.legend__cell {
 			width: 100%;
+			margin-bottom: 8px;
+
+			&__color-swatch-container {
+				display: inline-block;
+				float: none;
+				position: relative;
+				top: -2px;
+			}
+			&__label {
+				display: inline-block;
+				vertical-align: top;
+				width: 150px;
+				float: none;
+				margin-bottom: 0px;
+			}
+			&__val-count {
+				display: inline-block;
+				vertical-align: top;
+				float: none;
+			}
 		}
 	}
 
