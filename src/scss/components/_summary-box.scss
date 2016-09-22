@@ -1,15 +1,18 @@
 .summary-box {
-	max-width: 675px;
+	$summary-box-max-width: 750px;
+	max-width: $summary-box-max-width;
 	width: 100%;
 	overflow-x: scroll;
 	background-color: white;
 	padding: $desktop-padding;
 	margin: $desktop-padding 0px;
 	border: 1px solid palette-get(na-black-10);
+	position: relative;
+
 	@include standard-shadow;
 
 	&__content-container {
-		width: 675px - 2*$desktop-padding;
+		width: $summary-box-max-width - 2*$desktop-padding;
 	}
 
 	&__title-container {
@@ -27,6 +30,7 @@
 		font-size: 24px;
 		display: table-cell;
 		vertical-align: middle;
+		color: palette-get(na-black);
 	}
 	
 	&__category-name {
@@ -49,7 +53,7 @@
 		}
 
 		&__val-container {
-			width: 300px;
+			width: 350px;
 		}
 		&__label {
 			@include chart-primary-text;
@@ -63,9 +67,14 @@
 		}
 
 		&__color-scale {
-			position: relative;
-			height: 6px;
-			width: 300px;
+
+			&__container {
+				position: relative;
+				display: inline-block;
+				height: 6px;
+				width: 200px;
+			}
+
 			&__bin {
 				height: 6px;
 				display: inline-block;
@@ -80,8 +89,30 @@
 
 			&__marker {
 				fill: white;
-				stroke-width: 2;
-				stroke: palette-get(na-black-10);
+				stroke-width: 3;
+			}
+
+			&__average-line {
+				height: 20px;
+				width: 3px;
+				background-color: palette-get(na-black-30);
+				position: absolute;
+				top: 4px;
+			}
+
+			&__label-left, &__label-right {
+				display:inline-block;
+				@include chart-secondary-text;
+				width: 80px;
+			}
+
+			&__label-left {
+				text-align: right;
+				padding-right: 10px;
+			}
+
+			&__label-right {
+				padding-left: 10px;
 			}
 		}
 
@@ -90,6 +121,17 @@
 			color: palette-get(na-black);
 			padding-left: 20px;
 		}
+	}
+
+	&__average-line-label {
+		@include chart-secondary-text;
+		position: absolute;
+		border-left: 3px palette-get(na-black-30) solid;
+		padding-left: 5px;
+		top: 100px;
+		left: 450px;
+		height: 20px;
+		line-height: 20px;
 	}
 
 
