@@ -133,7 +133,7 @@ export class UsStatesMap extends Chart {
 		    })
 		    .attr("value", function(d,i) { return i; })
 		    .style("stroke", "white")
-		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], event); })
+		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event); })
 		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); });
 	}
 

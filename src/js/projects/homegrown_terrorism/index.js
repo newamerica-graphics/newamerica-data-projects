@@ -33,7 +33,7 @@ let vizSettingsList = [
 	{
 		id: "#homegrown__outcome-for-extremist", 
 		vizType: "grouped_dot_matrix",
-		primaryDataSheet: "people",
+		primaryDataSheet: "people_protected",
 		dotsPerRow: 5,
 		distanceBetweenGroups: 15,
 		groupingVars: [ variables.year_charged_or_deceased ],
@@ -45,7 +45,7 @@ let vizSettingsList = [
 	{
 		id: "#homegrown__awlaki-over-time", 
 		vizType: "grouped_dot_matrix",
-		primaryDataSheet: "people",
+		primaryDataSheet: "people_protected",
 		dotsPerRow: 5,
 		distanceBetweenGroups: 15,
 		groupingVars: [ variables.year_charged_or_deceased ],
@@ -59,7 +59,7 @@ let vizSettingsList = [
 	{
 		id: "#homegrown__gender-of-extremists", 
 		vizType: "chart_with_fact_box",
-		primaryDataSheet: "people",
+		primaryDataSheet: "people_protected",
 		chartSettings: {
 			vizType: "grouped_dot_matrix",
 			dotsPerRow: 5,
@@ -81,7 +81,7 @@ let vizSettingsList = [
 	{
 		id: "#homegrown__citizenship-status", 
 		vizType: "dot_matrix",
-		primaryDataSheet: "people",
+		primaryDataSheet: "people_protected",
 		orientation: "horizontal",
 		filterVars: [ variables.citizenship_status ],
 		tooltipVars: [ variables.full_name, variables.citizenship_status ],
@@ -91,7 +91,7 @@ let vizSettingsList = [
 	{
 		id: "#homegrown__age-of-extremists",
 		vizType: "chart_with_fact_box",
-		primaryDataSheet: "people",
+		primaryDataSheet: "people_protected",
 		chartSettings: {
 			vizType: "dot_histogram",
 			groupingVars: [ variables.age ],
@@ -115,13 +115,13 @@ let vizSettingsList = [
 	// 	defaultOrdering: [0, "asc"],
 	// 	pagination: true,
 	// 	numPerPage: 25,
-	// 	primaryDataSheet: "people",
+	// 	primaryDataSheet: "people_protected",
 	// 	colorScaling: false
 	// },
 	{
 		id: "#homegrown__fact-box__method-of-radicalization", 
 		vizType: "fact_box",
-		primaryDataSheet: "people",
+		primaryDataSheet: "people_protected",
 		factBoxType: "colored_boxes",
 		factBoxVals: [ 
 			{ variable: variables.char_online_radicalization, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Maintained a social media profile with jihadist material or utilized encryption for plotting"},
@@ -142,7 +142,7 @@ let vizSettingsList = [
 	{
 		id: "#homegrown__fact-box__prevention-method", 
 		vizType: "fact_box",
-		primaryDataSheet: "people",
+		primaryDataSheet: "people_protected",
 	 factBoxType: "colored_boxes",
 		factBoxVals: [ 
 			{ variable: variables.inv_informant, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Percent of jihadists monitored by an informant"},
@@ -155,7 +155,7 @@ let vizSettingsList = [
 let projectSettings = {
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/homegrown_extremism.json",
 	downloadDataLink: "https://docs.google.com/spreadsheets/d/1UHVsknlx8sWPNg6nYBg2_WdXTp2RwnWwe7BdInWncdg/",
-	dataSheetNames:["people", "terror_plots"],
+	dataSheetNames:["people_protected", "people_variables", "terror_plots", "terror_plots_variables"],
 	imageFolderId: "0B2KbJlQb9jlgeG5hOXZqbURpRUE",
 	vizSettingsList: vizSettingsList
 }
