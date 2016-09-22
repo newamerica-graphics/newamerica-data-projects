@@ -1,4 +1,5 @@
 .filter-group {
+	padding-bottom: $desktop-padding;
 	&__category {
 		display: inline-block;
 		padding: 11px;
@@ -35,6 +36,7 @@
 	&__variable {
 		display: block;
 		margin-right: $desktop-padding;
+		margin-bottom: 5px;
 		cursor: pointer;
 		color: palette-get(na-black-40);
 		font-size: 1rem;
@@ -45,9 +47,13 @@
 		}
 
 		&.active {
-			color:palette-get(na-black);
+			color:palette-get(na-black) !important;
 		    font-weight: 800;
 		    opacity: 1;
+		}
+
+		&:hover {
+			color: palette-get(na-turquoise);
 		}
 	}
 }

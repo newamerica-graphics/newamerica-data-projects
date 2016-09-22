@@ -35,8 +35,7 @@ export class UsStatesMap extends Chart {
 
 		this.svg = mapContainer
 			.append("svg")
-			.attr("id", "map-svg")
-			.attr("width", "100%");
+			.attr("class", "us-states-svg");
 
 		this.tooltip = new Tooltip(id, tooltipVars, null, null);
 		let legendSettings = {};
@@ -51,20 +50,26 @@ export class UsStatesMap extends Chart {
 	}
 
 	setDimensions() {
-		this.w = $(this.id).width();
+		let containerWidth = $(this.id).width();
+		this.w = containerWidth;
+		if (containerWidth > global.showLegendBreakpoint) {
+			// this.w -= 150;
+		} 
+
 		this.h = 3*this.w/5;
 
 		let translateX = this.w/2;
 		let scalingFactor = 5*this.w/4;
 
-		if (this.w > global.showLegendBreakpoint) {
+		if (containerWidth > global.showLegendBreakpoint) {
 			translateX -= global.legendWidth/2;
 			this.h = this.w/2;
 			scalingFactor = this.w;
 		}
 
 		this.svg
-			.attr("height", this.h);
+			.attr("height", this.h)
+			.attr("width", this.w);
 
 		//Define map projection
 		let projection = d3.geoAlbersUsa()
@@ -147,8 +152,6 @@ export class UsStatesMap extends Chart {
 		legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
 
 		this.legend.render(legendSettings);
-
-		
 	}
 
 	setFilterGroup() {
