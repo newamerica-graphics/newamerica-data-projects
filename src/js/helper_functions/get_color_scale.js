@@ -62,7 +62,6 @@ export function getColorScale(data, filterVar) {
 }
 
 function setCategoricalDomain(filterVar, uniqueVals) {
-	console.log(filterVar);
 	if (filterVar.customDomain) {
 		return filterVar.customDomain;
 	} else {

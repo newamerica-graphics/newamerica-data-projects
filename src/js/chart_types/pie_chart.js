@@ -69,8 +69,15 @@ export class PieChart {
 		this.h = this.w;
 		let radius = this.w / 2;
 
+		let innerRadius = 0;
+		if (radius - 70 > 0) {
+		    innerRadius = radius - 70
+		}
+
 		this.arc.outerRadius(radius - 10)
-		    .innerRadius(radius - 70);
+			.innerRadius(innerRadius);
+
+		
 
 		this.svg
 			.attr("width", "100%")
