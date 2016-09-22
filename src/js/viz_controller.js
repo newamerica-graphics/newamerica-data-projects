@@ -1,5 +1,6 @@
 require('./../scss/index.scss');
 var json2csv = require('json2csv');
+var JSZip = require("jszip");
 
 import $ from 'jquery';
 let d3 = require("d3");
@@ -87,35 +88,7 @@ export function setupProject(projectSettings) {
 		}
 	}
 
-	function setDownloadLinks(data) {
-		let publicDataJson = {};
-		for (let sheetName of dataSheetNames) {
-			publicDataJson[sheetName] = data[sheetName];
-		}
 
-		console.log(publicDataJson);
-
-		var fields = Object.keys(publicDataJson.state_data[0]);
-
-		console.log(publicDataJson.state_data);
-		console.log(fields);
-
-		try {
-			var result = json2csv({ data: publicDataJson.state_data, fields: fields });
-			console.log(result);
-			var csvDataUrlString = "data:text/csv;charset=utf-8," +escape(result);
-
-			$("#in-depth__download__csv").attr("href", csvDataUrlString);
-		} catch (err) {
-			// Errors are thrown for bad options, or if the data is empty and no fields are provided.
-			// Be sure to provide fields if it is possible that your data array will be empty.
-			console.error(err);
-		}
-
-		var jsonDataUrlString = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(publicDataJson));
-
-		$("#in-depth__download__json").attr("href", jsonDataUrlString);
-	}
 
 	function render() {
 		console.log(vizList);
@@ -135,5 +108,36 @@ export function setupProject(projectSettings) {
 		for (let viz of vizList) {
 			viz.resize ? viz.resize() : null;
 		}
+	}
+
+	function setDownloadLinks(data) {
+		let publicDataJson = {};
+		for (let sheetName of dataSheetNames) {
+			publicDataJson[sheetName] = data[sheetName];
+		}
+
+		setCSVZipLink(publicDataJson);
+		setJSONZipLink(publicDataJson);
+	}
+
+	function setCSVZipLink(dataJson) {
+		var zip = new JSZip();
+
+		for (let sheetName of dataSheetNames) {
+			let fields = Object.keys(dataJson[sheetName][0]);
+
+			let csvString = json2csv({ data: dataJson[sheetName], fields: fields });
+			zip.file(sheetName + ".csv", csvString);
+		}
+
+		zip.generateAsync({type:"base64"}).then(function (base64) {
+		    $("#in-depth__download__csv").attr("href", "data:application/zip;base64," + base64);
+		});
+	}
+
+	function setJSONZipLink(dataJson) {
+		var jsonDataUrlString = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataJson));
+
+		$("#in-depth__download__json").attr("href", jsonDataUrlString);
 	}
 }
