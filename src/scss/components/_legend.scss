@@ -64,6 +64,18 @@
 		}
 	}
 
+	&.vertical-right-center {
+		width: 250px;
+		position: absolute;
+		right: 0px;
+		top: 50%;
+		transform: translateY(-50%);
+
+		.legend__cell {
+			width: 100%;
+		}
+	}
+
 	&__cell-list {
 
 	}
