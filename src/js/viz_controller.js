@@ -1,7 +1,10 @@
 require('./../scss/index.scss');
+var json2csv = require('json2csv');
+var JSZip = require("jszip");
 
 import $ from 'jquery';
 let d3 = require("d3");
+
 
 import { DotMatrix } from "./chart_types/dot_matrix.js";
 import { DotHistogram } from "./chart_types/dot_histogram.js";
@@ -17,7 +20,7 @@ import { SummaryBox } from "./chart_types/summary_box.js";
 import { PieChart } from "./chart_types/pie_chart.js";
 
 export function setupProject(projectSettings) {
-	let { vizSettingsList, imageFolderId } = projectSettings;
+	let { vizSettingsList, imageFolderId, dataSheetNames } = projectSettings;
 
 	let vizList = [];
 
@@ -28,8 +31,6 @@ export function setupProject(projectSettings) {
 	render();
 
 	function initialize() {
-
-		setDownloadLinks();
 
 		for (let vizSettingsObject of vizSettingsList) {
 			let viz;
@@ -87,10 +88,7 @@ export function setupProject(projectSettings) {
 		}
 	}
 
-	function setDownloadLinks() {
-		$("#in-depth__download__xls").attr("href", projectSettings.downloadDataLink + "export?format=xlsx");
-		$("#in-depth__download__json").attr("href", projectSettings.dataUrl);
-	}
+
 
 	function render() {
 		console.log(vizList);
@@ -101,6 +99,7 @@ export function setupProject(projectSettings) {
 				console.log(viz);
 				viz.render(data);
 			}
+			setDownloadLinks(d);
 		});
 
 	}
@@ -109,5 +108,36 @@ export function setupProject(projectSettings) {
 		for (let viz of vizList) {
 			viz.resize ? viz.resize() : null;
 		}
+	}
+
+	function setDownloadLinks(data) {
+		let publicDataJson = {};
+		for (let sheetName of dataSheetNames) {
+			publicDataJson[sheetName] = data[sheetName];
+		}
+
+		setCSVZipLink(publicDataJson);
+		setJSONZipLink(publicDataJson);
+	}
+
+	function setCSVZipLink(dataJson) {
+		var zip = new JSZip();
+
+		for (let sheetName of dataSheetNames) {
+			let fields = Object.keys(dataJson[sheetName][0]);
+
+			let csvString = json2csv({ data: dataJson[sheetName], fields: fields });
+			zip.file(sheetName + ".csv", csvString);
+		}
+
+		zip.generateAsync({type:"base64"}).then(function (base64) {
+		    $("#in-depth__download__csv").attr("href", "data:application/zip;base64," + base64);
+		});
+	}
+
+	function setJSONZipLink(dataJson) {
+		var jsonDataUrlString = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataJson));
+
+		$("#in-depth__download__json").attr("href", jsonDataUrlString);
 	}
 }
