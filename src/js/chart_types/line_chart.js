@@ -166,7 +166,7 @@ export class LineChart {
 			.attr("height", dataPointWidth)
 			.attr("stroke-width", "none")
 			.attr("fill", (d) => { return this.colorScale(d[this.currColorVarName])})
-			.on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], event); })
+			.on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event); })
 		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); });
 	}
 
@@ -174,8 +174,10 @@ export class LineChart {
 		let retArray = [];
 		for (let d of data) {
 			if (d[this.currXVarName] && d[this.currYVarName] && d[this.currColorVarName]) {
-				d[this.currXVarName] = parseDate(d[this.currXVarName]);
-				retArray.push(d);
+				if (d[this.currYVarName] != 0) {
+					d[this.currXVarName] = parseDate(d[this.currXVarName]);
+					retArray.push(d);
+				}
 			}
 		}
 

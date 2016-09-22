@@ -39,7 +39,7 @@ export function getColorScale(data, filterVar) {
 	if (scaleType == "categorical") {
 		scale = d3.scaleOrdinal();
 
-		// if both are ot custom, get unique values
+		// if both are not custom, get unique values
 		let uniqueVals = !(filterVar.customDomain && filterVar.customRange) ? getUniqueVals(data, filterVar) : null;
 
 		let domain = setCategoricalDomain(filterVar, uniqueVals);
