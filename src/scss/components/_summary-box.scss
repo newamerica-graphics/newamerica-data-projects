@@ -7,6 +7,8 @@
 	padding: $desktop-padding;
 	margin: $desktop-padding 0px;
 	border: 1px solid palette-get(na-black-10);
+	position: relative;
+
 	@include standard-shadow;
 
 	&__content-container {
@@ -88,7 +90,6 @@
 			&__marker {
 				fill: white;
 				stroke-width: 3;
-				/*stroke: palette-get(na-black-10);*/
 			}
 
 			&__average-line {
@@ -97,12 +98,6 @@
 				background-color: palette-get(na-black-30);
 				position: absolute;
 				top: 4px;
-			}
-
-			&__average-line-label {
-				@include chart-secondary-text;
-				position: absolute;
-				top: -20px;
 			}
 
 			&__label-left, &__label-right {
@@ -126,6 +121,17 @@
 			color: palette-get(na-black);
 			padding-left: 20px;
 		}
+	}
+
+	&__average-line-label {
+		@include chart-secondary-text;
+		position: absolute;
+		border-left: 3px palette-get(na-black-30) solid;
+		padding-left: 5px;
+		top: 100px;
+		left: 450px;
+		height: 20px;
+		line-height: 20px;
 	}
 
 

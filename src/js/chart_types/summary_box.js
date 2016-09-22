@@ -4,6 +4,7 @@ let d3 = require("d3");
 
 import { colors } from "../helper_functions/colors.js";
 
+import { Chart } from "../layouts/chart.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { formatValue } from "../helper_functions/format_value.js";
 
@@ -11,10 +12,12 @@ let colorScaleContainerWidth = 400;
 let colorScaleWidth = 200;
 let colorScaleMarkerSize = 8;
 
-export class SummaryBox {
+export class SummaryBox extends Chart {
 	constructor(vizSettings) {
 		let {id, vizVars, titleLabel, titleVar, titleVarValue, columns, primaryDataSheet} = vizSettings;
 
+		super(id, false);
+		this.id = id;
 		this.titleVar = titleVar;
 		this.titleVarValue = titleVarValue;
 		this.vizVars = vizVars;
@@ -90,6 +93,10 @@ export class SummaryBox {
 				this.valueFields[variable.variable] = valueField;
 			}
 		}
+
+		let averageLegend = this.summaryBox.append("h3")
+			.attr("class", "summary-box__average-line-label")
+			.text(" = U.S. Average");
 	}
 
 	render(data) {
@@ -97,6 +104,8 @@ export class SummaryBox {
 		console.log("rendering");
 		let datapoint = data.filter( (d) => { return d[this.titleVar.variable] == this.titleVarValue })[0];
 		let natl_average = data.filter( (d) => { return d[this.titleVar.variable] == "United States" })[0];
+
+
 
 		let i = 0;
 		for (let variable of this.vizVars) {
@@ -124,12 +133,18 @@ export class SummaryBox {
 	}
 
 	appendValue(variable, value, natl_average_value, i) {
+		
 		let averageString = ""
 		if (i >= 5) {
-			if (value > natl_average_value) {
+			value = Math.round(value);
+			natl_average_value = Math.round(natl_average_value);
+			console.log(value, natl_average_value);
+			if (Number(value) > Number(natl_average_value)) {
 				averageString = " (Above Average)";
-			} else {
+			} else if (Number(value) < Number(natl_average_value)) {
 				averageString = " (Below Average)";
+			} else {
+				averageString = " (Average)";
 			}
 		}
 		this.valueFields[variable.variable].label
@@ -142,6 +157,7 @@ export class SummaryBox {
 
 	appendColorScale(variable, value, natl_average_value, i) {
 		console.log(variable);
+		
 		let colorScaleOuterWrapper = this.valueFields[variable.variable].colorScaleBox;
 		let colorScale = getColorScale(this.data, variable);
 		let numBins = variable.numBins;
@@ -174,16 +190,11 @@ export class SummaryBox {
 			.style("left", this.calcMarkerPosition(colorScale, natl_average_value) + "px")
 			.attr("class", "summary-box__list-item__color-scale__average-line");
 
-		if (i == 0) {
-			colorScaleContainer.append("h3")
-				.style("left", (this.calcMarkerPosition(colorScale, natl_average_value) - 45) + "px")
-				.attr("class", "summary-box__list-item__color-scale__average-line-label")
-				.text("U.S. Average");
-		}
+		
 		
 		colorScaleContainer.append("svg")
 			.attr("class", "summary-box__list-item__color-scale__marker-container")
-			.style("left", this.calcMarkerPosition(colorScale, value) + "px")
+			.style("left", (this.calcMarkerPosition(colorScale, value) - colorScaleMarkerSize) + "px")
 		   .append("svg:circle")
 			.attr("r", colorScaleMarkerSize)
 			.attr("cx", 10)
@@ -208,7 +219,7 @@ export class SummaryBox {
 	calcMarkerPosition(colorScale, value) {
 		let valueScale = d3.scaleLinear();
 		valueScale.domain(colorScale.domain());
-		valueScale.range([0, colorScaleWidth - colorScaleMarkerSize]);
+		valueScale.range([0, colorScaleWidth]);
 
 		console.log(colorScale.domain());
 		return valueScale(value);

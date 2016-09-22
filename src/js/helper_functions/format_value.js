@@ -11,7 +11,7 @@ export function formatValue(value, format) {
 		return value;
 	} else if (format == "price") {
 		console.log(value);
-		return d3.format("$,.2f")(value);
+		return d3.format("$,.0f")(value);
 	} else if (format == "percent") {
 		return d3.format(".0%")(value);
 	} else if (format == "string") {
