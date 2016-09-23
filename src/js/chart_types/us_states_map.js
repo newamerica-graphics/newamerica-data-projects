@@ -62,6 +62,9 @@ export class UsStatesMap extends Chart {
 			translateX -= global.legendWidth/2;
 			this.h = this.w/2;
 			scalingFactor = this.w;
+			this.legend.setOrientation("vertical-right");
+		} else {
+			this.legend.setOrientation("horizontal-left");
 		}
 
 		this.svg
@@ -88,8 +91,6 @@ export class UsStatesMap extends Chart {
 		this.filterGroup ? this.setFilterGroup() : null;
 
 		super.render();
-
-		// console.log(this.paths);
 	}
 
 	processData() {

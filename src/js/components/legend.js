@@ -9,15 +9,17 @@ let d3 = require("d3");
 export class Legend {
 	constructor(legendSettings) {
 		let {id, markerSettings, showTitle, orientation} = legendSettings;
+		this.id = id;
 		this.showTitle = showTitle;
 		this.markerSettings = markerSettings;
+		this.orientation = orientation;
 
-		let legend = d3.select(id)
+		this.legend = d3.select(id)
 			.append("div")
 			.attr("class", "legend " + orientation);
 
 		if (showTitle) {
-			let titleContainer = legend.append("div")
+			let titleContainer = this.legend.append("div")
 				.attr("class", "legend__title-container");
 
 			this.titleDiv = titleContainer.append("h3")
@@ -28,7 +30,7 @@ export class Legend {
 			// 	.text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et metus ut lorem viverra mattis. In hac habitasse platea dictumst.");
 		}
 
-		let cellContainer = legend.append("div")
+		let cellContainer = this.legend.append("div")
 			.attr("class", "legend__cell-container");
 
 		this.cellList = cellContainer.append("ul")
@@ -39,7 +41,6 @@ export class Legend {
 		let {scaleType, title, format, colorScale, valChangedFunction, valCounts} = legendSettings;
 
 		this.colorScale = colorScale;
-		console.log(colorScale.domain());
 
 		this.showTitle ? this.titleDiv.text(title) : null;
 
@@ -48,8 +49,6 @@ export class Legend {
 		this.cellList.selectAll(".legend__cell").remove();
 
 		this.numBins = colorScale.range().length;
-
-		console.log(this.numBins);
 
 		// this.cellList.attr("height", () => {
 		// 	return (this.numBins * 25) + "px";
@@ -163,6 +162,10 @@ export class Legend {
 			}
 			this.legendCellDivs.map( function(item) { item.classed("disabled", false)});
 		}
+	}
+
+	setOrientation(orientation) {
+		this.legend.attr("class", "legend " + orientation);
 	}
 
 }

@@ -1,27 +1,5 @@
-@mixin showSideLegend {
-	@media screen and (min-width: 900px) {
-        @content;
-    }
-}
-
 .legend {
 	padding: 15px 0px;
-
-	@include showSideLegend {
-		/*position: absolute;
-		bottom: 0px;
-		right: 0px;*/
-	}
-
-	/*&__title-container, &__cell-container {
-		@include breakpoint()
-		float: left;
-		width: 50%;
-	}*/
-
-	/*&__cell-container {
-		padding-left: $desktop-padding;
-	}*/
 
 	&__title {
 		font-size: 17px;
@@ -38,29 +16,25 @@
 		.legend__cell-container {
 			margin: auto;
 			width: 100%;
-			/*max-width: 700px;*/
 		}
 
 		.legend__cell-list {
 			text-align: center;
 		}
+	}
 
-		.legend__cell {
-			/*float: left;*/
-		}
+	&.horizontal-left {
+
 	}
 
 	&.vertical-right {
+		width: calc(100%/4);
+		position: absolute;
+		right: 0px;
+		bottom: 0;
 
-		@include showSideLegend {
-			width: calc(100%/4);
-			position: absolute;
-			right: 0px;
-			bottom: 0;
-
-			.legend__cell {
-				width: 100%;
-			}
+		.legend__cell {
+			width: 100%;
 		}
 	}
 
@@ -94,10 +68,6 @@
 				float: none;
 			}
 		}
-	}
-
-	&__cell-list {
-
 	}
 
 	&__cell {
