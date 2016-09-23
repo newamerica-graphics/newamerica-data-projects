@@ -69,7 +69,7 @@ export class UsStatesMap extends Chart {
 
 		this.svg
 			.attr("height", this.h)
-			.attr("width", this.w);
+			.attr("width", "100%");
 
 		//Define map projection
 		let projection = d3.geoAlbersUsa()
