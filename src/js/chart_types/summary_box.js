@@ -101,7 +101,6 @@ export class SummaryBox extends Chart {
 
 	render(data) {
 		this.data = data;
-		console.log("rendering");
 		let datapoint = data.filter( (d) => { return d[this.titleVar.variable] == this.titleVarValue })[0];
 		let natl_average = data.filter( (d) => { return d[this.titleVar.variable] == "United States" })[0];
 
@@ -111,7 +110,6 @@ export class SummaryBox extends Chart {
 		for (let variable of this.vizVars) {
 			let varName = variable.variable;
 			let varFormat = variable.format;
-			console.log(datapoint[varName]);
 			let value = datapoint[varName] ? datapoint[varName] : null;
 			let natl_average_value = natl_average[varName] ? natl_average[varName] : null;
 
@@ -138,7 +136,6 @@ export class SummaryBox extends Chart {
 		if (i >= 5) {
 			value = Math.round(value);
 			natl_average_value = Math.round(natl_average_value);
-			console.log(value, natl_average_value);
 			if (Number(value) > Number(natl_average_value)) {
 				averageString = " (Above Average)";
 			} else if (Number(value) < Number(natl_average_value)) {
@@ -155,9 +152,7 @@ export class SummaryBox extends Chart {
 			.text(formatValue(value, variable.format) + averageString);
 	}
 
-	appendColorScale(variable, value, natl_average_value, i) {
-		console.log(variable);
-		
+	appendColorScale(variable, value, natl_average_value, i) {	
 		let colorScaleOuterWrapper = this.valueFields[variable.variable].colorScaleBox;
 		let colorScale = getColorScale(this.data, variable);
 		let numBins = variable.numBins;
@@ -211,7 +206,6 @@ export class SummaryBox extends Chart {
 		let sortedData = this.data.sort((a, b) => { return a[variable.variable] - b[variable.variable];})
 		let rank = sortedData.indexOf(datapoint) + 1;
 
-		sortedData.forEach(function(d) { console.log(d[variable.variable]);});
 		this.valueFields[variable.variable].rank
 			.text(formatValue(rank, "rank"));
 	}
@@ -221,7 +215,6 @@ export class SummaryBox extends Chart {
 		valueScale.domain(colorScale.domain());
 		valueScale.range([0, colorScaleWidth]);
 
-		console.log(colorScale.domain());
 		return valueScale(value);
 
 	}

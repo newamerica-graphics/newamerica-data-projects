@@ -16,7 +16,6 @@ let dataPointWidth = 7;
 export class LineChart {
 	constructor(vizSettings, imageFolderId) {
 		let {id, tooltipVars, tooltipImageVar, xVars, yVars, colorVars, yScaleType, primaryDataSheet, interpolation, tooltipScrollable} = vizSettings;
-		console.log(id);
 		this.id = id;
 		this.interpolation = interpolation;
 		this.primaryDataSheet = primaryDataSheet;
@@ -146,8 +145,6 @@ export class LineChart {
 				.attr("d", this.line)
 				.attr("stroke", this.colorScale(d.key));
 
-			console.log(dataLine);
-
 		    this.dataLines[d.key] = dataLine;
 	  	})
 	}
@@ -221,7 +218,6 @@ export class LineChart {
 	    	for (let datapoint of nestObject.values) {
 	    		valSum += Number(datapoint[this.currYVarName]);
 	    		datapoint.cumulativeVal = valSum;
-	    		console.log(datapoint[this.currXVarName], datapoint.cumulativeVal);
 	    	}
 	    }
 	}

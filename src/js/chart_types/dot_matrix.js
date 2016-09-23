@@ -63,7 +63,6 @@ export class DotMatrix extends Chart {
 	}
 
 	render(data) {
-		// console.log("rendering");
 		this.data = this.processData(data);
 		this.setDimensions();
 		this.sortData();
@@ -83,7 +82,6 @@ export class DotMatrix extends Chart {
 
 	processData(data) {
 		data = data.filter((d) => { return d[this.currFilterVar] != null });
-		// console.log(this.currFilterVar);
 		if (this.currFilter.scaleType === "linear") {
 			for (var d of data) {
 				if(!$.isNumeric(d[this.currFilterVar])) {
@@ -189,7 +187,6 @@ export class DotMatrix extends Chart {
 
 		} else {
 			this.w = $(this.id).width();
-			console.log(this.svg);
 			let numCols = Math.floor(this.w/(dotW + dotOffset));
 			this.split ? numCols -= splitDistance : null;
 			this.dotsPerCol = Math.ceil(this.dataLength/numCols);
@@ -257,7 +254,6 @@ export class DotMatrix extends Chart {
 	}
 
 	// changeFilter(colorVar, scaleType) {
-	// 	console.log("changing filter");
 	// 	this.currFilterVar = this.currFilterVariable;
 	// 	this.scaleType = scaleType;
 
@@ -362,7 +358,6 @@ export class DotMatrix extends Chart {
 				rightValCounts += counts[i].value;
 			}
 		}
-		console.log(counts);
 
 		if (this.split.splitAggregate == "count") {
 			this.splitLabelLeftVal.text(leftValCounts);

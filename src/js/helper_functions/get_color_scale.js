@@ -46,7 +46,6 @@ export function getColorScale(data, filterVar) {
 		let range = setCategoricalRange(filterVar, uniqueVals);
 		scale.domain(domain);
 		scale.range(range);
-		console.log(scale.domain());
 
 	} else if (scaleType == "quantize") {
 		scale = d3.scaleQuantize();
@@ -91,16 +90,6 @@ function getUniqueVals(data, filterVar) {
 	return uniqueVals;
 }
 
-
-		// if (this.currFilter.customRange) {
-		// 	colorScaleSettings.customRange = this.currFilter.customRange;
-		// }
-
-		// colorScaleSettings.numBins = colorScaleSettings.domain.length;
-
-		// this.colorScale = getColorScale(colorScaleSettings);
-
-		// console.log(this.colorScale.domain());
 function setQuantizeDomain(filterVar, data) {
 	let filterName = filterVar.variable;
 	let dataMin = Number(d3.min(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; })); 

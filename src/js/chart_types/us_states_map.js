@@ -176,7 +176,6 @@ export class UsStatesMap extends Chart {
 	}
 
 	changeVariableValsShown(valsShown) {
-		console.log(valsShown);
 		this.paths
 			.style("fill", (d) => {
 		   		var value = d.properties[this.currFilterVar];
