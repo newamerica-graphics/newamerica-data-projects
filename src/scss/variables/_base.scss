@@ -1,5 +1,7 @@
 $desktop-padding: 25px;
 
+$max-body-width: 800px;
+
 $standard-border: 2px solid palette-get(na-black-10);
 
 @mixin standard-shadow {
