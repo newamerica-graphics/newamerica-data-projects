@@ -1,11 +1,22 @@
+$summary-box-max-width: 750px;
+$summary-box-show-color-scale-breakpoint: $summary-box-max-width + 100px + 5px;
+
+@mixin showSummaryBoxColorScale {
+	@media screen and (min-width: $summary-box-show-color-scale-breakpoint ) {
+        @content;
+    }
+}
+
 .summary-box {
-	$summary-box-max-width: 750px;
 	max-width: $summary-box-max-width;
-	width: 100%;
+	width: 350px;
+	@include showSummaryBoxColorScale {
+		width: auto;
+	}
 	overflow-x: scroll;
 	background-color: white;
 	padding: $desktop-padding;
-	margin: $desktop-padding 0px;
+	margin: $desktop-padding auto;
 	border: 1px solid palette-get(na-black-10);
 	position: relative;
 
@@ -67,7 +78,10 @@
 		}
 
 		&__color-scale {
-
+			display: none;
+			@include showSummaryBoxColorScale {
+				display: block;
+			}
 			&__container {
 				position: relative;
 				display: inline-block;
@@ -124,6 +138,10 @@
 	}
 
 	&__average-line-label {
+		display: none;
+		@include showSummaryBoxColorScale {
+			display: block;
+		}
 		@include chart-secondary-text;
 		position: absolute;
 		border-left: 3px palette-get(na-black-30) solid;

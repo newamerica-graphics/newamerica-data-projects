@@ -52,9 +52,6 @@ export class UsStatesMap extends Chart {
 	setDimensions() {
 		let containerWidth = $(this.id).width();
 		this.w = containerWidth;
-		if (containerWidth > global.showLegendBreakpoint) {
-			// this.w -= 150;
-		} 
 
 		this.h = 3*this.w/5;
 
