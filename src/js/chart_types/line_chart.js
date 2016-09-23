@@ -15,7 +15,7 @@ let dataPointWidth = 7;
 
 export class LineChart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, tooltipVars, tooltipImageVar, xVars, yVars, colorVars, yScaleType, primaryDataSheet, interpolation} = vizSettings;
+		let {id, tooltipVars, tooltipImageVar, xVars, yVars, colorVars, yScaleType, primaryDataSheet, interpolation, tooltipScrollable} = vizSettings;
 		console.log(id);
 		this.id = id;
 		this.interpolation = interpolation;
@@ -48,7 +48,7 @@ export class LineChart {
 		legendSettings.orientation = "horizontal-center";
 		this.legend = new Legend(legendSettings);
 
-		this.tooltip = new Tooltip(id, tooltipVars, tooltipImageVar, imageFolderId);
+		this.tooltip = new Tooltip(id, tooltipVars, tooltipImageVar, imageFolderId, tooltipScrollable);
 		
 	}
 

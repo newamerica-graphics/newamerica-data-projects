@@ -3,12 +3,13 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 let tooltipWidth = 330;
-let xPadding = 2;
+let nonScrollXPadding = 15;
+let scrollXPadding = 2;
 
 import { formatValue } from "../helper_functions/format_value.js";
 
 export class Tooltip {
-	constructor(id, tooltipVars, tooltipImageVar, imageFolderId) {
+	constructor(id, tooltipVars, tooltipImageVar, imageFolderId, tooltipScrollable) {
 		//removes first variable to be used as title
 		this.titleVar = tooltipVars.shift().variable;
 		this.tooltipVars = tooltipVars;
@@ -17,17 +18,23 @@ export class Tooltip {
 
 		this.isHovered = false;
 
+		let tooltipClass = "tooltip hidden";
+		tooltipClass += tooltipScrollable ? " scrollable" : "";
+		this.xPadding = tooltipScrollable ? scrollXPadding : nonScrollXPadding;
+
 		this.tooltip = d3.select("body")
 			.append("div")
-			.attr("class", "tooltip hidden")
+			.attr("class", tooltipClass)
 			.on("mouseleave", this.mouseleave.bind(this));
 
-		this.tooltip
-			.append("div")
-			.attr("class", "tooltip__fadeout__top");
-		this.tooltip
-			.append("div")
-			.attr("class", "tooltip__fadeout__bottom");
+		if (tooltipScrollable) {
+			this.tooltip
+				.append("div")
+				.attr("class", "tooltip__fadeout__top");
+			this.tooltip
+				.append("div")
+				.attr("class", "tooltip__fadeout__bottom");
+		}
 
 		let contentContainer = this.tooltip
 			.append("div")
@@ -182,11 +189,11 @@ export class Tooltip {
 		let windowWidth = $(window).width();
 		let tooltipHeight = $(this.tooltip._groups[0]).height();
 
-		if (mouse[0] > (windowWidth - tooltipWidth - xPadding)) {
+		if (mouse[0] > (windowWidth - tooltipWidth - this.xPadding)) {
 			retCoords[0] = mouse[0] - tooltipWidth;
-			retCoords[0] -= xPadding;
+			retCoords[0] -= this.xPadding;
 		} else {
-			retCoords[0] += xPadding;
+			retCoords[0] += this.xPadding;
 		}
 
 		retCoords[1] -= (tooltipHeight/2 + 15);
