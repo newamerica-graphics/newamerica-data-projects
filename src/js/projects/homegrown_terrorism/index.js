@@ -136,8 +136,8 @@ let vizSettingsList = [
 		xVars: [ variables.deadly_attack_date ],
 		yVars: [ variables.victims_killed ],
 		colorVars: [ variables.ideology ],
-		tooltipVars: [ variables.attack_name, variables.ideology, variables.victims_wounded, variables.victims_killed, variables.attack_description ]
-
+		tooltipVars: [ variables.attack_name, variables.ideology, variables.victims_wounded, variables.victims_killed, variables.attack_description ],
+		tooltipScrollable: true,
 	},
 	{
 		id: "#homegrown__fact-box__prevention-method", 

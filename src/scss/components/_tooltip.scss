@@ -43,9 +43,11 @@
 	}
 
 	&__content-container {
-		max-height: 350px;
-		overflow-y: scroll;
 		padding: 15px 0px;
+		.scrollable & {
+			max-height: 350px;
+			overflow-y: scroll;
+		}
 	}
 
 	&__title-container {
