@@ -10,7 +10,6 @@ export function formatValue(value, format) {
 	} else if (format == "year") {
 		return value;
 	} else if (format == "price") {
-		console.log(value);
 		return d3.format("$,.0f")(value);
 	} else if (format == "percent") {
 		return d3.format(".0%")(value);

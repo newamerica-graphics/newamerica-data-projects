@@ -19,9 +19,7 @@ export class ChartWithFactBox {
 		factBoxSettings.id = id;
 		factBoxSettings.factBoxType = "simple";
 
-		console.log(factBoxSettings);
 		this.factBox = new FactBox(factBoxSettings);
-		console.log(chartSettings);
 
 		chartSettings.id = id;
 

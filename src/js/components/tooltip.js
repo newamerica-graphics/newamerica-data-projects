@@ -94,46 +94,9 @@ export class Tooltip {
 				this.valueFields[variable.variable] = valueField;
 			}
 		}
-
-		// for (let variable of this.tooltipVars) {
-		// 	console.log(variable);
-		// 	if (!variable) {
-		// 		console.log("this variable was not defined!");
-		// 	}
-		// 	let category = variable.category;
-		// 	if (category) {
-		// 		if (!categories.hasOwnProperty(category)) {
-		// 			contentContainer.append("h5")
-		// 				.classed("tooltip__category__name", true)
-		// 				.text(category);
-
-		// 			categories[category] = contentContainer.append("ul")
-		// 				.classed("tooltip__category__list", true);
-		// 		}
-				
-		// 		var listElem = categories[category].append("li")
-		// 			.classed("tooltip__category__list-item", true);
-		// 	} else {
-		// 		var listElem = contentContainer.append("li")
-		// 			.classed("tooltip__category__list-item", true);
-		// 	}
-
-
-		// 	let valueField = {};
-		// 	valueField.label = listElem.append("h3")
-		// 		.classed("tooltip__category__list-item__label", true)
-		// 		.text(variable.displayName + ":");
-
-		// 	valueField.value = listElem.append("h3")
-		// 		.classed("tooltip__category__list-item__value", true)
-				
-		// 	this.valueFields[variable.variable] = valueField;
-		// }
 	}
 
 	show(d, mouse) {
-		console.log(mouse);
-
         if (this.tooltipImageVar) {
         	if (d[this.tooltipImageVar.variable]) {
         		this.title

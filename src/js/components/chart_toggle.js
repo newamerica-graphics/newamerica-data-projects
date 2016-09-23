@@ -6,7 +6,6 @@ let d3 = require("d3");
 
 export class ChartToggle {
 	constructor(id) {
-		console.log("in chart toggle constructor");
 		this.chartToggle = d3.select(id).append("div")
 			.classed("chart-toggle", true);
 	}
