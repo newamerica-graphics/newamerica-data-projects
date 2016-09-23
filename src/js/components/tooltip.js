@@ -15,6 +15,7 @@ export class Tooltip {
 		this.tooltipVars = tooltipVars;
 		this.tooltipImageVar = tooltipImageVar;
 		this.imageFolderId = imageFolderId;
+		this.tooltipScrollable = tooltipScrollable;
 
 		this.isHovered = false;
 
@@ -180,7 +181,7 @@ export class Tooltip {
 	}
 
 	hide() {
-		this.isHovered = $(this.tooltip._groups[0][0]).is(":hover");
+		this.isHovered = this.tooltipScrollable ? $(this.tooltip._groups[0][0]).is(":hover") : false;
 		this.isHovered ? null : this.tooltip.classed('hidden', true);
 	}
 
@@ -202,7 +203,6 @@ export class Tooltip {
 	}
 
 	mouseleave() {
-		console.log("mouseleaving!")
 		this.isHovered = false;
 		this.hide();
 	}
