@@ -16,7 +16,7 @@ $summary-box-show-color-scale-breakpoint: $summary-box-max-width + 100px + 5px;
 	overflow-x: scroll;
 	background-color: white;
 	padding: $desktop-padding;
-	margin: $desktop-padding auto;
+	margin: 2px auto;
 	border: 1px solid palette-get(na-black-10);
 	position: relative;
 
