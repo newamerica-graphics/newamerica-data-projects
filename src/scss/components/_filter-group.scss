@@ -37,7 +37,7 @@
 
 	&__variable {
 		display: block;
-		margin-right: $desktop-padding;
+		
 		margin-bottom: 5px;
 		cursor: pointer;
 		color: palette-get(na-black-40);
@@ -45,7 +45,12 @@
 
 		@include breakpoint(medium) {
 			font-size: 16px;
+			margin-right: $desktop-padding;
 			display: inline-block;
+		}
+
+		&:last-child {
+			margin-right: 0px;
 		}
 
 		&.active {
@@ -57,5 +62,9 @@
 		&:hover {
 			color: palette-get(na-turquoise);
 		}
+	}
+
+	&__category-container, &__variable-container {
+		text-align: center;
 	}
 }
