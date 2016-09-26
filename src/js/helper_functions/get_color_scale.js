@@ -54,6 +54,7 @@ export function getColorScale(data, filterVar) {
 		// let roundedDomain = setDomain(dataMin, dataMax, numBins);
 		scale.range(colorBins);
 		scale.domain(domain);
+		scale.nice();
 		// scale.domain(roundedDomain);
 	}
 	
