@@ -73,9 +73,11 @@ export class FilterGroup {
 		this.categoryDivs[newCategory].label
 			.classed("active", true);
 
-		this.categoryDivs[newCategory].valueListDiv
-			.style("display", "inline-block");
-
+		// only display var list if more than one variable in category
+		if ($(this.categoryDivs[newCategory].valueListDiv._groups[0]).children().length > 1) {
+			this.categoryDivs[newCategory].valueListDiv
+				.style("display", "inline-block");
+		}
 
 		let firstVar = this.categoryDivs[newCategory].valueListDiv.select("li")._groups[0];
 		let firstVarIndex = $(firstVar).val();
