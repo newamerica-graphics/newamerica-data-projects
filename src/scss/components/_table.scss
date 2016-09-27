@@ -3,7 +3,7 @@
 }
 
 .dataTables_filter {
-	float: right !important;
+	float: left !important;
 	text-align: left !important;
 	width: 300px;
 	label {
@@ -12,6 +12,7 @@
 		input {
 			font-size: 1rem;
 			margin-bottom: 10px;
+			margin-left: 0px !important;
 		}
 	}
 }
@@ -57,5 +58,9 @@ table.dataTable {
 	&.current {
 		font-weight: bold;
 	}
+}
+
+.dataTables_wrapper {
+	overflow-x: scroll;
 }
 
