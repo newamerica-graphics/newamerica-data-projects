@@ -1,9 +1,9 @@
 .chart-toggle {
-	padding: $desktop-padding 0px;
+	padding: 0px 0px $desktop-padding 0px;
 	&__icon {
 		fill: palette-get(na-black-30);
-		margin-right: 15px;
-		width: 30px;
+		margin-right: 12px;
+		width: 24px;
 		cursor: pointer;
 
 		&.active {
