@@ -4,7 +4,7 @@ import { colors } from "../../helper_functions/colors.js";
 
 
 let variables = {
-	state: {"variable":"state", "displayName":"State"},
+	state: {"variable":"state", "displayName":"State", "format": "string"},
 	cost_rank: {"variable":"cost_rank", "displayName":"Cost Rank", "format":"number", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":4},
 	cost_in_home_yearly: {"variable":"cost_in_home_yearly", "displayName":"Cost in Home", "format":"price", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":5},
 	cost_in_center_yearly: {"variable":"cost_in_center_yearly", "displayName":"Cost in Center", "format":"price", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":5},
@@ -35,7 +35,7 @@ let vizSettingsList = [
 			},
 			{
 				vizType: "table",
-				tableVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ],
+				tableVars: [ variables.state, variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ],
 				defaultOrdering: [0, "asc"],
 				pagination: true,
 				numPerPage: 25,
