@@ -27,6 +27,10 @@ table.dataTable {
 		}
 	}
 
+	td, th {
+		min-width: 80px;
+	}
+
 	tr {
 		background-color: transparent;
 	}
