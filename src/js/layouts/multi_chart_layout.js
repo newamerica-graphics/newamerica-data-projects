@@ -8,21 +8,25 @@ import { Table } from "../chart_types/table.js";
 
 export class MultiChartLayout {
 	constructor(vizSettings) {
-		this.chartToggle = new ChartToggle(vizSettings.id);
+		let { id, primaryDataSheet, chartSettingsList } = vizSettings;
+
+		this.primaryDataSheet = primaryDataSheet;
+
+		this.chartToggle = new ChartToggle(id);
 		this.vizList = [];
 		let i = 0;
 
 		// let filterGroup = new FilterGroup(vizSettings);
-		for (let chartType of vizSettings.layoutComponents) {
-			d3.select(vizSettings.id).append("div")
+		for (let chartSettingsObject of chartSettingsList) {
+			d3.select(id).append("div")
 				.attr("id", "chart" + i)
 				.style("display", function() { return i == 0 ? "block" : "none"; });
 
-			let chartSettingsObject = Object.assign({}, vizSettings);
+			// let chartSettingsObject = Object.assign({}, vizSettings);
 			chartSettingsObject.id = "#chart" + i;
 			
 			let viz;
-			switch (chartType) {
+			switch (chartSettingsObject.vizType) {
 				case "us_states_map":
 					viz = new UsStatesMap(chartSettingsObject);
 					this.vizList.push(viz);
