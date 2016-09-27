@@ -5,6 +5,7 @@ let d3 = require("d3");
 let dt = require('datatables.net');
 
 import { getColorScale } from "../helper_functions/get_color_scale.js";
+import { formatValue } from "../helper_functions/format_value.js";
 
 
 export class Table {
@@ -32,7 +33,7 @@ export class Table {
 		    lengthChange: false,
 		    paging: this.pagination ? true : false,
 		    pageLength: this.numPerPage,
-		    scrollX: true,
+		    scrollX: false,
 		    order: this.defaultOrdering ? this.defaultOrdering : ["0", "asc"]
 		});
 
@@ -46,7 +47,13 @@ export class Table {
 	getColumnNames() {
 		let columnNames = [];
 		for (let tableVar of this.tableVars) {
-			let varObject = {"title": tableVar.displayName, "data": tableVar.variable};
+			let varObject = {
+				"title": tableVar.displayName, 
+				"data": tableVar.variable, 
+				"render": function ( data, type, row ) {
+        			return formatValue(data, tableVar.format);
+        		}
+        	};
 			columnNames.push(varObject);
 		}
 

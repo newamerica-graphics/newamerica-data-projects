@@ -35,7 +35,7 @@ export function setupProject(projectSettings) {
 		for (let vizSettingsObject of vizSettingsList) {
 			let viz;
 			switch (vizSettingsObject.vizType) {
-				case "chart_table_layout":
+				case "multi_chart_layout":
 					viz = new MultiChartLayout(vizSettingsObject);
 					break;
 

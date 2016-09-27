@@ -4,7 +4,7 @@ import { colors } from "../../helper_functions/colors.js";
 
 
 let variables = {
-	state: {"variable":"state", "displayName":"State"},
+	state: {"variable":"state", "displayName":"State", "format": "string"},
 	cost_rank: {"variable":"cost_rank", "displayName":"Cost Rank", "format":"number", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":4},
 	cost_in_home_yearly: {"variable":"cost_in_home_yearly", "displayName":"Cost in Home", "format":"price", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":5},
 	cost_in_center_yearly: {"variable":"cost_in_center_yearly", "displayName":"Cost in Center", "format":"price", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":5},
@@ -23,21 +23,33 @@ let variables = {
 }
 
 let vizSettingsList = [
-	// {
-	// 	id: "#explore-the-index", 
-	// 	vizType: "chart_table_layout",
-	// 	layoutComponents: ["us_states_map", "table"],
-	// 	filterVars: [ children_5_under, quality_rank, cost_rank, cost_in_home ],
-	// 	tooltipVars: [ children_5_under, cost_rank, cost_in_home ],
-	// 	tableVars: [ state, children_5_under, cost_rank, cost_in_home ]
-	// },
 	{
 		id: "#care-index__explore-the-index", 
-		vizType: "us_states_map",
+		vizType: "multi_chart_layout",
 		primaryDataSheet: "state_data",
-		filterVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ],
-		tooltipVars: [ variables.state, variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined  ]
+		chartSettingsList: [
+			{
+				vizType: "us_states_map",
+				filterVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ],
+				tooltipVars: [ variables.state, variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ]
+			},
+			{
+				vizType: "table",
+				tableVars: [ variables.state, variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ],
+				defaultOrdering: [0, "asc"],
+				pagination: true,
+				numPerPage: 25,
+				colorScaling: false
+			}
+		]
 	},
+	// {
+	// 	id: "#care-index__explore-the-index", 
+	// 	vizType: "us_states_map",
+	// 	primaryDataSheet: "state_data",
+	// 	filterVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ],
+	// 	tooltipVars: [ variables.state, variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined  ]
+	// },
 	{
 		id: "#care-index__explore-the-index__availability", 
 		vizType: "us_states_map",
