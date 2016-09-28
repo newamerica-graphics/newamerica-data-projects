@@ -22,7 +22,7 @@ export class Table {
 
 		d3.select(id).append("table")
 			.attr("id", "dataTable")
-			.attr("class", "table hover cell-border");
+			.attr("class", "table");
 	}
 
 	render(data) {
@@ -42,6 +42,9 @@ export class Table {
 		}
 
 		$(this.id + ' input').addClass("search-box__input").attr("placeholder", "Search");
+
+		console.log($(this.id + " #dataTable"));
+		$(this.id + " #dataTable").wrap( "<div class='block-table'></div>" );
 	}
 
 	getColumnNames() {
