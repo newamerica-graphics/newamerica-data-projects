@@ -6,7 +6,7 @@ import { ChartToggle } from "../components/chart_toggle.js";
 import { UsStatesMap } from "../chart_types/us_states_map.js";
 import { Table } from "../chart_types/table.js";
 
-export class MultiChartLayout {
+export class TabbedChartLayout {
 	constructor(vizSettings) {
 		let { id, primaryDataSheet, chartSettingsList } = vizSettings;
 

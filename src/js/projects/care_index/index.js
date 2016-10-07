@@ -25,7 +25,7 @@ let variables = {
 let vizSettingsList = [
 	{
 		id: "#care-index__explore-the-index", 
-		vizType: "multi_chart_layout",
+		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "state_data",
 		chartSettingsList: [
 			{

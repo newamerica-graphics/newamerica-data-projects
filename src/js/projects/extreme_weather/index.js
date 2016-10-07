@@ -31,6 +31,20 @@ let vizSettingsList = [
 		// filterVars: [ variables.availability_total_norm ],
 		// tooltipVars: [ variables.state, variables.availability_total_norm]
 	},
+	// {
+	// 	id: "#extreme-weather__county-by-year", 
+	// 	vizType: "dashboard",
+	// 	primaryDataSheet: "county_by_year",
+	// 	secondaryDataSheet: "events",
+	// 	chartSettingsList: [
+	// 		{
+	// 			vizType: "bar_chart",
+	// 		},
+	// 		{
+	// 			vizType: "us_counties_map",
+	// 		}
+	// 	]
+	// },
 ]
 
 let projectSettings = {

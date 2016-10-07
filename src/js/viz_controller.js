@@ -36,12 +36,14 @@ export function setupProject(projectSettings) {
 		for (let vizSettingsObject of vizSettingsList) {
 			let viz;
 			switch (vizSettingsObject.vizType) {
-				case "multi_chart_layout":
-					viz = new MultiChartLayout(vizSettingsObject);
-					break;
+				
 
 				case "chart_with_fact_box":
 					viz = new ChartWithFactBox(vizSettingsObject, imageFolderId);
+					break;
+
+				case "dashboard":
+					viz = new Dashboard(vizSettingsObject);
 					break;
 
 				case "dot_matrix":
@@ -74,6 +76,10 @@ export function setupProject(projectSettings) {
 
 				case "summary_box":
 					viz = new SummaryBox(vizSettingsObject);
+					break;
+
+				case "tabbed_chart_layout":
+					viz = new TabbedChartLayout(vizSettingsObject);
 					break;
 
 				case "table":

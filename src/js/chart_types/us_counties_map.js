@@ -46,7 +46,7 @@ export class UsCountiesMap extends Chart {
 		// this.legend = new Legend(legendSettings);
 
 		this.setDimensions();
-		this.currYear = "2001";
+		this.currYear = "2016";
 	}
 
 	setDimensions() {
@@ -150,12 +150,14 @@ export class UsCountiesMap extends Chart {
 	      .data(this.usCountiesTopoJson)
 	    .enter().append("path")
 	      .attr("fill", (d) => { return d.data ? this.colorScale(d.data[this.currYear]) : "#fff"; })
+	      .attr("stroke", colors.grey.light)
+	      .attr("stroke-width", 1)
 	      .attr("d", this.pathGenerator);
 
-		this.svg.append("path")
-			.datum(topojson.mesh(usGeom, usGeom.objects.states, function(a, b) { return a !== b; }))
-			.attr("class", "states")
-			.attr("d", this.pathGenerator);
+		// this.svg.append("path")
+		// 	.datum(topojson.mesh(usGeom, usGeom.objects.states, function(a, b) { return a !== b; }))
+		// 	.attr("class", "states")
+		// 	.attr("d", this.pathGenerator);
 	}
 
 	setLegend() {
