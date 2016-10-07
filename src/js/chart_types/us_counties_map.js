@@ -5,6 +5,7 @@ import { Legend } from "../components/legend.js";
 import { Chart } from "../layouts/chart.js"
 
 import { getColorScale } from "../helper_functions/get_color_scale.js";
+import { colors } from "../helper_functions/colors.js";
 
 import { usGeom } from '../../geography/us.js';
 
@@ -13,6 +14,7 @@ import { formatValue, deformatValue } from "../helper_functions/format_value.js"
 import * as global from "./../utilities.js";
 
 let d3 = require("d3");
+let topojson = require("topojson");
 
 export class UsCountiesMap extends Chart {
 	constructor(vizSettings) {
@@ -44,6 +46,7 @@ export class UsCountiesMap extends Chart {
 		// this.legend = new Legend(legendSettings);
 
 		this.setDimensions();
+		this.currYear = "2016";
 	}
 
 	setDimensions() {
@@ -59,9 +62,9 @@ export class UsCountiesMap extends Chart {
 			translateX -= global.legendWidth/2;
 			this.h = this.w/2;
 			scalingFactor = this.w;
-			this.legend.setOrientation("vertical-right");
+			// this.legend.setOrientation("vertical-right");
 		} else {
-			this.legend.setOrientation("horizontal-left");
+			// this.legend.setOrientation("horizontal-left");
 		}
 
 		this.svg
@@ -79,10 +82,32 @@ export class UsCountiesMap extends Chart {
 	}
 
 	render(primaryData, secondaryData) {	
-		this.data = data;
+		this.primaryData = primaryData;
+		this.secondaryData = secondaryData;
+
+		this.usCountiesTopoJson = topojson.feature(usGeom, usGeom.objects.counties).features;
+
+		this.bindDataToGeom();
+		this.setScale();
+
+		console.log(usGeom);
+		console.log(this.colorScale.domain());
+
+		this.svg.append("g")
+	      .attr("class", "counties")
+	    .selectAll("path")
+	      .data(this.usCountiesTopoJson)
+	    .enter().append("path")
+	      .attr("fill", (d) => { return d.data ? this.colorScale(d.data[this.currYear]) : "#fff"; })
+	      .attr("d", this.pathGenerator);
+
+		this.svg.append("path")
+			.datum(topojson.mesh(usGeom, usGeom.objects.states, function(a, b) { return a !== b; }))
+			.attr("class", "states")
+			.attr("d", this.pathGenerator);
 		// this.processData();
-		// this.setScale();
-		// this.bindDataToGeom();
+		
+		
 		// this.buildGraph();
 		// this.setLegend();
 		// this.filterGroup ? this.setFilterGroup() : null;
@@ -101,19 +126,28 @@ export class UsCountiesMap extends Chart {
 	}
 
 	setScale() {
-		this.colorScale = getColorScale(this.data, this.filterVars[this.currFilterIndex]);
+		let dataMax = d3.max(this.primaryData, (d) => { return Number(d['2016']); });
+
+		console.log(dataMax);
+
+		let colorScaleSettings = {};
+		colorScaleSettings.scaleType = "quantize";
+		colorScaleSettings.numBins = 5;
+		colorScaleSettings.variable = this.currYear;
+		colorScaleSettings.customDomain = [0, dataMax];
+		colorScaleSettings.customRange = [colors.red.light, colors.red.dark];
+
+		this.colorScale = getColorScale(this.primaryData, colorScaleSettings);
 	}
 
 
 	bindDataToGeom() {
-		let data = this.data;
+		for (let dataElem of this.primaryData) {
+			let dataID = dataElem.fips;
 
-		for (let elem of data) {
-			let dataState = elem.state;
-
-			for (let state of usStates.features) {
-				if (dataState == state.properties.name) {
-					state.properties = elem;
+			for (let geom of this.usCountiesTopoJson) {
+				if (dataID == geom.id) {
+					geom.data = dataElem;
 					break;
 				}
 			}

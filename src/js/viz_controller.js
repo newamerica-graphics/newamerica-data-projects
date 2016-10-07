@@ -98,8 +98,9 @@ export function setupProject(projectSettings) {
 	function render() {
 		d3.json(projectSettings.dataUrl, (d) => {
 			for (let viz of vizList) {
-				let data = d[viz.primaryDataSheet];
-				viz.render(data);
+				let primaryData = d[viz.primaryDataSheet];
+				let secondaryData = viz.secondaryDataSheet ? d[viz.secondaryDataSheet] : null; 
+				viz.render(primaryData, secondaryData);
 			}
 			setDownloadLinks(d);
 		});

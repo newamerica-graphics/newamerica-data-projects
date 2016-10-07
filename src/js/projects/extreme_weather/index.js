@@ -26,8 +26,8 @@ let vizSettingsList = [
 	{
 		id: "#extreme-weather__county-by-year", 
 		vizType: "us_counties_map",
-		primaryDataSheet: "events",
-		secondaryDataSheet: "county_by_year",
+		primaryDataSheet: "county_by_year",
+		secondaryDataSheet: "events",
 		// filterVars: [ variables.availability_total_norm ],
 		// tooltipVars: [ variables.state, variables.availability_total_norm]
 	},

@@ -4,13 +4,14 @@
       <script type="text/javascript" src="https://na-staging-static.s3.amazonaws.com/static/js/mysite.js"></script>
       <style>
 
-.arc text {
-  font: 10px sans-serif;
-  text-anchor: middle;
+.counties {
+  fill: "green";
 }
 
-.arc path {
-  stroke: #fff;
+.states {
+  fill: none;
+  stroke: "black";
+  stroke-linejoin: round;
 }
 
 </style>
@@ -41,8 +42,10 @@
             <div class="dataviz__chart-area" id="homegrown__extremist-data-table"></div>
             <div class="dataviz__chart-area" id="homegrown__fact-box__association-with-awlaki"></div>
             <div class="dataviz__chart-area" id="homegrown__fact-box__gender-of-extremists"></div>
+
+            <div class="dataviz__chart-area" id="extreme-weather__county-by-year"></div>
           </div>
         </div>
-        <script type="text/javascript" src="build/care_index.js"></script>
+        <script type="text/javascript" src="build/extreme_weather.js"></script>
     </body>
 </html>

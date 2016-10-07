@@ -28,7 +28,7 @@ let ordinalRange = [
 ]
 
 export function getColorScale(data, filterVar) {
-	let { scaleType, numBins, customRange } = filterVar;
+	let { scaleType, numBins, customRange, customDomain } = filterVar;
 	let scale;
 
 	if (!scaleType) {
@@ -50,7 +50,7 @@ export function getColorScale(data, filterVar) {
 	} else if (scaleType == "quantize") {
 		scale = d3.scaleQuantize();
 		let colorBins = setColorBins(numBins, customRange);
-		let domain = setQuantizeDomain(filterVar, data);
+		let domain = customDomain ? customDomain : setQuantizeDomain(filterVar, data);
 		// let roundedDomain = setDomain(dataMin, dataMax, numBins);
 		scale.range(colorBins);
 		scale.domain(domain);
