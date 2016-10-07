@@ -6,7 +6,6 @@ import { DotMatrix } from "../chart_types/dot_matrix.js";
 import { DotHistogram } from "../chart_types/dot_histogram.js";
 import { GroupedDotMatrix } from "../chart_types/grouped_dot_matrix.js";
 import { UsStatesMap } from "../chart_types/us_states_map.js";
-import { GroupedBarChart } from "../chart_types/grouped_bar_chart.js";
 import { Table } from "../chart_types/table.js";
 import { FactBox } from "../chart_types/fact_box.js";
 import { LineChart } from "../chart_types/line_chart.js";
@@ -30,10 +29,6 @@ export class ChartWithFactBox {
 
 			case "dot_histogram":
 				this.chart = new DotHistogram(chartSettings, imageFolderId);
-				break;
-
-			case "grouped_bar_chart":
-				this.chart = new GroupedBarChart(chartSettings);
 				break;
 
 			case "grouped_dot_matrix":

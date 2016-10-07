@@ -5,15 +5,14 @@ var JSZip = require("jszip");
 import $ from 'jquery';
 let d3 = require("d3");
 
-
+import { BarChart } from "./chart_types/bar_chart.js";
 import { DotMatrix } from "./chart_types/dot_matrix.js";
 import { DotHistogram } from "./chart_types/dot_histogram.js";
 import { GroupedDotMatrix } from "./chart_types/grouped_dot_matrix.js";
 import { UsStatesMap } from "./chart_types/us_states_map.js";
 import { UsCountiesMap } from "./chart_types/us_counties_map.js";
-import { MultiChartLayout } from "./layouts/multi_chart_layout.js";
+import { TabbedChartLayout } from "./layouts/tabbed_chart_layout.js";
 import { ChartWithFactBox } from "./layouts/chart_with_fact_box.js";
-import { GroupedBarChart } from "./chart_types/grouped_bar_chart.js";
 import { Table } from "./chart_types/table.js";
 import { FactBox } from "./chart_types/fact_box.js";
 import { LineChart } from "./chart_types/line_chart.js";
@@ -36,7 +35,9 @@ export function setupProject(projectSettings) {
 		for (let vizSettingsObject of vizSettingsList) {
 			let viz;
 			switch (vizSettingsObject.vizType) {
-				
+				case "bar_chart":
+					viz = new BarChart(vizSettingsObject, imageFolderId);
+					break;
 
 				case "chart_with_fact_box":
 					viz = new ChartWithFactBox(vizSettingsObject, imageFolderId);
@@ -58,10 +59,6 @@ export function setupProject(projectSettings) {
 					viz = new FactBox(vizSettingsObject);
 					break;
 				
-				case "grouped_bar_chart":
-					viz = new GroupedBarChart(vizSettingsObject);
-					break;
-
 				case "grouped_dot_matrix":
 					viz = new GroupedDotMatrix(vizSettingsObject, imageFolderId);
 					break;
