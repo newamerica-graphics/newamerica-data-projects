@@ -56,6 +56,13 @@ export function getColorScale(data, filterVar) {
 		scale.domain(domain);
 		scale.nice();
 		// scale.domain(roundedDomain);
+	} else if (scaleType == "linear") {
+		scale = d3.scaleLinear();
+		let domain = customDomain ? customDomain : setLinearDomain(filterVar, data);
+		let range = customRange ? customRange : setLinearRange(filterVar, data);
+
+		scale.domain(domain);
+		scale.range(range);
 	}
 	
 	return scale;
@@ -127,6 +134,17 @@ function setDomain(dataMin, dataMax, numBins) {
 	// }
 
 	return [dataMin, dataMax];
+}
+
+function setLinearDomain(filterVar, data) {
+	let dataMin = Number(d3.min(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; })); 
+	let dataMax = Number(d3.max(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; }));
+
+	return [dataMin, dataMax];
+}
+
+function setLinearRange(filterVar, data) {
+	return [colors.white, colors.turquoise.dark];
 }
 
 function setColorBins(numBins, baseColor) {

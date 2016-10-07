@@ -46,7 +46,7 @@ export class UsCountiesMap extends Chart {
 		// this.legend = new Legend(legendSettings);
 
 		this.setDimensions();
-		this.currYear = "2016";
+		this.currYear = "2001";
 	}
 
 	setDimensions() {
@@ -89,22 +89,12 @@ export class UsCountiesMap extends Chart {
 
 		this.bindDataToGeom();
 		this.setScale();
+		this.buildGraph();
 
 		console.log(usGeom);
-		console.log(this.colorScale.domain());
+		console.log(this.colorScale.range());
 
-		this.svg.append("g")
-	      .attr("class", "counties")
-	    .selectAll("path")
-	      .data(this.usCountiesTopoJson)
-	    .enter().append("path")
-	      .attr("fill", (d) => { return d.data ? this.colorScale(d.data[this.currYear]) : "#fff"; })
-	      .attr("d", this.pathGenerator);
-
-		this.svg.append("path")
-			.datum(topojson.mesh(usGeom, usGeom.objects.states, function(a, b) { return a !== b; }))
-			.attr("class", "states")
-			.attr("d", this.pathGenerator);
+		
 		// this.processData();
 		
 		
@@ -131,11 +121,10 @@ export class UsCountiesMap extends Chart {
 		console.log(dataMax);
 
 		let colorScaleSettings = {};
-		colorScaleSettings.scaleType = "quantize";
-		colorScaleSettings.numBins = 5;
+		colorScaleSettings.scaleType = "linear";
 		colorScaleSettings.variable = this.currYear;
 		colorScaleSettings.customDomain = [0, dataMax];
-		colorScaleSettings.customRange = [colors.red.light, colors.red.dark];
+		colorScaleSettings.customRange = [colors.white, colors.red.dark];
 
 		this.colorScale = getColorScale(this.primaryData, colorScaleSettings);
 	}
@@ -155,20 +144,18 @@ export class UsCountiesMap extends Chart {
 	}
 
 	buildGraph() {
-		this.paths = this.svg.selectAll("path")
-		   .data(usStates.features)
-		   .enter()
-		   .append("path");
+		this.paths = this.svg.append("g")
+	      .attr("class", "counties")
+	    .selectAll("path")
+	      .data(this.usCountiesTopoJson)
+	    .enter().append("path")
+	      .attr("fill", (d) => { return d.data ? this.colorScale(d.data[this.currYear]) : "#fff"; })
+	      .attr("d", this.pathGenerator);
 
-		this.paths.attr("d", this.pathGenerator)
-		    .style("fill", (d) => {
-		   		var value = d.properties[this.currFilterVar];
-		   		return value ? this.colorScale(value) : "#ccc";
-		    })
-		    .attr("value", function(d,i) { return i; })
-		    .style("stroke", "white")
-		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event); })
-		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); });
+		this.svg.append("path")
+			.datum(topojson.mesh(usGeom, usGeom.objects.states, function(a, b) { return a !== b; }))
+			.attr("class", "states")
+			.attr("d", this.pathGenerator);
 	}
 
 	setLegend() {
