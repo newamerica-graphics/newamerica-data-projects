@@ -25,10 +25,10 @@ export class Table {
 			.attr("class", "table");
 	}
 
-	render(data) {
-		this.data = data;
+	render(primaryData, secondaryData) {
+		this.data = primaryData;
 		this.table = $(this.id + " #dataTable").DataTable({
-			data: data,
+			data: primaryData,
 			columns: this.getColumnNames(),
 		    lengthChange: false,
 		    paging: this.pagination ? true : false,
@@ -43,7 +43,6 @@ export class Table {
 
 		$(this.id + ' input').addClass("search-box__input").attr("placeholder", "Search");
 
-		console.log($(this.id + " #dataTable"));
 		$(this.id + " #dataTable").wrap( "<div class='block-table'></div>" );
 	}
 

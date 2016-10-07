@@ -12,8 +12,8 @@ export class DotHistogram extends GroupedDotMatrix {
 		super(vizSettings, imageFolderId);
 	}
 
-	render(data) {
-		super.render(data);
+	render(primaryData, secondaryData) {
+		super.render(primaryData, secondaryData);
 	}
 
 	resize() {

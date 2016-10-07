@@ -41,8 +41,8 @@ export class PieChart {
 		
 	}
 
-	render(data) {
-		this.data = data;
+	render(primaryData, secondaryData) {
+		this.data = primaryData;
 		this.setColorScale();
 		this.setLegend();
 
@@ -50,7 +50,7 @@ export class PieChart {
 		    .value((d) => { return d[this.currDataVar.variable]; });
 
 		var g = this.renderingArea.selectAll(".arc")
-		      .data(pie(data))
+		      .data(pie(this.data))
 		    .enter().append("g")
 		      .attr("class", "arc");
 

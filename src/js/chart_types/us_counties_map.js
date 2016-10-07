@@ -78,7 +78,7 @@ export class UsCountiesMap extends Chart {
 						 .projection(projection);
 	}
 
-	render(data) {	
+	render(primaryData, secondaryData) {	
 		this.data = data;
 		// this.processData();
 		// this.setScale();

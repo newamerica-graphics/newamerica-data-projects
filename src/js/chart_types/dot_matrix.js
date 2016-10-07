@@ -62,8 +62,8 @@ export class DotMatrix extends Chart {
 
 	}
 
-	render(data) {
-		this.data = this.processData(data);
+	render(primaryData, secondaryData) {
+		this.data = this.processData(primaryData);
 		this.setDimensions();
 		this.sortData();
 		if (!this.isSubComponent) {

@@ -20,8 +20,8 @@ export class FactBox {
 
 	}
 
-	render(data) {
-		this.data = data;
+	render(primaryData, secondaryData) {
+		this.data = primaryData;
 
 		if (this.factBoxType == "simple") {
 			this.renderSimple();

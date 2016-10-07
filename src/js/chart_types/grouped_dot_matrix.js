@@ -60,8 +60,8 @@ export class GroupedDotMatrix extends Chart {
 		this.legend = new Legend(legendSettings);
 	}
 
-	render(data) {
-		this.data = data;
+	render(primaryData, secondaryData) {
+		this.data = primaryData;
 
 		this.getGroupings();
 		this.setScale();
