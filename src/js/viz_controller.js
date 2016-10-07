@@ -10,6 +10,7 @@ import { DotMatrix } from "./chart_types/dot_matrix.js";
 import { DotHistogram } from "./chart_types/dot_histogram.js";
 import { GroupedDotMatrix } from "./chart_types/grouped_dot_matrix.js";
 import { UsStatesMap } from "./chart_types/us_states_map.js";
+import { UsCountiesMap } from "./chart_types/us_counties_map.js";
 import { MultiChartLayout } from "./layouts/multi_chart_layout.js";
 import { ChartWithFactBox } from "./layouts/chart_with_fact_box.js";
 import { GroupedBarChart } from "./chart_types/grouped_bar_chart.js";
@@ -77,6 +78,10 @@ export function setupProject(projectSettings) {
 
 				case "table":
 					viz = new Table(vizSettingsObject);
+					break;
+
+				case "us_counties_map":
+					viz = new UsCountiesMap(vizSettingsObject);
 					break;
 
 				case "us_states_map":
