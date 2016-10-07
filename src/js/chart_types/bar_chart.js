@@ -15,10 +15,11 @@ let dataPointWidth = 7;
 
 export class BarChart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, xVars, yVars, yScaleType, primaryDataSheet} = vizSettings;
+		let {id, xVars, yVars, yScaleType, primaryDataSheet, yAxisLabelText} = vizSettings;
 		this.id = id;
 		this.primaryDataSheet = primaryDataSheet;
 		this.yScaleType = yScaleType;
+		this.yAxisLabelText = yAxisLabelText;
 
 		this.svg = d3.select(id).append("svg").attr("class", "bar-chart");
 
@@ -82,7 +83,7 @@ export class BarChart {
 	}
 
 	renderBars() {
-		this.renderingArea.selectAll(".bar")
+		this.bars = this.renderingArea.selectAll(".bar")
 	      .data(this.data)
 	    .enter().append("rect")
 	      .attr("class", "bar")
@@ -109,45 +110,12 @@ export class BarChart {
 			.attr("y", -60)
 			.attr("dy", ".71em")
 			.style("text-anchor", "middle")
-			.text(this.currYVar.displayName);
-	}
-
-	processData(data) {
-		let retArray = [];
-		for (let d of data) {
-			if (d[this.currXVarName] && d[this.currYVarName] && d[this.currColorVarName]) {
-				if (d[this.currYVarName] != 0) {
-					d[this.currXVarName] = parseDate(d[this.currXVarName]);
-					retArray.push(d);
-				}
-			}
-		}
-
-		return retArray;
-	}
-
-	
-
-	setCumulativeValues() {
-		this.dataNest = d3.nest()
-	        .key((d) => {return d[this.currColorVarName];})
-	        .sortValues((a, b) => {return a[this.currXVarName] - b[this.currXVarName];})
-	        .entries(this.data);
-
-	    for (let nestObject of this.dataNest) {
-	    	let valSum = 0;
-
-	    	for (let datapoint of nestObject.values) {
-	    		valSum += Number(datapoint[this.currYVarName]);
-	    		datapoint.cumulativeVal = valSum;
-	    	}
-	    }
+			.text(this.yAxisLabelText);
 	}
 
 	resize() {
 		this.setDimensions();
-		this.setScales();
-		this.setLineScaleFunction();
+		this.setXYScaleRanges();
 
 		this.xAxis
 			.attr("transform", "translate(0," + this.h + ")")
@@ -156,15 +124,10 @@ export class BarChart {
 		this.yAxis.call(d3.axisLeft(this.yScale).tickPadding(10));
 		this.yAxisLabel.attr("x", -this.h/2);
 
-		for (let key of Object.keys(this.dataLines)) {
-			this.dataLines[key].attr("d", this.line);
-		}
-
-		this.dataPoints
-			.attr("x", (d) => { return this.xScale(d[this.currXVarName]) - dataPointWidth/2})
-			.attr("y", (d) => {
-				let scaledVal = this.yScaleType == "cumulative" ? d.cumulativeVal : d[this.currYVarName]; 
-				return this.yScale(scaledVal) - dataPointWidth/2;
-			})
+		this.bars
+			.attr("x", (d) => { return this.xScale(d.key); })
+			.attr("width", this.xScale.bandwidth())
+			.attr("y", (d) => { return this.yScale(d.value); })
+			.attr("height", (d) => { return this.h - this.yScale(d.value); });
 	}
 }

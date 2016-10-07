@@ -23,6 +23,7 @@ let vizSettingsList = [
 		primaryDataSheet: "events",
 		xVars: [ variables.year ],
 		yScaleType: "count",
+		yAxisLabelText: "Number of Disasters",
 		// filterVars: [ variables.availability_total_norm ],
 		// tooltipVars: [ variables.state, variables.availability_total_norm]
 	},
