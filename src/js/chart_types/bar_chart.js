@@ -34,6 +34,8 @@ export class BarChart {
 
 		this.currXVar = xVars[0];
 		this.currXVarName = xVars[0].variable;
+
+		this.currSelected = "1999";
 	}
 
 	render(primaryData, secondaryData) {
@@ -44,19 +46,21 @@ export class BarChart {
 	        .entries(primaryData);
 
 	    console.log(this.data);
+
+	    let i = 0;
+	    for (let d of this.data) {
+	    	if (d.key == this.currSelected) {
+	    		this.currSelectedIndex = i;
+	    		break;
+	    	}
+	    	i++;
+	    }
 		  
 		this.setXYScaleDomains();
 
 		this.renderBars();
 		this.renderAxes();
-
-		// this.setColorScale();
-
-		// this.renderAxes();
-        // this.renderLines();
-        // this.renderPoints();
-
-        // this.setLegend();
+		this.renderSlider();
 	}
 
 	setDimensions() {
@@ -90,7 +94,8 @@ export class BarChart {
 	      .attr("x", (d) => { return this.xScale(d.key); })
 	      .attr("width", this.xScale.bandwidth())
 	      .attr("y", (d) => { return this.yScale(d.value); })
-	      .attr("height", (d) => { return this.h - this.yScale(d.value); });
+	      .attr("height", (d) => { return this.h - this.yScale(d.value); })
+	      .attr("fill", (d, i) => { return this.setBarColor(i); });
 	}
 
 	renderAxes() {
@@ -111,6 +116,72 @@ export class BarChart {
 			.attr("dy", ".71em")
 			.style("text-anchor", "middle")
 			.text(this.yAxisLabelText);
+	}
+
+	renderSlider() {
+		// this.slider = this.renderingArea.append("rect")
+		// 	.attr("id", "slider")
+		// 	.attr("transform", "translate(0," + this.h + ")")
+		// 	.attr("x", this.xScale(this.currSelected))
+		// 	.attr("y", -5)
+		// 	.attr("width", this.xScale.bandwidth())
+		// 	.attr("height", 10)
+		// 	.attr("fill", "green");
+
+		console.log(this.xScale.step());
+
+		var slider = this.renderingArea.append("g")
+		    .attr("class", "slider")
+		    .attr("transform", "translate(0," + this.h + ")")
+
+		slider.append("line")
+		    .attr("class", "track")
+		    .attr("x1", this.xScale.range()[0])
+		    .attr("x2", this.xScale.range()[1])
+		  .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+		    .attr("class", "track-inset")
+		  .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+		    .attr("class", "track-overlay")
+		    .attr("pointer-events", "stroke")
+		    .call(d3.drag()
+		        .on("start.interrupt", function() { slider.interrupt(); })
+		        .on("start drag", () => { 
+		        	console.log(d3.event.x);
+		        	// var eachBand = this.xScale.step();
+					var index = Math.floor(d3.event.x / this.xScale.step());
+					var val = this.xScale.domain()[index];
+					console.log(val);
+					// handle.attr("x", d3.event.x - this.xScale.step()/2);
+		        	handle.attr("x", this.xScale(val));
+		        }));
+
+		// slider.insert("g", ".track-overlay")
+		//     .attr("class", "ticks")
+		//     .attr("transform", "translate(0," + 18 + ")")
+		//   .selectAll("text")
+		//   .data(this.xScale.ticks(10))
+		//   .enter().append("text")
+		//     .attr("x", this.xScale)
+		//     .attr("text-anchor", "middle")
+		//     .text(function(d) { return d + "°"; });
+
+		var handle = slider.insert("rect", ".track-overlay")
+		    .attr("width", this.xScale.bandwidth())
+			.attr("height", 10)
+			.attr("fill", "green")
+			.attr("y", -5);
+
+		
+	}
+
+	setBarColor(i) {
+		if (i < this.currSelectedIndex) {
+			return colors.red.light;
+		} else if (i == this.currSelectedIndex) {
+			return colors.black;
+		} else {
+			return colors.grey.light;
+		}
 	}
 
 	resize() {
