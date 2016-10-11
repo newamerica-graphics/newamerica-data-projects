@@ -45,17 +45,9 @@ export class BarChart {
 	        .rollup(function(leaves) { return leaves.length; })
 	        .entries(primaryData);
 
-	    console.log(this.data);
 
-	    let i = 0;
-	    for (let d of this.data) {
-	    	if (d.key == this.currSelected) {
-	    		this.currSelectedIndex = i;
-	    		break;
-	    	}
-	    	i++;
-	    }
-		  
+	    this.setCurrSelectedIndex();
+	    
 		this.setXYScaleDomains();
 
 		this.renderBars();
@@ -89,7 +81,9 @@ export class BarChart {
 	renderBars() {
 		this.bars = this.renderingArea.selectAll(".bar")
 	      .data(this.data)
-	    .enter().append("rect")
+	    .enter().append("rect");
+
+	    this.bars
 	      .attr("class", "bar")
 	      .attr("x", (d) => { return this.xScale(d.key); })
 	      .attr("width", this.xScale.bandwidth())
@@ -119,18 +113,7 @@ export class BarChart {
 	}
 
 	renderSlider() {
-		// this.slider = this.renderingArea.append("rect")
-		// 	.attr("id", "slider")
-		// 	.attr("transform", "translate(0," + this.h + ")")
-		// 	.attr("x", this.xScale(this.currSelected))
-		// 	.attr("y", -5)
-		// 	.attr("width", this.xScale.bandwidth())
-		// 	.attr("height", 10)
-		// 	.attr("fill", "green");
-
-		console.log(this.xScale.step());
-
-		var slider = this.renderingArea.append("g")
+		let slider = this.renderingArea.append("g")
 		    .attr("class", "slider")
 		    .attr("transform", "translate(0," + this.h + ")")
 
@@ -142,34 +125,32 @@ export class BarChart {
 		    .attr("class", "track-inset")
 		  .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
 		    .attr("class", "track-overlay")
-		    .attr("pointer-events", "stroke")
-		    .call(d3.drag()
-		        .on("start.interrupt", function() { slider.interrupt(); })
-		        .on("start drag", () => { 
-		        	console.log(d3.event.x);
-		        	// var eachBand = this.xScale.step();
-					var index = Math.floor(d3.event.x / this.xScale.step());
-					var val = this.xScale.domain()[index];
-					console.log(val);
-					// handle.attr("x", d3.event.x - this.xScale.step()/2);
-		        	handle.attr("x", this.xScale(val));
-		        }));
+		    .attr("pointer-events", "stroke");
 
-		// slider.insert("g", ".track-overlay")
-		//     .attr("class", "ticks")
-		//     .attr("transform", "translate(0," + 18 + ")")
-		//   .selectAll("text")
-		//   .data(this.xScale.ticks(10))
-		//   .enter().append("text")
-		//     .attr("x", this.xScale)
-		//     .attr("text-anchor", "middle")
-		//     .text(function(d) { return d + "°"; });
-
-		var handle = slider.insert("rect", ".track-overlay")
+		let handle = slider.insert("rect", ".track-overlay")
 		    .attr("width", this.xScale.bandwidth())
 			.attr("height", 10)
 			.attr("fill", "green")
-			.attr("y", -5);
+			.attr("y", -5)
+			.attr("x", this.xScale(this.currSelected))
+			.call(d3.drag()
+		        .on("start.interrupt", function() { slider.interrupt(); })
+		        .on("start drag", () => {
+					var index = Math.floor(d3.event.x / this.xScale.step());
+					console.log(index);
+					console.log(this.xScale.domain().length);
+					if (index >= this.xScale.domain().length) {
+						index = this.xScale.domain().length - 1;
+					} else if (index < 0) {
+						index = 0;
+					}
+					var val = this.xScale.domain()[index];
+					console.log(d3.event.x);
+					console.log(val);
+		        	handle.attr("x", this.xScale(val));
+		        	this.currSelected = val;
+		        	this.updateCurrSelected();
+		        }));;
 
 		
 	}
@@ -200,5 +181,22 @@ export class BarChart {
 			.attr("width", this.xScale.bandwidth())
 			.attr("y", (d) => { return this.yScale(d.value); })
 			.attr("height", (d) => { return this.h - this.yScale(d.value); });
+	}
+
+	setCurrSelectedIndex() {
+		let i = 0;
+		for (let d of this.data) {
+	    	if (d.key == this.currSelected) {
+	    		this.currSelectedIndex = i;
+	    		break;
+	    	}
+	    	i++;
+	    }
+	}
+
+	updateCurrSelected() {
+		this.setCurrSelectedIndex();
+		this.bars
+			.attr("fill", (d, i) => { return this.setBarColor(i); });
 	}
 }
