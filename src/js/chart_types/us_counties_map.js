@@ -16,6 +16,9 @@ import * as global from "./../utilities.js";
 let d3 = require("d3");
 let topojson = require("topojson");
 
+let minYear = "1996";
+let maxYear = "2016";
+
 export class UsCountiesMap extends Chart {
 	constructor(vizSettings) {
 		let {id, tooltipVars, filterVars, primaryDataSheet, secondaryDataSheet } = vizSettings;
@@ -83,6 +86,11 @@ export class UsCountiesMap extends Chart {
 
 	render(data) {	
 		this.data = data[this.primaryDataSheet];
+    this.secondaryDataByYear = d3.nest()
+      .key((d) => {return d["year"];})
+      .map(data[this.secondaryDataSheet]);
+
+    console.log(this.secondaryDataByYear);
 
 		this.usCountiesTopoJson = topojson.feature(usGeom, usGeom.objects.counties).features;
 
@@ -105,8 +113,6 @@ export class UsCountiesMap extends Chart {
 
 	setScale() {
 		let dataMax = d3.max(this.data, (d) => { return Number(d['2016']); });
-
-		console.log(dataMax);
 
 		let colorScaleSettings = {};
 		colorScaleSettings.scaleType = "linear";
@@ -137,8 +143,8 @@ export class UsCountiesMap extends Chart {
 	    .selectAll("path")
 	      .data(this.usCountiesTopoJson)
 	    .enter().append("path")
-	      .attr("fill", (d) => { return d.data ? this.colorScale(d.data[this.currYear]) : "#fff"; })
-	      .attr("stroke", colors.grey.light)
+	      .attr("fill", (d) => { return d.data ? this.setFill(d.data) : "#fff"; })
+	      .attr("stroke", colors.grey.medium)
 	      .attr("stroke-width", 1)
 	      .attr("d", this.pathGenerator);
 
@@ -152,7 +158,7 @@ export class UsCountiesMap extends Chart {
     this.currYear = value;
 
     this.paths
-      .attr("fill", (d) => { return d.data ? this.colorScale(d.data[this.currYear]) : "#fff"; })
+      .attr("fill", (d) => { return d.data ? this.setFill(d.data) : "#fff"; })
   }
 
 	setLegend() {
@@ -167,15 +173,27 @@ export class UsCountiesMap extends Chart {
 		this.legend.render(legendSettings);
 	}
 
-	setFilterGroup() {
-		this.filterGroup.render(this.changeFilter.bind(this));
-	}
-
 	
 	resize() {
 		this.setDimensions();
 		this.paths.attr("d", this.pathGenerator);
 	}
+
+  setFill(data) {
+    // if (this.currYear == minYear) {
+    //   if (data[this.currYear] != 0) {
+    //     return "black";
+    //   } else {
+    //     return this.colorScale(data[this.currYear]);
+    //   }
+    // } else {
+    //   if (data[this.currYear] != data[String(Number(this.currYear)-1)]) {
+    //     return "black";
+    //   } else {
+        return this.colorScale(data[this.currYear]);
+    //   }
+    // }
+  }
 
 
 	changeVariableValsShown(valsShown) {
