@@ -46,7 +46,7 @@ export class UsCountiesMap extends Chart {
 		// this.legend = new Legend(legendSettings);
 
 		this.setDimensions();
-		this.currYear = "2016";
+		this.currYear = "1996";
 	}
 
 	setDimensions() {
@@ -81,26 +81,14 @@ export class UsCountiesMap extends Chart {
 						 .projection(projection);
 	}
 
-	render(primaryData, secondaryData) {	
-		this.primaryData = primaryData;
-		this.secondaryData = secondaryData;
+	render(data) {	
+		this.data = data[this.primaryDataSheet];
 
 		this.usCountiesTopoJson = topojson.feature(usGeom, usGeom.objects.counties).features;
 
 		this.bindDataToGeom();
 		this.setScale();
 		this.buildGraph();
-
-		console.log(usGeom);
-		console.log(this.colorScale.range());
-
-		
-		// this.processData();
-		
-		
-		// this.buildGraph();
-		// this.setLegend();
-		// this.filterGroup ? this.setFilterGroup() : null;
 
 		super.render();
 	}
@@ -116,7 +104,7 @@ export class UsCountiesMap extends Chart {
 	}
 
 	setScale() {
-		let dataMax = d3.max(this.primaryData, (d) => { return Number(d['2016']); });
+		let dataMax = d3.max(this.data, (d) => { return Number(d['2016']); });
 
 		console.log(dataMax);
 
@@ -124,14 +112,14 @@ export class UsCountiesMap extends Chart {
 		colorScaleSettings.scaleType = "linear";
 		colorScaleSettings.variable = this.currYear;
 		colorScaleSettings.customDomain = [0, dataMax];
-		colorScaleSettings.customRange = [colors.white, colors.red.dark];
+		colorScaleSettings.customRange = [colors.white, colors.red.light];
 
-		this.colorScale = getColorScale(this.primaryData, colorScaleSettings);
+		this.colorScale = getColorScale(this.data, colorScaleSettings);
 	}
 
 
 	bindDataToGeom() {
-		for (let dataElem of this.primaryData) {
+		for (let dataElem of this.data) {
 			let dataID = dataElem.fips;
 
 			for (let geom of this.usCountiesTopoJson) {
@@ -160,6 +148,13 @@ export class UsCountiesMap extends Chart {
 		// 	.attr("d", this.pathGenerator);
 	}
 
+  changeFilter(value) {
+    this.currYear = value;
+
+    this.paths
+      .attr("fill", (d) => { return d.data ? this.colorScale(d.data[this.currYear]) : "#fff"; })
+  }
+
 	setLegend() {
 		let legendSettings = {};
 
@@ -182,18 +177,6 @@ export class UsCountiesMap extends Chart {
 		this.paths.attr("d", this.pathGenerator);
 	}
 
-	changeFilter(variableIndex) {
-		this.currFilterIndex = variableIndex;
-		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
-
-		this.setScale();
-		this.setLegend();
-		this.paths
-			.style("fill", (d) => {
-		   		var value = d.properties[this.currFilterVar];
-		   		return value ? this.colorScale(value) : "#ccc";
-		    })
-	}
 
 	changeVariableValsShown(valsShown) {
 		this.paths

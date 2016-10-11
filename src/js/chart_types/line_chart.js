@@ -51,8 +51,8 @@ export class LineChart {
 		
 	}
 
-	render(primaryData, secondaryData) {
-		this.data = this.processData(primaryData);
+	render(data) {
+		this.data = this.processData(data[this.primaryDataSheet]);
 
 		this.yScaleType == "cumulative" ? this.setCumulativeValues() : null;
 		  

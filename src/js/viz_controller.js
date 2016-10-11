@@ -6,6 +6,7 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 import { BarChart } from "./chart_types/bar_chart.js";
+import { Dashboard } from "./layouts/dashboard.js";
 import { DotMatrix } from "./chart_types/dot_matrix.js";
 import { DotHistogram } from "./chart_types/dot_histogram.js";
 import { GroupedDotMatrix } from "./chart_types/grouped_dot_matrix.js";
@@ -101,9 +102,7 @@ export function setupProject(projectSettings) {
 	function render() {
 		d3.json(projectSettings.dataUrl, (d) => {
 			for (let viz of vizList) {
-				let primaryData = d[viz.primaryDataSheet];
-				let secondaryData = viz.secondaryDataSheet ? d[viz.secondaryDataSheet] : null; 
-				viz.render(primaryData, secondaryData);
+				viz.render(d);
 			}
 			setDownloadLinks(d);
 		});

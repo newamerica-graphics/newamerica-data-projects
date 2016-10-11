@@ -41,8 +41,8 @@ export class PieChart {
 		
 	}
 
-	render(primaryData, secondaryData) {
-		this.data = primaryData;
+	render(data) {
+		this.data = data[this.primaryDataSheet];
 		this.setColorScale();
 		this.setLegend();
 

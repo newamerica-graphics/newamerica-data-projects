@@ -17,30 +17,35 @@ let vizSettingsList = [
 	// 	// filterVars: [ variables.availability_total_norm ],
 	// 	// tooltipVars: [ variables.state, variables.availability_total_norm]
 	// },
-	{
-		id: "#extreme-weather__county-by-year", 
-		vizType: "bar_chart",
-		primaryDataSheet: "events",
-		xVars: [ variables.year ],
-		yScaleType: "count",
-		yAxisLabelText: "Number of Disasters",
-		// filterVars: [ variables.availability_total_norm ],
-		// tooltipVars: [ variables.state, variables.availability_total_norm]
-	},
 	// {
 	// 	id: "#extreme-weather__county-by-year", 
-	// 	vizType: "dashboard",
-	// 	primaryDataSheet: "county_by_year",
-	// 	secondaryDataSheet: "events",
-	// 	chartSettingsList: [
-	// 		{
-	// 			vizType: "bar_chart",
-	// 		},
-	// 		{
-	// 			vizType: "us_counties_map",
-	// 		}
-	// 	]
+	// 	vizType: "bar_chart",
+	// 	primaryDataSheet: "events",
+	// 	xVars: [ variables.year ],
+	// 	yScaleType: "count",
+	// 	yAxisLabelText: "Number of Disasters",
+	// 	// filterVars: [ variables.availability_total_norm ],
+	// 	// tooltipVars: [ variables.state, variables.availability_total_norm]
 	// },
+	{
+		id: "#extreme-weather__county-by-year", 
+		vizType: "dashboard",
+		chartSettingsList: [
+			{
+				vizType: "bar_chart",
+				isMessagePasser: true,
+				primaryDataSheet: "events",
+				xVars: [ variables.year ],
+				yScaleType: "count",
+				yAxisLabelText: "Number of Disasters",
+			},
+			{
+				vizType: "us_counties_map",
+				primaryDataSheet: "county_by_year",
+				secondaryDataSheet: "events",
+			}
+		]
+	},
 ]
 
 let projectSettings = {

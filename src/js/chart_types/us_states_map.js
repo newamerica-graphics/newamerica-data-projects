@@ -81,8 +81,8 @@ export class UsStatesMap extends Chart {
 						 .projection(projection);
 	}
 
-	render(primaryData, secondaryData) {	
-		this.data = primaryData;
+	render(data) {	
+		this.data = data[this.primaryDataSheet];
 		this.processData();
 		this.setScale();
 		this.bindDataToGeom();

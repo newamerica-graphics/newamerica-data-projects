@@ -25,10 +25,10 @@ export class Table {
 			.attr("class", "table");
 	}
 
-	render(primaryData, secondaryData) {
-		this.data = primaryData;
+	render(data) {
+		this.data = data[this.primaryDataSheet];
 		this.table = $(this.id + " #dataTable").DataTable({
-			data: primaryData,
+			data: this.data,
 			columns: this.getColumnNames(),
 		    lengthChange: false,
 		    paging: this.pagination ? true : false,

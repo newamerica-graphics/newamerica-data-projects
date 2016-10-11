@@ -15,11 +15,12 @@ let dataPointWidth = 7;
 
 export class BarChart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, xVars, yVars, yScaleType, primaryDataSheet, yAxisLabelText} = vizSettings;
+		let {id, xVars, yVars, yScaleType, primaryDataSheet, yAxisLabelText, filterChangeFunction} = vizSettings;
 		this.id = id;
 		this.primaryDataSheet = primaryDataSheet;
 		this.yScaleType = yScaleType;
 		this.yAxisLabelText = yAxisLabelText;
+		this.filterChangeFunction = filterChangeFunction;
 
 		this.svg = d3.select(id).append("svg").attr("class", "bar-chart");
 
@@ -34,19 +35,14 @@ export class BarChart {
 
 		this.currXVar = xVars[0];
 		this.currXVarName = xVars[0].variable;
-
-		this.currSelected = "1999";
 	}
 
-	render(primaryData, secondaryData) {
+	render(data) {
 		this.data = d3.nest()
 			.key((d) => {return d[this.currXVarName];})
 	        .sortKeys(d3.ascending)
 	        .rollup(function(leaves) { return leaves.length; })
-	        .entries(primaryData);
-
-
-	    this.setCurrSelectedIndex();
+	        .entries(data[this.primaryDataSheet]);
 	    
 		this.setXYScaleDomains();
 
@@ -83,6 +79,8 @@ export class BarChart {
 	      .data(this.data)
 	    .enter().append("rect");
 
+	    this.setCurrSelected("1996");
+
 	    this.bars
 	      .attr("class", "bar")
 	      .attr("x", (d) => { return this.xScale(d.key); })
@@ -113,11 +111,11 @@ export class BarChart {
 	}
 
 	renderSlider() {
-		let slider = this.renderingArea.append("g")
+		this.slider = this.renderingArea.append("g")
 		    .attr("class", "slider")
 		    .attr("transform", "translate(0," + this.h + ")")
 
-		slider.append("line")
+		this.sliderLine = this.slider.append("line")
 		    .attr("class", "track")
 		    .attr("x1", this.xScale.range()[0])
 		    .attr("x2", this.xScale.range()[1])
@@ -127,29 +125,25 @@ export class BarChart {
 		    .attr("class", "track-overlay")
 		    .attr("pointer-events", "stroke");
 
-		let handle = slider.insert("rect", ".track-overlay")
+		this.handle = this.slider.insert("rect", ".track-overlay")
 		    .attr("width", this.xScale.bandwidth())
 			.attr("height", 10)
 			.attr("fill", "green")
 			.attr("y", -5)
 			.attr("x", this.xScale(this.currSelected))
 			.call(d3.drag()
-		        .on("start.interrupt", function() { slider.interrupt(); })
+		        .on("start.interrupt", () => { this.slider.interrupt(); })
 		        .on("start drag", () => {
 					var index = Math.floor(d3.event.x / this.xScale.step());
-					console.log(index);
-					console.log(this.xScale.domain().length);
 					if (index >= this.xScale.domain().length) {
 						index = this.xScale.domain().length - 1;
 					} else if (index < 0) {
 						index = 0;
 					}
 					var val = this.xScale.domain()[index];
-					console.log(d3.event.x);
-					console.log(val);
-		        	handle.attr("x", this.xScale(val));
-		        	this.currSelected = val;
-		        	this.updateCurrSelected();
+		        	this.handle.attr("x", this.xScale(val));
+		        	this.setCurrSelected(val);
+		        	this.filterChangeFunction(val);
 		        }));;
 
 		
@@ -181,22 +175,31 @@ export class BarChart {
 			.attr("width", this.xScale.bandwidth())
 			.attr("y", (d) => { return this.yScale(d.value); })
 			.attr("height", (d) => { return this.h - this.yScale(d.value); });
+
+		this.slider
+			.attr("transform", "translate(0," + this.h + ")");
+
+		this.sliderLine
+			.attr("x1", this.xScale.range()[0])
+		    .attr("x2", this.xScale.range()[1]);
+
+		this.handle
+			.attr("width", this.xScale.bandwidth())
+			.attr("x", this.xScale(this.currSelected));
 	}
 
-	setCurrSelectedIndex() {
+	setCurrSelected(value) {
+		this.currSelected = value;
 		let i = 0;
 		for (let d of this.data) {
-	    	if (d.key == this.currSelected) {
+	    	if (d.key == value) {
 	    		this.currSelectedIndex = i;
 	    		break;
 	    	}
 	    	i++;
 	    }
-	}
 
-	updateCurrSelected() {
-		this.setCurrSelectedIndex();
-		this.bars
+	    this.bars
 			.attr("fill", (d, i) => { return this.setBarColor(i); });
 	}
 }

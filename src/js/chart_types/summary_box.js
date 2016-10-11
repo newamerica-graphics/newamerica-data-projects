@@ -99,10 +99,10 @@ export class SummaryBox extends Chart {
 			.text(" = U.S. Average");
 	}
 
-	render(primaryData, secondaryData) {
-		this.data = primaryData;
-		let datapoint = primaryData.filter( (d) => { return d[this.titleVar.variable] == this.titleVarValue })[0];
-		let natl_average = primaryData.filter( (d) => { return d[this.titleVar.variable] == "United States" })[0];
+	render(data) {
+		this.data = data[this.primaryDataSheet];
+		let datapoint = this.data.filter( (d) => { return d[this.titleVar.variable] == this.titleVarValue })[0];
+		let natl_average = this.data.filter( (d) => { return d[this.titleVar.variable] == "United States" })[0];
 
 
 
