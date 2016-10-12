@@ -4,7 +4,8 @@ export var colors = {
 	"red": { "light": "#E75C64", "medium": "#A64046","dark": "#692025"},
 	"purple": { "light": "#A076AC", "medium": "#74557E","dark": "#48304F"},
 	"grey": { "light": "#EAEAEB", "medium_light":"#CBCBCD" ,"medium": "#ABACAE","dark": "#2C2F35"},
-	"white": "#FFFFFF"
+	"white": "#FFFFFF",
+	"black": "#2c2f35"
 }
 
 export function getDefaultColor(code) {

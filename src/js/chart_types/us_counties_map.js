@@ -144,8 +144,8 @@ export class UsCountiesMap extends Chart {
 	      .data(this.usCountiesTopoJson)
 	    .enter().append("path")
 	      .attr("fill", (d) => { return d.data ? this.setFill(d.data) : "#fff"; })
-	      .attr("stroke", colors.grey.medium)
-	      .attr("stroke-width", 1)
+	      .attr("stroke", colors.grey.dark)
+	      .attr("stroke-width", .3)
 	      .attr("d", this.pathGenerator);
 
 		// this.svg.append("path")
@@ -180,22 +180,36 @@ export class UsCountiesMap extends Chart {
 	}
 
   setFill(data) {
+    // let fips = data.fips;
+    // let currYearEvents = this.secondaryDataByYear.get(this.currYear);
+
+    // let colors = ["#2EBCB3","#1A8A84","#005753","#5BA4DA","#4378A0","#234A67","#A076AC","#74557E","#48304F","#EAEAEB","#CBCBCD","#ABACAE","#2C2F35"];
+    // let i = 0;
+    // for (let yearEvent of currYearEvents) {
+    //   let fipsArray = yearEvent.county_fips.split(", ");
+
+    //   if (fipsArray.indexOf(fips) >= 0) {
+    //     return colors[i];
+    //   }
+    //   i++;
+    // }
+
     // if (this.currYear == minYear) {
     //   if (data[this.currYear] != 0) {
-    //     return "black";
+    //     return colors.black;
     //   } else {
     //     return this.colorScale(data[this.currYear]);
     //   }
     // } else {
     //   if (data[this.currYear] != data[String(Number(this.currYear)-1)]) {
-    //     return "black";
+    //     return colors.black;
     //   } else {
         return this.colorScale(data[this.currYear]);
     //   }
     // }
   }
 
-
+  
 	changeVariableValsShown(valsShown) {
 		this.paths
 			.style("fill", (d) => {
