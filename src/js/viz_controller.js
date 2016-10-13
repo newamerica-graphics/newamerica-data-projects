@@ -19,6 +19,9 @@ import { LineChart } from "./chart_types/line_chart.js";
 import { SummaryBox } from "./chart_types/summary_box.js";
 import { PieChart } from "./chart_types/pie_chart.js";
 
+import { formatValue } from "./helper_functions/format_value.js";
+
+
 export function setupProject(projectSettings) {
 	let { vizSettingsList, imageFolderId, dataSheetNames } = projectSettings;
 
@@ -144,26 +147,20 @@ export function setupProject(projectSettings) {
 		let dataSheet = $inDepthProfile.attr("data-sheet-name");
 		let lookupField = $inDepthProfile.attr("data-lookup-field");
 		let lookupValue = window.location.search.replace("?", "").replace("/", "").toLowerCase();
+
 		let displayField, fieldFormat, value;
 
-		console.log(dataSheet, lookupField, lookupValue);
 		$(".data-reference__value").each(function(i, item) {
 			displayField = $(item).attr("data-field-name");
 			fieldFormat = $(item).attr("data-field-format");
-			console.log(item);
 
 			for (let d of data[dataSheet]) {
-				console.log(d[lookupField]);
-
 				if (d[lookupField].toLowerCase().replace(" ", "_") == lookupValue) {
-					console.log("match!");
-					$(item).text(d[displayField]);
+					let value = formatValue(d[displayField], fieldFormat);
+					$(item).text(value);
 					break;
 				}
 			}
-
-			value = data[dataSheet];
-			// console.log(value);
 		})
 	}
 }
