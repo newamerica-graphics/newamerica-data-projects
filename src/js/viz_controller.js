@@ -19,6 +19,9 @@ import { LineChart } from "./chart_types/line_chart.js";
 import { SummaryBox } from "./chart_types/summary_box.js";
 import { PieChart } from "./chart_types/pie_chart.js";
 
+import { formatValue } from "./helper_functions/format_value.js";
+
+
 export function setupProject(projectSettings) {
 	let { vizSettingsList, imageFolderId, dataSheetNames } = projectSettings;
 
@@ -97,6 +100,7 @@ export function setupProject(projectSettings) {
 				viz.render(data);
 			}
 			setDownloadLinks(d);
+			setProfileValues(d);
 		});
 
 	}
@@ -136,5 +140,27 @@ export function setupProject(projectSettings) {
 		var jsonDataUrlString = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataJson));
 
 		$("#in-depth__download__json").attr("href", jsonDataUrlString);
+	}
+
+	function setProfileValues(data) {
+		let $inDepthProfile = $(".in-depth__profile");
+		let dataSheet = $inDepthProfile.attr("data-sheet-name");
+		let lookupField = $inDepthProfile.attr("data-lookup-field");
+		let lookupValue = window.location.search.replace("?", "").replace("/", "").toLowerCase();
+
+		let displayField, fieldFormat, value;
+
+		$(".data-reference__value").each(function(i, item) {
+			displayField = $(item).attr("data-field-name");
+			fieldFormat = $(item).attr("data-field-format");
+
+			for (let d of data[dataSheet]) {
+				if (d[lookupField].toLowerCase().replace(" ", "_") == lookupValue) {
+					let value = formatValue(d[displayField], fieldFormat);
+					$(item).text(value);
+					break;
+				}
+			}
+		})
 	}
 }
