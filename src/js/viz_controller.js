@@ -97,6 +97,7 @@ export function setupProject(projectSettings) {
 				viz.render(data);
 			}
 			setDownloadLinks(d);
+			setProfileValues(d);
 		});
 
 	}
@@ -136,5 +137,33 @@ export function setupProject(projectSettings) {
 		var jsonDataUrlString = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataJson));
 
 		$("#in-depth__download__json").attr("href", jsonDataUrlString);
+	}
+
+	function setProfileValues(data) {
+		let $inDepthProfile = $(".in-depth__profile");
+		let dataSheet = $inDepthProfile.attr("data-sheet-name");
+		let lookupField = $inDepthProfile.attr("data-lookup-field");
+		let lookupValue = window.location.search.replace("?", "").replace("/", "").toLowerCase();
+		let displayField, fieldFormat, value;
+
+		console.log(dataSheet, lookupField, lookupValue);
+		$(".data-reference__value").each(function(i, item) {
+			displayField = $(item).attr("data-field-name");
+			fieldFormat = $(item).attr("data-field-format");
+			console.log(item);
+
+			for (let d of data[dataSheet]) {
+				console.log(d[lookupField]);
+
+				if (d[lookupField].toLowerCase().replace(" ", "_") == lookupValue) {
+					console.log("match!");
+					$(item).text(d[displayField]);
+					break;
+				}
+			}
+
+			value = data[dataSheet];
+			// console.log(value);
+		})
 	}
 }
