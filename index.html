@@ -16,7 +16,10 @@
 </style>
     </head>
     <body>
-        <div class="in-depth__profile post-body" data-sheet-name="state_data" data-lookup-field="state">
+        <select class="in-depth__profile__other-value-selector" onchange="document.location = '?' + this.value;" placeholder="Select Another Value">
+            <option value="" disabled selected>Select Another Value</option>
+        </select>
+        <div class="in-depth__profile__body post-body" data-sheet-name="state_data" data-lookup-field="state">
             <div class="block-data_reference">
                 <div class="data-reference__value" data-field-name="hhi_median" data-field-format="number"></div>
             </div>

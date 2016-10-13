@@ -143,24 +143,45 @@ export function setupProject(projectSettings) {
 	}
 
 	function setProfileValues(data) {
-		let $inDepthProfile = $(".in-depth__profile__body");
-		let dataSheet = $inDepthProfile.attr("data-sheet-name");
-		let lookupField = $inDepthProfile.attr("data-lookup-field");
-		let lookupValue = window.location.search.replace("?", "").replace("/", "").toLowerCase();
+		let $inDepthProfileBody = $(".in-depth__profile__body");
+		let dataSheet = $inDepthProfileBody.attr("data-sheet-name");
+		let lookupField = $inDepthProfileBody.attr("data-lookup-field");
+		let lookupValue = window.location.search.replace("?", "").replace("/", "").replace(/_/g, " ").toLowerCase();
 
-		let displayField, fieldFormat, value;
+		let allLookupValues = d3.nest()
+			.key((d) => { return d[lookupField].toLowerCase(); })
+			.map(data[dataSheet]);
+
+		if (!allLookupValues.get(lookupValue)) {
+			$inDepthProfileBody.empty();
+		}
+
+		let displayField, fieldFormat;
 
 		$(".data-reference__value").each(function(i, item) {
 			displayField = $(item).attr("data-field-name");
 			fieldFormat = $(item).attr("data-field-format");
-
+			let value;
 			for (let d of data[dataSheet]) {
-				if (d[lookupField].toLowerCase().replace(" ", "_") == lookupValue) {
-					let value = formatValue(d[displayField], fieldFormat);
+				if (d[lookupField].toLowerCase() == lookupValue) {
+					value = formatValue(d[displayField], fieldFormat);
 					$(item).text(value);
 					break;
 				}
 			}
 		})
+
+		setOtherValueSelectorOptions(allLookupValues.keys())
+	}
+
+	function setOtherValueSelectorOptions(otherValuesList) { 
+		let $valueSelector = $(".in-depth__profile__other-value-selector");
+		for (let item of otherValuesList) {
+			let option = $('<option/>')
+		        .addClass('in-depth__profile__other-value-selector__option')
+		        .text(item)
+		        .attr("value", item.toLowerCase().replace(/ /g, "_"))
+		        .appendTo($valueSelector);
+		}
 	}
 }
