@@ -143,7 +143,7 @@ export function setupProject(projectSettings) {
 	}
 
 	function setProfileValues(data) {
-		let $inDepthProfile = $(".in-depth__profile");
+		let $inDepthProfile = $(".in-depth__profile__body");
 		let dataSheet = $inDepthProfile.attr("data-sheet-name");
 		let lookupField = $inDepthProfile.attr("data-lookup-field");
 		let lookupValue = window.location.search.replace("?", "").replace("/", "").toLowerCase();
