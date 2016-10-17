@@ -186,8 +186,6 @@ export function setupProject(projectSettings) {
 		    .catch(function (error) {
 		        console.error('oops, something went wrong!', error);
 		    });
-
-		
 	}
 
 	
