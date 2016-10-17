@@ -3,7 +3,6 @@ import $ from 'jquery';
 import { Tooltip } from "../components/tooltip.js";
 import { Legend } from "../components/legend.js";
 import { FilterGroup } from "../components/filter_group.js";
-import { Chart } from "../layouts/chart.js"
 
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 
@@ -15,7 +14,7 @@ import * as global from "./../utilities.js";
 
 let d3 = require("d3");
 
-export class UsStatesMap extends Chart {
+export class UsStatesMap {
 	
 	constructor(vizSettings) {
 		let {id, tooltipVars, filterVars, primaryDataSheet } = vizSettings;

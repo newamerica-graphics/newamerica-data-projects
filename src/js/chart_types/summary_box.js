@@ -4,7 +4,6 @@ let d3 = require("d3");
 
 import { colors } from "../helper_functions/colors.js";
 
-import { Chart } from "../layouts/chart.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { formatValue } from "../helper_functions/format_value.js";
 
@@ -12,7 +11,7 @@ let colorScaleContainerWidth = 400;
 let colorScaleWidth = 200;
 let colorScaleMarkerSize = 8;
 
-export class SummaryBox extends Chart {
+export class SummaryBox {
 	constructor(vizSettings) {
 		let {id, vizVars, titleLabel, titleVar, titleVarValue, columns, primaryDataSheet} = vizSettings;
 

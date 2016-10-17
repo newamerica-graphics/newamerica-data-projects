@@ -2,7 +2,6 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
-import { Chart } from "../layouts/chart.js";
 import { Legend } from "../components/legend.js";
 import { DotMatrix } from "./dot_matrix.js";
 import { Tooltip } from "../components/tooltip.js";
@@ -14,7 +13,7 @@ let dotW = 10;
 let dotOffset = 3;
 let dividingLineTextOffset = 20;
 
-export class GroupedDotMatrix extends Chart {
+export class GroupedDotMatrix {
 	constructor(vizSettings, imageFolderId) {
 		let {id, groupingVars, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, distanceBetweenGroups, labelSettings, dividingLine, legendShowVals, primaryDataSheet } = vizSettings;
 
