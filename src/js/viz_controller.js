@@ -5,6 +5,7 @@ var JSZip = require("jszip");
 import $ from 'jquery';
 let d3 = require("d3");
 
+import domtoimage from 'dom-to-image';
 
 import { DotMatrix } from "./chart_types/dot_matrix.js";
 import { DotHistogram } from "./chart_types/dot_histogram.js";
@@ -89,6 +90,8 @@ export function setupProject(projectSettings) {
 
 			vizList.push(viz);
 		}
+
+		
 	}
 
 
@@ -99,8 +102,10 @@ export function setupProject(projectSettings) {
 				let data = d[viz.primaryDataSheet];
 				viz.render(data);
 			}
-			setDownloadLinks(d);
-			setProfileValues(d);
+			setDataDownloadLinks(d);
+			setChartDownloadLinks(d);
+			
+			// setProfileValues(d);
 		});
 
 	}
@@ -111,7 +116,7 @@ export function setupProject(projectSettings) {
 		}
 	}
 
-	function setDownloadLinks(data) {
+	function setDataDownloadLinks(data) {
 		let publicDataJson = {};
 		for (let sheetName of dataSheetNames) {
 			publicDataJson[sheetName] = data[sheetName];
@@ -140,6 +145,40 @@ export function setupProject(projectSettings) {
 		var jsonDataUrlString = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataJson));
 
 		$("#in-depth__download__json").attr("href", jsonDataUrlString);
+	}
+
+	function setChartDownloadLinks(data) {
+		for (let viz of vizList) {
+			let downloadLink = $(viz.id + "__download-link");
+			if (downloadLink.length) {
+				downloadLink.click(function() { downloadPng(viz) });
+			}
+			
+		}
+	}
+
+	function downloadPng(viz) {
+		// let viz = event.data.vizElement;
+		console.log("downloading" + viz.id);
+		let node = $(viz.id)[0];
+
+		$(node).css("zoom","2");
+		viz.resize();
+
+		domtoimage.toPng(node)
+		    .then((dataUrl) => {
+		    	var link = document.createElement("a");
+		        link.download = 'testchart.png';
+		        link.href = dataUrl;
+		        link.click();
+		        link.remove();
+		    })
+		    .catch(function (error) {
+		        console.error('oops, something went wrong!', error);
+		    });
+
+		$(node).css("zoom","1");
+		viz.resize();
 	}
 
 	function setProfileValues(data) {
