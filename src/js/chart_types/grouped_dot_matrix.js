@@ -17,8 +17,6 @@ export class GroupedDotMatrix {
 	constructor(vizSettings, imageFolderId) {
 		let {id, groupingVars, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, distanceBetweenGroups, labelSettings, dividingLine, legendShowVals, primaryDataSheet } = vizSettings;
 
-		super(id, false);
-
 		this.id = id;
 		this.w = $(this.id).width();
 		this.tooltipVars = tooltipVars;
@@ -103,8 +101,6 @@ export class GroupedDotMatrix {
 		if (this.dividingLine) {
 			this.addDividingLine();
 		}
-
-		super.render();
 	}
 
 	getGroupings() {

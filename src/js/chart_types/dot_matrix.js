@@ -17,8 +17,6 @@ let splitDistance = 3; //number of dots between split components
 export class DotMatrix {
 	constructor(vizSettings, imageFolderId) {
 		let {id, orientation, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, isSubComponent, tooltip, colorScale, split, primaryDataSheet} = vizSettings;
-		
-		super(id, isSubComponent);
 
 		this.id = id;
 		this.orientation = orientation;
@@ -74,7 +72,6 @@ export class DotMatrix {
 		
 		if (!this.isSubComponent) {
 			this.setLegend();
-			super.render();
 		}
 		
 	}

@@ -18,7 +18,6 @@ export class UsStatesMap {
 	
 	constructor(vizSettings) {
 		let {id, tooltipVars, filterVars, primaryDataSheet } = vizSettings;
-		super(id);
 
 		this.id = id;
 		this.filterVars = filterVars;
@@ -88,8 +87,6 @@ export class UsStatesMap {
 		this.buildGraph();
 		this.setLegend();
 		this.filterGroup ? this.setFilterGroup() : null;
-
-		super.render();
 	}
 
 	processData() {

@@ -15,7 +15,6 @@ export class SummaryBox {
 	constructor(vizSettings) {
 		let {id, vizVars, titleLabel, titleVar, titleVarValue, columns, primaryDataSheet} = vizSettings;
 
-		super(id, false);
 		this.id = id;
 		this.titleVar = titleVar;
 		this.titleVarValue = titleVarValue;
@@ -102,8 +101,6 @@ export class SummaryBox {
 		this.data = data;
 		let datapoint = data.filter( (d) => { return d[this.titleVar.variable] == this.titleVarValue })[0];
 		let natl_average = data.filter( (d) => { return d[this.titleVar.variable] == "United States" })[0];
-
-
 
 		let i = 0;
 		for (let variable of this.vizVars) {
