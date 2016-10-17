@@ -22,6 +22,8 @@ import { PieChart } from "./chart_types/pie_chart.js";
 
 import { formatValue } from "./helper_functions/format_value.js";
 
+let printWidth = 725;
+
 
 export function setupProject(projectSettings) {
 	let { vizSettingsList, imageFolderId, dataSheetNames } = projectSettings;
@@ -150,35 +152,60 @@ export function setupProject(projectSettings) {
 	function setChartDownloadLinks(data) {
 		for (let viz of vizList) {
 			let downloadLink = $(viz.id + "__download-link");
+			let printLink = $(viz.id + "__print-link");
 			if (downloadLink.length) {
-				downloadLink.click(function() { downloadPng(viz) });
+				downloadLink.click(function() { handleClickEvent(viz, "download") });
+				printLink.click(function() { handleClickEvent(viz, "print") });
 			}
 			
 		}
 	}
 
-	function downloadPng(viz) {
-		// let viz = event.data.vizElement;
-		console.log("downloading" + viz.id);
+	function handleClickEvent(viz, eventType) {
 		let node = $(viz.id)[0];
 
-		$(node).css("zoom","2");
+		let currWidth = $(node).width();
+		let currHeight = $(node).height();
+		let aspect = currHeight/currWidth; 
+		$(node).width(currWidth*2);
+		$(node).height(currHeight*2);
 		viz.resize();
 
 		domtoimage.toPng(node)
 		    .then((dataUrl) => {
-		    	var link = document.createElement("a");
-		        link.download = 'testchart.png';
-		        link.href = dataUrl;
-		        link.click();
-		        link.remove();
+		    	if (eventType == "download") {
+		    		downloadChart(dataUrl);
+		    	} else {
+		    		printChart(dataUrl, node, aspect);
+		    	}
+		    	$(node).width(currWidth);
+				$(node).height(currHeight);
+				viz.resize();
+		    	
 		    })
 		    .catch(function (error) {
 		        console.error('oops, something went wrong!', error);
 		    });
 
-		$(node).css("zoom","1");
-		viz.resize();
+		
+	}
+
+	
+
+	function downloadChart(dataUrl) {
+		var link = document.createElement("a");
+        link.download = 'testchart.png';
+        link.href = dataUrl;
+        link.click();
+        link.remove();
+	}
+
+	function printChart(dataUrl, node, aspect) {
+        let adjustedHeight = ( printWidth * aspect) + "px";
+        let popup = window.open();
+		popup.document.write("<img src=" + dataUrl + " height=" + adjustedHeight + " width=" + printWidth + "px></img>");
+		popup.focus(); //required for IE
+		popup.print();
 	}
 
 	function setProfileValues(data) {
