@@ -164,31 +164,19 @@ export function setupProject(projectSettings) {
 	function handleClickEvent(viz, eventType) {
 		let node = $(viz.id)[0];
 
-		let currWidth = $(node).width();
-		let currHeight = $(node).height();
-		let aspect = currHeight/currWidth; 
-		$(node).width(currWidth*2);
-		$(node).height(currHeight*2);
-		viz.resize();
-
 		domtoimage.toPng(node)
 		    .then((dataUrl) => {
 		    	if (eventType == "download") {
 		    		downloadChart(dataUrl);
 		    	} else {
-		    		printChart(dataUrl, node, aspect);
+		    		printChart(dataUrl, node);
 		    	}
-		    	$(node).width(currWidth);
-				$(node).height(currHeight);
-				viz.resize();
-		    	
 		    })
 		    .catch(function (error) {
 		        console.error('oops, something went wrong!', error);
 		    });
 	}
 
-	
 
 	function downloadChart(dataUrl) {
 		var link = document.createElement("a");
@@ -198,7 +186,11 @@ export function setupProject(projectSettings) {
         link.remove();
 	}
 
-	function printChart(dataUrl, node, aspect) {
+	function printChart(dataUrl, node) {
+		let currWidth = $(node).width();
+		let currHeight = $(node).height();
+		let aspect = currHeight/currWidth;
+
         let adjustedHeight = ( printWidth * aspect) + "px";
         let popup = window.open();
 		popup.document.write("<img src=" + dataUrl + " height=" + adjustedHeight + " width=" + printWidth + "px></img>");
