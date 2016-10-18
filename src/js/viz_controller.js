@@ -107,7 +107,7 @@ export function setupProject(projectSettings) {
 			setDataDownloadLinks(d);
 			setChartDownloadLinks(d);
 			
-			// setProfileValues(d);
+			setProfileValues(d);
 		});
 
 	}
