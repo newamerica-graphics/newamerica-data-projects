@@ -5,6 +5,7 @@ var JSZip = require("jszip");
 import $ from 'jquery';
 let d3 = require("d3");
 
+import domtoimage from 'dom-to-image';
 
 import { DotMatrix } from "./chart_types/dot_matrix.js";
 import { DotHistogram } from "./chart_types/dot_histogram.js";
@@ -20,6 +21,8 @@ import { SummaryBox } from "./chart_types/summary_box.js";
 import { PieChart } from "./chart_types/pie_chart.js";
 
 import { formatValue } from "./helper_functions/format_value.js";
+
+let printWidth = 725;
 
 
 export function setupProject(projectSettings) {
@@ -89,6 +92,8 @@ export function setupProject(projectSettings) {
 
 			vizList.push(viz);
 		}
+
+		
 	}
 
 
@@ -99,8 +104,10 @@ export function setupProject(projectSettings) {
 				let data = d[viz.primaryDataSheet];
 				viz.render(data);
 			}
-			setDownloadLinks(d);
-			setProfileValues(d);
+			setDataDownloadLinks(d);
+			setChartDownloadLinks(d);
+			
+			// setProfileValues(d);
 		});
 
 	}
@@ -111,7 +118,7 @@ export function setupProject(projectSettings) {
 		}
 	}
 
-	function setDownloadLinks(data) {
+	function setDataDownloadLinks(data) {
 		let publicDataJson = {};
 		for (let sheetName of dataSheetNames) {
 			publicDataJson[sheetName] = data[sheetName];
@@ -140,6 +147,55 @@ export function setupProject(projectSettings) {
 		var jsonDataUrlString = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataJson));
 
 		$("#in-depth__download__json").attr("href", jsonDataUrlString);
+	}
+
+	function setChartDownloadLinks(data) {
+		for (let viz of vizList) {
+			let downloadLink = $(viz.id + "__download-link");
+			let printLink = $(viz.id + "__print-link");
+			if (downloadLink.length) {
+				downloadLink.click(function() { handleClickEvent(viz, "download") });
+				printLink.click(function() { handleClickEvent(viz, "print") });
+			}
+			
+		}
+	}
+
+	function handleClickEvent(viz, eventType) {
+		let node = $(viz.id)[0];
+
+		domtoimage.toPng(node)
+		    .then((dataUrl) => {
+		    	if (eventType == "download") {
+		    		downloadChart(dataUrl);
+		    	} else {
+		    		printChart(dataUrl, node);
+		    	}
+		    })
+		    .catch(function (error) {
+		        console.error('oops, something went wrong!', error);
+		    });
+	}
+
+
+	function downloadChart(dataUrl) {
+		var link = document.createElement("a");
+        link.download = 'testchart.png';
+        link.href = dataUrl;
+        link.click();
+        link.remove();
+	}
+
+	function printChart(dataUrl, node) {
+		let currWidth = $(node).width();
+		let currHeight = $(node).height();
+		let aspect = currHeight/currWidth;
+
+        let adjustedHeight = ( printWidth * aspect) + "px";
+        let popup = window.open();
+		popup.document.write("<img src=" + dataUrl + " height=" + adjustedHeight + " width=" + printWidth + "px></img>");
+		popup.focus(); //required for IE
+		popup.print();
 	}
 
 	function setProfileValues(data) {
