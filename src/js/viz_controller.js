@@ -167,7 +167,7 @@ export function setupProject(projectSettings) {
 		domtoimage.toPng(node)
 		    .then((dataUrl) => {
 		    	if (eventType == "download") {
-		    		downloadChart(dataUrl);
+		    		downloadChart(dataUrl, viz.id);
 		    	} else {
 		    		printChart(dataUrl, node);
 		    	}
@@ -178,9 +178,10 @@ export function setupProject(projectSettings) {
 	}
 
 
-	function downloadChart(dataUrl) {
-		var link = document.createElement("a");
-        link.download = 'testchart.png';
+	function downloadChart(dataUrl, id) {
+		let trimmedId = id.replace("#", "");
+		let link = document.createElement("a");
+        link.download = trimmedId + '.png';
         link.href = dataUrl;
         link.click();
         link.remove();
