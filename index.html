@@ -16,33 +16,17 @@
 </style>
     </head>
     <body>
-        <div class="block-dataviz">
-          <div class="dataviz">
-            <!-- <a id="in-depth__download__json" download="data.json">Download JSON</a>
-            <a id="in-depth__download__csv" download="data.zip">Download CSV</a>
-            <a class="dataviz__download-link" id="care-index__explore-the-index__download-link">{% include 'ui_elements/svg/download.html' %}</a> -->
-            <!-- <div class="dataviz__chart-area" id="care-index__explore-the-index"></div> -->
-            <!-- <div class="dataviz__chart-area" id="care-index__explore-the-index__availability"></div>
-            <div class="dataviz__chart-area" id="care-index__child-care-accredidation"></div>
-            <div class="dataviz__chart-area" id="care-index__summary-box__new-mexico"></div>
-            <div class="dataviz__chart-area" id="care-index__summary-box__georgia"></div>
-            <div class="dataviz__chart-area" id="care-index__summary-box__illinois"></div>
-            <div class="dataviz__chart-area" id="care-index__summary-box__massachusetts"></div> -->
-            <div class="dataviz__chart-area" id="care-index__who-pays-for-care"></div>
-            
-            <div class="dataviz__chart-area" id="homegrown__deadly-attacks"></div>
-            <div class="dataviz__chart-area" id="homegrown__fact-box__prevention-method"></div>
-            <div class="dataviz__chart-area" id="homegrown__fact-box__method-of-radicalization"></div>
-            <div class="dataviz__chart-area" id="homegrown__outcome-for-extremist"></div>
-            <div class="dataviz__chart-area" id="homegrown__awlaki-over-time"></div>
-            <div class="dataviz__chart-area" id="homegrown__citizenship-status"></div>
-            <div class="dataviz__chart-area" id="homegrown__age-of-extremists"></div>
-            <div class="dataviz__chart-area" id="homegrown__gender-of-extremists"></div>
-            <div class="dataviz__chart-area" id="homegrown__extremist-data-table"></div>
-            <div class="dataviz__chart-area" id="homegrown__fact-box__association-with-awlaki"></div>
-            <div class="dataviz__chart-area" id="homegrown__fact-box__gender-of-extremists"></div>
-          </div>
-        </div>
-        <script type="text/javascript" src="build/care_index.js"></script>
+        <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+
+        <div id="map" style="height:700px"></div>
+
+        <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+        <script>
+        var url = "https://jackson.carto.com/api/v2/viz/edf83036-8fea-11e6-8a5c-0e05a8b3e3d7/viz.json";
+
+        cartodb.createVis('map', url)
+            .done(function(vis, layers) {
+            });
+        </script>
     </body>
 </html>
