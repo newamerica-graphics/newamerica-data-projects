@@ -5,7 +5,7 @@ import { colors } from "../../helper_functions/colors.js";
 
 let variables = {
 	year: {"variable":"year", "displayName":"Year", "format":"year"},
-
+	event_category: {"variable":"event_category", "displayName":"Event Category", "format":"string", "scaleType":"categorical", "customDomain":["Drought", "Wildfire", "Flooding", "Freeze", "Winter Storm", "Severe Storm", "Tropical Cyclone"], "customRange":[colors.red.light, colors.red.medium, colors.blue.light, colors.blue.medium, colors.blue.dark, colors.purple.light, colors.turquoise.light]},
 }
 
 let vizSettingsList = [
@@ -43,6 +43,7 @@ let vizSettingsList = [
 				vizType: "us_counties_map",
 				primaryDataSheet: "county_by_year",
 				secondaryDataSheet: "events",
+				filterVars: [variables.event_category]
 			}
 		]
 	},

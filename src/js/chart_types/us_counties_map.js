@@ -40,13 +40,15 @@ export class UsCountiesMap extends Chart {
 			.attr("class", "us-states-svg");
 
 		// this.tooltip = new Tooltip(id, tooltipVars, null, null);
-		// let legendSettings = {};
-		// legendSettings.id = id;
-		// legendSettings.showTitle = true;
-		// legendSettings.markerSettings = { shape:"circle", size:10 };
-		// legendSettings.orientation = "vertical-right";
+		let legendSettings = {};
+		legendSettings.id = id;
+		legendSettings.showTitle = true;
+		legendSettings.markerSettings = { shape:"circle", size:10 };
+		legendSettings.orientation = "vertical-right";
 
-		// this.legend = new Legend(legendSettings);
+		this.legend = new Legend(legendSettings);
+
+		this.currFilterVar = filterVars[0];
 
 		this.setDimensions();
 		this.currYear = "1996";
@@ -65,9 +67,9 @@ export class UsCountiesMap extends Chart {
 			translateX -= global.legendWidth/2;
 			this.h = this.w/2;
 			scalingFactor = this.w;
-			// this.legend.setOrientation("vertical-right");
+			this.legend.setOrientation("vertical-right");
 		} else {
-			// this.legend.setOrientation("horizontal-left");
+			this.legend.setOrientation("horizontal-left");
 		}
 
 		this.svg
@@ -86,19 +88,16 @@ export class UsCountiesMap extends Chart {
 
 	render(data) {	
 		this.data = data[this.primaryDataSheet];
-    this.secondaryDataByYear = d3.nest()
-      .key((d) => {return d["year"];})
-      .map(data[this.secondaryDataSheet]);
-
-    console.log(this.secondaryDataByYear);
+		this.secondaryData = data[this.secondaryDataSheet];
+	    this.secondaryDataByYear = d3.nest()
+	      .key((d) => {return d["year"];})
+	      .map(data[this.secondaryDataSheet]);
 
 		this.usCountiesTopoJson = topojson.feature(usGeom, usGeom.objects.counties).features;
-
 		this.bindDataToGeom();
 		this.setScale();
 		this.buildGraph();
-
-		super.render();
+		this.setLegend();
 	}
 
 	processData() {
@@ -121,6 +120,13 @@ export class UsCountiesMap extends Chart {
 		colorScaleSettings.customRange = [colors.white, colors.red.light];
 
 		this.colorScale = getColorScale(this.data, colorScaleSettings);
+
+	    this.eventColorScale = getColorScale(this.secondaryData, this.currFilterVar);
+	    this.valsShown = [];
+	    for (let i = 0; i < this.eventColorScale.domain().length; i++) {
+	    	this.valsShown.push(i);
+	    }
+	   
 	}
 
 
@@ -154,20 +160,20 @@ export class UsCountiesMap extends Chart {
 		// 	.attr("d", this.pathGenerator);
 	}
 
-  changeFilter(value) {
-    this.currYear = value;
-
-    this.paths
-      .attr("fill", (d) => { return d.data ? this.setFill(d.data) : "#fff"; })
-  }
+	changeFilter(value) {
+	    this.currYear = value;
+	    this.changeVariableValsShown(this.valsShown);
+	    // this.paths
+	    //   .attr("fill", (d) => { return d.data ? this.setFill(d.data) : "#fff"; });
+	}
 
 	setLegend() {
 		let legendSettings = {};
 
-		legendSettings.title = this.filterVars[this.currFilterIndex].displayName;
-		legendSettings.format = this.filterVars[this.currFilterIndex].format;
-		legendSettings.scaleType = this.filterVars[this.currFilterIndex].scaleType;
-		legendSettings.colorScale = this.colorScale;
+		legendSettings.title = this.currFilterVar.displayName;
+		legendSettings.format = this.currFilterVar.format;
+		legendSettings.scaleType = this.currFilterVar.scaleType;
+		legendSettings.colorScale = this.eventColorScale;
 		legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
 
 		this.legend.render(legendSettings);
@@ -179,49 +185,32 @@ export class UsCountiesMap extends Chart {
 		this.paths.attr("d", this.pathGenerator);
 	}
 
-  setFill(data) {
-    // let fips = data.fips;
-    // let currYearEvents = this.secondaryDataByYear.get(this.currYear);
+	setFill(data) {
+	    let fips = data.fips;
+	    let currYearEvents = this.secondaryDataByYear.get(this.currYear);
 
-    // let colors = ["#2EBCB3","#1A8A84","#005753","#5BA4DA","#4378A0","#234A67","#A076AC","#74557E","#48304F","#EAEAEB","#CBCBCD","#ABACAE","#2C2F35"];
-    // let i = 0;
-    // for (let yearEvent of currYearEvents) {
-    //   let fipsArray = yearEvent.county_fips.split(", ");
+	    for (let yearEvent of currYearEvents) {
+	      let fipsArray = yearEvent.county_fips.split(", ");
+	      if (fipsArray.indexOf(fips) >= 0) {
+	      	let binIndex = this.eventColorScale.domain().indexOf(yearEvent.event_category);
+			if (this.valsShown.indexOf(binIndex) > -1) {
+	        	return this.eventColorScale(yearEvent.event_category);
+	        }
+	      }
+	    }
+	    return "#fff";
 
-    //   if (fipsArray.indexOf(fips) >= 0) {
-    //     return colors[i];
-    //   }
-    //   i++;
-    // }
+	    // to show cumulative values
+	    // return this.colorScale(data[this.currYear]);
 
-    // if (this.currYear == minYear) {
-    //   if (data[this.currYear] != 0) {
-    //     return colors.black;
-    //   } else {
-    //     return this.colorScale(data[this.currYear]);
-    //   }
-    // } else {
-    //   if (data[this.currYear] != data[String(Number(this.currYear)-1)]) {
-    //     return colors.black;
-    //   } else {
-        return this.colorScale(data[this.currYear]);
-    //   }
-    // }
-  }
+	}
 
   
 	changeVariableValsShown(valsShown) {
+		console.log(valsShown);
+		this.valsShown = valsShown;
 		this.paths
-			.style("fill", (d) => {
-		   		var value = d.properties[this.currFilterVar];
-		   		if (value) {
-		   			let binIndex = this.colorScale.range().indexOf(this.colorScale(value));
-		   			if (valsShown.indexOf(binIndex) > -1) {
-		   				return this.colorScale(value);
-		   			}
-		   		}
-		   		return "#ccc";
-		    });
+			.style("fill", (d) => { return d.data ? this.setFill(d.data) : "#fff"; });
 	}
 
 	mouseover(datum, path, eventObject) {

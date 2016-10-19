@@ -41,7 +41,6 @@ export function getColorScale(data, filterVar) {
 
 		// if both are not custom, get unique values
 		let uniqueVals = !(filterVar.customDomain && filterVar.customRange) ? getUniqueVals(data, filterVar) : null;
-
 		let domain = setCategoricalDomain(filterVar, uniqueVals);
 		let range = setCategoricalRange(filterVar, uniqueVals);
 		scale.domain(domain);

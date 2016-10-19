@@ -127,10 +127,11 @@ export class BarChart {
 
 		this.handle = this.slider.insert("rect", ".track-overlay")
 		    .attr("width", this.xScale.bandwidth())
-			.attr("height", 10)
+			.attr("height", 20)
 			.attr("fill", "green")
-			.attr("y", -5)
+			.attr("y", -10)
 			.attr("x", this.xScale(this.currSelected))
+			.style("cursor", "pointer")
 			.call(d3.drag()
 		        .on("start.interrupt", () => { this.slider.interrupt(); })
 		        .on("start drag", () => {
