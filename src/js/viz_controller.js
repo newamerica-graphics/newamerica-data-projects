@@ -105,7 +105,6 @@ export function setupProject(projectSettings) {
 				viz.render(data);
 			}
 			setDataDownloadLinks(d);
-			setChartDownloadLinks(d);
 			
 			setProfileValues(d);
 		});
@@ -147,56 +146,6 @@ export function setupProject(projectSettings) {
 		var jsonDataUrlString = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataJson));
 
 		$("#in-depth__download__json").attr("href", jsonDataUrlString);
-	}
-
-	function setChartDownloadLinks(data) {
-		for (let viz of vizList) {
-			let downloadLink = $(viz.id + "__download-link");
-			let printLink = $(viz.id + "__print-link");
-			if (downloadLink.length) {
-				downloadLink.click(function() { handleClickEvent(viz, "download") });
-				printLink.click(function() { handleClickEvent(viz, "print") });
-			}
-			
-		}
-	}
-
-	function handleClickEvent(viz, eventType) {
-		let node = $(viz.id)[0];
-
-		domtoimage.toPng(node)
-		    .then((dataUrl) => {
-		    	if (eventType == "download") {
-		    		downloadChart(dataUrl, viz.id);
-		    	} else {
-		    		printChart(dataUrl, node);
-		    	}
-		    })
-		    .catch(function (error) {
-		        console.error('oops, something went wrong!', error);
-		    });
-	}
-
-
-	function downloadChart(dataUrl, id) {
-		let trimmedId = id.replace("#", "");
-		let link = document.createElement("a");
-        link.download = trimmedId + '.png';
-        link.href = dataUrl;
-        link.click();
-        link.remove();
-	}
-
-	function printChart(dataUrl, node) {
-		let currWidth = $(node).width();
-		let currHeight = $(node).height();
-		let aspect = currHeight/currWidth;
-
-        let adjustedHeight = ( printWidth * aspect) + "px";
-        let popup = window.open();
-		popup.document.write("<img src=" + dataUrl + " height=" + adjustedHeight + " width=" + printWidth + "px></img>");
-		popup.focus(); //required for IE
-		popup.print();
 	}
 
 	function setProfileValues(data) {
