@@ -11,6 +11,7 @@ let variables = {
 	end_date: {"variable":"end_date", "displayName":"End Date", "format":"string"},
 	states: {"variable":"states", "displayName":"States Affected", "format":"string"},
 	info_link: {"variable":"info_link", "displayName":"Info Link", "format":"string"},
+	cpi_adjusted_cost: {"variable":"cpi_adjusted_cost", "displayName":"CPI Adjusted Cost (Billions)", "format":"string"},
 }
 
 let vizSettingsList = [
@@ -49,7 +50,7 @@ let vizSettingsList = [
 				primaryDataSheet: "county_by_year",
 				secondaryDataSheet: "events",
 				filterVars: [variables.event_category],
-				tooltipVars: [variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.states ],
+				tooltipVars: [variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.cpi_adjusted_cost, variables.states ],
 			}
 		]
 	},
