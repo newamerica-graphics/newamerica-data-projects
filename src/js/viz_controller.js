@@ -22,9 +22,6 @@ import { PieChart } from "./chart_types/pie_chart.js";
 
 import { formatValue } from "./helper_functions/format_value.js";
 
-let printWidth = 725;
-
-
 export function setupProject(projectSettings) {
 	let { vizSettingsList, imageFolderId, dataSheetNames } = projectSettings;
 
