@@ -6,6 +6,11 @@ import { colors } from "../../helper_functions/colors.js";
 let variables = {
 	year: {"variable":"year", "displayName":"Year", "format":"year"},
 	event_category: {"variable":"event_category", "displayName":"Event Category", "format":"string", "scaleType":"categorical", "customDomain":["Drought", "Wildfire", "Flooding", "Freeze", "Winter Storm", "Severe Storm", "Tropical Cyclone"], "customRange":[colors.red.light, colors.red.medium, colors.blue.light, colors.blue.medium, colors.blue.dark, colors.purple.light, colors.turquoise.light]},
+	event_name: {"variable":"event_name", "displayName":"Event Name", "format":"string"},
+	begin_date: {"variable":"begin_date", "displayName":"Begin Date", "format":"string"},
+	end_date: {"variable":"end_date", "displayName":"End Date", "format":"string"},
+	states: {"variable":"states", "displayName":"States Affected", "format":"string"},
+	info_link: {"variable":"info_link", "displayName":"Info Link", "format":"string"},
 }
 
 let vizSettingsList = [
@@ -43,7 +48,8 @@ let vizSettingsList = [
 				vizType: "us_counties_map",
 				primaryDataSheet: "county_by_year",
 				secondaryDataSheet: "events",
-				filterVars: [variables.event_category]
+				filterVars: [variables.event_category],
+				tooltipVars: [variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.states ],
 			}
 		]
 	},

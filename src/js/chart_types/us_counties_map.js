@@ -39,7 +39,7 @@ export class UsCountiesMap extends Chart {
 			.append("svg")
 			.attr("class", "us-states-svg");
 
-		// this.tooltip = new Tooltip(id, tooltipVars, null, null);
+		this.tooltip = new Tooltip(id, tooltipVars, null, null, false);
 		let legendSettings = {};
 		legendSettings.id = id;
 		legendSettings.showTitle = true;
@@ -152,7 +152,9 @@ export class UsCountiesMap extends Chart {
 	      .attr("fill", (d) => { return d.data ? this.setFill(d.data) : "#fff"; })
 	      .attr("stroke", colors.grey.dark)
 	      .attr("stroke-width", .3)
-	      .attr("d", this.pathGenerator);
+	      .attr("d", this.pathGenerator)
+	      .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event); })
+		  .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); });
 
 		// this.svg.append("path")
 		// 	.datum(topojson.mesh(usGeom, usGeom.objects.states, function(a, b) { return a !== b; }))
@@ -214,17 +216,33 @@ export class UsCountiesMap extends Chart {
 	}
 
 	mouseover(datum, path, eventObject) {
-		d3.select(path).style("stroke-width", "3");
-		
+		d3.select(path).style("stroke-width", "2");
+
+		console.log(datum);
+
 		let mousePos = [];
 		mousePos[0] = eventObject.pageX;
 		mousePos[1] = eventObject.pageY;
-		this.tooltip.show(datum.properties, mousePos);
+
+		let currYearEvents = this.secondaryDataByYear.get(this.currYear);
+
+	    for (let yearEvent of currYearEvents) {
+	      let fipsArray = yearEvent.county_fips.split(", ");
+	      if (fipsArray.indexOf(String(this.zeroPad(datum.id, 5))) >= 0) {
+	      	this.tooltip.show(yearEvent, mousePos);
+	      }
+	    }
 	}
 
 	mouseout(path) {
-		d3.select(path).style("stroke-width", "1");
+		d3.select(path).style("stroke-width", ".3");
 	    this.tooltip.hide();
+	}
+
+	zeroPad(n, digits, z) {
+	  z = z || '0';
+	  n = n + '';
+	  return n.length >= digits ? n : new Array(digits - n.length + 1).join(z) + n;
 	}
 			
 }
