@@ -13,6 +13,10 @@ let labelTextSize = 10;
 let dotW = 10;
 let dotOffset = 3;
 let dividingLineTextOffset = 20;
+let margin = {
+	left:20,
+	right:20,
+}
 
 export class GroupedDotMatrix extends Chart {
 	constructor(vizSettings, imageFolderId) {
@@ -66,7 +70,7 @@ export class GroupedDotMatrix extends Chart {
 		this.getGroupings();
 		this.setScale();
 
-		let w = this.fullGroupingWidth * this.numGroupings;
+		let w = this.fullGroupingWidth * this.numGroupings + margin.left + margin.right;
 
 		w += this.dividingLine ? this.distanceBetweenGroups : 0;
 		this.svg.attr("width", w);
@@ -84,6 +88,7 @@ export class GroupedDotMatrix extends Chart {
 		vizSettings.isSubComponent = true;
 		vizSettings.tooltip = this.tooltip;
 		vizSettings.colorScale = this.colorScale;
+		vizSettings.primaryDataSheet = this.primaryDataSheet;
 
 		for (let i = 0; i < this.numGroupings; i++) {
 
@@ -99,7 +104,6 @@ export class GroupedDotMatrix extends Chart {
 		this.setContainerTransforms();
 		this.appendLabels();
 		this.setLegend();
-
 		
 		if (this.dividingLine) {
 			this.addDividingLine();
@@ -113,6 +117,8 @@ export class GroupedDotMatrix extends Chart {
 			.key((d) => { return d[this.currGroupingVar] ? Number(d[this.currGroupingVar]) : -1; })
 			.sortKeys(d3.ascending)
 			.entries(this.data);
+
+		console.log(this.groupings);
 
 		// removes values associated with -1 key (null values)
 		this.groupings[0].key == "-1" ? this.groupings.shift() : null;
@@ -148,19 +154,19 @@ export class GroupedDotMatrix extends Chart {
 
 		for (let i = 0; i < this.numGroupings; i = i + this.labelSettings.interval) {
 			let elem = labelWrapper.append("g")
-				.attr("transform", "translate(" + this.calcTransformX(i) + ")");
+				.attr("transform", "translate(" + (this.calcTransformX(i) + dotW/2) + ")");
 
 			elem.append("text")
 				.text(this.groupings[i].key)
 				.attr("class", "label__title")
-				.attr("text-anchor", "left");
+				.attr("text-anchor", "middle");
 
 			if (this.labelSettings.showNumVals) {
 				elem.append("text")
 					.text(this.groupings[i].values.length)
 					.attr("y", labelTextSize + labelOffset)
 					.attr("class", "label__value")
-					.attr("text-anchor", "left");
+					.attr("text-anchor", "middle");
 			}
 
 			this.labelContainers[i] = elem;
@@ -250,7 +256,7 @@ export class GroupedDotMatrix extends Chart {
 			transform = transform + this.distanceBetweenGroups;
 		}
 
-		return transform;
+		return transform + margin.left;
 	}
 
 	calcTransformY(i) {

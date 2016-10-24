@@ -11,7 +11,7 @@ let variables = {
 	end_date: {"variable":"end_date", "displayName":"End Date", "format":"string"},
 	states: {"variable":"states", "displayName":"States Affected", "format":"string"},
 	info_link: {"variable":"info_link", "displayName":"Info Link", "format":"string"},
-	cpi_adjusted_cost: {"variable":"cpi_adjusted_cost", "displayName":"CPI Adjusted Cost (Billions)", "format":"string"},
+	cpi_adjusted_cost: {"variable":"cpi_adjusted_cost", "displayName":"CPI Adjusted Cost (Billions)", "format":"string", "scaleType":"linear"},
 }
 
 let vizSettingsList = [
@@ -34,26 +34,36 @@ let vizSettingsList = [
 	// 	// tooltipVars: [ variables.state, variables.availability_total_norm]
 	// },
 	{
-		id: "#extreme-weather__county-by-year", 
-		vizType: "dashboard",
-		chartSettingsList: [
-			{
-				vizType: "bar_chart",
-				isMessagePasser: true,
-				primaryDataSheet: "events",
-				xVars: [ variables.year ],
-				yScaleType: "count",
-				yAxisLabelText: "Number of Disasters",
-			},
-			{
-				vizType: "us_counties_map",
-				primaryDataSheet: "county_by_year",
-				secondaryDataSheet: "events",
-				filterVars: [variables.event_category],
-				tooltipVars: [variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.cpi_adjusted_cost, variables.states ],
-			}
-		]
+		id: "#extreme-weather__events-by-year", 
+		vizType: "dot_histogram",
+		primaryDataSheet: "events",
+		groupingVars: [ variables.year ],
+		filterVars: [ variables.event_category ],
+		tooltipVars: [ variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.cpi_adjusted_cost, variables.states ],
+		labelSettings: { interval: 5 }
 	},
+	// {
+	// 	id: "#extreme-weather__county-by-year", 
+	// 	vizType: "dashboard",
+	// 	chartSettingsList: [
+	// 		{
+	// 			vizType: "dot_histogram",
+	// 			isMessagePasser: true,
+	// 			primaryDataSheet: "events",
+	// 			groupingVars: [ variables.year ],
+	// 			filterVars: [ variables.cpi_adjusted_cost ],
+	// 			tooltipVars: [ variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.cpi_adjusted_cost, variables.states ],
+	// 			labelSettings: { interval: 5 }
+	// 		},
+	// 		{
+	// 			vizType: "us_counties_map",
+	// 			primaryDataSheet: "county_by_year",
+	// 			secondaryDataSheet: "events",
+	// 			filterVars: [variables.event_category],
+	// 			tooltipVars: [variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.cpi_adjusted_cost, variables.states ],
+	// 		}
+	// 	]
+	// },
 ]
 
 let projectSettings = {

@@ -63,7 +63,12 @@ export class DotMatrix extends Chart {
 	}
 
 	render(data) {
-		this.data = data[this.primaryDataSheet];
+		if (!this.isSubComponent) {
+			this.data = this.processData(data[this.primaryDataSheet]);
+		} else {
+			this.data = data;
+		}
+		console.log(this.data);
 		this.setDimensions();
 		this.sortData();
 		if (!this.isSubComponent) {
@@ -81,6 +86,7 @@ export class DotMatrix extends Chart {
 	}
 
 	processData(data) {
+		console.log(this.primaryDataSheet, data);
 		data = data.filter((d) => { return d[this.currFilterVar] != null });
 		if (this.currFilter.scaleType === "linear") {
 			for (var d of data) {
@@ -181,7 +187,7 @@ export class DotMatrix extends Chart {
 	setDimensions() {
 		if (this.orientation == "vertical") {
 			this.w = this.dotsPerRow * (dotW + dotOffset);
-			let numRows = Math.ceil(this.dataLength/this.dotsPerRow);
+			let numRows = Math.ceil(this.data.length/this.dotsPerRow);
 
 			this.h = numRows * (dotW + dotOffset);
 

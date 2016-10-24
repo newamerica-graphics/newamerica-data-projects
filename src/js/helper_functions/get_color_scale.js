@@ -136,6 +136,7 @@ function setDomain(dataMin, dataMax, numBins) {
 }
 
 function setLinearDomain(filterVar, data) {
+	let filterName = filterVar.variable;
 	let dataMin = Number(d3.min(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; })); 
 	let dataMax = Number(d3.max(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; }));
 
