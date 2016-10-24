@@ -153,7 +153,7 @@ let vizSettingsList = [
 ]
 
 let projectSettings = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/homegrown_extremism.json",
+	s3Key: "data/isp/homegrown_extremism.json",
 	downloadDataLink: "https://docs.google.com/spreadsheets/d/1UHVsknlx8sWPNg6nYBg2_WdXTp2RwnWwe7BdInWncdg/",
 	dataSheetNames:["people_protected", "people_variables", "terror_plots", "terror_plots_variables"],
 	imageFolderId: "0B2KbJlQb9jlgeG5hOXZqbURpRUE",

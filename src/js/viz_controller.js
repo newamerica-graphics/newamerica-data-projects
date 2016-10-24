@@ -4,6 +4,7 @@ var JSZip = require("jszip");
 
 import $ from 'jquery';
 let d3 = require("d3");
+let AWS = require('aws-sdk');
 
 import domtoimage from 'dom-to-image';
 
@@ -32,6 +33,8 @@ export function setupProject(projectSettings) {
 	window.addEventListener('resize', resize);
 
 	render();
+
+	getDataLastModified();
 
 	function initialize() {
 
@@ -96,7 +99,8 @@ export function setupProject(projectSettings) {
 
 
 	function render() {
-		d3.json(projectSettings.dataUrl, (d) => {
+		let dataUrl = "https://na-data-projects.s3.amazonaws.com/" + projectSettings.s3Key;
+		d3.json(dataUrl, (d) => {
 			for (let viz of vizList) {
 				let data = d[viz.primaryDataSheet];
 				viz.render(data);
@@ -112,6 +116,23 @@ export function setupProject(projectSettings) {
 		for (let viz of vizList) {
 			viz.resize ? viz.resize() : null;
 		}
+	}
+
+	function getDataLastModified() {
+		console.log("getting date last modified");
+		// AWS.config.update({accessKeyId: String(process.env.AWS_ACCESS_KEY_ID), secretAccessKey: String(process.env.AWS_SECRET_ACCESS_KEY), region: 'us-west-2'});
+ 		let s3 = new AWS.S3();
+ 		console.log(process.env);
+
+		let params = {
+			Bucket: "na-data-projects",
+			Key: projectSettings.s3Key,
+		}
+		s3.getObject(params, function(err, data) {
+			if (err) console.log(err, err.stack); // an error occurred
+			else     console.log(data);           // successful response
+		});
+
 	}
 
 	function setDataDownloadLinks(data) {

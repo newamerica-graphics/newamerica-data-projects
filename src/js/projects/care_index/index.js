@@ -115,7 +115,7 @@ let vizSettingsList = [
 ]
 
 let projectSettings = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/bll/care_index.json",
+	s3Key: "data/bll/care_index.json",
 	downloadDataLink: "https://docs.google.com/spreadsheets/d/18WEcJVDByP5bCPACgt2s9-sYIOItweq9fI9PCMIpUjY/",
 	dataSheetNames:["state_data", "who_pays_for_care"],
 	vizSettingsList: vizSettingsList

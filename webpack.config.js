@@ -46,13 +46,29 @@ var config = {
       },
       { 
         test: /\.png$/, 
-        loader: "url-loader?limit=100000" },
+        loader: "url-loader?limit=100000" 
+      },
+      {
+        test: /\.json$/,
+        loaders: [ 'json-loader' ]
+      },
     ]
   },
   sassLoader: {
     includePaths: [path.resolve(__dirname, "./src/scss/index.scss")]
   },
-  plugins: (process.env.NODE_ENV === 'development') ? [] : [
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+          'AWS_ACCESS_KEY_ID': String(AWS_ACCESS_KEY_ID),
+          'AWS_SECRET_ACCESS_KEY': String(AWS_SECRET_ACCESS_KEY)
+      }
+    }),
+  ]
+};
+
+if (process.env.NODE_ENV != 'development') {
+  config.plugins +=
     new S3Plugin({
       // Only upload css and js 
       include: /.*\.(scss|css|js)/,
@@ -64,8 +80,8 @@ var config = {
       s3UploadOptions: {
         Bucket: DATA_PROJECTS_S3_BUCKET_NAME
       }
-    })
-  ]
-};
+    });
+}
+
 
 module.exports = config;
