@@ -8,7 +8,8 @@ let colorOptions = {
 	"turquoise":["#2EBCB3","#005753"],
 	"blue":["#5BA4DA","#234A67"],
 	"red":["#E75C64","#692025"],
-	"purple":["#A076AC","#48304F"]
+	"purple":["#A076AC","#48304F"],
+	"black":["#EAEAEB", "#2C2F35"]
 }
 
 let ordinalRange = [
@@ -57,6 +58,13 @@ export function getColorScale(data, filterVar) {
 		// scale.domain(roundedDomain);
 	} else if (scaleType == "linear") {
 		scale = d3.scaleLinear();
+		let domain = customDomain ? customDomain : setLinearDomain(filterVar, data);
+		let range = customRange ? customRange : setLinearRange(filterVar, data);
+
+		scale.domain(domain);
+		scale.range(range);
+	} else if (scaleType == "logarithmic") {
+		scale = d3.scaleLog();
 		let domain = customDomain ? customDomain : setLinearDomain(filterVar, data);
 		let range = customRange ? customRange : setLinearRange(filterVar, data);
 
@@ -147,12 +155,12 @@ function setLinearRange(filterVar, data) {
 	return [colors.white, colors.turquoise.dark];
 }
 
-function setColorBins(numBins, baseColor) {
+function setColorBins(numBins, customRange) {
 	let colorBins = [];
 
 	let linearColorScale = d3.scaleLinear()
 		.domain([0, numBins/2, numBins])
-		.range(["#ffffff", baseColor[0], baseColor[1]]);
+		.range(["#ffffff", customRange[0], customRange[1]]);
 
 	for (let i = 0; i < numBins; i++) {
 		colorBins[i] = linearColorScale(i+1);

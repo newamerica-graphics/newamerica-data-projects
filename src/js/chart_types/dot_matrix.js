@@ -108,9 +108,9 @@ export class DotMatrix extends Chart {
 	}
 
 	sortData() {
-		if (this.currFilter.scaleType === "linear") {
-			this.data.sort((a, b) => { return a[this.currFilterVar] - b[this.currFilterVar];});
-		} else if (this.currFilter.scaleType == "categorical") {
+		if (this.currFilter.scaleType === "linear" || this.currFilter.scaleType === "logarithmic") {
+			this.data.sort((a, b) => { return Number(b[this.currFilterVar]) - Number(a[this.currFilterVar]);});
+		} else if (this.currFilter.scaleType === "categorical") {
 			if (this.currFilter.customDomain) {
 				this.data.sort((a, b) => {
 					let elem1 = this.currFilter.customDomain.indexOf(a[this.currFilterVar]);
