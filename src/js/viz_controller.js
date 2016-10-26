@@ -10,7 +10,7 @@ import { Dashboard } from "./layouts/dashboard.js";
 import { DotMatrix } from "./chart_types/dot_matrix.js";
 import { DotHistogram } from "./chart_types/dot_histogram.js";
 import { GroupedDotMatrix } from "./chart_types/grouped_dot_matrix.js";
-import { UsStatesMap } from "./chart_types/us_states_map.js";
+import { UsMap } from "./chart_types/us_map.js";
 import { UsCountiesMap } from "./chart_types/us_counties_map.js";
 import { TabbedChartLayout } from "./layouts/tabbed_chart_layout.js";
 import { ChartWithFactBox } from "./layouts/chart_with_fact_box.js";
@@ -88,8 +88,8 @@ export function setupProject(projectSettings) {
 					viz = new UsCountiesMap(vizSettingsObject);
 					break;
 
-				case "us_states_map":
-					viz = new UsStatesMap(vizSettingsObject);
+				case "us_map":
+					viz = new UsMap(vizSettingsObject);
 					break;
 			}
 

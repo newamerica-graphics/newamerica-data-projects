@@ -5,7 +5,7 @@ let d3 = require("d3");
 import { DotMatrix } from "../chart_types/dot_matrix.js";
 import { DotHistogram } from "../chart_types/dot_histogram.js";
 import { GroupedDotMatrix } from "../chart_types/grouped_dot_matrix.js";
-import { UsStatesMap } from "../chart_types/us_states_map.js";
+import { UsMap } from "../chart_types/us_map.js";
 import { Table } from "../chart_types/table.js";
 import { FactBox } from "../chart_types/fact_box.js";
 import { LineChart } from "../chart_types/line_chart.js";
@@ -43,8 +43,8 @@ export class ChartWithFactBox {
 				this.chart = new Table(chartSettings);
 				break;
 
-			case "us_states_map":
-				this.chart = new UsStatesMap(chartSettings);
+			case "us_map":
+				this.chart = new UsMap(chartSettings);
 				break;
 		}
 	}

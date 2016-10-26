@@ -10,7 +10,7 @@ conn = psycopg2.connect("dbname=stormevents user=jacksonk")
 cur = conn.cursor()
 
 event_categories = [
-	'Flood', 'Severe Ice Storm', 'Severe Storm(s)', 'Snow', 'Tornado', 'Fire', 'Drought', 'Hurricane'
+	'Flood', 'Severe Ice Storm', 'Severe Storm(s)', 'Snow', 'Tornado', 'Fire', 'Coastal Storm', 'Freezing', 'Typhoon', 'Earthquake', 'Hurricane'
 ]
 
 def getAllFips():

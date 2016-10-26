@@ -7,7 +7,7 @@ import { Chart } from "../layouts/chart.js"
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { colors } from "../helper_functions/colors.js";
 
-import { usGeom } from '../../geography/us.js';
+import { usGeom } from '../../geometry/us.js';
 
 import { formatValue, deformatValue } from "../helper_functions/format_value.js";
 

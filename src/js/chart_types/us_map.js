@@ -7,23 +7,27 @@ import { Chart } from "../layouts/chart.js"
 
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 
-import { usStates } from '../../geography/us-states.js';
+import { usGeom } from '../../geometry/us.js';
 
 import { formatValue, deformatValue } from "../helper_functions/format_value.js";
 
 import * as global from "./../utilities.js";
 
 let d3 = require("d3");
+let topojson = require("topojson");
 
-export class UsStatesMap extends Chart {
+export class UsMap extends Chart {
 	
 	constructor(vizSettings) {
-		let {id, tooltipVars, filterVars, primaryDataSheet } = vizSettings;
+		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, hasStroke } = vizSettings;
 		super(id);
 
 		this.id = id;
 		this.filterVars = filterVars;
 		this.primaryDataSheet = primaryDataSheet;
+		this.geometryVar = geometryVar;
+		this.geometry = topojson.feature(usGeom, usGeom.objects[geometryType]).features;
+		this.hasStroke = hasStroke;
 
 		this.currFilterIndex = 0;
 		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
@@ -85,12 +89,13 @@ export class UsStatesMap extends Chart {
 		this.data = data[this.primaryDataSheet];
 		this.processData();
 		this.setScale();
+		console.log(this.colorScale.domain());
 		this.bindDataToGeom();
 		this.buildGraph();
 		this.setLegend();
 		this.filterGroup ? this.setFilterGroup() : null;
 
-		super.render();
+		// super.render();
 	}
 
 	processData() {
@@ -109,35 +114,41 @@ export class UsStatesMap extends Chart {
 
 
 	bindDataToGeom() {
-		let data = this.data;
+		for (let dataElem of this.data) {
+			let dataId = dataElem[this.geometryVar.variable];
 
-		for (let elem of data) {
-			let dataState = elem.state;
-
-			for (let state of usStates.features) {
-				if (dataState == state.properties.name) {
-					state.properties = elem;
+			for (let geogElem of this.geometry) {
+				if (dataId == geogElem.id) {
+					geogElem.data = dataElem;
 					break;
 				}
 			}
 		}
+		console.log(this.geometry);
 	}
 
 	buildGraph() {
 		this.paths = this.svg.selectAll("path")
-		   .data(usStates.features)
+		   .data(this.geometry)
 		   .enter()
 		   .append("path");
 
 		this.paths.attr("d", this.pathGenerator)
-		    .style("fill", (d) => {
-		   		var value = d.properties[this.currFilterVar];
-		   		return value ? this.colorScale(value) : "#ccc";
-		    })
+		    .style("fill", (d) => { return this.setFill(d); })
 		    .attr("value", function(d,i) { return i; })
 		    .style("stroke", "white")
+		    .style("stroke-width", this.hasStroke ? "1" : "0")
 		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event); })
 		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); });
+	}
+
+	setFill(d) {
+		if (d.data) {
+	   		var value = d.data[this.currFilterVar];
+	   		return value ? this.colorScale(value) : "#ccc";
+	   	} else {
+	   		return "#fff";
+	   	}
 	}
 
 	setLegend() {
@@ -168,17 +179,13 @@ export class UsStatesMap extends Chart {
 
 		this.setScale();
 		this.setLegend();
-		this.paths
-			.style("fill", (d) => {
-		   		var value = d.properties[this.currFilterVar];
-		   		return value ? this.colorScale(value) : "#ccc";
-		    })
+		this.paths.style("fill", (d) => { return this.setFill(d); })
 	}
 
 	changeVariableValsShown(valsShown) {
 		this.paths
 			.style("fill", (d) => {
-		   		var value = d.properties[this.currFilterVar];
+		   		var value = d.data[this.currFilterVar];
 		   		if (value) {
 		   			let binIndex = this.colorScale.range().indexOf(this.colorScale(value));
 		   			if (valsShown.indexOf(binIndex) > -1) {
@@ -195,7 +202,7 @@ export class UsStatesMap extends Chart {
 		let mousePos = [];
 		mousePos[0] = eventObject.pageX;
 		mousePos[1] = eventObject.pageY;
-		this.tooltip.show(datum.properties, mousePos);
+		this.tooltip.show(datum.data, mousePos);
 	}
 
 	mouseout(path) {
