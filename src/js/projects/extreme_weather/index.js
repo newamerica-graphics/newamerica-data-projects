@@ -14,6 +14,7 @@ let variables = {
 	cpi_adjusted_cost: {"variable":"cpi_adjusted_cost", "displayName":"CPI Adjusted Cost (Billions)", "format":"string", "scaleType":"logarithmic", "customRange":[colors.grey.light, colors.grey.dark], "numBins":20},
 
 	fema_fips: {"variable":"fips", "displayName":"County Fips", "format":"number"},
+	fema_county_name: {"variable":"county_name", "displayName":"County", "format":"string"},
 	fema_all: {"variable":"all", "displayName":"All", "format":"number", "scaleType":"linear"},
 	fema_other: {"variable":"other", "displayName":"Other", "format":"number", "scaleType":"linear"},
 	fema_flood: {"variable":"flood", "displayName":"Flood", "format":"number", "scaleType":"linear"},
@@ -22,10 +23,6 @@ let variables = {
 	fema_snow: {"variable":"snow", "displayName":"Snow", "format":"number", "scaleType":"linear"},
 	fema_tornado: {"variable":"tornado", "displayName":"Tornado", "format":"number", "scaleType":"linear"},
 	fema_fire: {"variable":"fire", "displayName":"Fire", "format":"number", "scaleType":"linear"},
-	fema_coastal_storm: {"variable":"coastal_storm", "displayName":"Coastal Storm", "format":"number", "scaleType":"linear"},
-	fema_freezing: {"variable":"freezing", "displayName":"Freezing", "format":"number", "scaleType":"linear"},
-	fema_earthquake: {"variable":"earthquake", "displayName":"Earthquake", "format":"number", "scaleType":"linear"},
-	fema_typhoon: {"variable":"typhoon", "displayName":"Typhoon", "format":"number", "scaleType":"linear"},
 	fema_hurricane: {"variable":"hurricane", "displayName":"Hurricane", "format":"number", "scaleType":"linear"},
 }
 
@@ -72,8 +69,8 @@ let vizSettingsList = [
 		geometryType: "counties",
 		hasStroke: false,
 		geometryVar: variables.fema_fips,
-		filterVars: [variables.fema_all, variables.fema_other, variables.fema_flood, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_fire, variables.fema_freezing, variables.fema_coastal_storm, variables.fema_typhoon, variables.fema_earthquake, variables.fema_hurricane],
-		tooltipVars: [variables.fema_all, variables.fema_all, variables.fema_other, variables.fema_flood, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_fire, variables.fema_freezing, variables.fema_coastal_storm, variables.fema_typhoon, variables.fema_earthquake, variables.fema_hurricane],
+		filterVars: [variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
+		tooltipVars: [variables.fema_county_name, variables.fema_fips, variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
 	},
 	// {
 	// 	id: "#extreme-weather__county-by-year", 

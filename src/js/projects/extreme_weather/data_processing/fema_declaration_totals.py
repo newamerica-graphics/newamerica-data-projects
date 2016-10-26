@@ -10,7 +10,7 @@ conn = psycopg2.connect("dbname=stormevents user=jacksonk")
 cur = conn.cursor()
 
 event_categories = [
-	'Flood', 'Severe Ice Storm', 'Severe Storm(s)', 'Snow', 'Tornado', 'Fire', 'Coastal Storm', 'Freezing', 'Typhoon', 'Earthquake', 'Hurricane'
+	'Flood', 'Severe Ice Storm', 'Severe Storm(s)', 'Snow', 'Tornado', 'Fire', 'Hurricane'
 ]
 
 def getAllFips():
@@ -36,48 +36,12 @@ def getCount(fips):
 
 		raw_event_type_counts.pop(event_category, None)
 
-	event_type_counts['Other'] = sum(raw_event_type_counts.values())
+	event_type_counts['other'] = sum(raw_event_type_counts.values())
+
+	cur.execute("SELECT DISTINCT county_name FROM fema_declarations WHERE fips='" + fips + "';")
+	event_type_counts['county_name'] = cur.fetchone()[0];
+
 	fips_events[fips] = event_type_counts
-
-# def getCountyFips(raw_list, cur, index):
-	# combined_fips_list = []
-	# for item in raw_list:
-	# 	state_fips = item[0].zfill(2)
-	# 	cz_fips = format(item[2], '03')
-	# 	event_type = item[4]
-	# 	if item[1] == "C":
-	# 		appendToData(index, state_fips + cz_fips, event_type)
-	# 	else:
-	# 		# get state abbreviation from state fips abbreviation mapping
-	# 		cur.execute("SELECT abbrev FROM stateabbrevfipsmapping WHERE fips=" + "'" + state_fips + "';")
-	# 		state_abbrev = list(cur.fetchone())[0]
-	# 		state_zone = state_abbrev + cz_fips
-
-	# 		# get fips list from zone fips mapping
-	# 		cur.execute("SELECT fips FROM zonefipsmapping WHERE state_zone=" + "'" + state_zone + "';")
-	# 		fips_in_zone = cur.fetchall()
-
-	# 		for fips in fips_in_zone:
-	# 			appendToData(index, format(fips[0], '05'), event_type)
-
-# def appendToData(billion_dollar_id, fips, event_type):
-	# if fips in fips_by_event:
-	# 	if fips_by_event[fips][billion_dollar_id]:
-	# 		currVals = set(fips_by_event[fips][billion_dollar_id])
-	# 		currVals.add(event_type)
-	# 		fips_by_event[fips][billion_dollar_id] = list(currVals)
-	# 	else:
-	# 		fips_by_event[fips][billion_dollar_id] = [event_type]
-	# else:
-	# 	fips_by_event[fips] = [None] * 142
-	#  	fips_by_event[fips][billion_dollar_id] = [event_type]
-
-
- #    data = json.load(data_file)
- #    eventsData = data.get('events')
-    
- #    conn = psycopg2.connect("dbname=stormevents user=jacksonk")
- #    cur = conn.cursor()
 
 
 all_fips_list = getAllFips()
@@ -94,14 +58,8 @@ for fips in all_fips_list:
 
 	i += 1
 
-# print(fips_events)
-# 	query_string = generateQS(item)
-# 	cur.execute(query_string)
-# 	raw_county_list = cur.fetchall()
-# 	fips_list = getCountyFips(raw_county_list, cur, int(item.get('id')))
 
-
-keys = ['fips', 'all', 'Other'] + event_categories
+keys = ['fips', 'county_name', 'all', 'other'] + event_categories
 
 with open('femaDeclarations.csv', 'wb') as fema_declarations_file:
     dict_writer = csv.DictWriter(fema_declarations_file, keys)
