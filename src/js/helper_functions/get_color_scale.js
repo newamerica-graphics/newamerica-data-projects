@@ -64,7 +64,7 @@ export function getColorScale(data, filterVar) {
 		scale.domain(domain);
 		scale.range(range);
 	} else if (scaleType == "logarithmic") {
-		scale = d3.scaleLog();
+		scale = d3.scaleLog().base(20);
 		let domain = customDomain ? customDomain : setLinearDomain(filterVar, data);
 		let range = customRange ? customRange : setLinearRange(filterVar, data);
 
