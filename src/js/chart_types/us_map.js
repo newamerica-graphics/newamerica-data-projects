@@ -19,7 +19,7 @@ let topojson = require("topojson");
 export class UsMap extends Chart {
 	
 	constructor(vizSettings) {
-		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, hasStroke } = vizSettings;
+		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, hasStroke, legendSettings } = vizSettings;
 		super(id);
 
 		this.id = id;
@@ -28,6 +28,7 @@ export class UsMap extends Chart {
 		this.geometryVar = geometryVar;
 		this.geometry = topojson.feature(usGeom, usGeom.objects[geometryType]).features;
 		this.hasStroke = hasStroke;
+		this.legendSettings = legendSettings;
 
 		this.currFilterIndex = 0;
 		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
@@ -42,11 +43,10 @@ export class UsMap extends Chart {
 			.attr("class", "us-states-svg");
 
 		this.tooltip = new Tooltip(id, tooltipVars, null, null);
-		let legendSettings = {};
-		legendSettings.id = id;
-		legendSettings.showTitle = true;
-		legendSettings.markerSettings = { shape:"circle", size:10 };
-		legendSettings.orientation = "vertical-right";
+
+		this.legendSettings.id = id;
+		this.legendSettings.showTitle = true;
+		this.legendSettings.markerSettings = { shape:"circle", size:10 };
 
 		this.legend = new Legend(legendSettings);
 
@@ -62,13 +62,15 @@ export class UsMap extends Chart {
 		let translateX = this.w/2;
 		let scalingFactor = 5*this.w/4;
 
-		if (containerWidth > global.showLegendBreakpoint) {
-			translateX -= global.legendWidth/2;
-			this.h = this.w/2;
-			scalingFactor = this.w;
-			this.legend.setOrientation("vertical-right");
-		} else {
-			this.legend.setOrientation("horizontal-left");
+		if (this.legendSettings.orientation == "vertical-right") {
+			if (containerWidth > global.showLegendBreakpoint) {
+				translateX -= global.legendWidth/2;
+				this.h = this.w/2;
+				scalingFactor = this.w;
+				this.legend.setOrientation("vertical-right");
+			} else {
+				this.legend.setOrientation("horizontal-left");
+			}
 		}
 
 		this.svg
@@ -171,6 +173,7 @@ export class UsMap extends Chart {
 	resize() {
 		this.setDimensions();
 		this.paths.attr("d", this.pathGenerator);
+		// this.legend.resize();
 	}
 
 	changeFilter(variableIndex) {

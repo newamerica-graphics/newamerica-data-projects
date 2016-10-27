@@ -6,11 +6,15 @@ import { formatValue } from "../helper_functions/format_value.js";
 
 let d3 = require("d3");
 
+let continuousLegendHeight = 20,
+	continuousLegendOffset = 20;
+
 export class Legend {
 	constructor(legendSettings) {
-		let {id, markerSettings, showTitle, orientation} = legendSettings;
+		let {id, markerSettings, showTitle, orientation, customTitleExpression} = legendSettings;
 		this.id = id;
 		this.showTitle = showTitle;
+		this.customTitleExpression = customTitleExpression;
 		this.markerSettings = markerSettings;
 		this.orientation = orientation;
 
@@ -25,41 +29,103 @@ export class Legend {
 			this.titleDiv = titleContainer.append("h3")
 				.attr("class", "legend__title");
 
-			// this.titleDescriptionDiv = titleContainer.append("p")
-			// 	.attr("class", "legend__title-description")
-			// 	.text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi et metus ut lorem viverra mattis. In hac habitasse platea dictumst.");
 		}
 
-		let cellContainer = this.legend.append("div")
+		this.cellContainer = this.legend.append("div")
 			.attr("class", "legend__cell-container");
 
-		this.cellList = cellContainer.append("ul")
-			.attr("class", "legend__cell-list");
 	}
 
 	render(legendSettings) {
-		let {scaleType, title, format, colorScale, valChangedFunction, valCounts} = legendSettings;
+		this.colorScale = legendSettings.colorScale;
+		if (this.showTitle) {
+			let title;
+			if (this.customTitleExpression) {
+				title = this.customTitleExpression.replace("<<>>",legendSettings.title);
+			} else {
+				title = legendSettings.title;
+			}
+			this.titleDiv.text(title)
+		}
 
-		this.colorScale = colorScale;
+		if (legendSettings.scaleType == "linear" || legendSettings.scaleType == "logarithmic") {
+			this.renderContinuous(legendSettings);
+		} else {
+			this.renderDiscrete(legendSettings);
+		}
+	}
 
-		this.showTitle ? this.titleDiv.text(title) : null;
+	renderContinuous(legendSettings) {
+		this.legendSvg ? this.legendSvg.remove() : null;
+		this.legendSvg = this.cellContainer.append("svg");
+		this.legendWidth = Number(this.legendSvg.style("width").replace("px", ""));
 
+		this.defineGradient();
+		this.legendSvg.append("rect")
+			.attr("width", this.legendWidth - 2*continuousLegendOffset)
+			.attr("height", continuousLegendHeight)
+			.attr("x", continuousLegendOffset)
+			.attr("y", 0)
+			.style("fill", "url(#linear-gradient)");
+
+		this.addLabels();
+	}
+
+	defineGradient() {
+		//Append a defs (for definition) element to your SVG
+		let defs = this.legendSvg.append("defs");
+
+		//Append a linearGradient element to the defs and give it a unique id
+		let linearGradient = defs.append("linearGradient")
+		    .attr("id", "linear-gradient")
+		    .attr("x1", "0%")
+		    .attr("y1", "0%")
+		    .attr("x2", "100%")
+		    .attr("y2", "0%");
+
+		linearGradient.append("stop") 
+		    .attr("offset", "0%")   
+		    .attr("stop-color", this.colorScale.range()[0]);
+
+		//Set the color for the end (100%)
+		linearGradient.append("stop") 
+		    .attr("offset", "100%")   
+		    .attr("stop-color", this.colorScale.range()[1]);
+	}
+
+	addLabels() {
+		//Set scale for x-axis
+		let legendXScale = d3.scaleLinear()
+			.domain(this.colorScale.domain())
+			.range([continuousLegendOffset, this.legendWidth - continuousLegendOffset]);
+
+		//Define x-axis
+		let legendXAxis = d3.axisBottom()
+			  .ticks(5)
+			  .scale(legendXScale);
+
+		//Set up X axis
+		this.legendSvg.append("g")
+			.attr("class", "axis legend__axis")
+			.attr("transform", "translate(0," + continuousLegendHeight + ")")
+			.call(legendXAxis);
+	}
+
+	renderDiscrete(legendSettings) {
+		let {scaleType, format, colorScale, valChangedFunction, valCounts} = legendSettings;
+
+		this.cellList ? this.cellList.remove() : null;
+		this.cellList = this.cellContainer.append("ul")
+			.attr("class", "legend__cell-list");
 		this.valsShown = [];
 
-		this.cellList.selectAll(".legend__cell").remove();
-
-		this.numBins = colorScale.range().length;
-
-		// this.cellList.attr("height", () => {
-		// 	return (this.numBins * 25) + "px";
-		// });
+		this.numBins = this.colorScale.range().length;
 
 		if (scaleType == "quantize") {
-			[this.dataMin, this.dataMax] = colorScale.domain();
+			[this.dataMin, this.dataMax] = this.colorScale.domain();
 			let dataSpread = this.dataMax - this.dataMin;
 			this.binInterval = dataSpread/this.numBins;
 		}
-
 		this.legendCellDivs = [];
 
 		for (let i = 0; i < this.numBins; i++) {
@@ -71,19 +137,15 @@ export class Legend {
 			this.appendCellMarker(cell, i);
 			valCounts ? this.appendValCount(cell, i, valCounts) : null;
 			this.appendCellText(cell, i, scaleType, format);
-
 			
 			this.legendCellDivs[i] = cell;
 		}
 	}
 
-		
-
 	calcBinVal(i, dataMin, binInterval) {
 		let binVal = dataMin + (binInterval * i);
 		return Math.round(binVal * 100)/100;
 	}
-
 
 	appendCellMarker(cell, i) {
 		let size = this.markerSettings.size;
@@ -166,6 +228,14 @@ export class Legend {
 
 	setOrientation(orientation) {
 		this.legend.attr("class", "legend " + orientation);
+	}
+
+	resize() {
+		// if ($(this.id).width() > global.showLegendBreakpoint) {
+		// 	this.legend.setOrientation("vertical-right");
+		// } else {
+		// 	this.legend.setOrientation("horizontal-left");
+		// }
 	}
 
 }

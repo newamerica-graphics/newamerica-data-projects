@@ -30,7 +30,7 @@ let ordinalRange = [
 
 export function getColorScale(data, filterVar) {
 	let { scaleType, numBins, customRange, customDomain } = filterVar;
-	let scale;
+	let scale, domain, range;
 
 	if (!scaleType) {
 		console.log("no scale type!");
@@ -42,36 +42,33 @@ export function getColorScale(data, filterVar) {
 
 		// if both are not custom, get unique values
 		let uniqueVals = !(filterVar.customDomain && filterVar.customRange) ? getUniqueVals(data, filterVar) : null;
-		let domain = setCategoricalDomain(filterVar, uniqueVals);
-		let range = setCategoricalRange(filterVar, uniqueVals);
-		scale.domain(domain);
-		scale.range(range);
+		domain = setCategoricalDomain(filterVar, uniqueVals);
+		range = setCategoricalRange(filterVar, uniqueVals);
+		
 
 	} else if (scaleType == "quantize") {
 		scale = d3.scaleQuantize();
-		let colorBins = setColorBins(numBins, customRange);
-		let domain = customDomain ? customDomain : setQuantizeDomain(filterVar, data);
-		// let roundedDomain = setDomain(dataMin, dataMax, numBins);
-		scale.range(colorBins);
-		scale.domain(domain);
-		scale.nice();
-		// scale.domain(roundedDomain);
+		range = setColorBins(numBins, customRange);
+		domain = customDomain ? customDomain : setQuantizeDomain(filterVar, data);
+		
 	} else if (scaleType == "linear") {
 		scale = d3.scaleLinear();
-		let domain = customDomain ? customDomain : setLinearDomain(filterVar, data);
-		let range = customRange ? customRange : setLinearRange(filterVar, data);
+		domain = customDomain ? customDomain : setLinearDomain(filterVar, data);
+		range = customRange ? customRange : setLinearRange(filterVar, data);
 
-		scale.domain(domain);
-		scale.range(range);
 	} else if (scaleType == "logarithmic") {
 		scale = d3.scaleLog().base(20);
-		let domain = customDomain ? customDomain : setLinearDomain(filterVar, data);
-		let range = customRange ? customRange : setLinearRange(filterVar, data);
-
-		scale.domain(domain);
-		scale.range(range);
+		domain = customDomain ? customDomain : setLinearDomain(filterVar, data);
+		range = customRange ? customRange : setLinearRange(filterVar, data);
 	}
-	
+
+	scale.domain(domain)
+		.range(range);
+
+	if (scaleType != "categorical") {
+		scale.nice();
+	}
+		
 	return scale;
 }
 
@@ -110,36 +107,6 @@ function setQuantizeDomain(filterVar, data) {
 	let dataMin = Number(d3.min(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; })); 
 	let dataMax = Number(d3.max(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; }));
 	
-	return [dataMin, dataMax];
-}
-
-
-function setDomain(dataMin, dataMax, numBins) {
-	// let dataMagnitude = Math.floor(Math.log10(dataMin));
-	// let intervalDivisor = Math.pow(10, dataMagnitude) * numBins;
-	// let dataSpread = dataMax - dataMin;
-	// let dataInterval = dataSpread/numBins;
-
-	// console.log("magnitude: " + dataMagnitude);
-	// console.log("dataspread: " + dataSpread);
-	// console.log("interval: " + dataInterval);
-
-	// let roundedInterval = Math.ceil(dataInterval/intervalDivisor)*intervalDivisor;
-	// console.log("roundedinterval: " + roundedInterval);
-
-	// let test = Math.pow(10, dataMagnitude) * (numBins/2);
-
-	// let newMin = Math.floor(dataMin/test)*test;
-	// console.log("oldmin " + dataMin + " newmin: " + newMin);
-
-	// let newMax = Math.ceil(dataMax/test)*test;
-	// console.log("oldmax " + dataMax + " newmax: " + newMax);
-
-	// for (let i = 0; i < numBins; i++) {
-	// 	let binVal = newMin + (roundedInterval * i);
-	// 	console.log(binVal);
-	// }
-
 	return [dataMin, dataMax];
 }
 

@@ -71,6 +71,7 @@ let vizSettingsList = [
 		geometryVar: variables.fema_fips,
 		filterVars: [variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
 		tooltipVars: [variables.fema_county_name, variables.fema_fips, variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
+		legendSettings: {"orientation": "horizontal-center", "customTitleExpression": "<<>> Declarations"}
 	},
 	// {
 	// 	id: "#extreme-weather__county-by-year", 

@@ -1,5 +1,5 @@
 .legend {
-	padding: 15px 0px;
+	
 
 	&__title {
 		font-size: 17px;
@@ -13,6 +13,8 @@
 	}
 
 	&.horizontal-center {
+		margin: auto;
+		text-align: center;
 		.legend__cell-container {
 			margin: auto;
 			width: 100%;
@@ -32,6 +34,7 @@
 		position: absolute;
 		right: 0px;
 		bottom: 0;
+		padding: 15px 0px;
 
 		.legend__cell {
 			width: 100%;
@@ -102,6 +105,14 @@
 			.legend__cell__label, .legend__cell__val-count {
 				color: palette-get(na-black-10) !important;
 			}
+		}
+	}
+
+	&__axis {
+		text {
+			font-size: 16px;
+			font-weight: normal;
+			fill: palette-get(na-black-40);
 		}
 	}
 }
