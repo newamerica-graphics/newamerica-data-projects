@@ -19,7 +19,7 @@ let topojson = require("topojson");
 export class UsMap extends Chart {
 	
 	constructor(vizSettings) {
-		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, hasStroke, legendSettings } = vizSettings;
+		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, stroke, legendSettings } = vizSettings;
 		super(id);
 
 		this.id = id;
@@ -27,7 +27,7 @@ export class UsMap extends Chart {
 		this.primaryDataSheet = primaryDataSheet;
 		this.geometryVar = geometryVar;
 		this.geometry = topojson.feature(usGeom, usGeom.objects[geometryType]).features;
-		this.hasStroke = hasStroke;
+		this.stroke = stroke;
 		this.legendSettings = legendSettings;
 
 		this.currFilterIndex = 0;
@@ -138,8 +138,9 @@ export class UsMap extends Chart {
 		this.paths.attr("d", this.pathGenerator)
 		    .style("fill", (d) => { return this.setFill(d); })
 		    .attr("value", function(d,i) { return i; })
-		    .style("stroke", "white")
-		    .style("stroke-width", this.hasStroke ? "1" : "0")
+		    .style("stroke", this.stroke.color || "white")
+		    .style("stroke-width", this.stroke.width || "1")
+		    .style("stroke-opacity", this.stroke.opacity || "1")
 		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event); })
 		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); });
 	}
@@ -154,15 +155,13 @@ export class UsMap extends Chart {
 	}
 
 	setLegend() {
-		let legendSettings = {};
+		this.legendSettings.title = this.filterVars[this.currFilterIndex].displayName;
+		this.legendSettings.format = this.filterVars[this.currFilterIndex].format;
+		this.legendSettings.scaleType = this.filterVars[this.currFilterIndex].scaleType;
+		this.legendSettings.colorScale = this.colorScale;
+		this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
 
-		legendSettings.title = this.filterVars[this.currFilterIndex].displayName;
-		legendSettings.format = this.filterVars[this.currFilterIndex].format;
-		legendSettings.scaleType = this.filterVars[this.currFilterIndex].scaleType;
-		legendSettings.colorScale = this.colorScale;
-		legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
-
-		this.legend.render(legendSettings);
+		this.legend.render(this.legendSettings);
 	}
 
 	setFilterGroup() {
@@ -200,7 +199,10 @@ export class UsMap extends Chart {
 	}
 
 	mouseover(datum, path, eventObject) {
-		d3.select(path).style("stroke-width", "3");
+		d3.select(path)
+			.style("stroke", this.stroke.hoverColor || "white")
+			.style("stroke-width", this.stroke.hoverWidth || "3")
+			.style("stroke-opacity", this.stroke.hoverOpacity || "1");
 		
 		let mousePos = [];
 		mousePos[0] = eventObject.pageX;
@@ -209,7 +211,10 @@ export class UsMap extends Chart {
 	}
 
 	mouseout(path) {
-		d3.select(path).style("stroke-width", "1");
+		d3.select(path)
+			.style("stroke", this.stroke.color || "white")
+		    .style("stroke-width", this.stroke.width || "1")
+		    .style("stroke-opacity", this.stroke.opacity || "1")
 	    this.tooltip.hide();
 	}
 			

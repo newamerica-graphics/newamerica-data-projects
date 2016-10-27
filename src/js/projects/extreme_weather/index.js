@@ -67,7 +67,7 @@ let vizSettingsList = [
 		vizType: "us_map",
 		primaryDataSheet: "fema_declarations",
 		geometryType: "counties",
-		hasStroke: false,
+		stroke: {"color": "grey", "width":".5", "opacity": ".7", "hoverColor": colors.black, "hoverWidth": "2"},
 		geometryVar: variables.fema_fips,
 		filterVars: [variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
 		tooltipVars: [variables.fema_county_name, variables.fema_fips, variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
