@@ -101,10 +101,11 @@ export function setupProject(projectSettings) {
 
 	function render() {
 		d3.json(projectSettings.dataUrl, (d) => {
+			console.log(d);
 			for (let viz of vizList) {
 				viz.render(d);
 			}
-			setDownloadLinks(d);
+			// setDownloadLinks(d);
 		});
 
 	}

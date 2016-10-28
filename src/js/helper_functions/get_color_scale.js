@@ -41,9 +41,12 @@ export function getColorScale(data, filterVar) {
 		scale = d3.scaleOrdinal();
 
 		// if both are not custom, get unique values
-		let uniqueVals = !(filterVar.customDomain && filterVar.customRange) ? getUniqueVals(data, filterVar) : null;
-		domain = setCategoricalDomain(filterVar, uniqueVals);
-		range = setCategoricalRange(filterVar, uniqueVals);
+		let uniqueVals = getUniqueVals(data, filterVar);
+		// console.log(customDomain);
+		[customDomain, customRange] = customDomain ? filterUnusedVals(uniqueVals, customDomain, customRange) : [customDomain, customRange];
+		// console.log(customDomain);
+		domain = setCategoricalDomain(uniqueVals, customDomain);
+		range = setCategoricalRange(uniqueVals, customRange);
 		
 
 	} else if (scaleType == "quantize") {
@@ -72,21 +75,36 @@ export function getColorScale(data, filterVar) {
 	return scale;
 }
 
-function setCategoricalDomain(filterVar, uniqueVals) {
-	if (filterVar.customDomain) {
-		return filterVar.customDomain;
+function filterUnusedVals(uniqueVals, customDomain, customRange) {
+	let retDomain = [];
+	let retRange = [];
+
+	for (let i = 0; i < customDomain.length; i++) {
+		let value = customDomain[i];
+		if (uniqueVals.has(value)) {
+			retDomain.push(value);
+			retRange.push(customRange[i]);
+		}
+	}
+
+	return [retDomain, retRange];
+}
+
+function setCategoricalDomain(uniqueVals, customDomain) {
+	if (customDomain) {
+		return customDomain;
 	} else {
 		return uniqueVals.keys().sort(d3.ascending);
 	}
 }
 
-function setCategoricalRange(filterVar, uniqueVals) {
-	if (filterVar.customRange) {
-		return filterVar.customRange;
+function setCategoricalRange(uniqueVals, customRange) {
+	if (customRange) {
+		return customRange;
 	} else {
 		let numBins = uniqueVals.keys().length;
 
-		numBins >= ordinalRange.length ? console.log("get_color_scale: too many color bins " + filterVar.variable) : null;
+		numBins >= ordinalRange.length ? console.log("get_color_scale: too many color bins") : null;
 
 		return ordinalRange[numBins];
 	}
@@ -96,7 +114,6 @@ function getUniqueVals(data, filterVar) {
 	let uniqueVals = d3.nest()
 		.key((d) => { return d[filterVar.variable] })
 		.map(data);
-
 	uniqueVals.remove("null");
 
 	return uniqueVals;

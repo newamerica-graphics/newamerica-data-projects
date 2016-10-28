@@ -11,12 +11,13 @@ let continuousLegendHeight = 20,
 
 export class Legend {
 	constructor(legendSettings) {
-		let {id, markerSettings, showTitle, orientation, customTitleExpression} = legendSettings;
+		let {id, markerSettings, showTitle, orientation, customTitleExpression, disableValueToggling} = legendSettings;
 		this.id = id;
 		this.showTitle = showTitle;
 		this.customTitleExpression = customTitleExpression;
 		this.markerSettings = markerSettings;
 		this.orientation = orientation;
+		this.disableValueToggling = disableValueToggling;
 
 		this.legend = d3.select(id)
 			.append("div")
@@ -56,9 +57,11 @@ export class Legend {
 	}
 
 	renderContinuous(legendSettings) {
-		this.legendSvg ? this.legendSvg.remove() : null;
+		// this.legendSvg ? this.legendSvg.remove() : null;
 		this.legendSvg = this.cellContainer.append("svg");
-		this.legendWidth = Number(this.legendSvg.style("width").replace("px", ""));
+		console.log(this.legendSvg);
+		this.legendWidth = $(this.id).width();
+		console.log(this.legendWidth);
 
 		this.defineGradient();
 		this.legendSvg.append("rect")
@@ -131,9 +134,13 @@ export class Legend {
 		for (let i = 0; i < this.numBins; i++) {
 			this.valsShown.push(i);
 			let cell = this.cellList.append("li")
-				.classed("legend__cell", true)
-				.on("click", () => { this.toggleValsShown(i); valChangedFunction(this.valsShown); });
+				.classed("legend__cell", true);
 
+			if (this.disableValueToggling) {
+				cell.style("cursor", "initial");
+			} else {
+				cell.on("click", () => { this.toggleValsShown(i); valChangedFunction(this.valsShown); });
+			}
 			this.appendCellMarker(cell, i);
 			valCounts ? this.appendValCount(cell, i, valCounts) : null;
 			this.appendCellText(cell, i, scaleType, format);

@@ -2,8 +2,8 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
-import { BarChart } from "../chart_types/bar_chart.js";
-import { UsCountiesMap } from "../chart_types/us_counties_map.js";
+import { DotHistogram } from "../chart_types/dot_histogram.js";
+import { UsMap } from "../chart_types/us_map.js";
 
 export class Dashboard {
 	constructor(vizSettings) {
@@ -26,12 +26,12 @@ export class Dashboard {
 			
 			let viz;
 			switch (chartSettingsObject.vizType) {
-				case "bar_chart":
-					viz = new BarChart(chartSettingsObject);
+				case "dot_histogram":
+					viz = new DotHistogram(chartSettingsObject);
 					this.vizList.push(viz);
 					break;
-				case "us_counties_map":
-					viz = new UsCountiesMap(chartSettingsObject);
+				case "us_map":
+					viz = new UsMap(chartSettingsObject);
 					this.vizList.push(viz);
 					break;
 			}

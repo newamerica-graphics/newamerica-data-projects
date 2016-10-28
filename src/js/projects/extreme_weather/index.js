@@ -13,6 +13,9 @@ let variables = {
 	info_link: {"variable":"info_link", "displayName":"Info Link", "format":"string"},
 	cpi_adjusted_cost: {"variable":"cpi_adjusted_cost", "displayName":"CPI Adjusted Cost (Billions)", "format":"string", "scaleType":"logarithmic", "customRange":[colors.grey.light, colors.grey.dark], "numBins":20},
 
+	event_fips: {"variable":"fips", "displayName":"County Fips", "format":"number"},
+	event_county_name: {"variable":"county_name", "displayName":"County", "format":"string"},
+
 	fema_fips: {"variable":"fips", "displayName":"County Fips", "format":"number"},
 	fema_county_name: {"variable":"county_name", "displayName":"County", "format":"string"},
 	fema_all: {"variable":"all", "displayName":"All", "format":"number", "scaleType":"linear"},
@@ -56,53 +59,71 @@ let vizSettingsList = [
 	// },
 	// {
 	// 	id: "#extreme-weather__counties_map", 
-	// 	vizType: "us_counties_map",
-	// 	primaryDataSheet: "county_by_year",
-	// 	secondaryDataSheet: "events",
-	// 	filterVars: [variables.event_category],
-	// 	tooltipVars: [variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.cpi_adjusted_cost, variables.states ],
+	// 	vizType: "us_map",
+	// 	primaryDataSheet: "fips_by_event",
+	// 	geometryType: "counties",
+	// 	stroke: {"color": "grey", "width":".5", "opacity": ".7", "hoverColor": colors.black, "hoverWidth": "2"},
+	// 	geometryVar: variables.event_fips,
+	// 	filterVars: getEventFilterVars(),
+	// 	tooltipVars: [variables.event_county_name ],
+	// 	legendSettings: {"orientation": "horizontal-center"}
+	// },
+	// {
+	// 	id: "#extreme-weather__fema-declarations", 
+	// 	vizType: "us_map",
+	// 	primaryDataSheet: "fema_declarations",
+	// 	geometryType: "counties",
+	// 	stroke: {"color": "grey", "width":".5", "opacity": ".7", "hoverColor": colors.black, "hoverWidth": "2"},
+	// 	geometryVar: variables.fema_fips,
+	// 	filterVars: [variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
+	// 	tooltipVars: [variables.fema_county_name, variables.fema_fips, variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
+	// 	legendSettings: {"orientation": "horizontal-center", "customTitleExpression": "<<>> Declarations"}
 	// },
 	{
-		id: "#extreme-weather__fema-declarations", 
-		vizType: "us_map",
-		primaryDataSheet: "fema_declarations",
-		geometryType: "counties",
-		stroke: {"color": "grey", "width":".5", "opacity": ".7", "hoverColor": colors.black, "hoverWidth": "2"},
-		geometryVar: variables.fema_fips,
-		filterVars: [variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
-		tooltipVars: [variables.fema_county_name, variables.fema_fips, variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
-		legendSettings: {"orientation": "horizontal-center", "customTitleExpression": "<<>> Declarations"}
+		id: "#extreme-weather__counties_map", 
+		vizType: "dashboard",
+		chartSettingsList: [
+			{
+				vizType: "dot_histogram",
+				isMessagePasser: true,
+				primaryDataSheet: "events",
+				groupingVars: [ variables.year ],
+				filterVars: [ variables.cpi_adjusted_cost ],
+				tooltipVars: [ variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.cpi_adjusted_cost, variables.states ],
+				labelSettings: { interval: 5 }
+			},
+			{
+				vizType: "us_map",
+				primaryDataSheet: "fips_by_event",
+				geometryType: "counties",
+				stroke: {"color": "grey", "width":".5", "opacity": ".7", "hoverColor": colors.black, "hoverWidth": "2"},
+				geometryVar: variables.event_fips,
+				hideFilterGroup: true,
+				filterVars: getEventFilterVars(),
+				tooltipVars: [variables.event_county_name ],
+				legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": true}
+			}
+		]
 	},
-	// {
-	// 	id: "#extreme-weather__county-by-year", 
-	// 	vizType: "dashboard",
-	// 	chartSettingsList: [
-	// 		{
-	// 			vizType: "dot_histogram",
-	// 			isMessagePasser: true,
-	// 			primaryDataSheet: "events",
-	// 			groupingVars: [ variables.year ],
-	// 			filterVars: [ variables.cpi_adjusted_cost ],
-	// 			tooltipVars: [ variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.cpi_adjusted_cost, variables.states ],
-	// 			labelSettings: { interval: 5 }
-	// 		},
-	// 		{
-	// 			vizType: "us_counties_map",
-	// 			primaryDataSheet: "county_by_year",
-	// 			secondaryDataSheet: "events",
-	// 			filterVars: [variables.event_category],
-	// 			tooltipVars: [variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.cpi_adjusted_cost, variables.states ],
-	// 		}
-	// 	]
-	// },
 ]
 
 let projectSettings = {
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/resourcesecurity/extreme_weather.json",
 	downloadDataLink: "https://docs.google.com/spreadsheets/d/18WEcJVDByP5bCPACgt2s9-sYIOItweq9fI9PCMIpUjY/",
-	dataSheetNames:["events", "county_by_year", "fema_declarations"],
+	dataSheetNames:["events", "fips_by_event", "fema_declarations"],
 	vizSettingsList: vizSettingsList
 }
 
 setupProject(projectSettings);
+
+function getEventFilterVars() {
+	let filterVars = [];
+	let curr;
+	for (let i = 0; i < 142; i++) {
+		curr = {"variable":String(i), "displayName":"All", "format":"string", "scaleType":"categorical", "customDomain":["Drought", "Extreme Heat", "Wildfire", "Flooding", "Cold Weather/Wind Chill or Freezing", "Snow Storms or Ice Storms", "Tornado or Funnel Cloud", "Tropical Storm", "Wind, Hail, or Lightning", "Other"], "customRange":[colors.red.light, colors.red.medium, colors.red.dark, colors.blue.light, colors.blue.medium, colors.blue.dark, colors.turquoise.light, colors.turquoise.dark, colors.purple.light, colors.grey.light]};
+		filterVars.push(curr);
+	}
+
+	return filterVars;
+}
 

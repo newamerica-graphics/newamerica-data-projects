@@ -17,9 +17,8 @@ let d3 = require("d3");
 let topojson = require("topojson");
 
 export class UsMap extends Chart {
-	
 	constructor(vizSettings) {
-		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, stroke, legendSettings } = vizSettings;
+		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, stroke, legendSettings, hideFilterGroup } = vizSettings;
 		super(id);
 
 		this.id = id;
@@ -29,11 +28,15 @@ export class UsMap extends Chart {
 		this.geometry = topojson.feature(usGeom, usGeom.objects[geometryType]).features;
 		this.stroke = stroke;
 		this.legendSettings = legendSettings;
-
+		this.hideFilterGroup = hideFilterGroup;
+		console.log(this.filterVars);
 		this.currFilterIndex = 0;
 		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
+		console.log(this.currFilterVar);
 
-		this.filterGroup = filterVars.length > 1 ? new FilterGroup(vizSettings) : null;
+		if (!hideFilterGroup) {
+			this.filterGroup = filterVars.length > 1 ? new FilterGroup(vizSettings) : null;
+		}
 
 		let mapContainer = d3.select(id)
 			.append("div");
@@ -45,7 +48,6 @@ export class UsMap extends Chart {
 		this.tooltip = new Tooltip(id, tooltipVars, null, null);
 
 		this.legendSettings.id = id;
-		this.legendSettings.showTitle = true;
 		this.legendSettings.markerSettings = { shape:"circle", size:10 };
 
 		this.legend = new Legend(legendSettings);
@@ -87,16 +89,21 @@ export class UsMap extends Chart {
 						 .projection(projection);
 	}
 
-	render(data) {	
+	render(data) {
+
 		this.data = data[this.primaryDataSheet];
-		this.processData();
+		console.log(data);
+
+		// this.processData();
 		this.setScale();
 		console.log(this.colorScale.domain());
 		this.bindDataToGeom();
 		this.buildGraph();
 		this.setLegend();
-		this.filterGroup ? this.setFilterGroup() : null;
 
+		if (!this.hideFilterGroup) {
+			this.filterGroup ? this.setFilterGroup() : null;
+		}
 		// super.render();
 	}
 
@@ -148,7 +155,7 @@ export class UsMap extends Chart {
 	setFill(d) {
 		if (d.data) {
 	   		var value = d.data[this.currFilterVar];
-	   		return value ? this.colorScale(value) : "#ccc";
+	   		return value ? this.colorScale(value) : "#fff";
 	   	} else {
 	   		return "#fff";
 	   	}

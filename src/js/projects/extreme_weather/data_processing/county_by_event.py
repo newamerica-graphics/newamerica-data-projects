@@ -8,6 +8,44 @@ county_totals = {}
 fips_by_year = {}
 fips_by_event = {}
 
+event_group_mappings = {
+	"Tornado": "Tornado or Funnel Cloud", 
+	"Funnel Cloud": "Tornado or Funnel Cloud",
+	"Flood": "Flooding",
+	"Flash Flood": "Flooding",
+	"Coastal Flood": "Flooding",
+	"Thunderstorm Wind":"Wind, Hail, or Lightning",
+	"Hail":"Wind, Hail, or Lightning",
+	"High Wind":"Wind, Hail, or Lightning",
+	"Lightning":"Wind, Hail, or Lightning",
+	"Strong Wind":"Wind, Hail, or Lightning",
+	"Waterspout":"Wind, Hail, or Lightning",
+	"Drought": "Drought",
+	"Excessive Heat": "Extreme Heat",
+	"Heat": "Extreme Heat",
+	"Wildfire": "Wildfire",
+	"Blizzard": "Snow Storms or Ice Storms",
+	"Winter Storm": "Snow Storms or Ice Storms",
+	"Winter Weather": "Snow Storms or Ice Storms",
+	"Heavy Snow": "Snow Storms or Ice Storms",
+	"Ice Storm": "Snow Storms or Ice Storms",
+	"Extreme Cold/Wind Chill": "Cold Weather/Wind Chill or Freezing",
+	"Cold/Wind Chill": "Cold Weather/Wind Chill or Freezing",
+	"Frost/Freeze": "Cold Weather/Wind Chill or Freezing",
+	"Hurricane (Typhoon)": "Tropical Storm", 
+	"Tropical Storm": "Tropical Storm",
+}
+
+billion_dollar_event_priorities = {
+	"Severe Storm": ["Tornado or Funnel Cloud", "Flooding", "Wind, Hail, or Lightning"],
+	"Flooding": ["Flooding", "Wind, Hail, or Lightning"],
+	"Drought": ["Drought", "Extreme Heat", "Wildfire"],
+	"Wildfire": ["Wildfire"],
+	"Winter Storm": ["Snow Storms or Ice Storms", "Cold Weather/Wind Chill or Freezing", "Wind, Hail, or Lightning"],
+	"Tropical Cyclone": ["Tropical Storm", "Tornado or Funnel Cloud", "Flooding", "Wind, Hail, or Lightning"],
+	"Freeze": ["Cold Weather/Wind Chill or Freezing", "Snow Storms or Ice Storms", "Wind, Hail, or Lightning"],
+}
+
 def generateQS(item):
 	qs = "SELECT state_fips, cz_type, cz_fips, cz_name, event_type FROM stormeventstable WHERE ("
 	# states
@@ -45,14 +83,15 @@ def generateQS(item):
 
 	return qs
 
-def getCountyFips(raw_list, cur, index):
+def getCountyFips(raw_list, cur, index, billion_dollar_event_category):
 	combined_fips_list = []
 	for item in raw_list:
 		state_fips = item[0].zfill(2)
 		cz_fips = format(item[2], '03')
+		cz_name = item[3]
 		event_type = item[4]
 		if item[1] == "C":
-			appendToData(index, state_fips + cz_fips, event_type)
+			appendToData(index, state_fips + cz_fips, event_type, billion_dollar_event_category, cz_name)
 		else:
 			# get state abbreviation from state fips abbreviation mapping
 			cur.execute("SELECT abbrev FROM stateabbrevfipsmapping WHERE fips=" + "'" + state_fips + "';")
@@ -60,30 +99,66 @@ def getCountyFips(raw_list, cur, index):
 			state_zone = state_abbrev + cz_fips
 
 			# get fips list from zone fips mapping
-			cur.execute("SELECT fips FROM zonefipsmapping WHERE state_zone=" + "'" + state_zone + "';")
+			cur.execute("SELECT fips, county_name FROM zonefipsmapping WHERE state_zone=" + "'" + state_zone + "';")
 			fips_in_zone = cur.fetchall()
 			# print(fips_in_zone)
 
-			for fips in fips_in_zone:
-				appendToData(index, format(fips[0], '05'), event_type)
+			for result in fips_in_zone:
+				fips = result[0]
+				fips_name = result[1]
+				appendToData(index, format(fips, '05'), event_type, billion_dollar_event_category, fips_name)
 
 	# return list(combined_fips_list)
 
-def appendToData(billion_dollar_id, fips, event_type):
+def appendToData(billion_dollar_id, fips, event_type, billion_dollar_event_category, fips_name):
 	if fips in fips_by_event:
 		if fips_by_event[fips][billion_dollar_id]:
-			currVals = set(fips_by_event[fips][billion_dollar_id])
-			currVals.add(event_type)
-			fips_by_event[fips][billion_dollar_id] = list(currVals)
+			currVal = fips_by_event[fips][billion_dollar_id]
+			fips_by_event[fips][billion_dollar_id] = compareVals(currVal, event_type, billion_dollar_event_category)
 		else:
-			fips_by_event[fips][billion_dollar_id] = [event_type]
+			fips_by_event[fips][billion_dollar_id] = getEventGroupMapping(event_type)
 	else:
-		fips_by_event[fips] = [None] * 142
+		fips_by_event[fips] = [None] * 143
 		# for eventId in range(1, 142):
 	 # 		fips_by_event[fips][str(eventId).decode("utf-8")] = None
-	 	fips_by_event[fips][billion_dollar_id] = [event_type]
+	 	fips_by_event[fips][142] = fips_name
+	 	fips_by_event[fips][billion_dollar_id] = getEventGroupMapping(event_type)
 
-	 	# fips_by_event[fips][year] = 1
+def compareVals(curr_val_group, new_val, billion_dollar_event_category):
+	priority_list = billion_dollar_event_priorities[billion_dollar_event_category]
+
+	if curr_val_group == "Other" and getEventGroupMapping(new_val) == "Other":
+		return "Other"
+	
+	if curr_val_group == "Other":
+		return getEventGroupMapping(new_val)
+
+	if getEventGroupMapping(new_val) == "Other":
+		return curr_val_group
+
+	
+	new_val_group = event_group_mappings[new_val]
+
+	if (curr_val_group not in priority_list):
+		return new_val_group
+
+	if (new_val_group not in priority_list):
+		return curr_val_group
+
+	# print(priority_list)
+	currVal_priority = priority_list.index(curr_val_group)
+	new_val_priority = priority_list.index(new_val_group)
+
+	if (currVal_priority < new_val_priority):
+		return curr_val_group
+	else:
+		return new_val_group
+
+def getEventGroupMapping(event_type):
+	if (event_type not in event_group_mappings):
+		return "Other"
+	else:
+		return event_group_mappings[event_type]
 
 with open('billion_dollar.json') as data_file:
     data = json.load(data_file)
@@ -103,7 +178,7 @@ for i, item in enumerate(eventsData):
 	cur.execute(query_string)
 	raw_county_list = cur.fetchall()
 	# print(raw_county_list)
-	fips_list = getCountyFips(raw_county_list, cur, int(item.get('id')))
+	fips_list = getCountyFips(raw_county_list, cur, int(item.get('id')), item.get('event_category'))
 	# fips_list_string = str(fips_list).replace("[", "").replace("]", "")
 	# eventsData[i]['county_fips'] = fips_list_string
 	# print(fips_list)
@@ -170,6 +245,7 @@ with open('countyByEvent.csv', 'wb') as county_by_event_file:
     #     dict_writer.writerow({field: fips_by_event[k].get(field) or k for field in keys})
 
     for key, value in fips_by_event.iteritems():
+    	# print(key, value)
     	writer.writerow([key] + list(value))
     	# print(key)
     	# print(value)
