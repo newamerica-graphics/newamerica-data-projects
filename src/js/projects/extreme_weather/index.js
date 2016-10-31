@@ -82,27 +82,49 @@ let vizSettingsList = [
 	{
 		id: "#extreme-weather__counties_map", 
 		vizType: "dashboard",
-		chartSettingsList: [
-			{
-				vizType: "dot_histogram",
-				isMessagePasser: true,
-				primaryDataSheet: "events",
-				groupingVars: [ variables.year ],
-				filterVars: [ variables.cpi_adjusted_cost ],
-				tooltipVars: [ variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.cpi_adjusted_cost, variables.states ],
-				labelSettings: { interval: 5 }
-			},
-			{
-				vizType: "us_map",
-				primaryDataSheet: "fips_by_event",
-				geometryType: "counties",
-				stroke: {"color": "grey", "width":".5", "opacity": ".7", "hoverColor": colors.black, "hoverWidth": "2"},
-				geometryVar: variables.event_fips,
-				hideFilterGroup: true,
-				filterVars: getEventFilterVars(),
-				tooltipVars: [variables.event_county_name ],
-				legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": true}
-			}
+		layoutRows: [
+			[
+				{
+					vizType: "select_box",
+					primaryDataSheet: "events",
+					variable: variables.event_name,
+					isMessagePasser: true,
+					messageHandlerType: "change_value",
+				}
+			],
+			[
+				{
+					vizType: "dot_histogram",
+					width: "330px",
+					isMessagePasser: true,
+					messageHandlerType: "change_value",
+					primaryDataSheet: "events",
+					groupingVars: [ variables.year ],
+					filterVars: [ variables.cpi_adjusted_cost ],
+					tooltipVars: [ variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.cpi_adjusted_cost, variables.states ],
+					labelSettings: { interval: 5 },
+					eventSettings: {
+						"mouseover":{ "tooltip": false, "fill": colors.turquoise.light, "stroke": "none"},
+						"click":{ "tooltip": false, "fill": "turqouise", "stroke": "none", "handlerFuncType": "change_value"}
+
+					}
+				}
+			],
+			[
+				{
+					vizType: "us_map",
+					messageHandlerType: "change_filter",
+					primaryDataSheet: "fips_by_event",
+					geometryType: "counties",
+					stroke: {"color": "grey", "width":".5", "opacity": ".7", "hoverColor": colors.black, "hoverWidth": "2"},
+					geometryVar: variables.event_fips,
+					hideFilterGroup: true,
+					filterVars: getEventFilterVars(),
+					tooltipVars: [variables.event_county_name ],
+					legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": true}
+				}
+
+			]
 		]
 	},
 ]

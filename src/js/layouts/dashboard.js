@@ -4,60 +4,98 @@ let d3 = require("d3");
 
 import { DotHistogram } from "../chart_types/dot_histogram.js";
 import { UsMap } from "../chart_types/us_map.js";
+import { SelectBox } from "../components/select_box.js";
+import { Tooltip } from "../components/tooltip.js";
 
 export class Dashboard {
 	constructor(vizSettings) {
-		let { id, chartSettingsList } = vizSettings;
+		let { id, layoutRows } = vizSettings;
+		this.id = id;
 
-		this.vizList = [];
+		this.componentList = [];
 		let i = 0;
 
-		// let filterGroup = new FilterGroup(vizSettings);
-		for (let chartSettingsObject of chartSettingsList) {
-			d3.select(id).append("div")
-				.attr("id", "chart" + i);
+		for (let layoutRow of layoutRows) {
+			for (let componentSettings of layoutRow) {
+				d3.select(this.id).append("div")
+					.attr("id", "viz" + i)
+					.style("width", componentSettings.width ? componentSettings.width : "auto")
+					.classed("full-row", layoutRow.length == 1 ? true : false);
 
-			// let chartSettingsObject = Object.assign({}, vizSettings);
-			chartSettingsObject.id = "#chart" + i;
+				componentSettings.id = "#viz" + i;
 
-			if (chartSettingsObject.isMessagePasser) {
-				chartSettingsObject.filterChangeFunction = this.changeFilter.bind(this);
+				this.componentList.push(this.initializeComponent(componentSettings));
+				i++;
 			}
-			
-			let viz;
-			switch (chartSettingsObject.vizType) {
-				case "dot_histogram":
-					viz = new DotHistogram(chartSettingsObject);
-					this.vizList.push(viz);
-					break;
-				case "us_map":
-					viz = new UsMap(chartSettingsObject);
-					this.vizList.push(viz);
-					break;
-			}
-
-			i++;
 		}
+
+	}
+
+	initializeComponent(componentSettings) {
+		if (componentSettings.isMessagePasser) {
+			componentSettings.filterChangeFunction = this.changeFilter.bind(this);
+		}
+			
+		let component;
+		switch (componentSettings.vizType) {
+			case "dot_histogram":
+				component = new DotHistogram(componentSettings);
+				break;
+			case "select_box":
+				component = new SelectBox(componentSettings);
+				break;
+			case "tooltip":
+				component = new Tooltip(componentSettings);
+				break;
+			case "us_map":
+				component = new UsMap(componentSettings);
+				break;
+		}
+		
+		component.messageHandlerType = componentSettings.messageHandlerType;
+		return component;
 	}
 
 	render(data) {
-		let visibilityToggles = [];
-		for (let viz of this.vizList) {
-			viz.render(data);
+		for (let component of this.componentList) {
+			component.render(data);
 		}
 	}
 
 	resize() {
-		for (let viz of this.vizList) {
-			viz.resize ? viz.resize() : null;
+		for (let component of this.componentList) {
+			component.resize ? component.resize() : null;
 		}
 	}
 
-	changeFilter(value) {
-		for (let viz of this.vizList) {
-			viz.changeFilter ? viz.changeFilter(value) : null;
+	changeFilter(value, messageOriginator) {
+		for (let component of this.componentList) {
+			if (component.id != messageOriginator.id) {
+
+				switch (component.messageHandlerType) {
+					case null:
+						break;
+					case "change_filter":
+						component.changeFilter(value) ? component.changeFilter(value) : null;
+						break;
+					case "change_value":
+						console.log(component);
+						component.changeValue(value) ? component.changeValue(value) : null;
+						break;
+				}
+			}
 		}
 		console.log(value);
+	}
+
+	addSelectBox() {
+		// this.selectBox = 
+		let id = this.selectBoxValList[index].values[0].id;
+			this.changeFilter(id);
+	}
+
+	populateSelectBox(data) {
+		
 	}
 
 

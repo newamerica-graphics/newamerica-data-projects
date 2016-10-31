@@ -20,7 +20,7 @@ let margin = {
 
 export class GroupedDotMatrix extends Chart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, groupingVars, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, distanceBetweenGroups, labelSettings, dividingLine, legendShowVals, primaryDataSheet } = vizSettings;
+		let {id, groupingVars, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, distanceBetweenGroups, labelSettings, dividingLine, legendShowVals, primaryDataSheet, eventSettings, filterChangeFunction } = vizSettings;
 
 		super(id, false);
 
@@ -32,6 +32,8 @@ export class GroupedDotMatrix extends Chart {
 		this.dividingLine = dividingLine;
 		this.legendShowVals = legendShowVals;
 		this.primaryDataSheet = primaryDataSheet;
+		this.eventSettings = eventSettings;
+		this.filterChangeFunction = filterChangeFunction;
 
 		if (dividingLine) {
 			this.dividingLineTextHeight = this.dividingLine.descriptionLines.length * dividingLineTextOffset + 30;
@@ -89,6 +91,10 @@ export class GroupedDotMatrix extends Chart {
 		vizSettings.tooltip = this.tooltip;
 		vizSettings.colorScale = this.colorScale;
 		vizSettings.primaryDataSheet = this.primaryDataSheet;
+		vizSettings.eventSettings = this.eventSettings;
+		if (this.eventSettings.click.handlerFuncType) {
+			vizSettings.eventSettings.click.handlerFunc = this.changeValue.bind(this);
+		}
 
 		for (let i = 0; i < this.numGroupings; i++) {
 
@@ -247,6 +253,14 @@ export class GroupedDotMatrix extends Chart {
 			// this.dotMatrixContainers[i].attr("transform", "translate(" + this.calcTransformX(i) + ", " + this.calcTransformY(i) + ")");
 			// this.labelContainers[i].attr("transform", "translate(" + this.calcTransformX(i) + ")");
 		// }
+	}
+
+	changeValue(value) {
+		for (let dotMatrix of this.dotMatrices) {
+			dotMatrix.changeValue(value);
+		}
+
+		this.filterChangeFunction ? this.filterChangeFunction(value, this) : null;
 	}
 
 	calcTransformX(i) {

@@ -17,7 +17,7 @@ let splitDistance = 3; //number of dots between split components
 
 export class DotMatrix extends Chart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, orientation, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, isSubComponent, tooltip, colorScale, split, primaryDataSheet} = vizSettings;
+		let {id, orientation, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, isSubComponent, tooltip, colorScale, split, primaryDataSheet, eventSettings} = vizSettings;
 		
 		super(id, isSubComponent);
 
@@ -27,6 +27,7 @@ export class DotMatrix extends Chart {
 		this.isSubComponent = isSubComponent;
 		this.split = split;
 		this.primaryDataSheet = primaryDataSheet;
+		this.eventSettings = eventSettings;
 
 		this.split ? this.appendSplitLabels() : null;
 
@@ -176,7 +177,8 @@ export class DotMatrix extends Chart {
 		    })
 		    .attr("class", (d) => { return d[this.currFilterVar]; })
 		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event); })
-		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); });
+		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); })
+		    .on("click", (d) => { return this.eventSettings.click.handlerFunc ? this.eventSettings.click.handlerFunc(d.id) : null; });
 	}
 
 	setSplitIndex() {
@@ -274,6 +276,8 @@ export class DotMatrix extends Chart {
 		mousePos[0] = eventObject.pageX;
 		mousePos[1] = eventObject.pageY;
 
+		let mouseoverSettings = this.eventSettings.mouseover;
+
 		let elem = d3.select(path);
 		// let prevX = elem.attr("x");
 		// let prevY = elem.attr("y");
@@ -283,8 +287,11 @@ export class DotMatrix extends Chart {
 		 //    .attr("height", dotW * 2)
 		 //    .attr("x", prevX - dotW/2)
 		 //    .attr("y", prevY - dotW/2)
-			.attr("stroke", "white")
-			.attr("stroke-width", 3.5);
+		 	.attr("fill", (d) => {
+		    	return mouseoverSettings.fill ? mouseoverSettings.fill : this.colorScale(d[this.currFilterVar]);
+		    })
+			.attr("stroke", mouseoverSettings.stroke ? mouseoverSettings.stroke : "none")
+			.attr("stroke-width", mouseoverSettings.strokeWidth ? mouseoverSettings.strokeWidth : "0px");
 			
 		this.tooltip.show(datum, mousePos);
 	}
@@ -295,6 +302,9 @@ export class DotMatrix extends Chart {
 		// let prevY = Number(elem.attr("y"));
 
 		elem
+			.attr("fill", (d) => {
+		    	return this.colorScale(d[this.currFilterVar]);
+		    })
 			.attr("stroke", "none");
 			// .attr("width", dotW)
 		 //    .attr("height", dotW)
@@ -316,6 +326,12 @@ export class DotMatrix extends Chart {
 		   		// }
 		   		return colors.grey.light;
 		    });
+	}
+
+	changeValue(value) {
+		this.cells
+			.attr("fill", (d) => { return d.id == value ? colors.turquoise.light : this.colorScale(d[this.currFilterVar]);});
+
 	}
 
 	appendSplitLabels() {
