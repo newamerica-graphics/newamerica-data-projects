@@ -12,8 +12,7 @@ export class SelectBox {
 			.on("change", (d) => { 
 				let index = this.selectBox.property('selectedIndex');
 				filterChangeFunction(index, this);
-			});
-			
+			});	
 	}
 
 	render(data) {
@@ -30,9 +29,6 @@ export class SelectBox {
 			.append("option")
 			.text((d) => { return d.key; })
 			.attr("value", (d) => { return d.values[0].id; });
-
-		
-
 	}
 
 	changeValue(value) {
