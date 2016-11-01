@@ -12,7 +12,7 @@ let continuousLegendHeight = 20,
 export class Legend {
 	constructor(legendSettings) {
 		console.log(legendSettings);
-		let {id, markerSettings, showTitle, orientation, customTitleExpression, disableValueToggling, openEnded} = legendSettings;
+		let {id, markerSettings, showTitle, orientation, customTitleExpression, disableValueToggling, openEnded, customLabels} = legendSettings;
 		this.id = id;
 		this.showTitle = showTitle;
 		this.customTitleExpression = customTitleExpression;
@@ -20,6 +20,7 @@ export class Legend {
 		this.orientation = orientation;
 		this.disableValueToggling = disableValueToggling;
 		this.openEnded = openEnded;
+		this.customLabels = customLabels;
 
 		this.legend = d3.select(id)
 			.append("div")
@@ -218,7 +219,11 @@ export class Legend {
 				cellText.text(formatValue(Math.ceil(this.calcBinVal(i, this.dataMin, this.binInterval)), format) + " to " + formatValue(Math.floor(this.calcBinVal(i+1, this.dataMin, this.binInterval)), format));
 			}
 		} else if (scaleType == "categorical") {
-			cellText.text(this.colorScale.domain()[i] ? this.colorScale.domain()[i] : "null" );
+			if (this.customLabels) {
+				cellText.text(this.customLabels[i]);
+			} else {
+				cellText.text(this.colorScale.domain()[i] ? this.colorScale.domain()[i] : "null" );
+			}
 		}
 	}
 

@@ -23,6 +23,12 @@
 		.legend__cell-list {
 			text-align: center;
 		}
+
+		&.top {
+			width: 100%;
+			position: absolute;
+			top: 0px;
+		}
 	}
 
 	&.horizontal-left {

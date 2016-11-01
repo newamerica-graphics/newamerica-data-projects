@@ -3,9 +3,9 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 import { colors } from "../helper_functions/colors.js";
-// import { getColorScale } from "../helper_functions/get_color_scale.js";
-// import { Legend } from "../components/legend.js";
-// import { Tooltip } from "../components/tooltip.js";
+import { Legend } from "../components/legend.js";
+
+import { formatValue } from "../helper_functions/format_value.js";
 
 let parseDate = d3.timeParse("%B %d, %Y");
 
@@ -15,11 +15,12 @@ let dataPointWidth = 7;
 
 export class BarChart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, primaryDataSheet, groupingVar, filterVars} = vizSettings;
+		let {id, primaryDataSheet, groupingVar, filterVars, legendSettings} = vizSettings;
 		this.id = id;
 		this.primaryDataSheet = primaryDataSheet;
 		this.filterVars = filterVars;
 		this.groupingVar = groupingVar;
+		this.legendSettings = legendSettings;
 
 		this.svg = d3.select(id).append("svg").attr("class", "bar-chart");
 
@@ -33,10 +34,12 @@ export class BarChart {
 		this.yScales = {};
 		this.xVals = [];
 		let colorVals = [];
+		let colorLabels = [];
 		
 		for (let filterVar of filterVars) {
 			this.xVals.push(filterVar.variable);
 			colorVals.push(filterVar.color);
+			colorLabels.push(filterVar.displayName);
 			this.yScales[filterVar.variable] = d3.scaleLinear();
 		}
 
@@ -45,7 +48,13 @@ export class BarChart {
 			.range(colorVals);
 
 		this.setDimensions();
-		this.setXYScaleDomains
+		this.setXYScaleDomains;
+
+		this.legendSettings.id = id;
+		this.legendSettings.markerSettings = { shape:"rect", size:10 };
+		this.legendSettings.customLabels = colorLabels;
+
+		this.legend = new Legend(this.legendSettings);
 	}
 
 	render(data) {
@@ -57,7 +66,13 @@ export class BarChart {
 		console.log(this.xScale.domain());
 
 		this.renderBars();
-		// this.renderAxes();
+		this.renderAxes();
+
+		this.legendSettings.scaleType = "categorical";
+		this.legendSettings.colorScale = this.colorScale;
+		this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
+
+		this.legend.render(this.legendSettings);
 	}
 
 	setDimensions() {
@@ -104,43 +119,38 @@ export class BarChart {
 	renderBars() {
 		console.log(this.groupingScale.bandwidth());
 		this.data.forEach((d) => {
-		    d.vals = this.xVals.map(function(variable) { return {variable: variable, value: +d[variable]}; });
+		    d.vals = this.filterVars.map(function(filterVar) { return {variable: filterVar.variable, format: filterVar.format, value: +d[filterVar.variable]}; });
 		});
 
 		this.groups = this.renderingArea.selectAll(".group")
-	      .data(this.data)
-	    .enter().append("g")
-	      .attr("class", "group")
-	      .attr("transform", (d) => { return "translate(" + this.groupingScale(d[this.groupingVar.variable]) + ",0)"; });
+	      	.data(this.data)
+	      .enter().append("g")
+	      	.attr("class", "group")
+	      	.attr("transform", (d) => { return "translate(" + this.groupingScale(d[this.groupingVar.variable]) + ",0)"; });
 
 	 	this.bars = this.groups.selectAll("rect")
-	      .data((d) => { return d.vals; })
-	    .enter().append("rect")
-	      .attr("width", this.xScale.bandwidth())
-	      .attr("x", (d) => { return this.xScale(d.variable); })
-	      .attr("y", (d) => { return this.yScales[d.variable](d.value); })
-	      .attr("height", (d) => { return this.h - this.yScales[d.variable](d.value); })
-	      .style("fill", (d) => { return this.colorScale(d.variable); });
+	      	.data((d) => { return d.vals; })
+	      .enter().append("rect")
+			.attr("width", this.xScale.bandwidth())
+			.attr("x", (d) => { return this.xScale(d.variable); })
+			.attr("y", (d) => { return this.yScales[d.variable](d.value); })
+			.attr("height", (d) => { return this.h - this.yScales[d.variable](d.value); })
+			.style("fill", (d) => { return this.colorScale(d.variable); });
+
+	    this.labels = this.groups.selectAll("text")
+	      	.data((d) => { return d.vals; })
+	      .enter().append("text")
+	      	.attr("x", (d) => { return this.xScale(d.variable) + this.xScale.bandwidth()/2; })
+	      	.attr("y", (d) => { return this.yScales[d.variable](d.value) - 5; })
+	      	.text((d) => { return formatValue(d.value, d.format) })
+	      	.attr("text-anchor", "middle");
 	}
 
 	renderAxes() {
-		this.xAxis = this.renderingArea.append("g")
+		this.groupingAxis = this.renderingArea.append("g")
 			.attr("class", "axis axis-x")
 			.attr("transform", "translate(0," + this.h + ")")
-			.call(d3.axisBottom(this.xScale).tickPadding(10));
-
-		this.yAxis = this.renderingArea.append("g")
-			.attr("class", "axis axis-y")
-			.call(d3.axisLeft(this.yScale).tickPadding(10));
-
-		this.yAxisLabel = this.yAxis.append("text")
-			.attr("class", "axis__title")
-			.attr("transform", "rotate(-90)")
-			.attr("x", -this.h/2)
-			.attr("y", -60)
-			.attr("dy", ".71em")
-			.style("text-anchor", "middle")
-			.text(this.yAxisLabelText);
+			.call(d3.axisBottom(this.groupingScale));
 	}
 
 	resize() {
@@ -155,32 +165,23 @@ export class BarChart {
 			.attr("y", (d) => { return this.yScales[d.variable](d.value); })
 			.attr("height", (d) => { return this.h - this.yScales[d.variable](d.value); });
 
-		// this.xAxis
-		// 	.attr("transform", "translate(0," + this.h + ")")
-		// 	.call(d3.axisBottom(this.xScale).tickPadding(10));
+		this.labels
+		 	.attr("x", (d) => { return this.xScale(d.variable) + this.xScale.bandwidth()/2; })
+	      	.attr("y", (d) => { return this.yScales[d.variable](d.value) - 5; })
 
-		// this.yAxis.call(d3.axisLeft(this.yScale).tickPadding(10));
-		// this.yAxisLabel.attr("x", -this.h/2);
-
-		// this.bars
-		// 	.attr("x", (d) => { return this.xScale(d.key); })
-		// 	.attr("width", this.xScale.bandwidth())
-		// 	.attr("y", (d) => { return this.yScale(d.value); })
-		// 	.attr("height", (d) => { return this.h - this.yScale(d.value); });
+		this.groupingAxis
+			.attr("transform", "translate(0," + this.h + ")")
+			.call(d3.axisBottom(this.groupingScale));
 	}
 
-	setCurrSelected(value) {
-		this.currSelected = value;
-		let i = 0;
-		for (let d of this.data) {
-	    	if (d.key == value) {
-	    		this.currSelectedIndex = i;
-	    		break;
-	    	}
-	    	i++;
-	    }
-
-	    this.bars
-			.attr("fill", (d, i) => { return this.setBarColor(i); });
+	changeVariableValsShown(valsShown) {
+		this.bars
+			.style("fill", (d) => {
+	   			let binIndex = this.colorScale.domain().indexOf(d.variable);
+	   			if (valsShown.indexOf(binIndex) > -1) {
+	   				return this.colorScale(d.variable);
+	   			}
+		   		return colors.grey.light;
+		    });
 	}
 }

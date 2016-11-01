@@ -31,7 +31,7 @@ let variables = {
 
 	storm_type: {"variable":"storm_type", "displayName":"Storm Type", "format":"string", "scaleType":"categorical"},
 	frequency: {"variable":"frequency", "displayName":"Frequency", "format":"number", "color": colors.turquoise.medium},
-	average_cost: {"variable":"average_cost", "displayName":"Average Cost (Billions)", "format":"price", "scaleType":"linear", "color": colors.blue.medium},
+	average_cost: {"variable":"average_cost", "displayName":"Average Cost (Billions)", "format":"number", "scaleType":"linear", "color": colors.blue.medium},
 }
 
 let numBillionDollarEvents = 142;
@@ -148,6 +148,7 @@ let vizSettingsList = [
 		primaryDataSheet: "event_types",
 		groupingVar: variables.storm_type,
 		filterVars: [ variables.frequency, variables.average_cost],
+		legendSettings: {"orientation": "horizontal-center top", "showTitle": false, "disableValueToggling": false}
 	},
 ]
 
