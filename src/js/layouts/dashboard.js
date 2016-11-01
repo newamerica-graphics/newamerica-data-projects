@@ -5,22 +5,26 @@ let d3 = require("d3");
 import { DotHistogram } from "../chart_types/dot_histogram.js";
 import { UsMap } from "../chart_types/us_map.js";
 import { SelectBox } from "../components/select_box.js";
-import { Tooltip } from "../components/tooltip.js";
+import { TextBox } from "../components/text_box.js";
 
 export class Dashboard {
 	constructor(vizSettings) {
-		let { id, layoutRows } = vizSettings;
+		let { id, layoutRows, defaultValue } = vizSettings;
 		this.id = id;
+		this.defaultValue = defaultValue;
 
 		this.componentList = [];
 		let i = 0;
 
 		for (let layoutRow of layoutRows) {
+			let currRow = d3.select(this.id).append("div")
+				.attr("class", "dashboard__row");
+
 			for (let componentSettings of layoutRow) {
-				d3.select(this.id).append("div")
+				currRow.append("div")
 					.attr("id", "viz" + i)
 					.style("width", componentSettings.width ? componentSettings.width : "auto")
-					.classed("full-row", layoutRow.length == 1 ? true : false);
+					.classed("dashboard__floated", layoutRow.length != 1 ? true : false);
 
 				componentSettings.id = "#viz" + i;
 
@@ -44,8 +48,8 @@ export class Dashboard {
 			case "select_box":
 				component = new SelectBox(componentSettings);
 				break;
-			case "tooltip":
-				component = new Tooltip(componentSettings);
+			case "text_box":
+				component = new TextBox(componentSettings);
 				break;
 			case "us_map":
 				component = new UsMap(componentSettings);
@@ -60,6 +64,7 @@ export class Dashboard {
 		for (let component of this.componentList) {
 			component.render(data);
 		}
+		this.changeFilter(this.defaultValue, this);
 	}
 
 	resize() {
@@ -71,7 +76,6 @@ export class Dashboard {
 	changeFilter(value, messageOriginator) {
 		for (let component of this.componentList) {
 			if (component.id != messageOriginator.id) {
-
 				switch (component.messageHandlerType) {
 					case null:
 						break;
@@ -86,16 +90,6 @@ export class Dashboard {
 			}
 		}
 		console.log(value);
-	}
-
-	addSelectBox() {
-		// this.selectBox = 
-		let id = this.selectBoxValList[index].values[0].id;
-			this.changeFilter(id);
-	}
-
-	populateSelectBox(data) {
-		
 	}
 
 

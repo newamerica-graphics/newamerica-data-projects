@@ -7,11 +7,12 @@ let variables = {
 	year: {"variable":"year", "displayName":"Year", "format":"year"},
 	event_category: {"variable":"event_category", "displayName":"Event Category", "format":"string", "scaleType":"categorical", "customDomain":["Drought", "Wildfire", "Flooding", "Freeze", "Winter Storm", "Severe Storm", "Tropical Cyclone"], "customRange":[colors.red.light, colors.red.medium, colors.blue.light, colors.blue.medium, colors.blue.dark, colors.purple.light, colors.turquoise.light]},
 	event_name: {"variable":"event_name", "displayName":"Event Name", "format":"string"},
+	deaths: {"variable":"deaths", "displayName":"Deaths", "format":"number"},
 	begin_date: {"variable":"begin_date", "displayName":"Begin Date", "format":"string"},
 	end_date: {"variable":"end_date", "displayName":"End Date", "format":"string"},
 	states: {"variable":"states", "displayName":"States Affected", "format":"string"},
 	info_link: {"variable":"info_link", "displayName":"Info Link", "format":"string"},
-	cpi_adjusted_cost: {"variable":"cpi_adjusted_cost", "displayName":"CPI Adjusted Cost (Billions)", "format":"string", "scaleType":"logarithmic", "customRange":[colors.grey.light, colors.grey.dark], "numBins":20},
+	cpi_adjusted_cost: {"variable":"cpi_adjusted_cost", "displayName":"CPI Adjusted Cost (Billions)", "format":"number", "scaleType":"quantize", "numBins":4, "customDomain":[1, 19], "customRange":[colors.grey.medium, colors.grey.dark]},
 
 	event_fips: {"variable":"fips", "displayName":"County Fips", "format":"number"},
 	event_county_name: {"variable":"county_name", "displayName":"County", "format":"string"},
@@ -28,6 +29,8 @@ let variables = {
 	fema_fire: {"variable":"fire", "displayName":"Fire", "format":"number", "scaleType":"linear"},
 	fema_hurricane: {"variable":"hurricane", "displayName":"Hurricane", "format":"number", "scaleType":"linear"},
 }
+
+let numBillionDollarEvents = 142;
 
 let vizSettingsList = [
 	// {
@@ -68,20 +71,21 @@ let vizSettingsList = [
 	// 	tooltipVars: [variables.event_county_name ],
 	// 	legendSettings: {"orientation": "horizontal-center"}
 	// },
-	// {
-	// 	id: "#extreme-weather__fema-declarations", 
-	// 	vizType: "us_map",
-	// 	primaryDataSheet: "fema_declarations",
-	// 	geometryType: "counties",
-	// 	stroke: {"color": "grey", "width":".5", "opacity": ".7", "hoverColor": colors.black, "hoverWidth": "2"},
-	// 	geometryVar: variables.fema_fips,
-	// 	filterVars: [variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
-	// 	tooltipVars: [variables.fema_county_name, variables.fema_fips, variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
-	// 	legendSettings: {"orientation": "horizontal-center", "customTitleExpression": "<<>> Declarations"}
-	// },
+	{
+		id: "#extreme-weather__fema-declarations", 
+		vizType: "us_map",
+		primaryDataSheet: "fema_declarations",
+		geometryType: "counties",
+		stroke: {"color": "grey", "width":".5", "opacity": ".7", "hoverColor": colors.black, "hoverWidth": "2"},
+		geometryVar: variables.fema_fips,
+		filterVars: [variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
+		tooltipVars: [variables.fema_county_name, variables.fema_fips, variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
+		legendSettings: {"orientation": "horizontal-center", "customTitleExpression": "<<>> Declarations", "showTitle": true}
+	},
 	{
 		id: "#extreme-weather__counties_map", 
 		vizType: "dashboard",
+		defaultValue: numBillionDollarEvents - 1,
 		layoutRows: [
 			[
 				{
@@ -95,19 +99,26 @@ let vizSettingsList = [
 			[
 				{
 					vizType: "dot_histogram",
-					width: "330px",
+					width: "450px",
 					isMessagePasser: true,
 					messageHandlerType: "change_value",
 					primaryDataSheet: "events",
 					groupingVars: [ variables.year ],
 					filterVars: [ variables.cpi_adjusted_cost ],
-					tooltipVars: [ variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.cpi_adjusted_cost, variables.states ],
+					dotSettings: { "width": 14, "offset": 3},
 					labelSettings: { interval: 5 },
+					legendSettings: {"orientation": "horizontal-center", "showTitle": true, "title": "CPI Adjusted Cost (Billions)", "openEnded": true, "disableValueToggling": true},
 					eventSettings: {
-						"mouseover":{ "tooltip": false, "fill": colors.turquoise.light, "stroke": "none"},
+						"mouseover":{ "tooltip": false, "fill": false, "stroke": "black"},
 						"click":{ "tooltip": false, "fill": "turqouise", "stroke": "none", "handlerFuncType": "change_value"}
-
 					}
+				},
+				{
+					vizType: "text_box",
+					width: "calc(100% - 450px)",
+					primaryDataSheet: "events",
+					textBoxVars: [ variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.deaths, variables.cpi_adjusted_cost, variables.states, variables.info_link ],
+					messageHandlerType: "change_value",
 				}
 			],
 			[
@@ -141,7 +152,7 @@ setupProject(projectSettings);
 function getEventFilterVars() {
 	let filterVars = [];
 	let curr;
-	for (let i = 0; i < 142; i++) {
+	for (let i = 0; i < numBillionDollarEvents; i++) {
 		curr = {"variable":String(i), "displayName":"All", "format":"string", "scaleType":"categorical", "customDomain":["Drought", "Extreme Heat", "Wildfire", "Flooding", "Cold Weather/Wind Chill or Freezing", "Snow Storms or Ice Storms", "Tornado or Funnel Cloud", "Tropical Storm", "Wind, Hail, or Lightning", "Other"], "customRange":[colors.red.light, colors.red.medium, colors.red.dark, colors.blue.light, colors.blue.medium, colors.blue.dark, colors.turquoise.light, colors.turquoise.dark, colors.purple.light, colors.grey.light]};
 		filterVars.push(curr);
 	}

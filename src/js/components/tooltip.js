@@ -9,7 +9,8 @@ let scrollXPadding = 2;
 import { formatValue } from "../helper_functions/format_value.js";
 
 export class Tooltip {
-	constructor(id, tooltipVars, tooltipImageVar, imageFolderId, tooltipScrollable) {
+	constructor(vizSettings) {
+		let {id, tooltipVars, tooltipImageVar, imageFolderId, tooltipScrollable} = vizSettings;
 		//removes first variable to be used as title
 		this.titleVar = tooltipVars.shift().variable;
 		this.tooltipVars = tooltipVars;

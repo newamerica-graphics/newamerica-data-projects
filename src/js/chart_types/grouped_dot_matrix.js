@@ -10,8 +10,6 @@ import { getColorScale } from "../helper_functions/get_color_scale.js";
 
 let labelOffset = 20;
 let labelTextSize = 10;
-let dotW = 10;
-let dotOffset = 3;
 let dividingLineTextOffset = 20;
 let margin = {
 	left:20,
@@ -20,7 +18,7 @@ let margin = {
 
 export class GroupedDotMatrix extends Chart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, groupingVars, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, distanceBetweenGroups, labelSettings, dividingLine, legendShowVals, primaryDataSheet, eventSettings, filterChangeFunction } = vizSettings;
+		let {id, groupingVars, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, distanceBetweenGroups, labelSettings, dividingLine, legendSettings, primaryDataSheet, eventSettings, filterChangeFunction, tooltipScrollable, dotSettings } = vizSettings;
 
 		super(id, false);
 
@@ -30,16 +28,19 @@ export class GroupedDotMatrix extends Chart {
 		this.filterVars = filterVars;
 		this.dotsPerRow = dotsPerRow;
 		this.dividingLine = dividingLine;
-		this.legendShowVals = legendShowVals;
+		this.legendSettings = legendSettings;
 		this.primaryDataSheet = primaryDataSheet;
 		this.eventSettings = eventSettings;
 		this.filterChangeFunction = filterChangeFunction;
+		this.dotSettings = dotSettings;
+
+		console.log(dotSettings);
 
 		if (dividingLine) {
 			this.dividingLineTextHeight = this.dividingLine.descriptionLines.length * dividingLineTextOffset + 30;
 		}
 		
-		this.fullGroupingWidth = distanceBetweenGroups + dotsPerRow * (dotW + dotOffset);
+		this.fullGroupingWidth = distanceBetweenGroups + dotsPerRow * (this.dotSettings.width + this.dotSettings.offset);
 		this.labelSettings = labelSettings;
 		this.distanceBetweenGroups = distanceBetweenGroups;
 
@@ -56,14 +57,18 @@ export class GroupedDotMatrix extends Chart {
 		this.currFilter = filterVars[0];
 		this.currFilterVar = filterVars[0].variable;
 
-		this.tooltip = new Tooltip(id, tooltipVars, tooltipImageVar, imageFolderId);
+		if (this.eventSettings && this.eventSettings.mouseover.tooltip) {
+			console.log("adding tooltip");
+			let tooltipSettings = { "id":id, "tooltipVars":tooltipVars, tooltipImageVar:"tooltipImageVar", "imageFolderId":imageFolderId, "tooltipScrollable":tooltipScrollable }
 
-		let legendSettings = {};
-		legendSettings.id = id;
-		legendSettings.showTitle = false;
-		legendSettings.markerSettings = { shape:"rect", size:dotW };
-		legendSettings.orientation = "horizontal-center";
-		this.legend = new Legend(legendSettings);
+			this.tooltip = new Tooltip(tooltipSettings);
+		}
+
+		this.legendSettings.id = id;
+		this.legendSettings.markerSettings = { shape:"rect", size:this.dotSettings.width };
+		this.legendSettings.orientation = "horizontal-center";
+		console.log(this.legendSettings);
+		this.legend = new Legend(this.legendSettings);
 	}
 
 	render(data) {
@@ -71,6 +76,8 @@ export class GroupedDotMatrix extends Chart {
 
 		this.getGroupings();
 		this.setScale();
+
+		console.log(this.colorScale.domain());
 
 		let w = this.fullGroupingWidth * this.numGroupings + margin.left + margin.right;
 
@@ -92,6 +99,7 @@ export class GroupedDotMatrix extends Chart {
 		vizSettings.colorScale = this.colorScale;
 		vizSettings.primaryDataSheet = this.primaryDataSheet;
 		vizSettings.eventSettings = this.eventSettings;
+		vizSettings.dotSettings = this.dotSettings;
 		if (this.eventSettings.click.handlerFuncType) {
 			vizSettings.eventSettings.click.handlerFunc = this.changeValue.bind(this);
 		}
@@ -160,7 +168,7 @@ export class GroupedDotMatrix extends Chart {
 
 		for (let i = 0; i < this.numGroupings; i = i + this.labelSettings.interval) {
 			let elem = labelWrapper.append("g")
-				.attr("transform", "translate(" + (this.calcTransformX(i) + dotW/2) + ")");
+				.attr("transform", "translate(" + (this.calcTransformX(i) + this.dotSettings.width/2) + ")");
 
 			elem.append("text")
 				.text(this.groupings[i].key)
@@ -198,19 +206,21 @@ export class GroupedDotMatrix extends Chart {
 	setLegend() {
 		let legendSettings = {};
 		
-		if ( this.legendShowVals ) {
+		if ( this.legendSettings.showVals ) {
 			legendSettings.valCounts = d3.nest()
 				.key((d) => { return d[this.currFilterVar]; })
 				.rollup(function(v) { return v.length; })
 				.map(this.data);
 		}
 
-		legendSettings.format = this.currFilter.format;
-		legendSettings.scaleType = this.currFilter.scaleType;
-		legendSettings.colorScale = this.colorScale;
-		legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
+		console.log(this.colorScale.domain());
 
-		this.legend.render(legendSettings);
+		this.legendSettings.format = this.currFilter.format;
+		this.legendSettings.scaleType = this.currFilter.scaleType;
+		this.legendSettings.colorScale = this.colorScale;
+		this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
+
+		this.legend.render(this.legendSettings);
 	}
 
 	addDividingLine() {

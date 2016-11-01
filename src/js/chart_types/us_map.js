@@ -45,7 +45,9 @@ export class UsMap extends Chart {
 			.append("svg")
 			.attr("class", "us-states-svg");
 
-		this.tooltip = new Tooltip(id, tooltipVars, null, null);
+		let tooltipSettings = { "id":id, "tooltipVars":tooltipVars }
+
+		this.tooltip = new Tooltip(tooltipSettings);
 
 		this.legendSettings.id = id;
 		this.legendSettings.markerSettings = { shape:"circle", size:10 };

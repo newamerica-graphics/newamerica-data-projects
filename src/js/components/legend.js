@@ -7,17 +7,19 @@ import { formatValue } from "../helper_functions/format_value.js";
 let d3 = require("d3");
 
 let continuousLegendHeight = 20,
-	continuousLegendOffset = 20;
+	continuousLegendOffset = 40;
 
 export class Legend {
 	constructor(legendSettings) {
-		let {id, markerSettings, showTitle, orientation, customTitleExpression, disableValueToggling} = legendSettings;
+		console.log(legendSettings);
+		let {id, markerSettings, showTitle, orientation, customTitleExpression, disableValueToggling, openEnded} = legendSettings;
 		this.id = id;
 		this.showTitle = showTitle;
 		this.customTitleExpression = customTitleExpression;
 		this.markerSettings = markerSettings;
 		this.orientation = orientation;
 		this.disableValueToggling = disableValueToggling;
+		this.openEnded = openEnded;
 
 		this.legend = d3.select(id)
 			.append("div")
@@ -58,9 +60,12 @@ export class Legend {
 
 	renderContinuous(legendSettings) {
 		// this.legendSvg ? this.legendSvg.remove() : null;
-		this.legendSvg = this.cellContainer.append("svg");
-		console.log(this.legendSvg);
 		this.legendWidth = $(this.id).width();
+		this.legendSvg = this.cellContainer.append("svg")
+			.attr("width", this.legendWidth)
+			.attr("height", continuousLegendHeight*2);
+		console.log(this.legendSvg);
+		
 		console.log(this.legendWidth);
 
 		this.defineGradient();
@@ -71,7 +76,7 @@ export class Legend {
 			.attr("y", 0)
 			.style("fill", "url(#linear-gradient)");
 
-		this.addLabels();
+		this.addLabels(legendSettings.scaleType);
 	}
 
 	defineGradient() {
@@ -96,15 +101,23 @@ export class Legend {
 		    .attr("stop-color", this.colorScale.range()[1]);
 	}
 
-	addLabels() {
+	addLabels(scaleType) {
+		let legendXScale;
 		//Set scale for x-axis
-		let legendXScale = d3.scaleLinear()
+		if (scaleType == "logarithmic") {
+			legendXScale = d3.scaleLog();
+		} else {
+			legendXScale = d3.scaleLinear();
+		}
+		console.log(this.colorScale.domain());
+		legendXScale
 			.domain(this.colorScale.domain())
 			.range([continuousLegendOffset, this.legendWidth - continuousLegendOffset]);
 
 		//Define x-axis
 		let legendXAxis = d3.axisBottom()
-			  .ticks(5)
+			  .tickValues([legendXScale.domain()[0], legendXScale.domain()[1]])
+			  .tickFormat((d) => { return legendXScale.tickFormat(4,d3.format(",d"))(d) })
 			  .scale(legendXScale);
 
 		//Set up X axis
@@ -193,7 +206,12 @@ export class Legend {
 		let cellText = cell.append("h5")
 			.classed("legend__cell__label", true);
 
+			console.log(this.colorScale.domain(), this.colorScale.range());
 		if (scaleType == "quantize") {
+			if (this.openEnded && i == this.colorScale.range().length - 1) {
+				cellText.text(formatValue(Math.ceil(this.calcBinVal(i, this.dataMin, this.binInterval)), format) + "+");
+				return;
+			}
 			if (format == "percent") {
 				cellText.text(formatValue(Math.ceil(100*this.calcBinVal(i, this.dataMin, this.binInterval))/100, format) + " to " + formatValue(Math.floor(100*this.calcBinVal(i+1, this.dataMin, this.binInterval))/100, format));
 			} else {

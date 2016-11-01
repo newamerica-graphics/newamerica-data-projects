@@ -60,7 +60,7 @@ export function getColorScale(data, filterVar) {
 		range = customRange ? customRange : setLinearRange(filterVar, data);
 
 	} else if (scaleType == "logarithmic") {
-		scale = d3.scaleLog().base(20);
+		scale = d3.scaleLog().base(15);
 		domain = customDomain ? customDomain : setLinearDomain(filterVar, data);
 		range = customRange ? customRange : setLinearRange(filterVar, data);
 	}
@@ -68,7 +68,7 @@ export function getColorScale(data, filterVar) {
 	scale.domain(domain)
 		.range(range);
 
-	if (scaleType != "categorical") {
+	if (scaleType == "linear" || scaleType == "quantize") {
 		scale.nice();
 	}
 		
@@ -132,6 +132,7 @@ function setLinearDomain(filterVar, data) {
 	let dataMin = Number(d3.min(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; })); 
 	let dataMax = Number(d3.max(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; }));
 
+	console.log(dataMin, dataMax);
 	return [dataMin, dataMax];
 }
 

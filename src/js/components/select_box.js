@@ -8,6 +8,7 @@ export class SelectBox {
 		this.primaryDataSheet = primaryDataSheet;
 		this.variable = variable;
 		this.selectBox = d3.select(id).append("select")
+			.attr("class", "select-box")
 			.on("change", (d) => { 
 				let index = this.selectBox.property('selectedIndex');
 				filterChangeFunction(index, this);

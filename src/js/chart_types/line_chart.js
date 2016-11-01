@@ -47,7 +47,8 @@ export class LineChart {
 		legendSettings.orientation = "horizontal-center";
 		this.legend = new Legend(legendSettings);
 
-		this.tooltip = new Tooltip(id, tooltipVars, tooltipImageVar, imageFolderId, tooltipScrollable);
+		let tooltipSettings = { "id":id, "tooltipVars":tooltipVars, tooltipImageVar:"tooltipImageVar", "imageFolderId":imageFolderId, "tooltipScrollable":tooltipScrollable }
+		this.tooltip = new Tooltip(tooltipSettings);
 		
 	}
 
