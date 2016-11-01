@@ -3,7 +3,6 @@ import $ from 'jquery';
 import { Tooltip } from "../components/tooltip.js";
 import { Legend } from "../components/legend.js";
 import { FilterGroup } from "../components/filter_group.js";
-import { Chart } from "../layouts/chart.js"
 
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 
@@ -16,10 +15,17 @@ import * as global from "./../utilities.js";
 let d3 = require("d3");
 let topojson = require("topojson");
 
+<<<<<<< HEAD:src/js/chart_types/us_map.js
 export class UsMap extends Chart {
 	constructor(vizSettings) {
 		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, stroke, legendSettings, filterGroupSettings } = vizSettings;
 		super(id);
+=======
+export class UsStatesMap {
+	
+	constructor(vizSettings) {
+		let {id, tooltipVars, filterVars, primaryDataSheet } = vizSettings;
+>>>>>>> fe78e4372e03f74f11469deddafafbe9322500d1:src/js/chart_types/us_states_map.js
 
 		this.id = id;
 		this.filterVars = filterVars;
@@ -98,11 +104,15 @@ export class UsMap extends Chart {
 		this.bindDataToGeom();
 		this.buildGraph();
 		this.setLegend();
+<<<<<<< HEAD:src/js/chart_types/us_map.js
 
 		if (!this.hideFilterGroup) {
 			this.filterGroup ? this.setFilterGroup() : null;
 		}
 		// super.render();
+=======
+		this.filterGroup ? this.setFilterGroup() : null;
+>>>>>>> fe78e4372e03f74f11469deddafafbe9322500d1:src/js/chart_types/us_states_map.js
 	}
 
 	processData() {

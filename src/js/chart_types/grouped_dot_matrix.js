@@ -2,7 +2,6 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
-import { Chart } from "../layouts/chart.js";
 import { Legend } from "../components/legend.js";
 import { DotMatrix } from "./dot_matrix.js";
 import { Tooltip } from "../components/tooltip.js";
@@ -16,11 +15,9 @@ let margin = {
 	right:20,
 }
 
-export class GroupedDotMatrix extends Chart {
+export class GroupedDotMatrix {
 	constructor(vizSettings, imageFolderId) {
 		let {id, groupingVars, tooltipVars, tooltipImageVar, filterVars, distanceBetweenGroups, labelSettings, dividingLine, legendSettings, primaryDataSheet, eventSettings, filterChangeFunction, tooltipScrollable, dotSettings } = vizSettings;
-
-		super(id, false);
 
 		this.id = id;
 		this.w = $(this.id).width();
@@ -119,8 +116,6 @@ export class GroupedDotMatrix extends Chart {
 		if (this.dividingLine) {
 			this.addDividingLine();
 		}
-
-		super.render();
 	}
 
 	getGroupings() {

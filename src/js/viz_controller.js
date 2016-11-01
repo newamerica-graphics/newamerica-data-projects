@@ -5,8 +5,13 @@ var JSZip = require("jszip");
 import $ from 'jquery';
 let d3 = require("d3");
 
+<<<<<<< HEAD
 import { BarChart } from "./chart_types/bar_chart.js";
 import { Dashboard } from "./layouts/dashboard.js";
+=======
+import domtoimage from 'dom-to-image';
+
+>>>>>>> fe78e4372e03f74f11469deddafafbe9322500d1
 import { DotMatrix } from "./chart_types/dot_matrix.js";
 import { DotHistogram } from "./chart_types/dot_histogram.js";
 import { GroupedDotMatrix } from "./chart_types/grouped_dot_matrix.js";
@@ -19,6 +24,8 @@ import { FactBox } from "./chart_types/fact_box.js";
 import { LineChart } from "./chart_types/line_chart.js";
 import { SummaryBox } from "./chart_types/summary_box.js";
 import { PieChart } from "./chart_types/pie_chart.js";
+
+import { formatValue } from "./helper_functions/format_value.js";
 
 export function setupProject(projectSettings) {
 	let { vizSettingsList, imageFolderId, dataSheetNames } = projectSettings;
@@ -95,6 +102,8 @@ export function setupProject(projectSettings) {
 
 			vizList.push(viz);
 		}
+
+		
 	}
 
 
@@ -105,7 +114,13 @@ export function setupProject(projectSettings) {
 			for (let viz of vizList) {
 				viz.render(d);
 			}
+<<<<<<< HEAD
 			// setDownloadLinks(d);
+=======
+			setDataDownloadLinks(d);
+			
+			setProfileValues(d);
+>>>>>>> fe78e4372e03f74f11469deddafafbe9322500d1
 		});
 
 	}
@@ -116,7 +131,7 @@ export function setupProject(projectSettings) {
 		}
 	}
 
-	function setDownloadLinks(data) {
+	function setDataDownloadLinks(data) {
 		let publicDataJson = {};
 		for (let sheetName of dataSheetNames) {
 			publicDataJson[sheetName] = data[sheetName];
@@ -145,5 +160,48 @@ export function setupProject(projectSettings) {
 		var jsonDataUrlString = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataJson));
 
 		$("#in-depth__download__json").attr("href", jsonDataUrlString);
+	}
+
+	function setProfileValues(data) {
+		let $inDepthProfileBody = $(".in-depth__profile__body");
+		let dataSheet = $inDepthProfileBody.attr("data-sheet-name");
+		let lookupField = $inDepthProfileBody.attr("data-lookup-field");
+		let lookupValue = window.location.search.replace("?", "").replace("/", "").replace(/_/g, " ").toLowerCase();
+
+		let allLookupValues = d3.nest()
+			.key((d) => { return d[lookupField].toLowerCase(); })
+			.map(data[dataSheet]);
+
+		if (!allLookupValues.get(lookupValue)) {
+			$inDepthProfileBody.empty();
+		}
+
+		let displayField, fieldFormat;
+
+		$(".data-reference__value").each(function(i, item) {
+			displayField = $(item).attr("data-field-name");
+			fieldFormat = $(item).attr("data-field-format");
+			let value;
+			for (let d of data[dataSheet]) {
+				if (d[lookupField].toLowerCase() == lookupValue) {
+					value = formatValue(d[displayField], fieldFormat);
+					$(item).text(value);
+					break;
+				}
+			}
+		})
+
+		setOtherValueSelectorOptions(allLookupValues.keys())
+	}
+
+	function setOtherValueSelectorOptions(otherValuesList) { 
+		let $valueSelector = $(".in-depth__profile__other-value-selector");
+		for (let item of otherValuesList) {
+			let option = $('<option/>')
+		        .addClass('in-depth__profile__other-value-selector__option')
+		        .text(item)
+		        .attr("value", item.toLowerCase().replace(/ /g, "_"))
+		        .appendTo($valueSelector);
+		}
 	}
 }

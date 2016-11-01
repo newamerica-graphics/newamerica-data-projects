@@ -2,7 +2,6 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
-import { Chart } from "../layouts/chart.js";
 import { Legend } from "../components/legend.js";
 
 import { colors } from "../helper_functions/colors.js";
@@ -13,7 +12,7 @@ import { Tooltip } from "../components/tooltip.js";
 
 let splitDistance = 3; //number of dots between split components
 
-export class DotMatrix extends Chart {
+export class DotMatrix {
 	constructor(vizSettings, imageFolderId) {
 		let {id, orientation, tooltipVars, tooltipImageVar, filterVars, isSubComponent, tooltip, colorScale, split, primaryDataSheet, eventSettings, dotSettings, tooltipScrollable, legendSettings} = vizSettings;
 		
@@ -82,7 +81,6 @@ export class DotMatrix extends Chart {
 		
 		if (!this.isSubComponent) {
 			this.setLegend();
-			super.render();
 		}
 		
 	}

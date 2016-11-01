@@ -6,9 +6,7 @@ import { colors } from "../helper_functions/colors.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { Legend } from "../components/legend.js";
 
-
 import { formatValue } from "../helper_functions/format_value.js";
-
 
 let legendWidth = 250;
 let margin = {top: 0, right: legendWidth + 40, bottom: 0, left: 0};
