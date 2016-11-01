@@ -5,15 +5,20 @@ var JSZip = require("jszip");
 import $ from 'jquery';
 let d3 = require("d3");
 
+<<<<<<< HEAD
+import { BarChart } from "./chart_types/bar_chart.js";
+import { Dashboard } from "./layouts/dashboard.js";
+=======
 import domtoimage from 'dom-to-image';
 
+>>>>>>> fe78e4372e03f74f11469deddafafbe9322500d1
 import { DotMatrix } from "./chart_types/dot_matrix.js";
 import { DotHistogram } from "./chart_types/dot_histogram.js";
 import { GroupedDotMatrix } from "./chart_types/grouped_dot_matrix.js";
-import { UsStatesMap } from "./chart_types/us_states_map.js";
-import { MultiChartLayout } from "./layouts/multi_chart_layout.js";
+import { UsMap } from "./chart_types/us_map.js";
+import { UsCountiesMap } from "./chart_types/us_counties_map.js";
+import { TabbedChartLayout } from "./layouts/tabbed_chart_layout.js";
 import { ChartWithFactBox } from "./layouts/chart_with_fact_box.js";
-import { GroupedBarChart } from "./chart_types/grouped_bar_chart.js";
 import { Table } from "./chart_types/table.js";
 import { FactBox } from "./chart_types/fact_box.js";
 import { LineChart } from "./chart_types/line_chart.js";
@@ -38,12 +43,16 @@ export function setupProject(projectSettings) {
 		for (let vizSettingsObject of vizSettingsList) {
 			let viz;
 			switch (vizSettingsObject.vizType) {
-				case "multi_chart_layout":
-					viz = new MultiChartLayout(vizSettingsObject);
+				case "bar_chart":
+					viz = new BarChart(vizSettingsObject, imageFolderId);
 					break;
 
 				case "chart_with_fact_box":
 					viz = new ChartWithFactBox(vizSettingsObject, imageFolderId);
+					break;
+
+				case "dashboard":
+					viz = new Dashboard(vizSettingsObject);
 					break;
 
 				case "dot_matrix":
@@ -58,10 +67,6 @@ export function setupProject(projectSettings) {
 					viz = new FactBox(vizSettingsObject);
 					break;
 				
-				case "grouped_bar_chart":
-					viz = new GroupedBarChart(vizSettingsObject);
-					break;
-
 				case "grouped_dot_matrix":
 					viz = new GroupedDotMatrix(vizSettingsObject, imageFolderId);
 					break;
@@ -78,12 +83,20 @@ export function setupProject(projectSettings) {
 					viz = new SummaryBox(vizSettingsObject);
 					break;
 
+				case "tabbed_chart_layout":
+					viz = new TabbedChartLayout(vizSettingsObject);
+					break;
+
 				case "table":
 					viz = new Table(vizSettingsObject);
 					break;
 
-				case "us_states_map":
-					viz = new UsStatesMap(vizSettingsObject);
+				case "us_counties_map":
+					viz = new UsCountiesMap(vizSettingsObject);
+					break;
+
+				case "us_map":
+					viz = new UsMap(vizSettingsObject);
 					break;
 			}
 
@@ -97,13 +110,17 @@ export function setupProject(projectSettings) {
 
 	function render() {
 		d3.json(projectSettings.dataUrl, (d) => {
+			console.log(d);
 			for (let viz of vizList) {
-				let data = d[viz.primaryDataSheet];
-				viz.render(data);
+				viz.render(d);
 			}
+<<<<<<< HEAD
+			// setDownloadLinks(d);
+=======
 			setDataDownloadLinks(d);
 			
 			setProfileValues(d);
+>>>>>>> fe78e4372e03f74f11469deddafafbe9322500d1
 		});
 
 	}

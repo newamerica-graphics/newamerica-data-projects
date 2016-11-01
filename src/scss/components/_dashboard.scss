@@ -1,0 +1,22 @@
+.dashboard {
+	&__floated {
+		@media screen and (max-width:700px){
+		    width: 100% !important;
+		    float: none;
+		    padding: 0px;
+		}
+		
+		float: left;
+		padding-right: $desktop-padding;
+		&:last-child {
+			padding-right: 0px;
+		}
+			
+	}
+
+	&__row {
+		.chart-wrapper {
+			padding-bottom: 0px;
+		}
+	}
+}

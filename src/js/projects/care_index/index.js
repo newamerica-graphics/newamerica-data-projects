@@ -5,6 +5,7 @@ import { colors } from "../../helper_functions/colors.js";
 
 let variables = {
 	state: {"variable":"state", "displayName":"State", "format": "string"},
+	state_id: {"variable":"state_id", "displayName":"State ID", "format": "number"},
 	cost_rank: {"variable":"cost_rank", "displayName":"Cost Rank", "format":"number", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":4},
 	cost_in_home_yearly: {"variable":"cost_in_home_yearly", "displayName":"Cost in Home", "format":"price", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":5},
 	cost_in_center_yearly: {"variable":"cost_in_center_yearly", "displayName":"Cost in Center", "format":"price", "category":"Cost", "scaleType":"quantize", "customRange":[colors.red.light, colors.red.dark], "numBins":5},
@@ -25,13 +26,18 @@ let variables = {
 let vizSettingsList = [
 	{
 		id: "#care-index__explore-the-index", 
-		vizType: "multi_chart_layout",
+		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "state_data",
 		chartSettingsList: [
 			{
-				vizType: "us_states_map",
+				vizType: "us_map",
 				filterVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ],
-				tooltipVars: [ variables.state, variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ]
+				tooltipVars: [ variables.state, variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ],
+				geometryType: "states",
+				geometryVar: variables.state_id,
+				legendSettings: {"orientation": "vertical-right", "showTitle": true},
+				stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
+				filterGroupSettings: {"hidden": false},
 			},
 			{
 				vizType: "table",
@@ -43,26 +49,27 @@ let vizSettingsList = [
 			}
 		]
 	},
-	// {
-	// 	id: "#care-index__explore-the-index", 
-	// 	vizType: "us_states_map",
-	// 	primaryDataSheet: "state_data",
-	// 	filterVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ],
-	// 	tooltipVars: [ variables.state, variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined  ]
-	// },
 	{
 		id: "#care-index__explore-the-index__availability", 
-		vizType: "us_states_map",
+		vizType: "us_map",
 		primaryDataSheet: "state_data",
+		geometryType: "states",
+		geometryVar: variables.state_id,
+		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
 		filterVars: [ variables.availability_total_norm ],
-		tooltipVars: [ variables.state, variables.availability_total_norm]
+		tooltipVars: [ variables.state, variables.availability_total_norm],
+		legendSettings: {"orientation": "vertical-right", "showTitle": true},
 	},
 	{
 		id: "#care-index__child-care-accredidation", 
-		vizType: "us_states_map",
+		vizType: "us_map",
 		primaryDataSheet: "state_data",
+		geometryType: "states",
+		geometryVar: variables.state_id,
+		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
 		filterVars: [ variables.in_center_pct_accred_statewide ],
-		tooltipVars: [ variables.state, variables.in_center_pct_accred_statewide]
+		tooltipVars: [ variables.state, variables.in_center_pct_accred_statewide],
+		legendSettings: {"orientation": "vertical-right", "showTitle": true},
 	},
 	{
 		id: "#care-index__summary-box__new-mexico", 

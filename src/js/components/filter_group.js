@@ -5,51 +5,71 @@ let d3 = require("d3");
 export class FilterGroup {
 
 	constructor(vizSettings) {
-		let {id, filterVars} = vizSettings;
+		let {id, filterVars, filterGroupSettings} = vizSettings;
 
 		this.id = id;
 		this.filterVars = filterVars;
+
 		let filterContainer = d3.select(id)
 			.append("div")
 			.attr("class", "filter-group");
 
-		this.filterCategoryContainer = filterContainer.append("ul")
-			.attr("class", "filter-group__category-container");
+		if (this.hasCategories()) {
+			this.filterCategoryContainer = filterContainer.append("ul")
+				.attr("class", "filter-group__category-container");
+		}
 
 		this.filterVariableContainer = filterContainer.append("ul")
 			.attr("class", "filter-group__variable-container");
+
+		if (filterGroupSettings && filterGroupSettings.mobileSelectBox) {
+			filterContainer.classed("has-mobile-select", true);
+			this.mobileSelectBox = d3.select(id)
+				.append("select")
+				.attr("class", "select-box filter-group__mobile-select-box");
+		}
 		
 	}
 
 	render(listenerFunc) {
-
 		this.categoryDivs = {};
 		this.valDivs = [];
 		let i = 0;
 		let self = this;
+		let valListDiv;
+
+		this.mobileSelectBox ? this.renderMobileSelectBox(listenerFunc) : null;
+
+		if (!this.hasCategories()) {
+			valListDiv = this.filterVariableContainer.append("ul")
+				.classed("filter-group__variable-list", true);
+		}
+
 		for (let variable of this.filterVars) {
-			let category = variable.category;
-			i == 0 ? this.currCategory = category : null;
+			if (this.hasCategories()) {
+				let category = variable.category;
+				i == 0 ? this.currCategory = category : null;
 
-			if (!this.categoryDivs.hasOwnProperty(category)) {
-				this.categoryDivs[category] = {};
-				this.categoryDivs[category].label = this.filterCategoryContainer.append("p")
-					.classed("filter-group__category", true)
-					.classed("active", () => { return i == 0 ? true : false; })
-					.attr("id", category)
-					.text(category)
-					.on("click", function() { 
-						let firstVar = self.showList(category);
-						listenerFunc(firstVar); 
-					});
+				if (!this.categoryDivs.hasOwnProperty(category)) {
+					this.categoryDivs[category] = {};
+					this.categoryDivs[category].label = this.filterCategoryContainer.append("p")
+						.classed("filter-group__category", true)
+						.classed("active", () => { return i == 0 ? true : false; })
+						.attr("id", category)
+						.text(category)
+						.on("click", function() { 
+							let firstVar = self.showList(category);
+							listenerFunc(firstVar); 
+						});
 
-				this.categoryDivs[category].valueListDiv = this.filterVariableContainer.append("ul")
-					.classed("filter-group__variable-list", true)
-					.attr("id", category);
-				
+					this.categoryDivs[category].valueListDiv = this.filterVariableContainer.append("ul")
+						.classed("filter-group__variable-list", true)
+						.attr("id", category);
+					
+				}
+
+				valListDiv = this.categoryDivs[category].valueListDiv;
 			}
-
-			let valListDiv = this.categoryDivs[category].valueListDiv;
 
 			this.valDivs[i] = valListDiv.append("li")
 				.classed("filter-group__variable", true)
@@ -98,6 +118,28 @@ export class FilterGroup {
 		this.valDivs[index]
 			.classed("active", true);
 
+	}
+
+	hasCategories() {
+		for (let filterVar of this.filterVars) {
+			if ('category' in filterVar) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	renderMobileSelectBox(listenerFunc) {
+		this.mobileSelectBox.selectAll("option")
+			.data(this.filterVars)
+		  .enter().append("option")
+		   	.text((d) => { return d.displayName; })
+		   	.attr("value", (d, i) => { return i; });
+
+		this.mobileSelectBox.on("change", (d) => {
+			let index = this.mobileSelectBox.property('selectedIndex');
+			listenerFunc(index);
+		});
 	}
 
 

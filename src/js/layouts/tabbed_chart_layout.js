@@ -3,14 +3,12 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 import { ChartToggle } from "../components/chart_toggle.js";
-import { UsStatesMap } from "../chart_types/us_states_map.js";
+import { UsMap } from "../chart_types/us_map.js";
 import { Table } from "../chart_types/table.js";
 
-export class MultiChartLayout {
+export class TabbedChartLayout {
 	constructor(vizSettings) {
 		let { id, primaryDataSheet, chartSettingsList } = vizSettings;
-
-		this.primaryDataSheet = primaryDataSheet;
 
 		this.chartToggle = new ChartToggle(id);
 		this.vizList = [];
@@ -24,11 +22,12 @@ export class MultiChartLayout {
 
 			// let chartSettingsObject = Object.assign({}, vizSettings);
 			chartSettingsObject.id = "#chart" + i;
+			chartSettingsObject.primaryDataSheet = primaryDataSheet;
 			
 			let viz;
 			switch (chartSettingsObject.vizType) {
-				case "us_states_map":
-					viz = new UsStatesMap(chartSettingsObject);
+				case "us_map":
+					viz = new UsMap(chartSettingsObject);
 					this.vizList.push(viz);
 					break;
 				case "table":

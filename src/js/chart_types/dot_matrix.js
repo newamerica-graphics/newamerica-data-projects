@@ -10,20 +10,22 @@ import { getColorScale } from "../helper_functions/get_color_scale.js";
 
 import { Tooltip } from "../components/tooltip.js";
 
-let dotW = 10;
-let dotOffset = 3;
 let splitDistance = 3; //number of dots between split components
 
 export class DotMatrix {
 	constructor(vizSettings, imageFolderId) {
-		let {id, orientation, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, isSubComponent, tooltip, colorScale, split, primaryDataSheet} = vizSettings;
+		let {id, orientation, tooltipVars, tooltipImageVar, filterVars, isSubComponent, tooltip, colorScale, split, primaryDataSheet, eventSettings, dotSettings, tooltipScrollable, legendSettings} = vizSettings;
+		
+		super(id, isSubComponent);
 
 		this.id = id;
 		this.orientation = orientation;
-		this.dotsPerRow = dotsPerRow;
 		this.isSubComponent = isSubComponent;
 		this.split = split;
 		this.primaryDataSheet = primaryDataSheet;
+		this.eventSettings = eventSettings;
+		this.dotSettings = dotSettings;
+		this.legendSettings = legendSettings;
 
 		this.split ? this.appendSplitLabels() : null;
 
@@ -44,12 +46,15 @@ export class DotMatrix {
 				.append("svg")
 				.attr("width", "100%");
 
-			this.tooltip = new Tooltip(id, tooltipVars, tooltipImageVar, imageFolderId);
+			let tooltipSettings = { "id":id, "tooltipVars":tooltipVars, tooltipImageVar:"tooltipImageVar", "imageFolderId":imageFolderId, "tooltipScrollable":tooltipScrollable };
+
+
+			this.tooltip = new Tooltip(tooltipSettings);
 
 			let legendSettings = {};
 			legendSettings.id = id;
 			legendSettings.showTitle = false;
-			legendSettings.markerSettings = { shape:"rect", size:dotW };
+			legendSettings.markerSettings = { shape:"rect", size:this.dotSettings.width };
 			legendSettings.orientation = "horizontal-center";
 			this.legend = new Legend(legendSettings);
 		}
@@ -60,7 +65,11 @@ export class DotMatrix {
 	}
 
 	render(data) {
-		this.data = this.processData(data);
+		if (!this.isSubComponent) {
+			this.data = this.processData(data[this.primaryDataSheet]);
+		} else {
+			this.data = data;
+		}
 		this.setDimensions();
 		this.sortData();
 		if (!this.isSubComponent) {
@@ -98,9 +107,9 @@ export class DotMatrix {
 	}
 
 	sortData() {
-		if (this.currFilter.scaleType === "linear") {
-			this.data.sort((a, b) => { return a[this.currFilterVar] - b[this.currFilterVar];});
-		} else if (this.currFilter.scaleType == "categorical") {
+		if (this.currFilter.scaleType === "linear" || this.currFilter.scaleType === "logarithmic" || this.currFilter.scaleType === "quantize") {
+			this.data.sort((a, b) => { return Number(b[this.currFilterVar]) - Number(a[this.currFilterVar]);});
+		} else if (this.currFilter.scaleType === "categorical") {
 			if (this.currFilter.customDomain) {
 				this.data.sort((a, b) => {
 					let elem1 = this.currFilter.customDomain.indexOf(a[this.currFilterVar]);
@@ -157,16 +166,18 @@ export class DotMatrix {
 		this.cells = this.svg.selectAll("rect")
 			.data(data)
 			.enter().append("rect")
-			.attr("width", dotW)
-		    .attr("height", dotW)
+			.attr("width", this.dotSettings.width)
+		    .attr("height", this.dotSettings.width)
 		    .attr("x", (d, i) => { return this.calcX(d, i); })
 		    .attr("y", (d, i) => { return this.calcY(i); })
 		    .attr("fill", (d) => {
 		    	return this.colorScale(d[this.currFilterVar]);
 		    })
+		    .style("cursor", this.eventSettings.click ? "pointer" : "auto")
 		    .attr("class", (d) => { return d[this.currFilterVar]; })
 		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event); })
-		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); });
+		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); })
+		    .on("click", (d) => { return this.eventSettings.click && this.eventSettings.click.handlerFunc ? this.eventSettings.click.handlerFunc(d.id) : null; });
 	}
 
 	setSplitIndex() {
@@ -176,18 +187,18 @@ export class DotMatrix {
 
 	setDimensions() {
 		if (this.orientation == "vertical") {
-			this.w = this.dotsPerRow * (dotW + dotOffset);
-			let numRows = Math.ceil(this.dataLength/this.dotsPerRow);
+			this.w = this.dotSettings.dotsPerRow * (this.dotSettings.width + this.dotSettings.offset);
+			let numRows = Math.ceil(this.data.length/this.dotSettings.dotsPerRow);
 
-			this.h = numRows * (dotW + dotOffset);
+			this.h = numRows * (this.dotSettings.width + this.dotSettings.offset);
 
 		} else {
 			this.w = $(this.id).width();
-			let numCols = Math.floor(this.w/(dotW + dotOffset));
+			let numCols = Math.floor(this.w/(this.dotSettings.width + this.dotSettings.offset));
 			this.split ? numCols -= splitDistance : null;
 			this.dotsPerCol = Math.ceil(this.dataLength/numCols);
 
-			this.h = this.dotsPerCol * (dotW + dotOffset);		
+			this.h = this.dotsPerCol * (this.dotSettings.width + this.dotSettings.offset);		
 		}
 
 		this.svg
@@ -196,32 +207,33 @@ export class DotMatrix {
 	}
 
 	setLegend() {
-		let valCounts = d3.nest()
-			.key((d) => { return d[this.currFilterVar]; })
-			.rollup(function(v) { return v.length; })
-			.map(this.data);
+		
+		if ( this.legendSettings.showValCounts ) {
+			this.legendSettings.valCounts = d3.nest()
+				.key((d) => { return d[this.currFilterVar]; })
+				.rollup(function(v) { return v.length; })
+				.map(this.data);
+		}
 
-		let legendSettings = {};
-		legendSettings.format = this.currFilter.format;
-		legendSettings.scaleType = this.currFilter.scaleType;
-		legendSettings.colorScale = this.colorScale;
-		legendSettings.valCounts = valCounts;
-		legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
+		this.legendSettings.format = this.currFilter.format;
+		this.legendSettings.scaleType = this.currFilter.scaleType;
+		this.legendSettings.colorScale = this.colorScale;
+		this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
 
-		this.legend.render(legendSettings);
+		this.legend.render(this.legendSettings);
 
 	}
 
 	calcX(d, i) {
 		if (this.orientation == "vertical") {
-			return i%this.dotsPerRow * (dotW + dotOffset);
+			return i%this.dotSettings.dotsPerRow * (this.dotSettings.width + this.dotSettings.offset);
 		} else {
-			let xCoord = Math.floor(i/this.dotsPerCol) * (dotW + dotOffset);
+			let xCoord = Math.floor(i/this.dotsPerCol) * (this.dotSettings.width + this.dotSettings.offset);
 			if (this.split) {
 				let variableVal = d[this.currFilterVar];
 				let variableValIndex = this.colorScale.domain().indexOf(variableVal);
 				if (variableValIndex > this.splitIndex) {
-					xCoord += splitDistance * (dotW + dotOffset);
+					xCoord += splitDistance * (this.dotSettings.width + this.dotSettings.offset);
 				}
 			}
 
@@ -231,9 +243,9 @@ export class DotMatrix {
 
 	calcY(i) {
 		if (this.orientation == "vertical") {
-			return this.h - (Math.floor(i/this.dotsPerRow) * (dotW + dotOffset)) - (dotW + dotOffset);
+			return this.h - (Math.floor(i/this.dotSettings.dotsPerRow) * (this.dotSettings.width + this.dotSettings.offset)) - (this.dotSettings.width + this.dotSettings.offset);
 		} else {
-			return i%this.dotsPerCol * (dotW + dotOffset);
+			return i%this.dotsPerCol * (this.dotSettings.width + this.dotSettings.offset);
 		}
 	}
 
@@ -264,19 +276,25 @@ export class DotMatrix {
 		mousePos[0] = eventObject.pageX;
 		mousePos[1] = eventObject.pageY;
 
+		let mouseoverSettings = this.eventSettings.mouseover;
+
 		let elem = d3.select(path);
 		// let prevX = elem.attr("x");
 		// let prevY = elem.attr("y");
 
+		let currFill = elem.attr("fill");
 		elem
-			// .attr("width", dotW * 2)
-		 //    .attr("height", dotW * 2)
-		 //    .attr("x", prevX - dotW/2)
-		 //    .attr("y", prevY - dotW/2)
-			.attr("stroke", "white")
-			.attr("stroke-width", 3.5);
+			// .attr("width", this.dotSettings.width * 2)
+		 //    .attr("height", this.dotSettings.width * 2)
+		 //    .attr("x", prevX - this.dotSettings.width/2)
+		 //    .attr("y", prevY - this.dotSettings.width/2)
+		 	.attr("fill", (d) => {
+		    	return mouseoverSettings.fill ? mouseoverSettings.fill : currFill;
+		    })
+			.attr("stroke", mouseoverSettings.stroke ? mouseoverSettings.stroke : "none")
+			.attr("stroke-width", mouseoverSettings.strokeWidth ? mouseoverSettings.strokeWidth : "0px");
 			
-		this.tooltip.show(datum, mousePos);
+		this.tooltip ? this.tooltip.show(datum, mousePos) : null;
 	}
 
 	mouseout(path) {
@@ -284,14 +302,19 @@ export class DotMatrix {
 		// let prevX = Number(elem.attr("x"));
 		// let prevY = Number(elem.attr("y"));
 
-		elem
-			.attr("stroke", "none");
-			// .attr("width", dotW)
-		 //    .attr("height", dotW)
-		 //    .attr("x", prevX + dotW/2)
-		 //    .attr("y", prevY + dotW/2);
+		let currFill = elem.attr("fill");
 
-		this.tooltip.hide();
+		elem
+			.attr("fill", (d) => {
+		    	return currFill;
+		    })
+			.attr("stroke", "none");
+			// .attr("width", this.dotSettings.width)
+		 //    .attr("height", this.dotSettings.width)
+		 //    .attr("x", prevX + this.dotSettings.width/2)
+		 //    .attr("y", prevY + this.dotSettings.width/2);
+
+		this.tooltip ? this.tooltip.hide() : null;
 	}
 
 	changeVariableValsShown(valsShown) {
@@ -306,6 +329,12 @@ export class DotMatrix {
 		   		// }
 		   		return colors.grey.light;
 		    });
+	}
+
+	changeValue(value) {
+		this.cells
+			.attr("fill", (d) => { return d.id == value ? colors.turquoise.light : this.colorScale(d[this.currFilterVar]);});
+
 	}
 
 	appendSplitLabels() {

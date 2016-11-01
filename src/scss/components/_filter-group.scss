@@ -67,4 +67,18 @@
 	&__category-container, &__variable-container {
 		text-align: center;
 	}
+
+	&.has-mobile-select {
+		display: none;
+		@include breakpoint(medium) {
+			display: block;
+		}
+	}
+
+	&__mobile-select-box {
+		display: block;
+		@include breakpoint(medium) {
+			display: none;
+		}
+	}
 }

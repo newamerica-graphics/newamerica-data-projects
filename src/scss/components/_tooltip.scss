@@ -1,5 +1,5 @@
 .tooltip {
-	width: 330px;
+	max-width: 330px;
 	z-index: 1000;
 	
 	position:absolute;
@@ -53,6 +53,9 @@
 
 	&__title-container {
 		padding-bottom: 15px;
+		&.no-content {
+			padding-bottom: 0px;
+		}
 		.person__icon {
 			margin: 0px !important;
 			display: table-cell;

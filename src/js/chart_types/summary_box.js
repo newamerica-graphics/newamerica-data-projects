@@ -98,9 +98,9 @@ export class SummaryBox {
 	}
 
 	render(data) {
-		this.data = data;
-		let datapoint = data.filter( (d) => { return d[this.titleVar.variable] == this.titleVarValue })[0];
-		let natl_average = data.filter( (d) => { return d[this.titleVar.variable] == "United States" })[0];
+		this.data = data[this.primaryDataSheet];
+		let datapoint = this.data.filter( (d) => { return d[this.titleVar.variable] == this.titleVarValue })[0];
+		let natl_average = this.data.filter( (d) => { return d[this.titleVar.variable] == "United States" })[0];
 
 		let i = 0;
 		for (let variable of this.vizVars) {

@@ -21,7 +21,7 @@ export class FactBox {
 	}
 
 	render(data) {
-		this.data = data;
+		this.data = data[this.primaryDataSheet];
 
 		if (this.factBoxType == "simple") {
 			this.renderSimple();
