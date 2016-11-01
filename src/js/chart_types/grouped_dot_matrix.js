@@ -18,7 +18,7 @@ let margin = {
 
 export class GroupedDotMatrix extends Chart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, groupingVars, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, distanceBetweenGroups, labelSettings, dividingLine, legendSettings, primaryDataSheet, eventSettings, filterChangeFunction, tooltipScrollable, dotSettings } = vizSettings;
+		let {id, groupingVars, tooltipVars, tooltipImageVar, filterVars, distanceBetweenGroups, labelSettings, dividingLine, legendSettings, primaryDataSheet, eventSettings, filterChangeFunction, tooltipScrollable, dotSettings } = vizSettings;
 
 		super(id, false);
 
@@ -26,7 +26,6 @@ export class GroupedDotMatrix extends Chart {
 		this.w = $(this.id).width();
 		this.tooltipVars = tooltipVars;
 		this.filterVars = filterVars;
-		this.dotsPerRow = dotsPerRow;
 		this.dividingLine = dividingLine;
 		this.legendSettings = legendSettings;
 		this.primaryDataSheet = primaryDataSheet;
@@ -34,13 +33,12 @@ export class GroupedDotMatrix extends Chart {
 		this.filterChangeFunction = filterChangeFunction;
 		this.dotSettings = dotSettings;
 
-		console.log(dotSettings);
-
 		if (dividingLine) {
 			this.dividingLineTextHeight = this.dividingLine.descriptionLines.length * dividingLineTextOffset + 30;
 		}
+		console.log(this.dotSettings);
 		
-		this.fullGroupingWidth = distanceBetweenGroups + dotsPerRow * (this.dotSettings.width + this.dotSettings.offset);
+		this.fullGroupingWidth = distanceBetweenGroups + this.dotSettings.dotsPerRow * (this.dotSettings.width + this.dotSettings.offset);
 		this.labelSettings = labelSettings;
 		this.distanceBetweenGroups = distanceBetweenGroups;
 
@@ -66,7 +64,7 @@ export class GroupedDotMatrix extends Chart {
 
 		this.legendSettings.id = id;
 		this.legendSettings.markerSettings = { shape:"rect", size:this.dotSettings.width };
-		this.legendSettings.orientation = "horizontal-center";
+		this.legendSettings.orientation = this.legendSettings.orientation ? this.legendSettings.orientation : "horizontal-center";
 		console.log(this.legendSettings);
 		this.legend = new Legend(this.legendSettings);
 	}
@@ -93,14 +91,13 @@ export class GroupedDotMatrix extends Chart {
 		vizSettings.orientation = "vertical";
 		vizSettings.tooltipVars = this.tooltipVars;
 		vizSettings.filterVars = this.filterVars;
-		vizSettings.dotsPerRow = this.dotsPerRow;
 		vizSettings.isSubComponent = true;
 		vizSettings.tooltip = this.tooltip;
 		vizSettings.colorScale = this.colorScale;
 		vizSettings.primaryDataSheet = this.primaryDataSheet;
 		vizSettings.eventSettings = this.eventSettings;
 		vizSettings.dotSettings = this.dotSettings;
-		if (this.eventSettings.click.handlerFuncType) {
+		if (this.eventSettings.click && this.eventSettings.click.handlerFuncType) {
 			vizSettings.eventSettings.click.handlerFunc = this.changeValue.bind(this);
 		}
 
@@ -204,16 +201,12 @@ export class GroupedDotMatrix extends Chart {
 	}
 
 	setLegend() {
-		let legendSettings = {};
-		
-		if ( this.legendSettings.showVals ) {
-			legendSettings.valCounts = d3.nest()
+		if ( this.legendSettings.showValCounts ) {
+			this.legendSettings.valCounts = d3.nest()
 				.key((d) => { return d[this.currFilterVar]; })
 				.rollup(function(v) { return v.length; })
 				.map(this.data);
 		}
-
-		console.log(this.colorScale.domain());
 
 		this.legendSettings.format = this.currFilter.format;
 		this.legendSettings.scaleType = this.currFilter.scaleType;

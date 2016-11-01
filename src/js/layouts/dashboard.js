@@ -83,13 +83,11 @@ export class Dashboard {
 						component.changeFilter(value) ? component.changeFilter(value) : null;
 						break;
 					case "change_value":
-						console.log(component);
 						component.changeValue(value) ? component.changeValue(value) : null;
 						break;
 				}
 			}
 		}
-		console.log(value);
 	}
 
 

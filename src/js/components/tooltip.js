@@ -2,7 +2,7 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
-let tooltipWidth = 330;
+
 let nonScrollXPadding = 15;
 let scrollXPadding = 2;
 
@@ -44,9 +44,9 @@ export class Tooltip {
 
 		let titleContainer = contentContainer
 			.append("div")
-			.attr("class", "tooltip__title-container");
+			.attr("class", "tooltip__title-container")
+			.classed("no-content", tooltipVars.length < 1);
 			
-
 		if (tooltipImageVar) {
 			this.imageContainer = titleContainer
 				.append("div")
@@ -153,9 +153,11 @@ export class Tooltip {
 		let retCoords = mouse;
 		let windowWidth = $(window).width();
 		let tooltipHeight = $(this.tooltip._groups[0]).height();
+		let tooltipWidth = $(this.tooltip._groups[0]).width();
+		console.log(tooltipWidth);
 
 		if (mouse[0] > (windowWidth - tooltipWidth - this.xPadding)) {
-			retCoords[0] = mouse[0] - tooltipWidth;
+			retCoords[0] = mouse[0] - tooltipWidth - 50;
 			retCoords[0] -= this.xPadding;
 		} else {
 			retCoords[0] += this.xPadding;

@@ -123,7 +123,6 @@ export class UsMap extends Chart {
 	bindDataToGeom() {
 		for (let dataElem of this.data) {
 			let dataId = dataElem[this.geometryVar.variable];
-
 			for (let geogElem of this.geometry) {
 				if (dataId == geogElem.id) {
 					geogElem.data = dataElem;

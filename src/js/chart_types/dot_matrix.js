@@ -15,18 +15,18 @@ let splitDistance = 3; //number of dots between split components
 
 export class DotMatrix extends Chart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, orientation, tooltipVars, tooltipImageVar, filterVars, dotsPerRow, isSubComponent, tooltip, colorScale, split, primaryDataSheet, eventSettings, dotSettings} = vizSettings;
+		let {id, orientation, tooltipVars, tooltipImageVar, filterVars, isSubComponent, tooltip, colorScale, split, primaryDataSheet, eventSettings, dotSettings, tooltipScrollable, legendSettings} = vizSettings;
 		
 		super(id, isSubComponent);
 
 		this.id = id;
 		this.orientation = orientation;
-		this.dotsPerRow = dotsPerRow;
 		this.isSubComponent = isSubComponent;
 		this.split = split;
 		this.primaryDataSheet = primaryDataSheet;
 		this.eventSettings = eventSettings;
 		this.dotSettings = dotSettings;
+		this.legendSettings = legendSettings;
 
 		this.split ? this.appendSplitLabels() : null;
 
@@ -179,7 +179,7 @@ export class DotMatrix extends Chart {
 		    .attr("class", (d) => { return d[this.currFilterVar]; })
 		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event); })
 		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); })
-		    .on("click", (d) => { return this.eventSettings.click.handlerFunc ? this.eventSettings.click.handlerFunc(d.id) : null; });
+		    .on("click", (d) => { return this.eventSettings.click && this.eventSettings.click.handlerFunc ? this.eventSettings.click.handlerFunc(d.id) : null; });
 	}
 
 	setSplitIndex() {
@@ -189,8 +189,8 @@ export class DotMatrix extends Chart {
 
 	setDimensions() {
 		if (this.orientation == "vertical") {
-			this.w = this.dotsPerRow * (this.dotSettings.width + this.dotSettings.offset);
-			let numRows = Math.ceil(this.data.length/this.dotsPerRow);
+			this.w = this.dotSettings.dotsPerRow * (this.dotSettings.width + this.dotSettings.offset);
+			let numRows = Math.ceil(this.data.length/this.dotSettings.dotsPerRow);
 
 			this.h = numRows * (this.dotSettings.width + this.dotSettings.offset);
 
@@ -209,25 +209,26 @@ export class DotMatrix extends Chart {
 	}
 
 	setLegend() {
-		let valCounts = d3.nest()
-			.key((d) => { return d[this.currFilterVar]; })
-			.rollup(function(v) { return v.length; })
-			.map(this.data);
+		
+		if ( this.legendSettings.showValCounts ) {
+			this.legendSettings.valCounts = d3.nest()
+				.key((d) => { return d[this.currFilterVar]; })
+				.rollup(function(v) { return v.length; })
+				.map(this.data);
+		}
 
-		let legendSettings = {};
-		legendSettings.format = this.currFilter.format;
-		legendSettings.scaleType = this.currFilter.scaleType;
-		legendSettings.colorScale = this.colorScale;
-		legendSettings.valCounts = valCounts;
-		legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
+		this.legendSettings.format = this.currFilter.format;
+		this.legendSettings.scaleType = this.currFilter.scaleType;
+		this.legendSettings.colorScale = this.colorScale;
+		this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
 
-		this.legend.render(legendSettings);
+		this.legend.render(this.legendSettings);
 
 	}
 
 	calcX(d, i) {
 		if (this.orientation == "vertical") {
-			return i%this.dotsPerRow * (this.dotSettings.width + this.dotSettings.offset);
+			return i%this.dotSettings.dotsPerRow * (this.dotSettings.width + this.dotSettings.offset);
 		} else {
 			let xCoord = Math.floor(i/this.dotsPerCol) * (this.dotSettings.width + this.dotSettings.offset);
 			if (this.split) {
@@ -244,7 +245,7 @@ export class DotMatrix extends Chart {
 
 	calcY(i) {
 		if (this.orientation == "vertical") {
-			return this.h - (Math.floor(i/this.dotsPerRow) * (this.dotSettings.width + this.dotSettings.offset)) - (this.dotSettings.width + this.dotSettings.offset);
+			return this.h - (Math.floor(i/this.dotSettings.dotsPerRow) * (this.dotSettings.width + this.dotSettings.offset)) - (this.dotSettings.width + this.dotSettings.offset);
 		} else {
 			return i%this.dotsPerCol * (this.dotSettings.width + this.dotSettings.offset);
 		}

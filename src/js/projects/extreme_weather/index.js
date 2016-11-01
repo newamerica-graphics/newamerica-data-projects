@@ -8,10 +8,10 @@ let variables = {
 	event_category: {"variable":"event_category", "displayName":"Event Category", "format":"string", "scaleType":"categorical", "customDomain":["Drought", "Wildfire", "Flooding", "Freeze", "Winter Storm", "Severe Storm", "Tropical Cyclone"], "customRange":[colors.red.light, colors.red.medium, colors.blue.light, colors.blue.medium, colors.blue.dark, colors.purple.light, colors.turquoise.light]},
 	event_name: {"variable":"event_name", "displayName":"Event Name", "format":"string"},
 	deaths: {"variable":"deaths", "displayName":"Deaths", "format":"number"},
-	begin_date: {"variable":"begin_date", "displayName":"Begin Date", "format":"string"},
-	end_date: {"variable":"end_date", "displayName":"End Date", "format":"string"},
+	begin_date: {"variable":"begin_date", "displayName":"Begin Date", "format":"date"},
+	end_date: {"variable":"end_date", "displayName":"End Date", "format":"date"},
 	states: {"variable":"states", "displayName":"States Affected", "format":"string"},
-	info_link: {"variable":"info_link", "displayName":"Info Link", "format":"string"},
+	info_link: {"variable":"info_link", "displayName":"Info Link", "format":"link"},
 	cpi_adjusted_cost: {"variable":"cpi_adjusted_cost", "displayName":"CPI Adjusted Cost (Billions)", "format":"number", "scaleType":"quantize", "numBins":4, "customDomain":[1, 19], "customRange":[colors.grey.medium, colors.grey.dark]},
 
 	event_fips: {"variable":"fips", "displayName":"County Fips", "format":"number"},
@@ -37,44 +37,6 @@ let variables = {
 let numBillionDollarEvents = 142;
 
 let vizSettingsList = [
-	// {
-	// 	id: "#extreme-weather__county-by-year", 
-	// 	vizType: "us_counties_map",
-	// 	primaryDataSheet: "county_by_year",
-	// 	secondaryDataSheet: "events",
-	// 	// filterVars: [ variables.availability_total_norm ],
-	// 	// tooltipVars: [ variables.state, variables.availability_total_norm]
-	// },
-	// {
-	// 	id: "#extreme-weather__county-by-year", 
-	// 	vizType: "bar_chart",
-	// 	primaryDataSheet: "events",
-	// 	xVars: [ variables.year ],
-	// 	yScaleType: "count",
-	// 	yAxisLabelText: "Number of Disasters",
-	// 	// filterVars: [ variables.availability_total_norm ],
-	// 	// tooltipVars: [ variables.state, variables.availability_total_norm]
-	// },
-	// {
-	// 	id: "#extreme-weather__events-by-year", 
-	// 	vizType: "dot_histogram",
-	// 	primaryDataSheet: "events",
-	// 	groupingVars: [ variables.year ],
-	// 	filterVars: [ variables.cpi_adjusted_cost ],
-	// 	tooltipVars: [ variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.cpi_adjusted_cost, variables.states ],
-	// 	labelSettings: { interval: 5 }
-	// },
-	// {
-	// 	id: "#extreme-weather__counties_map", 
-	// 	vizType: "us_map",
-	// 	primaryDataSheet: "fips_by_event",
-	// 	geometryType: "counties",
-	// 	stroke: {"color": "grey", "width":".5", "opacity": ".7", "hoverColor": colors.black, "hoverWidth": "2"},
-	// 	geometryVar: variables.event_fips,
-	// 	filterVars: getEventFilterVars(),
-	// 	tooltipVars: [variables.event_county_name ],
-	// 	legendSettings: {"orientation": "horizontal-center"}
-	// },
 	{
 		id: "#extreme-weather__fema-declarations", 
 		vizType: "us_map",
@@ -87,70 +49,70 @@ let vizSettingsList = [
 		legendSettings: {"orientation": "horizontal-center", "customTitleExpression": "<<>> Declarations", "showTitle": true},
 		filterGroupSettings: { "mobileSelectBox": true },
 	},
-	// {
-	// 	id: "#extreme-weather__counties_map", 
-	// 	vizType: "dashboard",
-	// 	defaultValue: numBillionDollarEvents - 1,
-	// 	layoutRows: [
-	// 		[
-	// 			{
-	// 				vizType: "select_box",
-	// 				primaryDataSheet: "events",
-	// 				variable: variables.event_name,
-	// 				isMessagePasser: true,
-	// 				messageHandlerType: "change_value",
-	// 			}
-	// 		],
-	// 		[
-	// 			{
-	// 				vizType: "dot_histogram",
-	// 				width: "450px",
-	// 				isMessagePasser: true,
-	// 				messageHandlerType: "change_value",
-	// 				primaryDataSheet: "events",
-	// 				groupingVars: [ variables.year ],
-	// 				filterVars: [ variables.cpi_adjusted_cost ],
-	// 				dotSettings: { "width": 14, "offset": 3},
-	// 				labelSettings: { interval: 5 },
-	// 				legendSettings: {"orientation": "horizontal-center", "showTitle": true, "title": "CPI Adjusted Cost (Billions)", "openEnded": true, "disableValueToggling": true},
-	// 				eventSettings: {
-	// 					"mouseover":{ "tooltip": false, "fill": false, "stroke": "black"},
-	// 					"click":{ "tooltip": false, "fill": "turqouise", "stroke": "none", "handlerFuncType": "change_value"}
-	// 				}
-	// 			},
-	// 			{
-	// 				vizType: "text_box",
-	// 				width: "calc(100% - 450px)",
-	// 				primaryDataSheet: "events",
-	// 				textBoxVars: [ variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.deaths, variables.cpi_adjusted_cost, variables.states, variables.info_link ],
-	// 				messageHandlerType: "change_value",
-	// 			}
-	// 		],
-	// 		[
-	// 			{
-	// 				vizType: "us_map",
-	// 				messageHandlerType: "change_filter",
-	// 				primaryDataSheet: "fips_by_event",
-	// 				geometryType: "counties",
-	// 				stroke: {"color": "grey", "width":".5", "opacity": ".7", "hoverColor": colors.black, "hoverWidth": "2"},
-	// 				geometryVar: variables.event_fips,
-	// 				filterGroupSettings: { "hidden":true },
-	// 				filterVars: getEventFilterVars(),
-	// 				tooltipVars: [variables.event_county_name ],
-	// 				legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": true}
-	// 			}
+	{
+		id: "#extreme-weather__counties_map", 
+		vizType: "dashboard",
+		defaultValue: numBillionDollarEvents - 1,
+		layoutRows: [
+			[
+				{
+					vizType: "select_box",
+					primaryDataSheet: "events",
+					variable: variables.event_name,
+					isMessagePasser: true,
+					messageHandlerType: "change_value",
+				}
+			],
+			[
+				{
+					vizType: "dot_histogram",
+					width: "440px",
+					isMessagePasser: true,
+					messageHandlerType: "change_value",
+					primaryDataSheet: "events",
+					groupingVars: [ variables.year ],
+					filterVars: [ variables.cpi_adjusted_cost ],
+					dotSettings: { "width": 13, "offset": 3},
+					labelSettings: { interval: 5 },
+					legendSettings: {"orientation": "horizontal-center", "showTitle": true, "title": "CPI Adjusted Cost (Billions)", "openEnded": true, "disableValueToggling": true},
+					eventSettings: {
+						"mouseover":{ "tooltip": false, "fill": false, "stroke": "black"},
+						"click":{ "tooltip": false, "fill": "turqouise", "stroke": "none", "handlerFuncType": "change_value"}
+					}
+				},
+				{
+					vizType: "text_box",
+					width: "calc(100% - 440px)",
+					primaryDataSheet: "events",
+					textBoxVars: [ variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.deaths, variables.cpi_adjusted_cost, variables.states, variables.info_link ],
+					messageHandlerType: "change_value",
+				}
+			],
+			[
+				{
+					vizType: "us_map",
+					messageHandlerType: "change_filter",
+					primaryDataSheet: "fips_by_event",
+					geometryType: "counties",
+					stroke: {"color": "grey", "width":".5", "opacity": ".7", "hoverColor": colors.black, "hoverWidth": "2"},
+					geometryVar: variables.event_fips,
+					filterGroupSettings: { "hidden":true },
+					filterVars: getEventFilterVars(),
+					tooltipVars: [variables.event_county_name ],
+					legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": true}
+				}
 
-	// 		]
-	// 	]
-	// },
-	// {
-	// 	id: "#extreme-weather__event-types", 
-	// 	vizType: "bar_chart",
-	// 	primaryDataSheet: "event_types",
-	// 	groupingVar: variables.storm_type,
-	// 	filterVars: [ variables.frequency, variables.average_cost],
-	// 	legendSettings: {"orientation": "horizontal-center top", "showTitle": false, "disableValueToggling": false}
-	// },
+			]
+		]
+	},
+	{
+		id: "#extreme-weather__event-types", 
+		vizType: "bar_chart",
+		primaryDataSheet: "event_types",
+		groupingVar: variables.storm_type,
+		filterVars: [ variables.frequency, variables.average_cost],
+		legendSettings: {"orientation": "horizontal-center top", "showTitle": false, "disableValueToggling": false}
+	},
 ]
 
 let projectSettings = {

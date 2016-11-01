@@ -10,8 +10,6 @@ export class TabbedChartLayout {
 	constructor(vizSettings) {
 		let { id, primaryDataSheet, chartSettingsList } = vizSettings;
 
-		this.primaryDataSheet = primaryDataSheet;
-
 		this.chartToggle = new ChartToggle(id);
 		this.vizList = [];
 		let i = 0;
@@ -24,6 +22,7 @@ export class TabbedChartLayout {
 
 			// let chartSettingsObject = Object.assign({}, vizSettings);
 			chartSettingsObject.id = "#chart" + i;
+			chartSettingsObject.primaryDataSheet = primaryDataSheet;
 			
 			let viz;
 			switch (chartSettingsObject.vizType) {

@@ -12,7 +12,7 @@ let continuousLegendHeight = 20,
 export class Legend {
 	constructor(legendSettings) {
 		console.log(legendSettings);
-		let {id, markerSettings, showTitle, orientation, customTitleExpression, disableValueToggling, openEnded, customLabels} = legendSettings;
+		let {id, markerSettings, showTitle, showValCounts, orientation, customTitleExpression, disableValueToggling, openEnded, customLabels} = legendSettings;
 		this.id = id;
 		this.showTitle = showTitle;
 		this.customTitleExpression = customTitleExpression;
@@ -21,6 +21,7 @@ export class Legend {
 		this.disableValueToggling = disableValueToggling;
 		this.openEnded = openEnded;
 		this.customLabels = customLabels;
+		this.showValCounts = showValCounts;
 	}
 
 	render(legendSettings) {
@@ -177,7 +178,7 @@ export class Legend {
 		let svg = cell.append("svg")
 			.attr("height", size)
 			.attr("width", size)
-			.style("margin-top", 14 - size)
+			.style("margin-top", 10 - size/2)
 			.attr("class", "legend__cell__color-swatch-container");
 
 		let marker = svg.append(shape)
@@ -209,7 +210,6 @@ export class Legend {
 		let cellText = cell.append("h5")
 			.classed("legend__cell__label", true);
 
-			console.log(this.colorScale.domain(), this.colorScale.range());
 		if (scaleType == "quantize") {
 			if (this.openEnded && i == this.colorScale.range().length - 1) {
 				cellText.text(formatValue(Math.ceil(this.calcBinVal(i, this.dataMin, this.binInterval)), format) + "+");
@@ -230,7 +230,6 @@ export class Legend {
 	}
 
 	toggleValsShown(valToggled) {
-
 		// if all toggled, just show clicked value
 		if (this.valsShown.length == this.numBins) {
 			this.valsShown = [valToggled];
@@ -259,7 +258,7 @@ export class Legend {
 	}
 
 	setOrientation(orientation) {
-		this.legend.attr("class", "legend " + orientation);
+		this.orientation = orientation;
 	}
 
 	resize() {

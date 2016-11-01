@@ -14,13 +14,15 @@ export class ChartWithFactBox {
 	constructor(vizSettings, imageFolderId) {
 		let { id, primaryDataSheet, chartSettings, factBoxSettings } = vizSettings;
 
-		this.primaryDataSheet = primaryDataSheet;
 		factBoxSettings.id = id;
 		factBoxSettings.factBoxType = "simple";
+		factBoxSettings.primaryDataSheet = primaryDataSheet;
 
 		this.factBox = new FactBox(factBoxSettings);
 
 		chartSettings.id = id;
+
+		chartSettings.primaryDataSheet = primaryDataSheet;
 
 		switch (chartSettings.vizType) {
 			case "dot_matrix":

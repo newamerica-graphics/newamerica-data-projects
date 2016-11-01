@@ -77,6 +77,7 @@ export class TextBox {
 	}
 
 	render(data) {
+		console.log("rendering!");
 		this.data = data[this.primaryDataSheet];
 		let defaultVal = 0;
 
@@ -99,7 +100,18 @@ export class TextBox {
 
 				this.valueFields[varName].value
 					.style("display", "inline-block")
-					.text(value);
+
+				if (varFormat == "link") {
+					this.valueFields[varName].value.select("a").remove();
+					this.valueFields[varName].value
+						.append("a")
+						.attr("href", value)
+						.text(value);
+				} else {
+					this.valueFields[varName].value
+						.text(value);
+				}
+					
 			} else  {
 				this.valueFields[varName].label
 					.style("display", "none");

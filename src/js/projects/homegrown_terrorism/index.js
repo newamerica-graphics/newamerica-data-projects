@@ -34,27 +34,34 @@ let vizSettingsList = [
 		id: "#homegrown__outcome-for-extremist", 
 		vizType: "grouped_dot_matrix",
 		primaryDataSheet: "people_protected",
-		dotsPerRow: 5,
+		dotSettings: { "width": 10, "offset": 3, "dotsPerRow": 5},
 		distanceBetweenGroups: 15,
 		groupingVars: [ variables.year_charged_or_deceased ],
 		filterVars: [ variables.charged_or_deceased ],
 		tooltipVars: [ variables.full_name, variables.charged_or_deceased, variables.date_charged, variables.terror_plot],
 		tooltipImageVar: variables.headshot,
-		labelSettings: { interval: 1, showNumVals: true}
+		labelSettings: { interval: 1, showNumVals: true},
+		legendSettings: {"orientation": "horizontal-center"},
+		eventSettings: {
+			"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
+		}
 	},
 	{
 		id: "#homegrown__awlaki-over-time", 
 		vizType: "grouped_dot_matrix",
 		primaryDataSheet: "people_protected",
-		dotsPerRow: 5,
 		distanceBetweenGroups: 15,
+		dotSettings: { "width": 10, "offset": 3, "dotsPerRow": 5},
 		groupingVars: [ variables.year_charged_or_deceased ],
 		dividingLine: { value: "2011", title: "Post al-Awlaki", descriptionLines: ["Anwar al-Awlaki killed in drone strike on", "September 30, 2011"]},
 		filterVars: [ variables.char_awlaki ],
 		tooltipVars: [ variables.full_name, variables.char_awlaki, variables.terror_plot],
 		tooltipImageVar: variables.headshot,
 		labelSettings: { interval: 1, showNumVals: true},
-		legendShowVals: true
+		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "showValCounts": true },
+		eventSettings: {
+			"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
+		}
 	},
 	{
 		id: "#homegrown__gender-of-extremists", 
@@ -62,13 +69,17 @@ let vizSettingsList = [
 		primaryDataSheet: "people_protected",
 		chartSettings: {
 			vizType: "grouped_dot_matrix",
-			dotsPerRow: 5,
+			dotSettings: { "width": 10, "offset": 3, "dotsPerRow": 5},
 			distanceBetweenGroups: 15,
 			groupingVars: [ variables.year_charged_or_deceased ],
 			filterVars: [ variables.gender ],
 			tooltipVars: [ variables.full_name, variables.charged_or_deceased, variables.gender, variables.date_charged, variables.terror_plot],
 			tooltipImageVar: variables.headshot,
-			labelSettings: { interval: 1, showNumVals: true}
+			labelSettings: { interval: 1, showNumVals: true},
+			legendSettings: {"orientation": "horizontal-center"},
+			eventSettings: {
+				"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
+			}
 		},
 		factBoxSettings: {
 			alignment: "left-aligned",
@@ -83,10 +94,15 @@ let vizSettingsList = [
 		vizType: "dot_matrix",
 		primaryDataSheet: "people_protected",
 		orientation: "horizontal",
+		dotSettings: { "width": 10, "offset": 3},
 		filterVars: [ variables.citizenship_status ],
 		tooltipVars: [ variables.full_name, variables.citizenship_status ],
 		tooltipImageVar: variables.headshot,
-		split: { splitFilterVar:variables.citizenship_status, splitVal: "Permanent Resident", leftLabel: "Citizens and Permanent Residents", rightLabel: "Non-residents and Unknown", splitAggregate: "percent"}
+		split: { splitFilterVar:variables.citizenship_status, splitVal: "Permanent Resident", leftLabel: "Citizens and Permanent Residents", rightLabel: "Non-residents and Unknown", splitAggregate: "percent"},
+		legendSettings: {"orientation": "horizontal-center", "showValCounts": true  },
+		eventSettings: {
+			"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
+		}
 	},
 	{
 		id: "#homegrown__age-of-extremists",
@@ -98,7 +114,12 @@ let vizSettingsList = [
 			filterVars: [ variables.marital_status ],
 			tooltipVars: [ variables.full_name, variables.age, variables.marital_status, variables.terror_plot ],
 			tooltipImageVar: variables.headshot,
-			labelSettings: { interval: 5 }
+			labelSettings: { interval: 5 },
+			dotSettings: { "width": 10, "offset": 3 },
+			legendSettings: {"orientation": "horizontal-center"},
+			eventSettings: {
+				"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
+			}
 		},
 		factBoxSettings: {
 			alignment: "right-aligned",
@@ -143,7 +164,7 @@ let vizSettingsList = [
 		id: "#homegrown__fact-box__prevention-method", 
 		vizType: "fact_box",
 		primaryDataSheet: "people_protected",
-	 factBoxType: "colored_boxes",
+	 	factBoxType: "colored_boxes",
 		factBoxVals: [ 
 			{ variable: variables.inv_informant, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Percent of jihadists monitored by an informant"},
 			{ variable: variables.inv_community_or_family_tip, value: "Yes", type:"percent", color:colors.blue.light, text:"Percent of jihadists implicated by a tip from family members or the community"},
