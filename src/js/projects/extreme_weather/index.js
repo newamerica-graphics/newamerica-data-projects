@@ -28,6 +28,10 @@ let variables = {
 	fema_tornado: {"variable":"tornado", "displayName":"Tornado", "format":"number", "scaleType":"linear"},
 	fema_fire: {"variable":"fire", "displayName":"Fire", "format":"number", "scaleType":"linear"},
 	fema_hurricane: {"variable":"hurricane", "displayName":"Hurricane", "format":"number", "scaleType":"linear"},
+
+	storm_type: {"variable":"storm_type", "displayName":"Storm Type", "format":"string", "scaleType":"categorical"},
+	frequency: {"variable":"frequency", "displayName":"Frequency", "format":"number", "color": colors.turquoise.medium},
+	average_cost: {"variable":"average_cost", "displayName":"Average Cost (Billions)", "format":"price", "scaleType":"linear", "color": colors.blue.medium},
 }
 
 let numBillionDollarEvents = 142;
@@ -71,79 +75,86 @@ let vizSettingsList = [
 	// 	tooltipVars: [variables.event_county_name ],
 	// 	legendSettings: {"orientation": "horizontal-center"}
 	// },
-	{
-		id: "#extreme-weather__fema-declarations", 
-		vizType: "us_map",
-		primaryDataSheet: "fema_declarations",
-		geometryType: "counties",
-		stroke: {"color": "grey", "width":".5", "opacity": ".7", "hoverColor": colors.black, "hoverWidth": "2"},
-		geometryVar: variables.fema_fips,
-		filterVars: [variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
-		tooltipVars: [variables.fema_county_name, variables.fema_fips, variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
-		legendSettings: {"orientation": "horizontal-center", "customTitleExpression": "<<>> Declarations", "showTitle": true}
-	},
-	{
-		id: "#extreme-weather__counties_map", 
-		vizType: "dashboard",
-		defaultValue: numBillionDollarEvents - 1,
-		layoutRows: [
-			[
-				{
-					vizType: "select_box",
-					primaryDataSheet: "events",
-					variable: variables.event_name,
-					isMessagePasser: true,
-					messageHandlerType: "change_value",
-				}
-			],
-			[
-				{
-					vizType: "dot_histogram",
-					width: "450px",
-					isMessagePasser: true,
-					messageHandlerType: "change_value",
-					primaryDataSheet: "events",
-					groupingVars: [ variables.year ],
-					filterVars: [ variables.cpi_adjusted_cost ],
-					dotSettings: { "width": 14, "offset": 3},
-					labelSettings: { interval: 5 },
-					legendSettings: {"orientation": "horizontal-center", "showTitle": true, "title": "CPI Adjusted Cost (Billions)", "openEnded": true, "disableValueToggling": true},
-					eventSettings: {
-						"mouseover":{ "tooltip": false, "fill": false, "stroke": "black"},
-						"click":{ "tooltip": false, "fill": "turqouise", "stroke": "none", "handlerFuncType": "change_value"}
-					}
-				},
-				{
-					vizType: "text_box",
-					width: "calc(100% - 450px)",
-					primaryDataSheet: "events",
-					textBoxVars: [ variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.deaths, variables.cpi_adjusted_cost, variables.states, variables.info_link ],
-					messageHandlerType: "change_value",
-				}
-			],
-			[
-				{
-					vizType: "us_map",
-					messageHandlerType: "change_filter",
-					primaryDataSheet: "fips_by_event",
-					geometryType: "counties",
-					stroke: {"color": "grey", "width":".5", "opacity": ".7", "hoverColor": colors.black, "hoverWidth": "2"},
-					geometryVar: variables.event_fips,
-					hideFilterGroup: true,
-					filterVars: getEventFilterVars(),
-					tooltipVars: [variables.event_county_name ],
-					legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": true}
-				}
+	// {
+	// 	id: "#extreme-weather__fema-declarations", 
+	// 	vizType: "us_map",
+	// 	primaryDataSheet: "fema_declarations",
+	// 	geometryType: "counties",
+	// 	stroke: {"color": "grey", "width":".5", "opacity": ".7", "hoverColor": colors.black, "hoverWidth": "2"},
+	// 	geometryVar: variables.fema_fips,
+	// 	filterVars: [variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
+	// 	tooltipVars: [variables.fema_county_name, variables.fema_fips, variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
+	// 	legendSettings: {"orientation": "horizontal-center", "customTitleExpression": "<<>> Declarations", "showTitle": true}
+	// },
+	// {
+	// 	id: "#extreme-weather__counties_map", 
+	// 	vizType: "dashboard",
+	// 	defaultValue: numBillionDollarEvents - 1,
+	// 	layoutRows: [
+	// 		[
+	// 			{
+	// 				vizType: "select_box",
+	// 				primaryDataSheet: "events",
+	// 				variable: variables.event_name,
+	// 				isMessagePasser: true,
+	// 				messageHandlerType: "change_value",
+	// 			}
+	// 		],
+	// 		[
+	// 			{
+	// 				vizType: "dot_histogram",
+	// 				width: "450px",
+	// 				isMessagePasser: true,
+	// 				messageHandlerType: "change_value",
+	// 				primaryDataSheet: "events",
+	// 				groupingVars: [ variables.year ],
+	// 				filterVars: [ variables.cpi_adjusted_cost ],
+	// 				dotSettings: { "width": 14, "offset": 3},
+	// 				labelSettings: { interval: 5 },
+	// 				legendSettings: {"orientation": "horizontal-center", "showTitle": true, "title": "CPI Adjusted Cost (Billions)", "openEnded": true, "disableValueToggling": true},
+	// 				eventSettings: {
+	// 					"mouseover":{ "tooltip": false, "fill": false, "stroke": "black"},
+	// 					"click":{ "tooltip": false, "fill": "turqouise", "stroke": "none", "handlerFuncType": "change_value"}
+	// 				}
+	// 			},
+	// 			{
+	// 				vizType: "text_box",
+	// 				width: "calc(100% - 450px)",
+	// 				primaryDataSheet: "events",
+	// 				textBoxVars: [ variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.deaths, variables.cpi_adjusted_cost, variables.states, variables.info_link ],
+	// 				messageHandlerType: "change_value",
+	// 			}
+	// 		],
+	// 		[
+	// 			{
+	// 				vizType: "us_map",
+	// 				messageHandlerType: "change_filter",
+	// 				primaryDataSheet: "fips_by_event",
+	// 				geometryType: "counties",
+	// 				stroke: {"color": "grey", "width":".5", "opacity": ".7", "hoverColor": colors.black, "hoverWidth": "2"},
+	// 				geometryVar: variables.event_fips,
+	// 				hideFilterGroup: true,
+	// 				filterVars: getEventFilterVars(),
+	// 				tooltipVars: [variables.event_county_name ],
+	// 				legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": true}
+	// 			}
 
-			]
-		]
+	// 		]
+	// 	]
+	// },
+	{
+		id: "#extreme-weather__event-types", 
+		vizType: "bar_chart",
+		primaryDataSheet: "event_types",
+		groupingVar: variables.storm_type,
+		filterVars: [ variables.frequency, variables.average_cost],
 	},
 ]
 
 let projectSettings = {
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/resourcesecurity/extreme_weather.json",
 	downloadDataLink: "https://docs.google.com/spreadsheets/d/18WEcJVDByP5bCPACgt2s9-sYIOItweq9fI9PCMIpUjY/",
-	dataSheetNames:["events", "fips_by_event", "fema_declarations"],
+	dataSheetNames:["events", "fips_by_event", "fema_declarations", "event_types"],
 	vizSettingsList: vizSettingsList
 }
 

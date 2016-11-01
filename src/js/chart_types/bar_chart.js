@@ -3,52 +3,61 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 import { colors } from "../helper_functions/colors.js";
-import { getColorScale } from "../helper_functions/get_color_scale.js";
+// import { getColorScale } from "../helper_functions/get_color_scale.js";
 // import { Legend } from "../components/legend.js";
 // import { Tooltip } from "../components/tooltip.js";
 
 let parseDate = d3.timeParse("%B %d, %Y");
 
-let margin = {top: 20, right: 20, bottom: 30, left: 75};
+let margin = {top: 20, right: 20, bottom: 30, left: 20};
 
 let dataPointWidth = 7;
 
 export class BarChart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, xVars, yVars, yScaleType, primaryDataSheet, yAxisLabelText, filterChangeFunction} = vizSettings;
+		let {id, primaryDataSheet, groupingVar, filterVars} = vizSettings;
 		this.id = id;
 		this.primaryDataSheet = primaryDataSheet;
-		this.yScaleType = yScaleType;
-		this.yAxisLabelText = yAxisLabelText;
-		this.filterChangeFunction = filterChangeFunction;
+		this.filterVars = filterVars;
+		this.groupingVar = groupingVar;
 
 		this.svg = d3.select(id).append("svg").attr("class", "bar-chart");
 
 		this.renderingArea = this.svg.append("g");
 
-		this.xScale = d3.scaleBand()
+		this.groupingScale = d3.scaleBand()
 			.padding(0.2);
-		this.yScale = d3.scaleLinear();
+
+		this.xScale = d3.scaleBand();
+
+		this.yScales = {};
+		this.xVals = [];
+		let colorVals = [];
+		
+		for (let filterVar of filterVars) {
+			this.xVals.push(filterVar.variable);
+			colorVals.push(filterVar.color);
+			this.yScales[filterVar.variable] = d3.scaleLinear();
+		}
+
+		this.colorScale = d3.scaleOrdinal()
+			.domain(this.xVals)
+			.range(colorVals);
 
 		this.setDimensions();
-		this.setXYScaleRanges();
-
-		this.currXVar = xVars[0];
-		this.currXVarName = xVars[0].variable;
+		this.setXYScaleDomains
 	}
 
 	render(data) {
-		this.data = d3.nest()
-			.key((d) => {return d[this.currXVarName];})
-	        .sortKeys(d3.ascending)
-	        .rollup(function(leaves) { return leaves.length; })
-	        .entries(data[this.primaryDataSheet]);
+		this.data = data[this.primaryDataSheet];
 	    
 		this.setXYScaleDomains();
 
+		console.log(this.groupingScale.domain());
+		console.log(this.xScale.domain());
+
 		this.renderBars();
-		this.renderAxes();
-		this.renderSlider();
+		// this.renderAxes();
 	}
 
 	setDimensions() {
@@ -62,32 +71,56 @@ export class BarChart {
 
 		this.renderingArea
 		    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+		this.setXYScaleRanges();
 	}
 
 	setXYScaleRanges() {
-		this.xScale.range([0, this.w]);
-		this.yScale.range([this.h, 0]);
+		this.groupingScale.range([0, this.w]);
+
+		console.log(this.groupingScale.bandwidth());
+		this.xScale.range([0, this.groupingScale.bandwidth()]);
+
+		for (let filterVar of this.filterVars) {
+			this.yScales[filterVar.variable].range([this.h, 0]);
+		}
 	}
 
 	setXYScaleDomains() {
-		this.xScale.domain(this.data.map((d) => { return d.key; }));
-		this.yScale.domain([0, d3.max(this.data, (d) => { return d.value; })]);
+		let groupingVals = d3.nest()
+			.key((d) => { return d[this.groupingVar.variable]})
+			.map(this.data);
+
+		this.groupingScale.domain(groupingVals.keys());
+
+		for (let filterVar of this.filterVars) {
+			this.yScales[filterVar.variable].domain([0, d3.max(this.data, (d) => { console.log(d); return Number(d[filterVar.variable]); })]);
+			console.log(this.yScales[filterVar.variable].domain());
+		}
+
+		this.xScale.domain(this.xVals).range([0, this.groupingScale.bandwidth()]);;
 	}
 
 	renderBars() {
-		this.bars = this.renderingArea.selectAll(".bar")
+		console.log(this.groupingScale.bandwidth());
+		this.data.forEach((d) => {
+		    d.vals = this.xVals.map(function(variable) { return {variable: variable, value: +d[variable]}; });
+		});
+
+		this.groups = this.renderingArea.selectAll(".group")
 	      .data(this.data)
-	    .enter().append("rect");
+	    .enter().append("g")
+	      .attr("class", "group")
+	      .attr("transform", (d) => { return "translate(" + this.groupingScale(d[this.groupingVar.variable]) + ",0)"; });
 
-	    this.setCurrSelected("1996");
-
-	    this.bars
-	      .attr("class", "bar")
-	      .attr("x", (d) => { return this.xScale(d.key); })
+	 	this.bars = this.groups.selectAll("rect")
+	      .data((d) => { return d.vals; })
+	    .enter().append("rect")
 	      .attr("width", this.xScale.bandwidth())
-	      .attr("y", (d) => { return this.yScale(d.value); })
-	      .attr("height", (d) => { return this.h - this.yScale(d.value); })
-	      .attr("fill", (d, i) => { return this.setBarColor(i); });
+	      .attr("x", (d) => { return this.xScale(d.variable); })
+	      .attr("y", (d) => { return this.yScales[d.variable](d.value); })
+	      .attr("height", (d) => { return this.h - this.yScales[d.variable](d.value); })
+	      .style("fill", (d) => { return this.colorScale(d.variable); });
 	}
 
 	renderAxes() {
@@ -110,83 +143,30 @@ export class BarChart {
 			.text(this.yAxisLabelText);
 	}
 
-	renderSlider() {
-		this.slider = this.renderingArea.append("g")
-		    .attr("class", "slider")
-		    .attr("transform", "translate(0," + this.h + ")")
-
-		this.sliderLine = this.slider.append("line")
-		    .attr("class", "track")
-		    .attr("x1", this.xScale.range()[0])
-		    .attr("x2", this.xScale.range()[1])
-		  .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
-		    .attr("class", "track-inset")
-		  .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
-		    .attr("class", "track-overlay")
-		    .attr("pointer-events", "stroke");
-
-		this.handle = this.slider.insert("rect", ".track-overlay")
-		    .attr("width", this.xScale.bandwidth())
-			.attr("height", 20)
-			.attr("fill", "green")
-			.attr("y", -10)
-			.attr("x", this.xScale(this.currSelected))
-			.style("cursor", "pointer")
-			.call(d3.drag()
-		        .on("start.interrupt", () => { this.slider.interrupt(); })
-		        .on("start drag", () => {
-					var index = Math.floor(d3.event.x / this.xScale.step());
-					if (index >= this.xScale.domain().length) {
-						index = this.xScale.domain().length - 1;
-					} else if (index < 0) {
-						index = 0;
-					}
-					var val = this.xScale.domain()[index];
-		        	this.handle.attr("x", this.xScale(val));
-		        	this.setCurrSelected(val);
-		        	this.filterChangeFunction(val);
-		        }));;
-
-		
-	}
-
-	setBarColor(i) {
-		if (i < this.currSelectedIndex) {
-			return colors.red.light;
-		} else if (i == this.currSelectedIndex) {
-			return colors.black;
-		} else {
-			return colors.grey.light;
-		}
-	}
-
 	resize() {
 		this.setDimensions();
-		this.setXYScaleRanges();
 
-		this.xAxis
-			.attr("transform", "translate(0," + this.h + ")")
-			.call(d3.axisBottom(this.xScale).tickPadding(10));
-
-		this.yAxis.call(d3.axisLeft(this.yScale).tickPadding(10));
-		this.yAxisLabel.attr("x", -this.h/2);
+		this.groups
+			.attr("transform", (d) => { return "translate(" + this.groupingScale(d[this.groupingVar.variable]) + ",0)"; });
 
 		this.bars
-			.attr("x", (d) => { return this.xScale(d.key); })
 			.attr("width", this.xScale.bandwidth())
-			.attr("y", (d) => { return this.yScale(d.value); })
-			.attr("height", (d) => { return this.h - this.yScale(d.value); });
+			.attr("x", (d) => { return this.xScale(d.variable); })
+			.attr("y", (d) => { return this.yScales[d.variable](d.value); })
+			.attr("height", (d) => { return this.h - this.yScales[d.variable](d.value); });
 
-		this.slider
-			.attr("transform", "translate(0," + this.h + ")");
+		// this.xAxis
+		// 	.attr("transform", "translate(0," + this.h + ")")
+		// 	.call(d3.axisBottom(this.xScale).tickPadding(10));
 
-		this.sliderLine
-			.attr("x1", this.xScale.range()[0])
-		    .attr("x2", this.xScale.range()[1]);
+		// this.yAxis.call(d3.axisLeft(this.yScale).tickPadding(10));
+		// this.yAxisLabel.attr("x", -this.h/2);
 
-		this.handle
-			.attr("width", this.xScale.bandwidth())
-			.attr("x", this.xScale(this.currSelected));
+		// this.bars
+		// 	.attr("x", (d) => { return this.xScale(d.key); })
+		// 	.attr("width", this.xScale.bandwidth())
+		// 	.attr("y", (d) => { return this.yScale(d.value); })
+		// 	.attr("height", (d) => { return this.h - this.yScale(d.value); });
 	}
 
 	setCurrSelected(value) {
