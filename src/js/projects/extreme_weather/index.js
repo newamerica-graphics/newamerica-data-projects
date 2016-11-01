@@ -19,15 +19,15 @@ let variables = {
 
 	fema_fips: {"variable":"fips", "displayName":"County Fips", "format":"number"},
 	fema_county_name: {"variable":"county_name", "displayName":"County", "format":"string"},
-	fema_all: {"variable":"all", "displayName":"All", "format":"number", "scaleType":"linear"},
-	fema_other: {"variable":"other", "displayName":"Other", "format":"number", "scaleType":"linear"},
-	fema_flood: {"variable":"flood", "displayName":"Flood", "format":"number", "scaleType":"linear"},
-	fema_severe_ice_storm: {"variable":"severe_ice_storm", "displayName":"Severe Ice Storm", "format":"number", "scaleType":"linear"},
-	fema_severe_storms: {"variable":"severe_storms", "displayName":"Severe Storm(s)", "format":"number", "scaleType":"linear"},
-	fema_snow: {"variable":"snow", "displayName":"Snow", "format":"number", "scaleType":"linear"},
-	fema_tornado: {"variable":"tornado", "displayName":"Tornado", "format":"number", "scaleType":"linear"},
-	fema_fire: {"variable":"fire", "displayName":"Fire", "format":"number", "scaleType":"linear"},
-	fema_hurricane: {"variable":"hurricane", "displayName":"Hurricane", "format":"number", "scaleType":"linear"},
+	fema_all: {"variable":"all", "displayName":"All", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.turquoise.dark]},
+	fema_other: {"variable":"other", "displayName":"Other", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.turquoise.dark]},
+	fema_flood: {"variable":"flood", "displayName":"Flood", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.blue.dark]},
+	fema_severe_ice_storm: {"variable":"severe_ice_storm", "displayName":"Severe Ice Storm", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.blue.dark]},
+	fema_severe_storms: {"variable":"severe_storms", "displayName":"Severe Storm(s)", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.purple.dark]},
+	fema_snow: {"variable":"snow", "displayName":"Snow", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.blue.dark]},
+	fema_tornado: {"variable":"tornado", "displayName":"Tornado", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.purple.dark]},
+	fema_fire: {"variable":"fire", "displayName":"Fire", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.red.dark]},
+	fema_hurricane: {"variable":"hurricane", "displayName":"Hurricane", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.purple.dark]},
 
 	storm_type: {"variable":"storm_type", "displayName":"Storm Type", "format":"string", "scaleType":"categorical"},
 	frequency: {"variable":"frequency", "displayName":"Frequency", "format":"number", "color": colors.turquoise.medium},
@@ -75,17 +75,18 @@ let vizSettingsList = [
 	// 	tooltipVars: [variables.event_county_name ],
 	// 	legendSettings: {"orientation": "horizontal-center"}
 	// },
-	// {
-	// 	id: "#extreme-weather__fema-declarations", 
-	// 	vizType: "us_map",
-	// 	primaryDataSheet: "fema_declarations",
-	// 	geometryType: "counties",
-	// 	stroke: {"color": "grey", "width":".5", "opacity": ".7", "hoverColor": colors.black, "hoverWidth": "2"},
-	// 	geometryVar: variables.fema_fips,
-	// 	filterVars: [variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
-	// 	tooltipVars: [variables.fema_county_name, variables.fema_fips, variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
-	// 	legendSettings: {"orientation": "horizontal-center", "customTitleExpression": "<<>> Declarations", "showTitle": true}
-	// },
+	{
+		id: "#extreme-weather__fema-declarations", 
+		vizType: "us_map",
+		primaryDataSheet: "fema_declarations",
+		geometryType: "counties",
+		stroke: {"color": "grey", "width":".5", "opacity": ".7", "hoverColor": colors.black, "hoverWidth": "2"},
+		geometryVar: variables.fema_fips,
+		filterVars: [variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
+		tooltipVars: [variables.fema_county_name, variables.fema_all, variables.fema_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_other],
+		legendSettings: {"orientation": "horizontal-center", "customTitleExpression": "<<>> Declarations", "showTitle": true},
+		filterGroupSettings: { "mobileSelectBox": true },
+	},
 	// {
 	// 	id: "#extreme-weather__counties_map", 
 	// 	vizType: "dashboard",
@@ -133,7 +134,7 @@ let vizSettingsList = [
 	// 				geometryType: "counties",
 	// 				stroke: {"color": "grey", "width":".5", "opacity": ".7", "hoverColor": colors.black, "hoverWidth": "2"},
 	// 				geometryVar: variables.event_fips,
-	// 				hideFilterGroup: true,
+	// 				filterGroupSettings: { "hidden":true },
 	// 				filterVars: getEventFilterVars(),
 	// 				tooltipVars: [variables.event_county_name ],
 	// 				legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": true}
@@ -142,14 +143,14 @@ let vizSettingsList = [
 	// 		]
 	// 	]
 	// },
-	{
-		id: "#extreme-weather__event-types", 
-		vizType: "bar_chart",
-		primaryDataSheet: "event_types",
-		groupingVar: variables.storm_type,
-		filterVars: [ variables.frequency, variables.average_cost],
-		legendSettings: {"orientation": "horizontal-center top", "showTitle": false, "disableValueToggling": false}
-	},
+	// {
+	// 	id: "#extreme-weather__event-types", 
+	// 	vizType: "bar_chart",
+	// 	primaryDataSheet: "event_types",
+	// 	groupingVar: variables.storm_type,
+	// 	filterVars: [ variables.frequency, variables.average_cost],
+	// 	legendSettings: {"orientation": "horizontal-center top", "showTitle": false, "disableValueToggling": false}
+	// },
 ]
 
 let projectSettings = {

@@ -5,7 +5,7 @@ let d3 = require("d3");
 export class FilterGroup {
 
 	constructor(vizSettings) {
-		let {id, filterVars} = vizSettings;
+		let {id, filterVars, filterGroupSettings} = vizSettings;
 
 		this.id = id;
 		this.filterVars = filterVars;
@@ -13,22 +13,32 @@ export class FilterGroup {
 		let filterContainer = d3.select(id)
 			.append("div")
 			.attr("class", "filter-group");
+
 		if (this.hasCategories()) {
 			this.filterCategoryContainer = filterContainer.append("ul")
 				.attr("class", "filter-group__category-container");
 		}
+
 		this.filterVariableContainer = filterContainer.append("ul")
 			.attr("class", "filter-group__variable-container");
+
+		if (filterGroupSettings && filterGroupSettings.mobileSelectBox) {
+			filterContainer.classed("has-mobile-select", true);
+			this.mobileSelectBox = d3.select(id)
+				.append("select")
+				.attr("class", "select-box filter-group__mobile-select-box");
+		}
 		
 	}
 
 	render(listenerFunc) {
-
 		this.categoryDivs = {};
 		this.valDivs = [];
 		let i = 0;
 		let self = this;
 		let valListDiv;
+
+		this.mobileSelectBox ? this.renderMobileSelectBox(listenerFunc) : null;
 
 		if (!this.hasCategories()) {
 			valListDiv = this.filterVariableContainer.append("ul")
@@ -117,6 +127,19 @@ export class FilterGroup {
 			}
 		}
 		return false;
+	}
+
+	renderMobileSelectBox(listenerFunc) {
+		this.mobileSelectBox.selectAll("option")
+			.data(this.filterVars)
+		  .enter().append("option")
+		   	.text((d) => { return d.displayName; })
+		   	.attr("value", (d, i) => { return i; });
+
+		this.mobileSelectBox.on("change", (d) => {
+			let index = this.mobileSelectBox.property('selectedIndex');
+			listenerFunc(index);
+		});
 	}
 
 

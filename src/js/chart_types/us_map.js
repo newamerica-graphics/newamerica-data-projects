@@ -18,7 +18,7 @@ let topojson = require("topojson");
 
 export class UsMap extends Chart {
 	constructor(vizSettings) {
-		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, stroke, legendSettings, hideFilterGroup } = vizSettings;
+		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, stroke, legendSettings, filterGroupSettings } = vizSettings;
 		super(id);
 
 		this.id = id;
@@ -28,13 +28,11 @@ export class UsMap extends Chart {
 		this.geometry = topojson.feature(usGeom, usGeom.objects[geometryType]).features;
 		this.stroke = stroke;
 		this.legendSettings = legendSettings;
-		this.hideFilterGroup = hideFilterGroup;
-		console.log(this.filterVars);
+		this.filterGroupSettings = filterGroupSettings;
 		this.currFilterIndex = 0;
 		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
-		console.log(this.currFilterVar);
 
-		if (!hideFilterGroup) {
+		if (filterGroupSettings && !filterGroupSettings.hidden) {
 			this.filterGroup = filterVars.length > 1 ? new FilterGroup(vizSettings) : null;
 		}
 
@@ -94,11 +92,9 @@ export class UsMap extends Chart {
 	render(data) {
 
 		this.data = data[this.primaryDataSheet];
-		console.log(data);
 
 		// this.processData();
 		this.setScale();
-		console.log(this.colorScale.domain());
 		this.bindDataToGeom();
 		this.buildGraph();
 		this.setLegend();
@@ -135,7 +131,6 @@ export class UsMap extends Chart {
 				}
 			}
 		}
-		console.log(this.geometry);
 	}
 
 	buildGraph() {
@@ -181,7 +176,7 @@ export class UsMap extends Chart {
 	resize() {
 		this.setDimensions();
 		this.paths.attr("d", this.pathGenerator);
-		// this.legend.resize();
+		this.legend.resize();
 	}
 
 	changeFilter(variableIndex) {

@@ -21,27 +21,30 @@ export class Legend {
 		this.disableValueToggling = disableValueToggling;
 		this.openEnded = openEnded;
 		this.customLabels = customLabels;
+	}
 
-		this.legend = d3.select(id)
+	render(legendSettings) {
+		this.legendSettings = legendSettings;
+		if (this.legend) {
+			this.legend.remove();
+		}
+		this.legend = d3.select(this.id)
 			.append("div")
-			.attr("class", "legend " + orientation);
+			.attr("class", "legend " + this.orientation);
 
-		if (showTitle) {
+		if (this.showTitle) {
 			let titleContainer = this.legend.append("div")
 				.attr("class", "legend__title-container");
 
 			this.titleDiv = titleContainer.append("h3")
 				.attr("class", "legend__title");
-
 		}
 
 		this.cellContainer = this.legend.append("div")
 			.attr("class", "legend__cell-container");
 
-	}
-
-	render(legendSettings) {
 		this.colorScale = legendSettings.colorScale;
+
 		if (this.showTitle) {
 			let title;
 			if (this.customTitleExpression) {
@@ -60,14 +63,13 @@ export class Legend {
 	}
 
 	renderContinuous(legendSettings) {
-		// this.legendSvg ? this.legendSvg.remove() : null;
 		this.legendWidth = $(this.id).width();
+		if (this.legendWidth > 500) {
+			this.legendWidth = 500;
+		}
 		this.legendSvg = this.cellContainer.append("svg")
 			.attr("width", this.legendWidth)
 			.attr("height", continuousLegendHeight*2);
-		console.log(this.legendSvg);
-		
-		console.log(this.legendWidth);
 
 		this.defineGradient();
 		this.legendSvg.append("rect")
@@ -261,11 +263,7 @@ export class Legend {
 	}
 
 	resize() {
-		// if ($(this.id).width() > global.showLegendBreakpoint) {
-		// 	this.legend.setOrientation("vertical-right");
-		// } else {
-		// 	this.legend.setOrientation("horizontal-left");
-		// }
+		this.render(this.legendSettings);
 	}
 
 }

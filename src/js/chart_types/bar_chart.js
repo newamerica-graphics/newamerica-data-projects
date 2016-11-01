@@ -62,9 +62,6 @@ export class BarChart {
 	    
 		this.setXYScaleDomains();
 
-		console.log(this.groupingScale.domain());
-		console.log(this.xScale.domain());
-
 		this.renderBars();
 		this.renderAxes();
 
@@ -93,7 +90,6 @@ export class BarChart {
 	setXYScaleRanges() {
 		this.groupingScale.range([0, this.w]);
 
-		console.log(this.groupingScale.bandwidth());
 		this.xScale.range([0, this.groupingScale.bandwidth()]);
 
 		for (let filterVar of this.filterVars) {
@@ -110,14 +106,12 @@ export class BarChart {
 
 		for (let filterVar of this.filterVars) {
 			this.yScales[filterVar.variable].domain([0, d3.max(this.data, (d) => { console.log(d); return Number(d[filterVar.variable]); })]);
-			console.log(this.yScales[filterVar.variable].domain());
 		}
 
 		this.xScale.domain(this.xVals).range([0, this.groupingScale.bandwidth()]);;
 	}
 
 	renderBars() {
-		console.log(this.groupingScale.bandwidth());
 		this.data.forEach((d) => {
 		    d.vals = this.filterVars.map(function(filterVar) { return {variable: filterVar.variable, format: filterVar.format, value: +d[filterVar.variable]}; });
 		});
