@@ -5,18 +5,14 @@ var JSZip = require("jszip");
 import $ from 'jquery';
 let d3 = require("d3");
 
-<<<<<<< HEAD
-import { BarChart } from "./chart_types/bar_chart.js";
-import { Dashboard } from "./layouts/dashboard.js";
-=======
 import domtoimage from 'dom-to-image';
 
->>>>>>> fe78e4372e03f74f11469deddafafbe9322500d1
+import { BarChart } from "./chart_types/bar_chart.js";
+import { Dashboard } from "./layouts/dashboard.js";
 import { DotMatrix } from "./chart_types/dot_matrix.js";
 import { DotHistogram } from "./chart_types/dot_histogram.js";
 import { GroupedDotMatrix } from "./chart_types/grouped_dot_matrix.js";
 import { UsMap } from "./chart_types/us_map.js";
-import { UsCountiesMap } from "./chart_types/us_counties_map.js";
 import { TabbedChartLayout } from "./layouts/tabbed_chart_layout.js";
 import { ChartWithFactBox } from "./layouts/chart_with_fact_box.js";
 import { Table } from "./chart_types/table.js";
@@ -110,17 +106,13 @@ export function setupProject(projectSettings) {
 
 	function render() {
 		d3.json(projectSettings.dataUrl, (d) => {
-			console.log(d);
 			for (let viz of vizList) {
 				viz.render(d);
 			}
-<<<<<<< HEAD
-			// setDownloadLinks(d);
-=======
+
 			setDataDownloadLinks(d);
 			
-			setProfileValues(d);
->>>>>>> fe78e4372e03f74f11469deddafafbe9322500d1
+			// setProfileValues(d);
 		});
 
 	}

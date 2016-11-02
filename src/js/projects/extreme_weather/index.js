@@ -66,7 +66,7 @@ let vizSettingsList = [
 			[
 				{
 					vizType: "dot_histogram",
-					width: "440px",
+					width: "420px",
 					isMessagePasser: true,
 					messageHandlerType: "change_value",
 					primaryDataSheet: "events",
@@ -82,7 +82,7 @@ let vizSettingsList = [
 				},
 				{
 					vizType: "text_box",
-					width: "calc(100% - 440px)",
+					width: "calc(100% - 420px)",
 					primaryDataSheet: "events",
 					textBoxVars: [ variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.deaths, variables.cpi_adjusted_cost, variables.states, variables.info_link ],
 					messageHandlerType: "change_value",
@@ -111,7 +111,7 @@ let vizSettingsList = [
 		primaryDataSheet: "event_types",
 		groupingVar: variables.storm_type,
 		filterVars: [ variables.frequency, variables.average_cost],
-		legendSettings: {"orientation": "horizontal-center top", "showTitle": false, "disableValueToggling": false}
+		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false}
 	},
 ]
 

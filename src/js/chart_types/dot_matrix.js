@@ -16,7 +16,7 @@ export class DotMatrix {
 	constructor(vizSettings, imageFolderId) {
 		let {id, orientation, tooltipVars, tooltipImageVar, filterVars, isSubComponent, tooltip, colorScale, split, primaryDataSheet, eventSettings, dotSettings, tooltipScrollable, legendSettings} = vizSettings;
 		
-		super(id, isSubComponent);
+		// super(id, isSubComponent);
 
 		this.id = id;
 		this.orientation = orientation;

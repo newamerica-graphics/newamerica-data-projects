@@ -137,7 +137,8 @@ export class BarChart {
 	      	.attr("x", (d) => { return this.xScale(d.variable) + this.xScale.bandwidth()/2; })
 	      	.attr("y", (d) => { return this.yScales[d.variable](d.value) - 5; })
 	      	.text((d) => { return formatValue(d.value, d.format) })
-	      	.attr("text-anchor", "middle");
+	      	.attr("text-anchor", "middle")
+	      	.attr("class", "label__value");
 	}
 
 	renderAxes() {

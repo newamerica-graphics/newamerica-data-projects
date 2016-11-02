@@ -26,7 +26,7 @@
 		font-size: 18px;
 		display: table-cell;
 		vertical-align: middle;
-		
+		color: palette-get(na-black) !important;
 
 		&.has-image {
 			padding-left: 15px;
@@ -60,7 +60,7 @@
 				
 			}
 
-			&__value, &__value a {
+			&__value {
 				@include chart-secondary-text;
 			}
 		}
