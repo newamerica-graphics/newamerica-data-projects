@@ -17,7 +17,7 @@ let topojson = require("topojson");
 
 export class UsMap {
 	constructor(vizSettings) {
-		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, stroke, legendSettings, filterGroupSettings } = vizSettings;
+		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, stroke, legendSettings, filterGroupSettings, zoomable } = vizSettings;
 
 		this.id = id;
 		this.filterVars = filterVars;
@@ -29,6 +29,7 @@ export class UsMap {
 		this.filterGroupSettings = filterGroupSettings;
 		this.currFilterIndex = 0;
 		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
+		this.zoomable = zoomable;
 
 		if (filterGroupSettings && !filterGroupSettings.hidden) {
 			this.filterGroup = filterVars.length > 1 ? new FilterGroup(vizSettings) : null;
@@ -37,9 +38,19 @@ export class UsMap {
 		let mapContainer = d3.select(id)
 			.append("div");
 
+		if (zoomable) {
+			this.zoomOutPrompt = mapContainer
+				.append("div")
+				.attr("class", "zoom-out-prompt")
+				.text("Return to Full U.S. Map")
+				.on("click", () => { return this.clicked(null, null, null); });
+		}
+
 		this.svg = mapContainer
 			.append("svg")
 			.attr("class", "us-states-svg");
+
+		this.g = this.svg.append("g");
 
 		let tooltipSettings = { "id":id, "tooltipVars":tooltipVars }
 
@@ -51,6 +62,7 @@ export class UsMap {
 		this.legend = new Legend(legendSettings);
 
 		this.setDimensions();
+		this.centered = true;
 	}
 
 	setDimensions() {
@@ -130,7 +142,7 @@ export class UsMap {
 	}
 
 	buildGraph() {
-		this.paths = this.svg.selectAll("path")
+		this.paths = this.g.selectAll("path")
 		   .data(this.geometry)
 		   .enter()
 		   .append("path");
@@ -141,8 +153,10 @@ export class UsMap {
 		    .style("stroke", this.stroke.color || "white")
 		    .style("stroke-width", this.stroke.width || "1")
 		    .style("stroke-opacity", this.stroke.opacity || "1")
+		    .style("cursor", this.zoomable ? "pointer" : "auto")
 		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event); })
-		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); });
+		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); })
+		    .on("click", (d, index, paths) => { return this.zoomable ? this.clicked(d, paths[index], d3.event) : null; });
 	}
 
 	setFill(d) {
@@ -199,6 +213,7 @@ export class UsMap {
 	}
 
 	mouseover(datum, path, eventObject) {
+		// console.log(datum, path, eventObject);
 		d3.select(path)
 			.style("stroke", this.stroke.hoverColor || "white")
 			.style("stroke-width", this.stroke.hoverWidth || "3")
@@ -216,6 +231,36 @@ export class UsMap {
 		    .style("stroke-width", this.stroke.width || "1")
 		    .style("stroke-opacity", this.stroke.opacity || "1")
 	    this.tooltip.hide();
+	}
+
+	clicked(datum, path, eventObject) {
+		console.log("clicked!");
+		let x, y, k;
+
+		if (datum && this.centered !== datum) {
+			let centroid = this.pathGenerator.centroid(datum);
+			x = centroid[0];
+			y = centroid[1];
+			k = 4;
+			this.centered = datum;
+			this.zoomOutPrompt.style("display", "block");
+		} else {
+			x = this.w / 2;
+			y = this.h / 2;
+			k = 1;
+			this.centered = null;
+			this.zoomOutPrompt.style("display", "none");
+		}
+
+		this.g.selectAll("path")
+		  .classed("active", this.centered && function(d) { return d === this.centered; });
+
+		this.g.transition()
+		  .duration(750)
+		  .attr("transform", "translate(" + this.w / 2 + "," + this.h / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+		  .style("stroke-width", 1.5 / k + "px")
+		  .on("end", () => { return this.centered ? this.tooltip.show(datum.data, [this.w / 2 + 30, this.h / 2]) : null; })
+
 	}
 			
 }
