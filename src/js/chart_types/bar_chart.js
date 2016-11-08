@@ -74,7 +74,7 @@ export class BarChart {
 
 	setDimensions() {
 		this.w = $(this.id).width() - margin.left - margin.right;
-		this.h = this.w < 400 ? 2*this.w/3 : this.w/2;
+		this.h =  2*this.w/3;
 		this.h = this.h - margin.top - margin.bottom;
 
 		this.svg

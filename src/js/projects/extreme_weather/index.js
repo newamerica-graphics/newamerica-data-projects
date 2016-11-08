@@ -19,19 +19,23 @@ let variables = {
 
 	fema_fips: {"variable":"fips", "displayName":"County Fips", "format":"number"},
 	fema_county_name: {"variable":"county_name", "displayName":"County", "format":"string"},
-	fema_all: {"variable":"all", "displayName":"All", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.turquoise.dark]},
-	fema_other: {"variable":"other", "displayName":"Other", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.turquoise.dark]},
-	fema_flood: {"variable":"flood", "displayName":"Flood", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.blue.dark]},
-	fema_severe_ice_storm: {"variable":"severe_ice_storm", "displayName":"Severe Ice Storm", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.blue.dark]},
-	fema_severe_storms: {"variable":"severe_storms", "displayName":"Severe Storm(s)", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.purple.dark]},
-	fema_snow: {"variable":"snow", "displayName":"Snow", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.blue.dark]},
-	fema_tornado: {"variable":"tornado", "displayName":"Tornado", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.purple.dark]},
-	fema_fire: {"variable":"fire", "displayName":"Fire", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.red.dark]},
-	fema_hurricane: {"variable":"hurricane", "displayName":"Hurricane", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.purple.dark]},
+	fema_all: {"variable":"all", "displayName":"All", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.turquoise.medium]},
+	fema_other: {"variable":"other", "displayName":"Other", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.turquoise.medium]},
+	fema_flood: {"variable":"flood", "displayName":"Flood", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.blue.medium]},
+	fema_severe_ice_storm: {"variable":"severe_ice_storm", "displayName":"Severe Ice Storm", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.blue.medium]},
+	fema_severe_storms: {"variable":"severe_storms", "displayName":"Severe Storm(s)", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.purple.medium]},
+	fema_snow: {"variable":"snow", "displayName":"Snow", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.blue.medium]},
+	fema_tornado: {"variable":"tornado", "displayName":"Tornado", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.purple.medium]},
+	fema_fire: {"variable":"fire", "displayName":"Fire", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.red.medium]},
+	fema_hurricane: {"variable":"hurricane", "displayName":"Hurricane", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.purple.medium]},
 
 	storm_type: {"variable":"storm_type", "displayName":"Storm Type", "format":"string", "scaleType":"categorical"},
-	frequency: {"variable":"frequency", "displayName":"Frequency", "format":"number", "color": colors.turquoise.medium},
+	frequency: {"variable":"frequency", "displayName":"Frequency", "format":"number", "color": colors.turquoise.light},
 	average_cost: {"variable":"average_cost", "displayName":"Average Cost (Billions)", "format":"number", "scaleType":"linear", "color": colors.blue.medium},
+
+	year_counts_year: {"variable":"year", "displayName":"Year", "format":"year"},
+	year_counts_count: {"variable":"count", "displayName":"Count", "format":"number", "color": colors.turquoise.medium},
+	year_counts_cost_total: {"variable":"cost_total", "displayName":"Total Cost", "format":"Total Cost"},
 }
 
 let numBillionDollarEvents = 142;
@@ -113,12 +117,20 @@ let vizSettingsList = [
 		filterVars: [ variables.frequency, variables.average_cost],
 		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false}
 	},
+	{
+		id: "#extreme-weather__events-year-counts", 
+		vizType: "bar_chart",
+		primaryDataSheet: "events_year_counts",
+		groupingVar: variables.year_counts_year,
+		filterVars: [ variables.year_counts_count ],
+		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false}
+	},
 ]
 
 let projectSettings = {
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/resourcesecurity/extreme_weather.json",
 	downloadDataLink: "https://docs.google.com/spreadsheets/d/18WEcJVDByP5bCPACgt2s9-sYIOItweq9fI9PCMIpUjY/",
-	dataSheetNames:["events", "fips_by_event", "fema_declarations", "event_types"],
+	dataSheetNames:["events", "fips_by_event", "fema_declarations", "event_types", "events_year_counts"],
 	vizSettingsList: vizSettingsList
 }
 
