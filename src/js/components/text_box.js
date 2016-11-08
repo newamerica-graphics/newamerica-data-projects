@@ -64,9 +64,11 @@ export class TextBox {
 					.classed("text-box__category__list-item", true);
 
 				let valueField = {};
-				valueField.label = listElem.append("h3")
-					.classed("text-box__category__list-item__label", true)
-					.text(variable.displayName + ":");
+				if (variable.format != "link") {
+					valueField.label = listElem.append("h3")
+						.classed("text-box__category__list-item__label", true)
+						.text(variable.displayName + ":");
+				}
 
 				valueField.value = listElem.append("h3")
 					.classed("text-box__category__list-item__value", true)
@@ -95,9 +97,6 @@ export class TextBox {
 			let value = currElement[varName] ? formatValue(currElement[varName], varFormat) : null;
 
 			if (value) {
-				this.valueFields[varName].label
-					.style("display", "inline-block");
-
 				this.valueFields[varName].value
 					.style("display", "inline-block")
 
@@ -106,8 +105,11 @@ export class TextBox {
 					this.valueFields[varName].value
 						.append("a")
 						.attr("href", value)
-						.text(value);
+						.text(variable.displayName);
 				} else {
+					this.valueFields[varName].label
+						.style("display", "inline-block");
+
 					this.valueFields[varName].value
 						.text(value);
 				}
