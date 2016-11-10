@@ -32,11 +32,11 @@ let variables = {
 	fema_other: {"variable":"other", "displayName":"Other", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.turquoise.medium]},
 	
 	storm_type: {"variable":"storm_type", "displayName":"Storm Type", "format":"string", "scaleType":"categorical"},
-	frequency: {"variable":"frequency", "displayName":"Frequency", "format":"number", "color": colors.turquoise.light},
+	frequency: {"variable":"frequency", "displayName":"Count", "format":"number", "color": colors.turquoise.light},
 	average_cost: {"variable":"average_cost", "displayName":"Average Cost (Billions)", "format":"number", "scaleType":"linear", "color": colors.blue.medium},
 
 	year_counts_year: {"variable":"year", "displayName":"Year", "format":"year"},
-	year_counts_count: {"variable":"count", "displayName":"Count", "format":"number", "color": colors.turquoise.medium},
+	year_counts_count: {"variable":"count", "displayName":"Billion Dollar Event Count", "format":"number", "color": colors.turquoise.light},
 	year_counts_cost_total: {"variable":"cost_total", "displayName":"Total Cost", "format":"Total Cost"},
 }
 
@@ -131,7 +131,10 @@ let vizSettingsList = [
 		primaryDataSheet: "event_types",
 		groupingVar: variables.storm_type,
 		filterVars: [ variables.frequency, variables.average_cost],
-		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false}
+		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
+		xAxisLabelInterval: {"small": 2, "medium": 1, "large": 1},
+		labelValues: true,
+		showYAxis: false
 	},
 	{
 		id: "#extreme-weather__events-year-counts", 
@@ -139,7 +142,14 @@ let vizSettingsList = [
 		primaryDataSheet: "events_year_counts",
 		groupingVar: variables.year_counts_year,
 		filterVars: [ variables.year_counts_count ],
-		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false}
+		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
+		xAxisLabelInterval: {"small": 10, "medium": 5, "large": 2},
+		labelValues: false,
+		showYAxis: true,
+		tooltipVars: [ variables.year_counts_year, variables.year_counts_count ],
+		eventSettings: {
+			"mouseover":{ "tooltip": true, "fill": colors.turquoise.medium, "stroke": false }
+		}
 	},
 ]
 

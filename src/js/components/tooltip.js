@@ -2,7 +2,6 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
-
 let nonScrollXPadding = 15;
 let scrollXPadding = 2;
 
@@ -12,8 +11,8 @@ export class Tooltip {
 	constructor(vizSettings) {
 		let {id, tooltipVars, tooltipImageVar, imageFolderId, tooltipScrollable} = vizSettings;
 		//removes first variable to be used as title
-		this.titleVar = tooltipVars.shift().variable;
-		this.tooltipVars = tooltipVars;
+		this.titleVar = tooltipVars[0].variable;
+		this.tooltipVars = tooltipVars.slice(1);
 		this.tooltipImageVar = tooltipImageVar;
 		this.imageFolderId = imageFolderId;
 		this.tooltipScrollable = tooltipScrollable;
@@ -98,6 +97,9 @@ export class Tooltip {
 	}
 
 	show(d, mouse) {
+		if ($(window).width() < 400) {
+			return;
+		}
         if (this.tooltipImageVar) {
         	if (d[this.tooltipImageVar.variable]) {
         		this.title
@@ -154,7 +156,6 @@ export class Tooltip {
 		let windowWidth = $(window).width();
 		let tooltipHeight = $(this.tooltip._groups[0]).height();
 		let tooltipWidth = $(this.tooltip._groups[0]).width();
-		console.log(tooltipWidth);
 
 		if (mouse[0] > (windowWidth - tooltipWidth - this.xPadding)) {
 			retCoords[0] = mouse[0] - tooltipWidth - 50;

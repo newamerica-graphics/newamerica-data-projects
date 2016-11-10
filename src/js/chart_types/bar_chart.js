@@ -4,23 +4,30 @@ let d3 = require("d3");
 
 import { colors } from "../helper_functions/colors.js";
 import { Legend } from "../components/legend.js";
+import { Tooltip } from "../components/tooltip.js";
 
 import { formatValue } from "../helper_functions/format_value.js";
 
 let parseDate = d3.timeParse("%B %d, %Y");
 
-let margin = {top: 20, right: 20, bottom: 30, left: 20};
-
 let dataPointWidth = 7;
 
 export class BarChart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, primaryDataSheet, groupingVar, filterVars, legendSettings} = vizSettings;
+		let {id, primaryDataSheet, groupingVar, filterVars, legendSettings, xAxisLabelInterval, labelValues, showYAxis, tooltipVars, eventSettings} = vizSettings;
 		this.id = id;
 		this.primaryDataSheet = primaryDataSheet;
 		this.filterVars = filterVars;
+		this.tooltipVars = tooltipVars;
+		this.eventSettings = eventSettings;
 		this.groupingVar = groupingVar;
 		this.legendSettings = legendSettings;
+		this.xAxisLabelInterval = xAxisLabelInterval;
+		this.labelValues = labelValues;
+		this.showYAxis = showYAxis;
+		this.margin = {top: 20, right: 20};
+		this.margin.left = this.showYAxis ? 70 : 20;
+		this.margin.bottom = this.filterVars.length == 1 ? 50 : 30;
 
 		this.svg = d3.select(id).append("svg").attr("class", "bar-chart");
 
@@ -50,11 +57,18 @@ export class BarChart {
 		this.setDimensions();
 		this.setXYScaleDomains;
 
-		this.legendSettings.id = id;
-		this.legendSettings.markerSettings = { shape:"rect", size:10 };
-		this.legendSettings.customLabels = colorLabels;
+		if (filterVars.length > 1) {
+			this.legendSettings.id = id;
+			this.legendSettings.markerSettings = { shape:"rect", size:10 };
+			this.legendSettings.customLabels = colorLabels;
 
-		this.legend = new Legend(this.legendSettings);
+			this.legend = new Legend(this.legendSettings);
+		}
+
+		if (tooltipVars) {
+			let tooltipSettings = { "id":id, "tooltipVars":tooltipVars }
+			this.tooltip = new Tooltip(tooltipSettings);
+		}
 	}
 
 	render(data) {
@@ -65,24 +79,26 @@ export class BarChart {
 		this.renderBars();
 		this.renderAxes();
 
-		this.legendSettings.scaleType = "categorical";
-		this.legendSettings.colorScale = this.colorScale;
-		this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
+		if (this.filterVars.length > 1) {
+			this.legendSettings.scaleType = "categorical";
+			this.legendSettings.colorScale = this.colorScale;
+			this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
 
-		this.legend.render(this.legendSettings);
+			this.legend.render(this.legendSettings);
+		}
 	}
 
 	setDimensions() {
-		this.w = $(this.id).width() - margin.left - margin.right;
+		this.w = $(this.id).width() - this.margin.left - this.margin.right;
 		this.h =  2*this.w/3;
-		this.h = this.h - margin.top - margin.bottom;
+		this.h = this.h - this.margin.top - this.margin.bottom;
 
 		this.svg
 			.attr("width", "100%")
-		    .attr("height", this.h + margin.top + margin.bottom);
+		    .attr("height", this.h + this.margin.top + this.margin.bottom);
 
 		this.renderingArea
-		    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		    .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
 		this.setXYScaleRanges();
 	}
@@ -105,15 +121,15 @@ export class BarChart {
 		this.groupingScale.domain(groupingVals.keys());
 
 		for (let filterVar of this.filterVars) {
-			this.yScales[filterVar.variable].domain([0, d3.max(this.data, (d) => { console.log(d); return Number(d[filterVar.variable]); })]);
+			this.yScales[filterVar.variable].domain([0, d3.max(this.data, (d) => { return Number(d[filterVar.variable]); })]);
 		}
 
 		this.xScale.domain(this.xVals).range([0, this.groupingScale.bandwidth()]);;
 	}
 
 	renderBars() {
-		this.data.forEach((d) => {
-		    d.vals = this.filterVars.map(function(filterVar) { return {variable: filterVar.variable, format: filterVar.format, value: +d[filterVar.variable]}; });
+		this.data.forEach((d, i) => {
+		    d.vals = this.filterVars.map((filterVar) => { return {variable: filterVar.variable, format: filterVar.format, label: this.groupingScale.domain()[i], value: +d[filterVar.variable]}; });
 		});
 
 		this.groups = this.renderingArea.selectAll(".group")
@@ -129,23 +145,64 @@ export class BarChart {
 			.attr("x", (d) => { return this.xScale(d.variable); })
 			.attr("y", (d) => { return this.yScales[d.variable](d.value); })
 			.attr("height", (d) => { return this.h - this.yScales[d.variable](d.value); })
-			.style("fill", (d) => { return this.colorScale(d.variable); });
+			.style("fill", (d) => { return this.colorScale(d.variable); })
+			.on("mouseover", (d, index, paths) => {  return this.eventSettings && this.eventSettings.mouseover ? this.mouseover(d, paths[index], d3.event) : null; })
+			.on("mouseout", (d, index, paths) => {  return this.eventSettings && this.eventSettings.mouseover ? this.mouseout(paths[index]) : null; });
 
-	    this.labels = this.groups.selectAll("text")
-	      	.data((d) => { return d.vals; })
-	      .enter().append("text")
-	      	.attr("x", (d) => { return this.xScale(d.variable) + this.xScale.bandwidth()/2; })
-	      	.attr("y", (d) => { return this.yScales[d.variable](d.value) - 5; })
-	      	.text((d) => { return formatValue(d.value, d.format) })
-	      	.attr("text-anchor", "middle")
-	      	.attr("class", "label__value");
+		if (this.labelValues) {
+		    this.labels = this.groups.selectAll("text")
+		      	.data((d) => { return d.vals; })
+		      .enter().append("text")
+		      	.attr("x", (d) => { return this.xScale(d.variable) + this.xScale.bandwidth()/2; })
+		      	.attr("y", (d) => { return this.yScales[d.variable](d.value) - 5; })
+		      	.text((d) => { return formatValue(d.value, d.format) })
+		      	.attr("text-anchor", "middle")
+		      	.attr("class", "label__value");
+		}
 	}
 
 	renderAxes() {
+		let ticks = this.calculateTicks();
+
 		this.groupingAxis = this.renderingArea.append("g")
 			.attr("class", "axis axis-x")
 			.attr("transform", "translate(0," + this.h + ")")
-			.call(d3.axisBottom(this.groupingScale));
+			.call(d3.axisBottom(this.groupingScale).tickValues(ticks));
+
+		if (this.filterVars.length == 1) {
+			this.groupingAxisLabel = this.groupingAxis.append("text")
+				.attr("x", this.w/2)
+				.attr("y", 50)
+				.attr("class", "axis__title")
+				.style("text-anchor", "middle")
+				.text(this.groupingVar.displayName);
+		}
+
+		if (this.showYAxis) {
+			this.yAxis = this.renderingArea.append("g")
+				.attr("class", "y axis")
+				.call(d3.axisLeft(this.yScales[this.filterVars[0].variable]));
+		    
+		    this.yAxisLabel = this.yAxis.append("text")
+				.attr("transform", "rotate(-90)")
+				.attr("x", -this.h/2)
+				.attr("y", -40)
+				.attr("class", "axis__title")
+				.style("text-anchor", "middle")
+				.text(this.filterVars[0].displayName);
+		}
+	}
+
+	calculateTicks() {
+		let currInterval;
+		if ($(this.id).width() < 575) {
+			currInterval = this.xAxisLabelInterval.small;
+		} else if ($(this.id).width() > 1100) {
+			currInterval = this.xAxisLabelInterval.large;
+		} else {
+			currInterval = this.xAxisLabelInterval.medium;
+		}
+		return this.groupingScale.domain().filter( (d, i) => { return !(i%currInterval);});
 	}
 
 	resize() {
@@ -160,13 +217,50 @@ export class BarChart {
 			.attr("y", (d) => { return this.yScales[d.variable](d.value); })
 			.attr("height", (d) => { return this.h - this.yScales[d.variable](d.value); });
 
-		this.labels
-		 	.attr("x", (d) => { return this.xScale(d.variable) + this.xScale.bandwidth()/2; })
-	      	.attr("y", (d) => { return this.yScales[d.variable](d.value) - 5; })
+		if (this.labelValues) {
+			this.labels
+			 	.attr("x", (d) => { return this.xScale(d.variable) + this.xScale.bandwidth()/2; })
+		      	.attr("y", (d) => { return this.yScales[d.variable](d.value) - 5; })
+		}
+
+	    let ticks = this.calculateTicks();
 
 		this.groupingAxis
 			.attr("transform", "translate(0," + this.h + ")")
-			.call(d3.axisBottom(this.groupingScale));
+			.call(d3.axisBottom(this.groupingScale).tickValues(ticks));
+
+		if (this.groupingAxisLabel) {
+			this.groupingAxisLabel.attr("x", this.w/2);
+		}
+
+		if (this.showYAxis) {
+			this.yAxis
+				.call(d3.axisLeft(this.yScales[this.filterVars[0].variable]));
+
+			this.yAxisLabel
+				.attr("x", -this.h/2);
+		}
+	}
+
+	mouseover(datum, path, eventObject) {
+		d3.select(path)
+			.style("fill", this.eventSettings.mouseover.fill);
+		
+		let mousePos = [];
+		mousePos[0] = eventObject.pageX;
+		mousePos[1] = eventObject.pageY;
+
+		let tooltipData = {};
+		tooltipData[this.tooltipVars[0].variable] = datum.label;
+		tooltipData[datum.variable] = datum.value;
+		this.tooltip.show(tooltipData, mousePos);
+	}
+
+	mouseout(path) {
+		d3.select(path)
+			.style("fill", (d) => { return this.colorScale(d.variable); });
+
+	    this.tooltip.hide();
 	}
 
 	changeVariableValsShown(valsShown) {

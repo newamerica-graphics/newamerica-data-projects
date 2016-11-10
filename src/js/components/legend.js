@@ -11,7 +11,6 @@ let continuousLegendHeight = 20,
 
 export class Legend {
 	constructor(legendSettings) {
-		console.log(legendSettings);
 		let {id, markerSettings, showTitle, showValCounts, orientation, customTitleExpression, disableValueToggling, openEnded, customLabels} = legendSettings;
 		this.id = id;
 		this.showTitle = showTitle;
@@ -113,7 +112,6 @@ export class Legend {
 		} else {
 			legendXScale = d3.scaleLinear();
 		}
-		console.log(this.colorScale.domain());
 		legendXScale
 			.domain(this.colorScale.domain())
 			.range([continuousLegendOffset, this.legendWidth - continuousLegendOffset]);
