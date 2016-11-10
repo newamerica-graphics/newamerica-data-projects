@@ -97,7 +97,7 @@ export class Tooltip {
 	}
 
 	show(d, mouse) {
-		if ($(window).width() < 400) {
+		if ($(window).width() < 450) {
 			return;
 		}
         if (this.tooltipImageVar) {
