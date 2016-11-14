@@ -1,10 +1,13 @@
-var mapboxgl = require('mapbox-gl');
-let d3 = require("d3");
+let mapboxgl = require('mapbox-gl');
+window.mapboxgl = mapboxgl;
+require('mapbox-gl-geocoder');
+// let d3 = require("d3");
 
 // import { bankPoints } from '../../../geometry/bankPoints.js';
 
-mapboxgl.mapboxAccessToken = "pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA";
-
+mapboxgl.acessToken = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
+mapboxgl.config.ACCESS_TOKEN = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
+console.log(mapboxgl);
 // var southWest = L.latLng(15, -165),
 //     northEast = L.latLng(72, -65),
 //     bounds = L.latLngBounds(southWest, northEast);
@@ -34,11 +37,49 @@ mapboxgl.mapboxAccessToken = "pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTU
 
 var map = new mapboxgl.Map({
     container: 'map',
-    style: 'mapbox://styles/mapbox/streets-v9',
-    center: [-79.4512, 43.6568],
-    zoom: 13
+    style: 'mapbox://styles/newamericamapbox/civcm5ziy00d92imrwswlo1wv',
+    zoom: 3,
+    center: [-98.5795, 39.8282]
+
 });
 
-map.addControl(new mapboxgl.Geocoder());
+// map.on('load', function() {
+	
+// 	console.log(map.getLayer('banks'));
+// });
 
-// newamericamapbox.0qvq0l4l
+map.addControl(new mapboxgl.Geocoder({
+	country:'us'
+}));
+
+map.addControl(new mapboxgl.NavigationControl());
+
+var toggleableLayerIds = [ 'banks', 'altcredit', 'ncua', 'usps', 'censustracts_white_4','censustracts_white_5' ];
+
+for (var i = 0; i < toggleableLayerIds.length; i++) {
+    var id = toggleableLayerIds[i];
+
+    var link = document.createElement('a');
+    link.href = '#';
+    link.className = 'active';
+    link.textContent = id;
+
+    link.onclick = function (e) {
+        var clickedLayer = this.textContent;
+        e.preventDefault();
+        e.stopPropagation();
+
+        var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+        if (visibility === 'visible') {
+            map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+            this.className = '';
+        } else {
+            this.className = 'active';
+            map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+        }
+    };
+
+    var layers = document.getElementById('menu');
+    layers.appendChild(link);
+}
