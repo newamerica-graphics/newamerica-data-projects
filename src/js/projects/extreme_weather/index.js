@@ -146,6 +146,7 @@ let vizSettingsList = [
 		xAxisLabelInterval: {"small": 10, "medium": 5, "large": 2},
 		labelValues: false,
 		showYAxis: true,
+		hasTrendline: true,
 		tooltipVars: [ variables.year_counts_year, variables.year_counts_count ],
 		eventSettings: {
 			"mouseover":{ "tooltip": true, "fill": colors.turquoise.medium, "stroke": false }
