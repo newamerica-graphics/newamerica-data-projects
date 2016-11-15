@@ -106,15 +106,59 @@ export function setupProject(projectSettings) {
 
 	function render() {
 		d3.json(projectSettings.dataUrl, (d) => {
-			for (let viz of vizList) {
-				viz.render(d);
-			}
+			if ($("body").hasClass("template-indepthprofile")) {
+				setProfileValues(d);
+			} else {
+				for (let viz of vizList) {
+					viz.render(d);
+				}
 
-			setDataDownloadLinks(d);
-			
-			setProfileValues(d);
+				setDataDownloadLinks(d);
+			}
 		});
 
+		console.log(gapi);
+
+		downloadFile("https://www.googleapis.com/drive/v3/files/1UHVsknlx8sWPNg6nYBg2_WdXTp2RwnWwe7BdInWncdg", (d) => { console.log(d)});
+
+	}
+
+	function downloadFile(file, callback) {
+		function start() {
+			gapi.client.init({
+			    'apiKey': 'AIzaSyDEw5U0UeTsSQ_GA542Auu6bW9Z5_tuB-w',
+			    // clientId and scope are optional if auth is not required.
+			    'clientId': '748333064756-ocgu5vjjip1iffns3jbikguts7604sn6.apps.googleusercontent.com',
+			    'scope':'https://www.googleapis.com/auth/drive.file',
+			  }).then(function() {
+			    // 3. Initialize and make the API request.
+			    return gapi.client.request({
+			      'path': 'https://www.googleapis.com/drive/v3/files',
+			    })
+			  }).then(function(resp) {
+			    console.log(resp.result);
+			  }, function(reason) {
+			    console.log(reason);
+			  });
+
+		}
+		// 1. Load the JavaScript client library.
+		gapi.load('client', start);
+	  // if (file) {
+	  //   var accessToken = gapi.auth.getToken().access_token;
+	  //   var xhr = new XMLHttpRequest();
+	  //   xhr.open('GET', file);
+	  //   xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+	  //   xhr.onload = function() {
+	  //     callback(xhr.responseText);
+	  //   };
+	  //   xhr.onerror = function() {
+	  //     callback(null);
+	  //   };
+	  //   xhr.send();
+	  // } else {
+	  //   callback(null);
+	  // }
 	}
 
 	function resize() {
@@ -155,6 +199,40 @@ export function setupProject(projectSettings) {
 	}
 
 	function setProfileValues(data) {
+		projectSettings.imageFolderId ? setProfileHeaderImage(data) : null;
+		setProfileDataReferences(data);
+	}
+
+	function setProfileHeaderImage(data) {
+		let $inDepthProfileImage = $(".in-depth__profile__header-image");
+		let dataSheet = $inDepthProfileImage.attr("data-sheet-name");
+		let lookupField = $inDepthProfileImage.attr("data-lookup-field");
+		let lookupValue = window.location.search.replace("?", "").replace("/", "").replace(/_/g, " ").toLowerCase();
+		let imageField =  $inDepthProfileImage.attr("data-image-field");
+
+		if (!lookupField) {
+			return;
+		}
+		let allLookupValues = d3.nest()
+			.key((d) => { return d[lookupField].toLowerCase(); })
+			.map(data[dataSheet]);
+
+		if (!allLookupValues.get(lookupValue)) {
+			$inDepthProfileImage.empty();
+		}
+
+		for (let d of data[dataSheet]) {
+			if (d[lookupField].toLowerCase() == lookupValue) {
+				let imageUrl = d[imageField];
+				console.log(imageUrl);
+				let imageDiv = $inDepthProfileImage.append("div");
+				// imageDiv.css("background", "no-repeat center/100% url('https://docs.google.com/uc?id=0B2KbJlQb9jlgeG5hOXZqbURpRUE')")
+				break;
+			}
+		}
+	}
+
+	function setProfileDataReferences(data) {
 		let $inDepthProfileBody = $(".in-depth__profile__body");
 		let dataSheet = $inDepthProfileBody.attr("data-sheet-name");
 		let lookupField = $inDepthProfileBody.attr("data-lookup-field");
@@ -169,6 +247,8 @@ export function setupProject(projectSettings) {
 
 		if (!allLookupValues.get(lookupValue)) {
 			$inDepthProfileBody.empty();
+		} else {
+			document.title = lookupValue;
 		}
 
 		let displayField, fieldFormat;
