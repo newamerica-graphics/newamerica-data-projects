@@ -17,7 +17,7 @@ function getProjectEntryPoints() {
   if (whichProject) {
     var projectList = [whichProject];
   } else {
-    var projectList = ['homegrown_terrorism', 'care_index'];
+    var projectList = ['homegrown_terrorism', 'care_index', 'extreme_weather'];
   }
 
 	for (var project of projectList) {

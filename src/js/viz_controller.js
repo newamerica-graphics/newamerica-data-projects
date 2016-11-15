@@ -112,7 +112,7 @@ export function setupProject(projectSettings) {
 
 			setDataDownloadLinks(d);
 			
-			// setProfileValues(d);
+			setProfileValues(d);
 		});
 
 	}
@@ -160,6 +160,9 @@ export function setupProject(projectSettings) {
 		let lookupField = $inDepthProfileBody.attr("data-lookup-field");
 		let lookupValue = window.location.search.replace("?", "").replace("/", "").replace(/_/g, " ").toLowerCase();
 
+		if (!lookupField) {
+			return;
+		}
 		let allLookupValues = d3.nest()
 			.key((d) => { return d[lookupField].toLowerCase(); })
 			.map(data[dataSheet]);
