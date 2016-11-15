@@ -70,7 +70,7 @@ let vizSettingsList = [
 		zoomable: false
 	},
 	{
-		id: "#extreme-weather__counties_map", 
+		id: "#extreme-weather__counties-map", 
 		vizType: "dashboard",
 		defaultValue: numBillionDollarEvents - 1,
 		layoutRows: [
