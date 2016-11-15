@@ -108,6 +108,7 @@ export function setupProject(projectSettings) {
 		d3.json(projectSettings.dataUrl, (d) => {
 			for (let viz of vizList) {
 				viz.render(d);
+				hideLoadingGif(viz.id);
 			}
 
 			setDataDownloadLinks(d);
@@ -121,6 +122,10 @@ export function setupProject(projectSettings) {
 		for (let viz of vizList) {
 			viz.resize ? viz.resize() : null;
 		}
+	}
+
+	function hideLoadingGif(id) {
+		$(id).siblings(".dataviz__loading-gif").hide();
 	}
 
 	function setDataDownloadLinks(data) {
