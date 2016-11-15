@@ -22,7 +22,7 @@ let variables = {
 	fema_all_except_fire: {"variable":"all_except_fire", "displayName":"All", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.turquoise.dark]},
 	fema_flood: {"variable":"flood", "displayName":"Flood", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.blue.dark]},
 	fema_severe_ice_storm: {"variable":"severe_ice_storm", "displayName":"Severe Ice Storm", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.blue.dark]},
-	fema_severe_storms: {"variable":"severe_storms", "displayName":"Severe Storm(s)", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.purple.dark]},
+	fema_severe_storms: {"variable":"severe_storms", "displayName":"Severe Storm", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.purple.dark]},
 	fema_snow: {"variable":"snow", "displayName":"Snow", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.blue.dark]},
 	fema_tornado: {"variable":"tornado", "displayName":"Tornado", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.purple.dark]},
 	fema_fire: {"variable":"fire", "displayName":"Fire", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.red.dark]},
@@ -77,7 +77,7 @@ let vizSettingsList = [
 			[
 				{
 					vizType: "select_box",
-					primaryDataSheet: "events",
+					primaryDataSheet: "filtered_storm_events",
 					variable: variables.event_name,
 					isMessagePasser: true,
 					messageHandlerType: "change_value",
@@ -89,7 +89,7 @@ let vizSettingsList = [
 					width: "420px",
 					isMessagePasser: true,
 					messageHandlerType: "change_value",
-					primaryDataSheet: "events",
+					primaryDataSheet: "filtered_storm_events",
 					groupingVars: [ variables.year ],
 					filterVars: [ variables.cpi_adjusted_cost ],
 					dotSettings: { "width": 13, "offset": 3},
@@ -103,7 +103,7 @@ let vizSettingsList = [
 				{
 					vizType: "text_box",
 					width: "calc(100% - 420px)",
-					primaryDataSheet: "events",
+					primaryDataSheet: "filtered_storm_events",
 					textBoxVars: [ variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.deaths, variables.cpi_adjusted_cost, variables.states, variables.info_link ],
 					messageHandlerType: "change_value",
 				}
@@ -146,6 +146,7 @@ let vizSettingsList = [
 		xAxisLabelInterval: {"small": 10, "medium": 5, "large": 2},
 		labelValues: false,
 		showYAxis: true,
+		hasTrendline: true,
 		tooltipVars: [ variables.year_counts_year, variables.year_counts_count ],
 		eventSettings: {
 			"mouseover":{ "tooltip": true, "fill": colors.turquoise.medium, "stroke": false }
@@ -156,7 +157,7 @@ let vizSettingsList = [
 let projectSettings = {
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/resourcesecurity/extreme_weather.json",
 	downloadDataLink: "https://docs.google.com/spreadsheets/d/18WEcJVDByP5bCPACgt2s9-sYIOItweq9fI9PCMIpUjY/",
-	dataSheetNames:["events", "fips_by_event", "fema_declarations", "event_types", "events_year_counts"],
+	dataSheetNames:["filtered_storm_events", "fips_by_event", "fema_declarations", "event_types", "events_year_counts"],
 	vizSettingsList: vizSettingsList
 }
 
