@@ -7,6 +7,12 @@ let margin = { top: 100, bottom: 100 };
 let minNodeOffset = 20,
 	nodeWidth = 300;
 
+let nodeXPadding = 10;
+
+let graphTopPadding = 7;
+
+let transitionDuration = 850;
+
 export class Bipartite {
 	constructor(vizSettings, imageFolderId) {
 		let {id, primaryDataSheet, keyVar, leftVar, rightVar} = vizSettings;
@@ -34,15 +40,16 @@ export class Bipartite {
 		this.leftNodeBox
 			.attr("width", nodeWidth)
 			.attr("height", this.h)
-			.attr("transform", "translate(" + nodeWidth + ",0)");
+			.attr("transform", "translate(" + nodeWidth + "," + graphTopPadding + ")");
 
 		this.rightNodeBox
 			.attr("width", nodeWidth)
 			.attr("height", this.h)
-			.attr("transform", "translate(" + (this.w - nodeWidth) + ",0)");
+			.attr("transform", "translate(" + (this.w - nodeWidth) + "," + graphTopPadding + ")");
 
-		this.leftX = nodeWidth,
+		this.leftX = nodeWidth - 100,
 		this.rightX = this.w - nodeWidth + 100;
+		this.transformLeftX = nodeWidth;
 		this.transformRightX = this.w - nodeWidth;
 	}
 
@@ -71,6 +78,7 @@ export class Bipartite {
 			}
 		}
 		this.rightVals = Array.from(rightVals).sort(d3.ascending);
+		this.leftVals.sort(d3.ascending);
 		console.log(this.linkVals);
 	}
 
@@ -98,7 +106,7 @@ export class Bipartite {
 			this.leftNodes[leftVal] = this.leftNodeBox
 				.append("text")
 				.attr("class", "bipartite__node left")
-				.attr("transform", "translate(0, " + i*this.leftNodeOffset + ")")
+				.attr("transform", "translate(-100, " + i*this.leftNodeOffset + ")")
 			  	.attr("index", i)
 				.style("text-anchor", "end")
 			  	.text(leftVal)
@@ -140,19 +148,28 @@ export class Bipartite {
 	}
 
 	setTransformPath(d, side, newY) {
-		let leftY, rightY;
+		let leftX, rightX, leftY, rightY;
 		if (side == "left") {
+			leftX = this.transformLeftX;
+			rightX = this.rightX;
 			leftY = newY;
 			rightY = this.getYCoord(d[1], "right");
 		} else {
+			leftX = this.leftX;
+			rightX = this.transformRightX
 			rightY = newY;
 			leftY = this.getYCoord(d[0], "left");
 		}
 		
-		return this.pathFunction(this.leftX, this.transformRightX, leftY, rightY);
+		return this.pathFunction(leftX, rightX, leftY, rightY);
 	}
 
 	pathFunction(leftX, rightX, leftY, rightY) {
+		leftX += nodeXPadding;
+		rightX -= nodeXPadding;
+		leftY += graphTopPadding;
+		rightY += graphTopPadding;
+
 		return "M" + leftX + "," + leftY
 		    + "C" + (leftX + rightX) / 2 + "," + leftY
 		    + " " + (leftX + rightX) / 2 + "," + rightY
@@ -185,7 +202,6 @@ export class Bipartite {
 
 		this.links
 			.attr("class", (d, index, paths) => { 
-				// console.log(d, index, paths);
 				if (d[0] === id) {
 					targets.push({id:d[1], link: paths[index]});
 					return "bipartite__link active";
@@ -202,14 +218,14 @@ export class Bipartite {
 				.classed("active", true)
 				.classed("inactive", false)
 				.transition()
-				.duration(1000)
+				.duration(transitionDuration)
 				.attr("transform", "translate(0, " + newY + ")");
 
 			i++;
 
 			d3.select(target.link)
 				.transition()
-				.duration(1000)
+				.duration(transitionDuration)
 				.attr("d", (d) => { return this.setTransformPath(d, "right", newY)} );
 		}
 	}
@@ -220,20 +236,36 @@ export class Bipartite {
 			.addClass("inactive");
 
 		this.rightNodes[id].classed("active", true).classed("inactive", false);
+		let targetYCoord = this.getYCoord(id, "right");
 		let sources = [];
 
 		this.links
-			.attr("class", (d) => { 
+			.attr("class", (d, index, paths) => { 
 				if (d[1] === id) {
-					sources.push(d[0]);
+					sources.push({id:d[0], link: paths[index]});
 					return "bipartite__link active";
 				} else {
 					return "bipartite__link inactive";
 				}
 			});
 
-		for (let sourceId of sources) {
-			this.leftNodes[sourceId].classed("active", true).classed("inactive", false);
+		let i = 0;
+		let newYBase = targetYCoord - (sources.length * minNodeOffset)/2
+		for (let source of sources) {
+			let newY = newYBase + i*minNodeOffset;
+			this.leftNodes[source.id]
+				.classed("active", true)
+				.classed("inactive", false)
+				.transition()
+				.duration(transitionDuration)
+				.attr("transform", "translate(0, " + newY + ")");
+
+			i++;
+
+			d3.select(source.link)
+				.transition()
+				.duration(transitionDuration)
+				.attr("d", (d) => { return this.setTransformPath(d, "left", newY)} );
 		}
 	}
 
@@ -241,44 +273,29 @@ export class Bipartite {
 		console.log(this);
 		this.links
 			.transition()
-			.duration(1000)
+			.duration(transitionDuration)
 			.attr("d", (d) => { return this.setInitialPath(d); });
 
 		let activeNodesLeft = $(".bipartite__node.active.left");
 
-
-		// for (let activeNode of activeNodes) {
-		// 	d3.select(activeNode)
-		// }
+		for (let activeNode of activeNodesLeft) {
+			let index = d3.select(activeNode).attr("index");
+			d3.select(activeNode)
+				.transition()
+				.duration(transitionDuration)
+				.attr("transform", "translate(-100, " + (index*this.leftNodeOffset) + ")");
+		}
 
 		let activeNodesRight = $(".bipartite__node.active.right");
-
-		console.log(activeNodesRight);
 
 		for (let activeNode of activeNodesRight) {
 			let index = d3.select(activeNode).attr("index");
 			console.log(this.rightNodeOffset, this.leftNodeOffset);
 			d3.select(activeNode)
 				.transition()
-				.duration(1000)
-				.attr("transform", "translate(100, " + (index*this.rightNodeOffset) + ")")
+				.duration(transitionDuration)
+				.attr("transform", "translate(100, " + (index*this.rightNodeOffset) + ")");
 		}
-
-
-		// let j = 0;
-		// for (let rightVal of this.rightVals) {
-		// 	this.rightNodes[rightVal] = this.rightNodeBox
-		// 		.append("text")
-		// 		.attr("class", "bipartite__node")
-		// 		.attr("transform", "translate(100, " + j*this.rightNodeOffset + ")")
-		// 	  	.attr("index", j)
-		// 		.style("text-anchor", "beginning")
-		// 	  	.text(rightVal)
-		// 	  	.on("mouseover", (d) => { return this.mouseoverRight(rightVal); })
-		// 	  	.on("mouseout", this.mouseout);
-
-		// 	j++;
-		// }
 
 		$(".active").removeClass("active");
 		$(".inactive").removeClass("inactive");

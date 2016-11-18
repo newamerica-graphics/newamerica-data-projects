@@ -19,11 +19,12 @@
   		fill: palette-get(na-black);
     	cursor: pointer;
     	font-size: 16px;
+    	alignment-baseline: middle;
     	&:hover {
     		font-weight: bold;
     	}
     	&.inactive {
-    		opacity: .5;
+    		opacity: .2;
     		font-weight: normal;
     	}
     	&.active {
