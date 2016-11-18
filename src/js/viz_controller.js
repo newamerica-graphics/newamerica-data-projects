@@ -20,6 +20,7 @@ import { FactBox } from "./chart_types/fact_box.js";
 import { LineChart } from "./chart_types/line_chart.js";
 import { SummaryBox } from "./chart_types/summary_box.js";
 import { PieChart } from "./chart_types/pie_chart.js";
+import { Bipartite } from "./chart_types/bipartite.js";
 
 import { formatValue } from "./helper_functions/format_value.js";
 
@@ -41,6 +42,10 @@ export function setupProject(projectSettings) {
 			switch (vizSettingsObject.vizType) {
 				case "bar_chart":
 					viz = new BarChart(vizSettingsObject, imageFolderId);
+					break;
+
+				case "bipartite":
+					viz = new Bipartite(vizSettingsObject, imageFolderId);
 					break;
 
 				case "chart_with_fact_box":

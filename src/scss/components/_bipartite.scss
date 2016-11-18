@@ -1,0 +1,35 @@
+.bipartite {
+	&__link {
+		fill: none;
+		stroke: palette-get(na-black);
+		opacity: 0.3;
+		stroke-width: 1.5px;
+		stroke-linecap: round;
+
+		&.inactive {
+    		opacity: .1;
+    		stroke-width: 1.5px;
+    	}
+		&.active {
+			opacity: 1;
+    		stroke-width: 3px;
+    	}
+    }
+
+    &__node {
+  		fill: palette-get(na-black);
+    	cursor: pointer;
+    	font-size: 16px;
+    	alignment-baseline: middle;
+    	&:hover {
+    		font-weight: bold;
+    	}
+    	&.inactive {
+    		opacity: .2;
+    		font-weight: normal;
+    	}
+    	&.active {
+    		font-weight: bold;
+    	}
+    }
+}
