@@ -4,6 +4,7 @@
 		stroke: palette-get(na-black);
 		opacity: 0.3;
 		stroke-width: 1.5px;
+		stroke-linecap: round;
 
 		&.inactive {
     		opacity: .1;

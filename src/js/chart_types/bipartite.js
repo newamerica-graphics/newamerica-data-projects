@@ -5,9 +5,9 @@ let d3 = require("d3");
 let margin = { top: 100, bottom: 100 };
 
 let minNodeOffset = 20,
-	nodeWidth = 300;
+	nodeWidth = 200;
 
-let nodeXPadding = 10;
+let nodeXPadding = 7;
 
 let graphTopPadding = 7;
 
@@ -37,6 +37,11 @@ export class Bipartite {
 			.attr("width", this.w)
 		    .attr("height", this.h);
 
+		this.leftX = 100,
+		this.rightX = this.w - 100;
+		this.transformLeftX = nodeWidth;
+		this.transformRightX = this.w - 100 - 100;
+
 		this.leftNodeBox
 			.attr("width", nodeWidth)
 			.attr("height", this.h)
@@ -47,10 +52,7 @@ export class Bipartite {
 			.attr("height", this.h)
 			.attr("transform", "translate(" + (this.w - nodeWidth) + "," + graphTopPadding + ")");
 
-		this.leftX = nodeWidth - 100,
-		this.rightX = this.w - nodeWidth + 100;
-		this.transformLeftX = nodeWidth;
-		this.transformRightX = this.w - nodeWidth;
+		
 	}
 
 	render(data) {
@@ -179,11 +181,9 @@ export class Bipartite {
 	getYCoord(id, side) {
 		let yIndex;
 		if (side == "left") {
-			console.log(this.leftNodes[id]);
 			yIndex = this.leftNodes[id].attr("index");
 			return yIndex * this.leftNodeOffset;
 		} else {
-			console.log(this.rightNodes[id]);
 			yIndex = this.rightNodes[id].attr("index");
 			return yIndex * this.rightNodeOffset;
 		}
@@ -211,7 +211,7 @@ export class Bipartite {
 			});
 
 		let i = 0;
-		let newYBase = sourceYCoord - (targets.length * minNodeOffset)/2
+		let newYBase = this.setTransformYBase(sourceYCoord, targets.length);
 		for (let target of targets) {
 			let newY = newYBase + i*minNodeOffset;
 			this.rightNodes[target.id]
@@ -250,7 +250,9 @@ export class Bipartite {
 			});
 
 		let i = 0;
-		let newYBase = targetYCoord - (sources.length * minNodeOffset)/2
+
+		let newYBase = this.setTransformYBase(targetYCoord, sources.length);
+
 		for (let source of sources) {
 			let newY = newYBase + i*minNodeOffset;
 			this.leftNodes[source.id]
@@ -269,8 +271,21 @@ export class Bipartite {
 		}
 	}
 
+	setTransformYBase(coord, listLen) {
+		console.log(coord + (listLen * minNodeOffset)/2, this.h);
+		// transform would bring nodes out the bottom of the svg
+		if (coord - (listLen * minNodeOffset)/2 < 0) {
+			console.log("less!");
+			return 0;
+		} else if (coord + (listLen * minNodeOffset)/2 > this.h) {
+			console.log("greater!");
+			return this.h - (listLen * minNodeOffset);
+		} else {
+			return coord - (listLen * minNodeOffset)/2;
+		}
+	}
+
 	mouseout() {
-		console.log(this);
 		this.links
 			.transition()
 			.duration(transitionDuration)
@@ -290,7 +305,6 @@ export class Bipartite {
 
 		for (let activeNode of activeNodesRight) {
 			let index = d3.select(activeNode).attr("index");
-			console.log(this.rightNodeOffset, this.leftNodeOffset);
 			d3.select(activeNode)
 				.transition()
 				.duration(transitionDuration)
