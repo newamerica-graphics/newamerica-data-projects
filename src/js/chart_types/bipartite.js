@@ -273,6 +273,7 @@ export class Bipartite {
 
 	setTransformYBase(coord, listLen) {
 		console.log(coord + (listLen * minNodeOffset)/2, this.h);
+		coord += graphTopPadding;
 		// transform would bring nodes out the bottom of the svg
 		if (coord - (listLen * minNodeOffset)/2 < 0) {
 			console.log("less!");
