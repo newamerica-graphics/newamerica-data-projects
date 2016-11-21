@@ -7,6 +7,7 @@ import { FilterGroup } from "../components/filter_group.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 
 import { usGeom } from '../../geometry/us.js';
+import { worldGeom } from '../../geometry/world.js';
 
 import { formatValue, deformatValue } from "../helper_functions/format_value.js";
 
@@ -17,19 +18,23 @@ let topojson = require("topojson");
 
 export class UsMap {
 	constructor(vizSettings) {
-		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, stroke, legendSettings, filterGroupSettings, zoomable } = vizSettings;
+		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, stroke, legendSettings, filterGroupSettings, zoomable, defaultFill } = vizSettings;
 
 		this.id = id;
 		this.filterVars = filterVars;
 		this.primaryDataSheet = primaryDataSheet;
+		this.geometryType = geometryType;
 		this.geometryVar = geometryVar;
-		this.geometry = topojson.feature(usGeom, usGeom.objects[geometryType]).features;
 		this.stroke = stroke;
 		this.legendSettings = legendSettings;
 		this.filterGroupSettings = filterGroupSettings;
 		this.currFilterIndex = 0;
 		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
 		this.zoomable = zoomable;
+
+		this.defaultFill = defaultFill ? defaultFill : "#fff";
+
+		this.setGeometry(geometryType);
 
 		if (filterGroupSettings && !filterGroupSettings.hidden) {
 			this.filterGroup = filterVars.length > 1 ? new FilterGroup(vizSettings) : null;
@@ -42,7 +47,7 @@ export class UsMap {
 			this.zoomOutPrompt = mapContainer
 				.append("div")
 				.attr("class", "zoom-out-prompt")
-				.text("Return to Full U.S. Map")
+				.text("Return to Full Map")
 				.on("click", () => { return this.clicked(null, null, null); });
 		}
 
@@ -65,11 +70,20 @@ export class UsMap {
 		this.centered = true;
 	}
 
+	setGeometry(geometryType) {
+		if (geometryType == "world") {
+			console.log("setting geometry");
+			this.geometry = topojson.feature(worldGeom, worldGeom.objects.countries).features;
+		} else {
+			this.geometry = topojson.feature(usGeom, usGeom.objects[geometryType]).features;
+		}
+	}
+
 	setDimensions() {
 		let containerWidth = $(this.id).width();
 		this.w = containerWidth;
 
-		this.h = 3*this.w/5;
+		this.h = this.geometryType == "world" ? 2*this.w/5 : 3*this.w/5;
 
 		let translateX = this.w/2;
 		let scalingFactor = 5*this.w/4;
@@ -90,13 +104,26 @@ export class UsMap {
 			.attr("width", "100%");
 
 		//Define map projection
-		let projection = d3.geoAlbersUsa()
-				.scale(scalingFactor)
-				.translate([translateX, this.h/2]);
+		let projection = this.setProjection(scalingFactor, translateX);
 
 		//Define path generator
 		this.pathGenerator = d3.geoPath()
 						 .projection(projection);
+	}
+
+	setProjection(scalingFactor, translateX) {
+		if (this.geometryType == "world") {
+			this.g.attr("transform", "translate(0, " + this.h/12 + ")");
+			return d3.geoEquirectangular()
+				.scale(this.w/6.5)
+				.rotate([-12,0])
+			    .translate([translateX, this.h/2]);
+		} else {
+			return d3.geoAlbersUsa()
+				.scale(scalingFactor)
+				.translate([translateX, this.h/2]);
+		}
+		
 	}
 
 	render(data) {
@@ -132,13 +159,18 @@ export class UsMap {
 	bindDataToGeom() {
 		for (let dataElem of this.data) {
 			let dataId = dataElem[this.geometryVar.variable];
+			// console.log(Number(dataId));
 			for (let geogElem of this.geometry) {
+				// console.log(geogElem);
 				if (dataId == geogElem.id) {
+					console.log("match!");
 					geogElem.data = dataElem;
 					break;
 				}
 			}
 		}
+
+		console.log(this.geometry);
 	}
 
 	buildGraph() {
@@ -149,6 +181,7 @@ export class UsMap {
 
 		this.paths.attr("d", this.pathGenerator)
 		    .style("fill", (d) => { return this.setFill(d); })
+		    .style("opacity", ".9")
 		    .attr("value", function(d,i) { return i; })
 		    .style("stroke", this.stroke.color || "white")
 		    .style("stroke-width", this.stroke.width || "1")
@@ -162,9 +195,9 @@ export class UsMap {
 	setFill(d) {
 		if (d.data) {
 	   		var value = d.data[this.currFilterVar];
-	   		return value ? this.colorScale(value) : "#fff";
+	   		return value ? this.colorScale(value) : this.defaultFill;
 	   	} else {
-	   		return "#fff";
+	   		return this.defaultFill;
 	   	}
 	}
 

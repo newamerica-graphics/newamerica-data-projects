@@ -3,32 +3,35 @@ import { setupProject } from "../../viz_controller.js";
 import { colors } from "../../helper_functions/colors.js";
 
 let variables = {
+	id: {"variable": "id", "displayName":"ID", "format":"number"},
 	name: {"variable": "name", "displayName":"Country", "format":"string"},
 	exports_to: {"variable": "exports_to", "displayName":"Exports to", "format":"string"},
 	imports_from: {"variable": "imports_from", "displayName":"Imports from", "format":"string"},
+	domestic_production: {"variable": "domestic_production", "displayName":"Domestic Production", "format":"string", "scaleType":"categorical", "customRange":[colors.grey.light, colors.turquoise.light]},
 }
 
 let vizSettingsList = [
+	// {
+	// 	id: "#world-of-drones__import-export", 
+	// 	vizType: "bipartite",
+	// 	primaryDataSheet: "countries",
+	// 	keyVar: variables.name,
+	// 	leftVar: variables.exports_to,
+	// 	rightVar: variables.imports_from,
+	// },
 	{
-		id: "#world-of-drones__import-export", 
-		vizType: "bipartite",
+		id: "#world-of-drones__domestic-production", 
+		vizType: "us_map",
 		primaryDataSheet: "countries",
-		keyVar: variables.name,
-		leftVar: variables.exports_to,
-		rightVar: variables.imports_from,
-
-		// dotSettings: { "width": 10, "offset": 3, "dotsPerRow": 5},
-		// distanceBetweenGroups: 15,
-		// groupingVars: [ variables.year_charged_or_deceased ],
-		// filterVars: [ variables.charged_or_deceased ],
-		// tooltipVars: [ variables.full_name, variables.charged_or_deceased, variables.date_charged, variables.terror_plot],
-		// tooltipImageVar: variables.headshot,
-		// labelSettings: { interval: 1, showNumVals: true},
-		// legendSettings: {"orientation": "horizontal-center"},
-		// eventSettings: {
-		// 	"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
-		// }
-	}
+		geometryType: "world",
+		stroke: {"color": "white", "width":"1", "opacity": "1", "hoverColor": colors.black, "hoverWidth": "2"},
+		defaultFill: colors.grey.light,
+		geometryVar: variables.id,
+		filterVars: [variables.domestic_production],
+		tooltipVars: [variables.name, variables.domestic_production],
+		legendSettings: {"orientation": "horizontal-center", "showTitle": true, "disableValueToggling": true},
+		zoomable: false,
+	},
 ]
 
 let projectSettings = {
