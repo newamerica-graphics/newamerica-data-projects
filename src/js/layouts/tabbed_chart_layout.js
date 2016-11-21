@@ -3,7 +3,7 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 import { ChartToggle } from "../components/chart_toggle.js";
-import { UsMap } from "../chart_types/us_map.js";
+import { TopoJsonMap } from "../chart_types/topo_json_map.js";
 import { Table } from "../chart_types/table.js";
 
 export class TabbedChartLayout {
@@ -26,8 +26,8 @@ export class TabbedChartLayout {
 			
 			let viz;
 			switch (chartSettingsObject.vizType) {
-				case "us_map":
-					viz = new UsMap(chartSettingsObject);
+				case "topo_json_map":
+					viz = new TopoJsonMap(chartSettingsObject);
 					this.vizList.push(viz);
 					break;
 				case "table":

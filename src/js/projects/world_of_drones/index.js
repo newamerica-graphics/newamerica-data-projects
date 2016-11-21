@@ -21,7 +21,7 @@ let vizSettingsList = [
 	// },
 	{
 		id: "#world-of-drones__domestic-production", 
-		vizType: "us_map",
+		vizType: "topo_json_map",
 		primaryDataSheet: "countries",
 		geometryType: "world",
 		stroke: {"color": "white", "width":"1", "opacity": "1", "hoverColor": colors.black, "hoverWidth": "2"},

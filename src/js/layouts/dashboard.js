@@ -3,7 +3,7 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 import { DotHistogram } from "../chart_types/dot_histogram.js";
-import { UsMap } from "../chart_types/us_map.js";
+import { TopoJsonMap } from "../chart_types/topo_json_map.js";
 import { SelectBox } from "../components/select_box.js";
 import { TextBox } from "../components/text_box.js";
 
@@ -51,8 +51,8 @@ export class Dashboard {
 			case "text_box":
 				component = new TextBox(componentSettings);
 				break;
-			case "us_map":
-				component = new UsMap(componentSettings);
+			case "topo_json_map":
+				component = new TopoJsonMap(componentSettings);
 				break;
 		}
 		

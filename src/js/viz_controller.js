@@ -12,7 +12,7 @@ import { Dashboard } from "./layouts/dashboard.js";
 import { DotMatrix } from "./chart_types/dot_matrix.js";
 import { DotHistogram } from "./chart_types/dot_histogram.js";
 import { GroupedDotMatrix } from "./chart_types/grouped_dot_matrix.js";
-import { UsMap } from "./chart_types/us_map.js";
+import { TopoJsonMap } from "./chart_types/topo_json_map.js";
 import { TabbedChartLayout } from "./layouts/tabbed_chart_layout.js";
 import { ChartWithFactBox } from "./layouts/chart_with_fact_box.js";
 import { Table } from "./chart_types/table.js";
@@ -92,12 +92,8 @@ export function setupProject(projectSettings) {
 					viz = new Table(vizSettingsObject);
 					break;
 
-				case "us_counties_map":
-					viz = new UsCountiesMap(vizSettingsObject);
-					break;
-
-				case "us_map":
-					viz = new UsMap(vizSettingsObject);
+				case "topo_json_map":
+					viz = new TopoJsonMap(vizSettingsObject);
 					break;
 			}
 

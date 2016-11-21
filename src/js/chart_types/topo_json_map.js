@@ -16,7 +16,7 @@ import * as global from "./../utilities.js";
 let d3 = require("d3");
 let topojson = require("topojson");
 
-export class UsMap {
+export class TopoJsonMap {
 	constructor(vizSettings) {
 		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, stroke, legendSettings, filterGroupSettings, zoomable, defaultFill } = vizSettings;
 

@@ -45,7 +45,7 @@ let numBillionDollarEvents = 142;
 let vizSettingsList = [
 	{
 		id: "#extreme-weather__fema-declarations", 
-		vizType: "us_map",
+		vizType: "topo_json_map",
 		primaryDataSheet: "fema_declarations",
 		geometryType: "counties",
 		stroke: {"color": "grey", "width":".5", "opacity": ".6", "hoverColor": colors.black, "hoverWidth": "2"},
@@ -58,7 +58,7 @@ let vizSettingsList = [
 	},
 	{
 		id: "#extreme-weather__fema-declarations-fire", 
-		vizType: "us_map",
+		vizType: "topo_json_map",
 		primaryDataSheet: "fema_declarations",
 		geometryType: "counties",
 		stroke: {"color": "grey", "width":".5", "opacity": ".6", "hoverColor": colors.black, "hoverWidth": "2"},
@@ -110,7 +110,7 @@ let vizSettingsList = [
 			],
 			[
 				{
-					vizType: "us_map",
+					vizType: "topo_json_map",
 					messageHandlerType: "change_filter",
 					primaryDataSheet: "fips_by_event",
 					geometryType: "counties",
