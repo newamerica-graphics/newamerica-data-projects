@@ -310,8 +310,11 @@ export class Bipartite {
 				.attr("transform", "translate(" + transitionOffset + ", " + (index*this.rightNodeOffset) + ")");
 		}
 
-		$(".active").removeClass("active");
-		$(".inactive").removeClass("inactive");
+		$(".bipartite__node.active").removeClass("active");
+		$(".bipartite__node.inactive").removeClass("inactive");
+
+		$(".bipartite__link.active").removeClass("active");
+		$(".bipartite__link.inactive").removeClass("inactive");
 	}
 
 	resize() {
