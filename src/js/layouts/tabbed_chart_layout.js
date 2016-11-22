@@ -3,8 +3,9 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 import { ChartToggle } from "../components/chart_toggle.js";
-import { UsMap } from "../chart_types/us_map.js";
+import { TopoJsonMap } from "../chart_types/topo_json_map.js";
 import { Table } from "../chart_types/table.js";
+import { Dashboard } from "./dashboard.js";
 
 export class TabbedChartLayout {
 	constructor(vizSettings) {
@@ -26,32 +27,44 @@ export class TabbedChartLayout {
 			
 			let viz;
 			switch (chartSettingsObject.vizType) {
-				case "us_map":
-					viz = new UsMap(chartSettingsObject);
-					this.vizList.push(viz);
+				case "dashboard":
+					viz = new Dashboard(chartSettingsObject);
 					break;
 				case "table":
 					viz = new Table(chartSettingsObject);
-					this.vizList.push(viz);
+					break;
+				case "topo_json_map":
+					viz = new TopoJsonMap(chartSettingsObject);
 					break;
 			}
+			this.vizList.push(viz);
 
 			i++;
 		}
 	}
 
 	render(data) {
+		console.log(this.vizList);
 		let visibilityToggles = [];
 		for (let viz of this.vizList) {
+			console.log(viz);
 			viz.render(data);
 		}
 
-		this.chartToggle.render(this.vizList.length);
+		this.chartToggle.render(this.toggleChangedFunction.bind(this));
 	}
 
 	resize() {
 		for (let viz of this.vizList) {
 			viz.resize ? viz.resize() : null;
 		}
+	}
+
+	toggleChangedFunction() {
+		console.log("changing toggles");
+		for (let i = 0; i < this.vizList.length; i++) {
+			$("#chart" + i).toggle();
+		}
+		this.resize();
 	}
 }

@@ -10,18 +10,15 @@ export class ChartToggle {
 			.classed("chart-toggle", true);
 	}
 
-	render(numCharts) {
+	render(toggleChangedFunction) {
 		function toggleAll() {
 			if ($(this).hasClass("active")) { return; };
 			
 			$(".chart-toggle__icon").removeClass("active");
 			$(this).addClass("active");
 			
-			for (let i = 0; i < numCharts; i++) {
-				$("#chart" + i).toggle();
-			}
+			toggleChangedFunction();
 		}
-
 
 		let icon1 = this.chartToggle.append("svg")
 			.classed("chart-toggle__icon active", true)
