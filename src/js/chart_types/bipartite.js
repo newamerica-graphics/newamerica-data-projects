@@ -2,16 +2,15 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
-let margin = { top: 100, bottom: 100 };
-
 let minNodeOffset = 20,
-	nodeWidth = 200;
+	nodeWidth = 230;
 
 let nodeXPadding = 7;
 
-let graphTopPadding = 7;
+let graphTopPadding = 20;
 
-let transitionDuration = 850;
+let transitionDuration = 850,
+	transitionOffset = 100;
 
 export class Bipartite {
 	constructor(vizSettings, imageFolderId) {
@@ -35,12 +34,12 @@ export class Bipartite {
 		this.w = $(this.id).width();
 		this.svg
 			.attr("width", "100%")
-		    .attr("height", this.h);
+		    .attr("height", this.h + graphTopPadding);
 
-		this.leftX = 100,
-		this.rightX = this.w - 100;
+		this.leftX = nodeWidth - transitionOffset,
+		this.rightX = this.w - (nodeWidth - transitionOffset);
 		this.transformLeftX = nodeWidth;
-		this.transformRightX = this.w - 100 - 100;
+		this.transformRightX = this.w - (nodeWidth - transitionOffset) - transitionOffset;
 
 		this.leftNodeBox
 			.attr("width", nodeWidth)
@@ -108,7 +107,7 @@ export class Bipartite {
 			this.leftNodes[leftVal] = this.leftNodeBox
 				.append("text")
 				.attr("class", "bipartite__node left")
-				.attr("transform", "translate(-100, " + i*this.leftNodeOffset + ")")
+				.attr("transform", "translate(-" + transitionOffset + ", " + i*this.leftNodeOffset + ")")
 			  	.attr("index", i)
 				.style("text-anchor", "end")
 			  	.text(leftVal)
@@ -123,7 +122,7 @@ export class Bipartite {
 			this.rightNodes[rightVal] = this.rightNodeBox
 				.append("text")
 				.attr("class", "bipartite__node right")
-				.attr("transform", "translate(100, " + j*this.rightNodeOffset + ")")
+				.attr("transform", "translate(" + transitionOffset + ", " + j*this.rightNodeOffset + ")")
 			  	.attr("index", j)
 				.style("text-anchor", "beginning")
 			  	.text(rightVal)
@@ -196,7 +195,7 @@ export class Bipartite {
 			.removeClass("active")
 			.addClass("inactive");
 
-		this.leftNodes[id].classed("active", true).classed("inactive", false)
+		this.leftNodes[id].classed("active", true).classed("inactive", false);
 		let sourceYCoord = this.getYCoord(id, "left");
 		let targets = [];
 
@@ -272,8 +271,7 @@ export class Bipartite {
 	}
 
 	setTransformYBase(coord, listLen) {
-		console.log(coord + (listLen * minNodeOffset)/2, this.h);
-		coord += graphTopPadding;
+		coord += graphTopPadding - 10;
 		// transform would bring nodes out the bottom of the svg
 		if (coord - (listLen * minNodeOffset)/2 < 0) {
 			console.log("less!");
@@ -299,7 +297,7 @@ export class Bipartite {
 			d3.select(activeNode)
 				.transition()
 				.duration(transitionDuration)
-				.attr("transform", "translate(-100, " + (index*this.leftNodeOffset) + ")");
+				.attr("transform", "translate(-" + transitionOffset + ", " + (index*this.leftNodeOffset) + ")");
 		}
 
 		let activeNodesRight = $(".bipartite__node.active.right");
@@ -309,7 +307,7 @@ export class Bipartite {
 			d3.select(activeNode)
 				.transition()
 				.duration(transitionDuration)
-				.attr("transform", "translate(100, " + (index*this.rightNodeOffset) + ")");
+				.attr("transform", "translate(" + transitionOffset + ", " + (index*this.rightNodeOffset) + ")");
 		}
 
 		$(".active").removeClass("active");

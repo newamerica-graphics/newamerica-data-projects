@@ -23,50 +23,50 @@ let vizSettingsList = [
 		leftVar: variables.exports_to,
 		rightVar: variables.imports_from,
 	},
-	{
-		id: "#world-of-drones__domestic-production",
-		vizType: "tabbed_chart_layout",
-		primaryDataSheet: "countries",
-		chartSettingsList: [
-			{
-				vizType: "dashboard",
-				getDefaultValueFunction: getDefaultValue,
-				layoutRows: [
-					[
-						{
-							vizType: "slider",
-							primaryDataSheet: "countries",
-							variable: variables.fake_year_data,
-							isMessagePasser: true,
-							automated: true
-						}
-					],
-					[
-						{
-							vizType: "topo_json_map",
-							primaryDataSheet: "countries",
-							geometryType: "world",
-							stroke: {"color": "white", "width":"1", "opacity": "1", "hoverColor": "white", "hoverWidth": "3"},
-							defaultFill: colors.grey.light,
-							geometryVar: variables.id,
-							filterVars: [variables.fake_year_data],
-							tooltipVars: [variables.name, variables.description],
-							zoomable: false,
-							messageHandlerType: "change_value",
-						}
-					]
-				]
-			},
-			{
-				vizType: "table",
-				tableVars: [variables.name, variables.description, variables.domestic_production],
-				defaultOrdering: [0, "asc"],
-				pagination: true,
-				numPerPage: 25,
-				colorScaling: false
-			}
-		]
-	},
+	// {
+	// 	id: "#world-of-drones__domestic-production",
+	// 	vizType: "tabbed_chart_layout",
+	// 	primaryDataSheet: "countries",
+	// 	chartSettingsList: [
+	// 		{
+	// 			vizType: "dashboard",
+	// 			getDefaultValueFunction: getDefaultValue,
+	// 			layoutRows: [
+	// 				[
+	// 					{
+	// 						vizType: "slider",
+	// 						primaryDataSheet: "countries",
+	// 						variable: variables.fake_year_data,
+	// 						isMessagePasser: true,
+	// 						automated: true
+	// 					}
+	// 				],
+	// 				[
+	// 					{
+	// 						vizType: "topo_json_map",
+	// 						primaryDataSheet: "countries",
+	// 						geometryType: "world",
+	// 						stroke: {"color": "white", "width":"1", "opacity": "1", "hoverColor": "white", "hoverWidth": "3"},
+	// 						defaultFill: colors.grey.light,
+	// 						geometryVar: variables.id,
+	// 						filterVars: [variables.fake_year_data],
+	// 						tooltipVars: [variables.name, variables.description],
+	// 						zoomable: false,
+	// 						messageHandlerType: "change_value",
+	// 					}
+	// 				]
+	// 			]
+	// 		},
+	// 		{
+	// 			vizType: "table",
+	// 			tableVars: [variables.name, variables.description, variables.domestic_production],
+	// 			defaultOrdering: [0, "asc"],
+	// 			pagination: true,
+	// 			numPerPage: 25,
+	// 			colorScaling: false
+	// 		}
+	// 	]
+	// },
 ]
 
 let projectSettings = {
