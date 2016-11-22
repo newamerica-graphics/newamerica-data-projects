@@ -15,58 +15,14 @@ let variables = {
 }
 
 let vizSettingsList = [
-	// {
-	// 	id: "#world-of-drones__import-export", 
-	// 	vizType: "bipartite",
-	// 	primaryDataSheet: "countries",
-	// 	keyVar: variables.name,
-	// 	leftVar: variables.exports_to,
-	// 	rightVar: variables.imports_from,
-	// },
-	// {
-	// 	id: "#world-of-drones__domestic-production", 
-	// 	vizType: "topo_json_map",
-	// 	primaryDataSheet: "countries",
-	// 	geometryType: "world",
-	// 	stroke: {"color": "white", "width":"1", "opacity": "1", "hoverColor": colors.black, "hoverWidth": "2"},
-	// 	defaultFill: colors.grey.light,
-	// 	geometryVar: variables.id,
-	// 	filterVars: [variables.domestic_production],
-	// 	tooltipVars: [variables.name, variables.domestic_production],
-	// 	legendSettings: {"orientation": "horizontal-center", "showTitle": true, "disableValueToggling": true},
-	// 	zoomable: false,
-	// },
-	// {
-	// 	id: "#world-of-drones__domestic-production-test",
-	// 	vizType: "dashboard",
-	// 	getDefaultValueFunction: getDefaultValue,
-	// 	layoutRows: [
-	// 		[
-	// 			{
-	// 				vizType: "slider",
-	// 				primaryDataSheet: "countries",
-	// 				variable: variables.fake_year_data,
-	// 				isMessagePasser: true,
-	// 				automated: true
-	// 			}
-	// 		],
-	// 		[
-	// 			{
-	// 				vizType: "topo_json_map",
-	// 				primaryDataSheet: "countries",
-	// 				geometryType: "world",
-	// 				stroke: {"color": "white", "width":"1", "opacity": "1", "hoverColor": colors.black, "hoverWidth": "2"},
-	// 				defaultFill: colors.grey.light,
-	// 				geometryVar: variables.id,
-	// 				filterVars: [variables.fake_year_data],
-	// 				tooltipVars: [variables.name, variables.domestic_production],
-	// 				legendSettings: {"orientation": "horizontal-center", "showTitle": true, "disableValueToggling": true},
-	// 				zoomable: false,
-	// 				messageHandlerType: "change_value",
-	// 			}
-	// 		]
-	// 	]
-	// },
+	{
+		id: "#world-of-drones__import-export", 
+		vizType: "bipartite",
+		primaryDataSheet: "countries",
+		keyVar: variables.name,
+		leftVar: variables.exports_to,
+		rightVar: variables.imports_from,
+	},
 	{
 		id: "#world-of-drones__domestic-production",
 		vizType: "tabbed_chart_layout",

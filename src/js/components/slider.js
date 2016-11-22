@@ -58,7 +58,7 @@ export class Slider {
 		this.w = $(this.id).width();
 		
 		this.svg
-			.attr("width", this.w)
+			.attr("width", "100%")
 			.attr("height", this.h + 30);
 
 		this.scale
