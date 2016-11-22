@@ -66,6 +66,7 @@ export class Dashboard {
 	}
 
 	render(data) {
+		console.log("rendering");
 		if (this.getDefaultValueFunction) {
 			this.defaultValue = this.getDefaultValueFunction(data);
 		}

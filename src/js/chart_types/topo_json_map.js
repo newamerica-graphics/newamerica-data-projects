@@ -62,11 +62,12 @@ export class TopoJsonMap {
 
 		this.tooltip = new Tooltip(tooltipSettings);
 
-		this.legendSettings.id = id;
-		this.legendSettings.markerSettings = { shape:"circle", size:10 };
+		if (legendSettings) {
+			this.legendSettings.id = id;
+			this.legendSettings.markerSettings = { shape:"circle", size:10 };
 
-		this.legend = new Legend(legendSettings);
-
+			this.legend = new Legend(legendSettings);
+		}
 		this.setDimensions();
 		this.centered = true;
 	}
@@ -89,7 +90,7 @@ export class TopoJsonMap {
 		let translateX = this.w/2;
 		let scalingFactor = 5*this.w/4;
 
-		if (this.legendSettings.orientation == "vertical-right") {
+		if (this.legendSettings && this.legendSettings.orientation == "vertical-right") {
 			if (containerWidth > global.showLegendBreakpoint) {
 				translateX -= global.legendWidth/2;
 				this.h = this.w/2;
@@ -135,7 +136,7 @@ export class TopoJsonMap {
 		this.setScale();
 		this.bindDataToGeom();
 		this.buildGraph();
-		this.setLegend();
+		this.legendSettings ? this.setLegend() : null;
 		if (!this.hideFilterGroup) {
 			this.filterGroup ? this.setFilterGroup() : null;
 		}
@@ -219,7 +220,7 @@ export class TopoJsonMap {
 	resize() {
 		this.setDimensions();
 		this.paths.attr("d", this.pathGenerator);
-		this.legend.resize();
+		this.legendSettings ? this.legend.resize() : null;
 	}
 
 	changeFilter(variableIndex) {
@@ -227,7 +228,7 @@ export class TopoJsonMap {
 		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
 
 		this.setScale();
-		this.setLegend();
+		this.legendSettings ? this.setLegend() : null;
 		this.paths.style("fill", (d) => { return this.setFill(d); })
 	}
 
