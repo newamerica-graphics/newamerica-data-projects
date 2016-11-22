@@ -34,7 +34,7 @@ export class Bipartite {
 	setDimensions() {
 		this.w = $(this.id).width();
 		this.svg
-			.attr("width", 100%)
+			.attr("width", "100%")
 		    .attr("height", this.h);
 
 		this.leftX = 100,
