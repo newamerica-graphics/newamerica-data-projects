@@ -6,12 +6,14 @@ import { DotHistogram } from "../chart_types/dot_histogram.js";
 import { TopoJsonMap } from "../chart_types/topo_json_map.js";
 import { SelectBox } from "../components/select_box.js";
 import { TextBox } from "../components/text_box.js";
+import { Slider } from "../components/slider.js";
 
 export class Dashboard {
 	constructor(vizSettings) {
-		let { id, layoutRows, defaultValue } = vizSettings;
+		let { id, layoutRows, defaultValue, getDefaultValueFunction } = vizSettings;
 		this.id = id;
 		this.defaultValue = defaultValue;
+		this.getDefaultValueFunction = getDefaultValueFunction;
 
 		this.componentList = [];
 		let i = 0;
@@ -48,6 +50,9 @@ export class Dashboard {
 			case "select_box":
 				component = new SelectBox(componentSettings);
 				break;
+			case "slider":
+				component = new Slider(componentSettings);
+				break;
 			case "text_box":
 				component = new TextBox(componentSettings);
 				break;
@@ -61,10 +66,16 @@ export class Dashboard {
 	}
 
 	render(data) {
+		if (this.getDefaultValueFunction) {
+			this.defaultValue = this.getDefaultValueFunction(data);
+		}
 		for (let component of this.componentList) {
 			component.render(data);
 		}
 		this.changeFilter(this.defaultValue, this);
+		for (let component of this.componentList) {
+			component.startAnimation ? component.startAnimation() : null;
+		}
 	}
 
 	resize() {
@@ -74,6 +85,7 @@ export class Dashboard {
 	}
 
 	changeFilter(value, messageOriginator) {
+		console.log(value);
 		for (let component of this.componentList) {
 			if (component.id != messageOriginator.id) {
 				switch (component.messageHandlerType) {

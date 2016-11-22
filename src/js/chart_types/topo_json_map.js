@@ -4,6 +4,7 @@ import { Tooltip } from "../components/tooltip.js";
 import { Legend } from "../components/legend.js";
 import { FilterGroup } from "../components/filter_group.js";
 
+import { colors } from "../helper_functions/colors.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 
 import { usGeom } from '../../geometry/us.js';
@@ -170,7 +171,6 @@ export class TopoJsonMap {
 			}
 		}
 
-		console.log(this.geometry);
 	}
 
 	buildGraph() {
@@ -231,6 +231,29 @@ export class TopoJsonMap {
 		this.paths.style("fill", (d) => { return this.setFill(d); })
 	}
 
+	changeValue(newVal) {
+		let i = 0;
+		let newRange = [];
+		for (let value of this.colorScale.domain()) {
+			if (Number(value) <= newVal) {
+				newRange[i] = colors.turquoise.light;
+			} else {
+				newRange[i] = "#ccc";
+			}
+			i++;
+		}
+
+		this.colorScale.range(newRange);
+		this.paths
+			.style("fill", (d) => {
+				if (d.data) {
+					let value = Number(d.data[this.currFilterVar]);
+			   		return this.colorScale(value);
+			   	}
+			   	return "#ccc";
+		    });
+	}
+
 	changeVariableValsShown(valsShown) {
 		this.paths
 			.style("fill", (d) => {
@@ -246,7 +269,6 @@ export class TopoJsonMap {
 	}
 
 	mouseover(datum, path, eventObject) {
-		// console.log(datum, path, eventObject);
 		d3.select(path)
 			.style("stroke", this.stroke.hoverColor || "white")
 			.style("stroke-width", this.stroke.hoverWidth || "3")

@@ -31,6 +31,7 @@ let ordinalRange = [
 export function getColorScale(data, filterVar) {
 	let { scaleType, numBins, customRange, customDomain } = filterVar;
 	let scale, domain, range;
+	console.log(customDomain, customRange);
 
 	if (!scaleType) {
 		console.log("no scale type!");
@@ -42,12 +43,12 @@ export function getColorScale(data, filterVar) {
 
 		// if both are not custom, get unique values
 		let uniqueVals = getUniqueVals(data, filterVar);
-		// console.log(customDomain);
+		console.log(uniqueVals);
 		[customDomain, customRange] = customDomain ? filterUnusedVals(uniqueVals, customDomain, customRange) : [customDomain, customRange];
 		// console.log(customDomain);
 		domain = setCategoricalDomain(uniqueVals, customDomain);
 		range = setCategoricalRange(uniqueVals, customRange);
-		
+		console.log(domain, range);
 
 	} else if (scaleType == "quantize") {
 		scale = d3.scaleQuantize();
