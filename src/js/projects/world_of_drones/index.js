@@ -11,7 +11,7 @@ let variables = {
 	imports_from: {"variable": "imports_from", "displayName":"Imports from", "format":"string"},
 	domestic_production: {"variable": "domestic_production", "displayName":"Domestic Production", "format":"string", "scaleType":"categorical", "customRange":[colors.grey.light, colors.turquoise.light]},
 	fake_year_data: {"variable": "fake_year_data", "displayName":"Fake Year", "format":"year", "scaleType":"categorical", "customRange":[colors.turquoise.light]},
-	description: {"variable": "description", "displayName":"Description", "format":"string"},
+	description: {"variable": "description", "displayName":"Description", "format":"string", "disableTableOrdering": true},
 }
 
 let vizSettingsList = [
@@ -62,7 +62,7 @@ let vizSettingsList = [
 				tableVars: [variables.name, variables.description, variables.domestic_production],
 				defaultOrdering: [0, "asc"],
 				pagination: true,
-				numPerPage: 25,
+				numPerPage: 15,
 				colorScaling: false
 			}
 		]

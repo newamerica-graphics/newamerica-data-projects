@@ -49,13 +49,16 @@ export class Table {
 	getColumnNames() {
 		let columnNames = [];
 		for (let tableVar of this.tableVars) {
+
 			let varObject = {
 				"title": tableVar.displayName, 
-				"data": tableVar.variable, 
+				"data": tableVar.variable,
+				"orderable" : tableVar.disableTableOrdering ? false : true,
 				"render": function ( data, type, row ) {
         			return formatValue(data, tableVar.format);
         		}
         	};
+        	console.log(varObject);
 			columnNames.push(varObject);
 		}
 
