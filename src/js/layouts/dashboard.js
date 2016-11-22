@@ -73,8 +73,9 @@ export class Dashboard {
 			component.render(data);
 		}
 		this.changeFilter(this.defaultValue, this);
+
 		for (let component of this.componentList) {
-			component.startAnimation ? component.startAnimation() : null;
+			component.addAnimationTrigger ? component.addAnimationTrigger() : null;
 		}
 	}
 

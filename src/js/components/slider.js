@@ -4,6 +4,8 @@ import { formatValue } from "../helper_functions/format_value.js";
 
 let d3 = require("d3");
 
+require('waypoints/lib/noframework.waypoints.js');
+
 let margin = {right: 50, left: 50};
 
 let animationButtonPaths = {pause: "M11,10 L17,10 17,26 11,26 M20,10 L26,10 26,26 20,26",
@@ -152,9 +154,18 @@ export class Slider {
 		console.log("done toggling animation " + this.animationState + " " + this.currAnimationVal);
 	}
 
-	startAnimation() {
-		this.animationState = "paused";
-		this.toggleAnimation(this.scale.range()[0])
+	addAnimationTrigger() {
+		let id = this.id.replace("#", "");
+		let waypoint = new Waypoint({
+		  element: document.getElementById(id),
+		  offset: '50%',
+		  handler: () => {
+		    console.log(this);
+		    this.animationState = "paused";
+			this.toggleAnimation(this.scale.range()[0])
+			waypoint.destroy();
+		  }
+		});
 	}
 	
 	resize() {
