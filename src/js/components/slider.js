@@ -43,12 +43,12 @@ export class Slider {
 		this.w = $(this.id).width();
 
 		this.track = this.slider.append("line")
-		    .attr("class", "track-overlay")
+		    .attr("class", "slider__track")
 		    .attr("x1", margin.left)
 		    .attr("x2", (this.w - margin.right));
 
 		this.handle = this.slider.insert("circle", ".track-overlay")
-		    .attr("class", "handle")
+		    .attr("class", "slider__handle")
 		    .attr("r", 9)
 		    .attr("cx", margin.left);
 
@@ -156,51 +156,11 @@ export class Slider {
 		this.animationState = "paused";
 		this.toggleAnimation(this.scale.range()[0])
 	}
-	// 	this.animationState = "playing";
-	// 	let interval = 7000/this.w;
-	// 	console.log("starting animation " + this.animationState + " " + this.currAnimationVal);
-	// 	this.intervalFunction = window.setInterval(() => {
-	// 		if (this.currAnimationVal >= this.scale.range()[1] || this.animationState == "paused") {
-	// 			this.stopAnimation(this.scale.range()[0]);
-	// 			this.currAnimationVal = this.scale.range()[0];
-	// 			return;
-	// 		}
-	// 		this.dragEvent(this.currAnimationVal);
-	// 		this.currAnimationVal++;
-	// 	}, interval);
-	// }
-
+	
 	resize() {
 		this.setDimensions();
 		// halts animation when resized
 		this.animationState == "playing" ? this.toggleAnimation(this.currAnimationVal) : null;
 	}
-
-	// stopAnimation(newAnimationVal) {
-	// 	this.currAnimationVal = newAnimationVal;
-	// 	console.log("stopping animation " + this.animationState + " " + this.currAnimationVal);
-	// 	if (this.animationState == "playing") {
-	// 		window.clearInterval(this.intervalFunction);
-	// 		this.changeAnimationButton();
-	// 		this.animationState = "paused";
-	// 	}
-	// 	console.log("resting state " + this.animationState + " " + this.currAnimationVal);
-	// }
-
-	// changeAnimationButton() {
-	// 	console.log("changing animation button " + this.animationState + " " + this.currAnimationVal);
-	// 	if (this.animationState == "playing") {
-	// 		this.animationButton
-	// 			.transition()
-	// 			.duration(10)
-	// 			.attr("d", animationButtonPaths.play);
-	// 	} else {
-	// 		this.startAnimation();
-	// 		this.animationButton
-	// 			.transition()
-	// 			.duration(10)
-	// 			.attr("d", animationButtonPaths.pause);
-	// 	}
-	// }
 
 }

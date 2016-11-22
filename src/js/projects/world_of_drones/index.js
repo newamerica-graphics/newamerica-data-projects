@@ -94,7 +94,7 @@ let vizSettingsList = [
 							defaultFill: colors.grey.light,
 							geometryVar: variables.id,
 							filterVars: [variables.fake_year_data],
-							tooltipVars: [variables.name, variables.domestic_production],
+							tooltipVars: [variables.name, variables.description],
 							zoomable: false,
 							messageHandlerType: "change_value",
 						}
