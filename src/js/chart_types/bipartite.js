@@ -3,7 +3,7 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 let minNodeOffset = 20,
-	nodeWidth = 230;
+	nodeWidth = 210;
 
 let nodeXPadding = 7;
 
