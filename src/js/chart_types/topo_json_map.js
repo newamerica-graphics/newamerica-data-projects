@@ -74,7 +74,6 @@ export class TopoJsonMap {
 
 	setGeometry(geometryType) {
 		if (geometryType == "world") {
-			console.log("setting geometry");
 			this.geometry = topojson.feature(worldGeom, worldGeom.objects.countries).features;
 		} else {
 			this.geometry = topojson.feature(usGeom, usGeom.objects[geometryType]).features;
@@ -161,11 +160,8 @@ export class TopoJsonMap {
 	bindDataToGeom() {
 		for (let dataElem of this.data) {
 			let dataId = dataElem[this.geometryVar.variable];
-			// console.log(Number(dataId));
 			for (let geogElem of this.geometry) {
-				// console.log(geogElem);
 				if (dataId == geogElem.id) {
-					console.log("match!");
 					geogElem.data = dataElem;
 					break;
 				}
@@ -290,7 +286,6 @@ export class TopoJsonMap {
 	}
 
 	clicked(datum, path, eventObject) {
-		console.log("clicked!");
 		let x, y, k;
 
 		if (datum && this.centered !== datum) {

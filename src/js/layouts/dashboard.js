@@ -66,7 +66,6 @@ export class Dashboard {
 	}
 
 	render(data) {
-		console.log("rendering");
 		if (this.getDefaultValueFunction) {
 			this.defaultValue = this.getDefaultValueFunction(data);
 		}
@@ -86,7 +85,6 @@ export class Dashboard {
 	}
 
 	changeFilter(value, messageOriginator) {
-		console.log(value);
 		for (let component of this.componentList) {
 			if (component.id != messageOriginator.id) {
 				switch (component.messageHandlerType) {

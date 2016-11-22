@@ -12,7 +12,7 @@ let variables = {
 	end_date: {"variable":"end_date", "displayName":"End Date", "format":"date"},
 	states: {"variable":"states", "displayName":"All States Affected", "format":"string"},
 	info_link: {"variable":"info_link", "displayName":"More Information", "format":"link"},
-	cpi_adjusted_cost: {"variable":"cpi_adjusted_cost", "displayName":"CPI Adjusted Cost (Billions)", "format":"number", "scaleType":"quantize", "numBins":4, "customDomain":[1, 19], "customRange":[colors.grey.medium, colors.grey.dark]},
+	cpi_adjusted_cost: {"variable":"cpi_adjusted_cost", "displayName":"CPI Adjusted Cost (Billions)", "format":"price", "scaleType":"quantize", "numBins":4, "customDomain":[1, 19], "customRange":[colors.grey.medium, colors.grey.dark]},
 
 	event_fips: {"variable":"fips", "displayName":"County Fips", "format":"number"},
 	event_county_name: {"variable":"county_name", "displayName":"County", "format":"string"},
@@ -33,7 +33,7 @@ let variables = {
 	
 	storm_type: {"variable":"storm_type", "displayName":"Storm Type", "format":"string", "scaleType":"categorical"},
 	frequency: {"variable":"frequency", "displayName":"Count", "format":"number", "color": colors.turquoise.light},
-	average_cost: {"variable":"average_cost", "displayName":"Average Cost (Billions)", "format":"number", "scaleType":"linear", "color": colors.blue.medium},
+	average_cost: {"variable":"average_cost", "displayName":"Average Cost (Billions)", "format":"price", "scaleType":"linear", "color": colors.blue.medium},
 
 	year_counts_year: {"variable":"year", "displayName":"Year", "format":"year"},
 	year_counts_count: {"variable":"count", "displayName":"Billion Dollar Event Count", "format":"number", "color": colors.turquoise.light},
@@ -167,7 +167,7 @@ function getEventFilterVars() {
 	let filterVars = [];
 	let curr;
 	for (let i = 0; i < numBillionDollarEvents; i++) {
-		curr = {"variable":String(i), "displayName":"All", "format":"string", "scaleType":"categorical", "customDomain":["Drought", "Extreme Heat", "Wildfire", "Flooding", "Cold Weather/Wind Chill or Freezing", "Snow Storms or Ice Storms", "Tornado or Funnel Cloud", "Tropical Storm", "Wind, Hail, or Lightning", "Other"], "customRange":[colors.red.light, colors.red.medium, colors.red.dark, colors.blue.light, colors.blue.medium, colors.blue.dark, colors.turquoise.light, colors.turquoise.dark, colors.purple.light, colors.grey.light]};
+		curr = {"variable":String(i), "displayName":"All", "format":"string", "scaleType":"categorical", "customDomain":["Drought", "Extreme Heat", "Wildfire", "Flooding", "Cold Weather/Wind Chill or Freezing", "Snow Storms or Ice Storms", "Tornado or Funnel Cloud", "Tropical Storm", "Wind, Hail, or Lightning", "Other"], "customRange":[colors.red.light, colors.red.medium, colors.red.dark, colors.blue.light, colors.blue.medium, colors.blue.dark, colors.turquoise.light, colors.turquoise.dark, colors.purple.very_light, colors.grey.light]};
 		filterVars.push(curr);
 	}
 

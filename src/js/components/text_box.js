@@ -79,7 +79,6 @@ export class TextBox {
 	}
 
 	render(data) {
-		console.log("rendering!");
 		this.data = data[this.primaryDataSheet];
 		let defaultVal = 0;
 
@@ -115,9 +114,10 @@ export class TextBox {
 				}
 					
 			} else  {
-				this.valueFields[varName].label
-					.style("display", "none");
-
+				if (this.valueFields[varName].label) {
+					this.valueFields[varName].label
+						.style("display", "none");
+				}
 				this.valueFields[varName].value
 					.style("display", "none");
 
