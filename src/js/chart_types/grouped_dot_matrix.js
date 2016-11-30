@@ -156,9 +156,12 @@ export class GroupedDotMatrix {
 			.attr("class", "grouped-dot-matrix__label-container")
 			.attr("transform",  "translate(0," + transformY + ")");
 
+		let dotsPerRow = this.dotSettings.dotsPerRow ? this.dotSettings.dotsPerRow : 1;
+		let groupingWidth = (this.dotSettings.width + this.dotSettings.offset) * dotsPerRow - this.dotSettings.offset;
+
 		for (let i = 0; i < this.numGroupings; i = i + this.labelSettings.interval) {
 			let elem = labelWrapper.append("g")
-				.attr("transform", "translate(" + (this.calcTransformX(i) + this.dotSettings.width/2) + ")");
+				.attr("transform", "translate(" + (this.calcTransformX(i) + groupingWidth/2) + ")");
 
 			elem.append("text")
 				.text(this.groupings[i].key)
