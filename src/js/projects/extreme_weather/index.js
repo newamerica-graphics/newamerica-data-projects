@@ -12,7 +12,7 @@ let variables = {
 	end_date: {"variable":"end_date", "displayName":"End Date", "format":"date"},
 	states: {"variable":"states", "displayName":"All States Affected", "format":"string"},
 	info_link: {"variable":"info_link", "displayName":"More Information", "format":"link"},
-	cpi_adjusted_cost: {"variable":"cpi_adjusted_cost", "displayName":"CPI Adjusted Cost (Billions)", "format":"number", "scaleType":"quantize", "numBins":4, "customDomain":[1, 19], "customRange":[colors.grey.medium, colors.grey.dark]},
+	cpi_adjusted_cost: {"variable":"cpi_adjusted_cost", "displayName":"CPI Adjusted Cost (Billions)", "format":"price", "scaleType":"quantize", "numBins":4, "customDomain":[1, 19], "customRange":[colors.grey.medium, colors.grey.dark]},
 
 	event_fips: {"variable":"fips", "displayName":"County Fips", "format":"number"},
 	event_county_name: {"variable":"county_name", "displayName":"County", "format":"string"},
@@ -22,7 +22,7 @@ let variables = {
 	fema_all_except_fire: {"variable":"all_except_fire", "displayName":"All", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.turquoise.dark]},
 	fema_flood: {"variable":"flood", "displayName":"Flood", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.blue.dark]},
 	fema_severe_ice_storm: {"variable":"severe_ice_storm", "displayName":"Severe Ice Storm", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.blue.dark]},
-	fema_severe_storms: {"variable":"severe_storms", "displayName":"Severe Storm(s)", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.purple.dark]},
+	fema_severe_storms: {"variable":"severe_storms", "displayName":"Severe Storm", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.purple.dark]},
 	fema_snow: {"variable":"snow", "displayName":"Snow", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.blue.dark]},
 	fema_tornado: {"variable":"tornado", "displayName":"Tornado", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.purple.dark]},
 	fema_fire: {"variable":"fire", "displayName":"Fire", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.red.dark]},
@@ -33,7 +33,7 @@ let variables = {
 	
 	storm_type: {"variable":"storm_type", "displayName":"Storm Type", "format":"string", "scaleType":"categorical"},
 	frequency: {"variable":"frequency", "displayName":"Count", "format":"number", "color": colors.turquoise.light},
-	average_cost: {"variable":"average_cost", "displayName":"Average Cost (Billions)", "format":"number", "scaleType":"linear", "color": colors.blue.medium},
+	average_cost: {"variable":"average_cost", "displayName":"Average Cost (Billions)", "format":"price", "scaleType":"linear", "color": colors.blue.medium},
 
 	year_counts_year: {"variable":"year", "displayName":"Year", "format":"year"},
 	year_counts_count: {"variable":"count", "displayName":"Billion Dollar Event Count", "format":"number", "color": colors.turquoise.light},
@@ -45,7 +45,7 @@ let numBillionDollarEvents = 142;
 let vizSettingsList = [
 	{
 		id: "#extreme-weather__fema-declarations", 
-		vizType: "us_map",
+		vizType: "topo_json_map",
 		primaryDataSheet: "fema_declarations",
 		geometryType: "counties",
 		stroke: {"color": "grey", "width":".5", "opacity": ".6", "hoverColor": colors.black, "hoverWidth": "2"},
@@ -58,7 +58,7 @@ let vizSettingsList = [
 	},
 	{
 		id: "#extreme-weather__fema-declarations-fire", 
-		vizType: "us_map",
+		vizType: "topo_json_map",
 		primaryDataSheet: "fema_declarations",
 		geometryType: "counties",
 		stroke: {"color": "grey", "width":".5", "opacity": ".6", "hoverColor": colors.black, "hoverWidth": "2"},
@@ -70,14 +70,14 @@ let vizSettingsList = [
 		zoomable: false
 	},
 	{
-		id: "#extreme-weather__counties_map", 
+		id: "#extreme-weather__counties-map", 
 		vizType: "dashboard",
 		defaultValue: numBillionDollarEvents - 1,
 		layoutRows: [
 			[
 				{
 					vizType: "select_box",
-					primaryDataSheet: "events",
+					primaryDataSheet: "filtered_storm_events",
 					variable: variables.event_name,
 					isMessagePasser: true,
 					messageHandlerType: "change_value",
@@ -89,7 +89,7 @@ let vizSettingsList = [
 					width: "420px",
 					isMessagePasser: true,
 					messageHandlerType: "change_value",
-					primaryDataSheet: "events",
+					primaryDataSheet: "filtered_storm_events",
 					groupingVars: [ variables.year ],
 					filterVars: [ variables.cpi_adjusted_cost ],
 					dotSettings: { "width": 13, "offset": 3},
@@ -103,14 +103,14 @@ let vizSettingsList = [
 				{
 					vizType: "text_box",
 					width: "calc(100% - 420px)",
-					primaryDataSheet: "events",
+					primaryDataSheet: "filtered_storm_events",
 					textBoxVars: [ variables.event_name, variables.event_category, variables.begin_date, variables.end_date, variables.deaths, variables.cpi_adjusted_cost, variables.states, variables.info_link ],
 					messageHandlerType: "change_value",
 				}
 			],
 			[
 				{
-					vizType: "us_map",
+					vizType: "topo_json_map",
 					messageHandlerType: "change_filter",
 					primaryDataSheet: "fips_by_event",
 					geometryType: "counties",
@@ -146,6 +146,7 @@ let vizSettingsList = [
 		xAxisLabelInterval: {"small": 10, "medium": 5, "large": 2},
 		labelValues: false,
 		showYAxis: true,
+		hasTrendline: true,
 		tooltipVars: [ variables.year_counts_year, variables.year_counts_count ],
 		eventSettings: {
 			"mouseover":{ "tooltip": true, "fill": colors.turquoise.medium, "stroke": false }
@@ -156,7 +157,7 @@ let vizSettingsList = [
 let projectSettings = {
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/resourcesecurity/extreme_weather.json",
 	downloadDataLink: "https://docs.google.com/spreadsheets/d/18WEcJVDByP5bCPACgt2s9-sYIOItweq9fI9PCMIpUjY/",
-	dataSheetNames:["events", "fips_by_event", "fema_declarations", "event_types", "events_year_counts"],
+	dataSheetNames:["filtered_storm_events", "fips_by_event", "fema_declarations", "event_types", "events_year_counts"],
 	vizSettingsList: vizSettingsList
 }
 
@@ -166,7 +167,7 @@ function getEventFilterVars() {
 	let filterVars = [];
 	let curr;
 	for (let i = 0; i < numBillionDollarEvents; i++) {
-		curr = {"variable":String(i), "displayName":"All", "format":"string", "scaleType":"categorical", "customDomain":["Drought", "Extreme Heat", "Wildfire", "Flooding", "Cold Weather/Wind Chill or Freezing", "Snow Storms or Ice Storms", "Tornado or Funnel Cloud", "Tropical Storm", "Wind, Hail, or Lightning", "Other"], "customRange":[colors.red.light, colors.red.medium, colors.red.dark, colors.blue.light, colors.blue.medium, colors.blue.dark, colors.turquoise.light, colors.turquoise.dark, colors.purple.light, colors.grey.light]};
+		curr = {"variable":String(i), "displayName":"All", "format":"string", "scaleType":"categorical", "customDomain":["Drought", "Extreme Heat", "Wildfire", "Flooding", "Cold Weather/Wind Chill or Freezing", "Snow Storms or Ice Storms", "Tornado or Funnel Cloud", "Tropical Storm", "Wind, Hail, or Lightning", "Other"], "customRange":[colors.red.light, colors.red.medium, colors.red.dark, colors.blue.light, colors.blue.medium, colors.blue.dark, colors.turquoise.light, colors.turquoise.dark, colors.purple.very_light, colors.grey.light]};
 		filterVars.push(curr);
 	}
 

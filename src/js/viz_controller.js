@@ -12,7 +12,7 @@ import { Dashboard } from "./layouts/dashboard.js";
 import { DotMatrix } from "./chart_types/dot_matrix.js";
 import { DotHistogram } from "./chart_types/dot_histogram.js";
 import { GroupedDotMatrix } from "./chart_types/grouped_dot_matrix.js";
-import { UsMap } from "./chart_types/us_map.js";
+import { TopoJsonMap } from "./chart_types/topo_json_map.js";
 import { TabbedChartLayout } from "./layouts/tabbed_chart_layout.js";
 import { ChartWithFactBox } from "./layouts/chart_with_fact_box.js";
 import { Table } from "./chart_types/table.js";
@@ -20,6 +20,7 @@ import { FactBox } from "./chart_types/fact_box.js";
 import { LineChart } from "./chart_types/line_chart.js";
 import { SummaryBox } from "./chart_types/summary_box.js";
 import { PieChart } from "./chart_types/pie_chart.js";
+import { Bipartite } from "./chart_types/bipartite.js";
 
 import { formatValue } from "./helper_functions/format_value.js";
 
@@ -41,6 +42,10 @@ export function setupProject(projectSettings) {
 			switch (vizSettingsObject.vizType) {
 				case "bar_chart":
 					viz = new BarChart(vizSettingsObject, imageFolderId);
+					break;
+
+				case "bipartite":
+					viz = new Bipartite(vizSettingsObject, imageFolderId);
 					break;
 
 				case "chart_with_fact_box":
@@ -87,12 +92,8 @@ export function setupProject(projectSettings) {
 					viz = new Table(vizSettingsObject);
 					break;
 
-				case "us_counties_map":
-					viz = new UsCountiesMap(vizSettingsObject);
-					break;
-
-				case "us_map":
-					viz = new UsMap(vizSettingsObject);
+				case "topo_json_map":
+					viz = new TopoJsonMap(vizSettingsObject);
 					break;
 			}
 
@@ -108,11 +109,12 @@ export function setupProject(projectSettings) {
 		d3.json(projectSettings.dataUrl, (d) => {
 			for (let viz of vizList) {
 				viz.render(d);
+				hideLoadingGif(viz.id);
 			}
 
 			setDataDownloadLinks(d);
 			
-			// setProfileValues(d);
+			setProfileValues(d);
 		});
 
 	}
@@ -121,6 +123,10 @@ export function setupProject(projectSettings) {
 		for (let viz of vizList) {
 			viz.resize ? viz.resize() : null;
 		}
+	}
+
+	function hideLoadingGif(id) {
+		$(id).siblings(".dataviz__loading-gif").hide();
 	}
 
 	function setDataDownloadLinks(data) {
@@ -160,6 +166,9 @@ export function setupProject(projectSettings) {
 		let lookupField = $inDepthProfileBody.attr("data-lookup-field");
 		let lookupValue = window.location.search.replace("?", "").replace("/", "").replace(/_/g, " ").toLowerCase();
 
+		if (!lookupField) {
+			return;
+		}
 		let allLookupValues = d3.nest()
 			.key((d) => { return d[lookupField].toLowerCase(); })
 			.map(data[dataSheet]);

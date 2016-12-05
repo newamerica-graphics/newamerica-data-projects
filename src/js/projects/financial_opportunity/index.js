@@ -1,85 +1,232 @@
 let mapboxgl = require('mapbox-gl');
 window.mapboxgl = mapboxgl;
 require('mapbox-gl-geocoder');
+
+import { getColorScale } from "../../helper_functions/get_color_scale.js";
+import { colors } from "../../helper_functions/colors.js";
+
+import $ from 'jquery';
 // let d3 = require("d3");
 
 // import { bankPoints } from '../../../geometry/bankPoints.js';
 
 mapboxgl.acessToken = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
 mapboxgl.config.ACCESS_TOKEN = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
-console.log(mapboxgl);
-// var southWest = L.latLng(15, -165),
-//     northEast = L.latLng(72, -65),
-//     bounds = L.latLngBounds(southWest, northEast);
 
+let variables = {
+    medhhinc: {"variable":"MEDHHINC", "displayName":"Median Household Income", "format": "price",  "scaleType": "quantize", "customDomain":[0, 250000], "customRange":[colors.grey.light, colors.black], "numBins":5},
+    minority: {"variable":"MINORITY", "displayName":"% Minority", "format": "percent", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.grey.light, colors.black], "numBins":5},
+    fampov: {"variable":"FAMPOV", "displayName":"% Families Below Poverty Line", "format": "percent", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.grey.light, colors.black], "numBins":5},
+    medval: {"variable":"MEDVAL", "displayName":"Medium Value of Houshold Units", "format": "price", "scaleType": "quantize", "customDomain":[0, 1000000], "customRange":[colors.grey.light, colors.black], "numBins":5},
+};
 
-// var map = L.map('map', {
-// 		zoom: 4,
-// 		center: L.latLng(39.8282, -98.5795),
-// 		maxBounds: bounds,
-// 		minZoom: 3,
-// 		maxZoom: 10,
-// 	});
+let insetMapSettings = [
+    {
+        title: "Atlanta",
+        center: [-84.3880, 33.7490],
+        zoom: 8
+    },
+    {
+        title: "Chicago",
+        center: [-87.6298, 41.8781],
+        zoom: 8
+    },
+    {
+        title: "Denver",
+        center: [-104.9903, 39.7392],
+        zoom: 8
+    },
+    {
+        title: "Houston",
+        center: [-95.3698, 29.7604],
+        zoom: 8
+    },
+    {
+        title: "New York",
+        center: [-74.0059, 40.7128],
+        zoom: 8
+    },
+    {
+        title: "San Francisco",
+        center: [-122.4194, 37.7749],
+        zoom: 8
+    },
+    {
+        title: "Washington D.C.",
+        center: [-77.0369, 38.9072],
+        zoom: 8
+    },
+]
 
+let colorScales = {};
+setColorScales();
 
-
-// let tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-// 	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-// 	subdomains: 'abcd',
-// }).addTo(map);
-
-// d3.json("https://na-data-projects.s3.amazonaws.com/data/financial_opportunity/Bank2014.json", (d, error) => {
-
-// 	console.log(d, error);
-// 	L.geoJson(d).addTo(map);
-
-// });
+let insetMaps = [];
 
 var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/newamericamapbox/civcm5ziy00d92imrwswlo1wv',
-    zoom: 3,
-    center: [-98.5795, 39.8282]
-
+    zoom: 4,
+    center: [-98.5795, 39.8282],
+    minZoom: 4,
+    maxZoom: 15
 });
 
-// map.on('load', function() {
-	
-// 	console.log(map.getLayer('banks'));
-// });
+createInsetMaps();
 
-map.addControl(new mapboxgl.Geocoder({
-	country:'us'
-}));
+addControls();
 
-map.addControl(new mapboxgl.NavigationControl());
+map.on('load', function() {
+    map.addSource('census-tracts',{
+        'type': 'vector',
+        'url': 'mapbox://newamericamapbox.7zun44wf'
+    });
 
-var toggleableLayerIds = [ 'banks', 'altcredit', 'ncua', 'usps', 'censustracts_white_4','censustracts_white_5' ];
+    addLayers();
 
-for (var i = 0; i < toggleableLayerIds.length; i++) {
-    var id = toggleableLayerIds[i];
+    addTooltip();
 
-    var link = document.createElement('a');
-    link.href = '#';
-    link.className = 'active';
-    link.textContent = id;
+    addFilters();
+    
+});
 
-    link.onclick = function (e) {
-        var clickedLayer = this.textContent;
-        e.preventDefault();
-        e.stopPropagation();
-
-        var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
-
-        if (visibility === 'visible') {
-            map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-            this.className = '';
-        } else {
-            this.className = 'active';
-            map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-        }
-    };
-
-    var layers = document.getElementById('menu');
-    layers.appendChild(link);
+function createInsetMaps() {
+    let i = 1;
+    for (let settingsObject of insetMapSettings) {
+        var insetMap = new mapboxgl.Map({
+            container: 'inset-map-' + i,
+            style: 'mapbox://styles/newamericamapbox/civcm5ziy00d92imrwswlo1wv',
+            zoom: settingsObject.zoom,
+            center: settingsObject.center,
+        });
+        insetMaps.push(insetMap);
+        i++;
+    }
 }
+
+function setColorScales() {
+    for (let variable in variables) {
+        colorScales[variable] = getColorScale(null, variables[variable]);
+    }
+}
+
+function addControls() {
+    map.addControl(new mapboxgl.Geocoder({
+    country:'us'
+    }));
+
+    map.addControl(new mapboxgl.NavigationControl());
+}
+
+function addLayers() {
+    let i = 0;
+    for (let variable in variables) {
+        let dataMin = variables[variable].customDomain[0],
+            dataMax = variables[variable].customDomain[1];
+        let dataSpread = dataMax - dataMin;
+        let binInterval = dataSpread/5;
+
+        let colorStops = [];
+
+        for (let i = 0; i < 5; i++) {
+            colorStops.push([dataMin + i*binInterval, colorScales[variable].range()[i]]);
+        }
+
+        console.log(variable);
+        map.addLayer(
+            {
+                'id': variable,
+                'source': 'census-tracts',
+                'source-layer':'CensusTracts_2014data2K_2-3r3ays',
+                'type': 'fill',
+                // 'filter': ['>', , 0],
+                'paint': {
+                    'fill-color': {
+                        property: variables[variable].variable,
+                        stops: colorStops
+                    },
+                    'fill-opacity': .7
+                }
+            },'water'
+        );
+
+        i != 0 ? map.setLayoutProperty(variable, 'visibility', 'none') : null;
+        i++;
+    }
+}
+
+function addTooltip() {
+    map.on('click', function (e) {
+        console.log(e);
+        var features = map.queryRenderedFeatures(e.point, { layers: Object.keys(variables) });
+
+        if (!features.length) {
+            return;
+        }
+
+        var feature = features[0];
+        console.log(feature.properties);
+        // Populate the popup and set its coordinates
+        // based on the feature found.
+        var popup = new mapboxgl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML(feature.properties.Geography)
+            .addTo(map);
+
+        console.log(map);
+    });
+}
+
+function addFilters() {
+    let pointLayerIds = [ 'banks', 'altcredit', 'ncua', 'usps'],
+        polygonLayerIds = Object.keys(variables);
+
+    addFilter("#point-layer-menu", pointLayerIds, true, true);
+    addFilter("#polygon-layer-menu", polygonLayerIds, false, false);
+}
+
+function addFilter(menuDomId, ids, toggleInsets, canToggleMultiple) {
+    let $menu = $(menuDomId);
+    for (var i = 0; i < ids.length; i++) {
+        var id = ids[i];
+
+        var link = document.createElement('a');
+        link.href = '#';
+        link.className = !canToggleMultiple && i != 0 ? '' : 'active';
+        link.textContent = id;
+
+        link.onclick = function (e) {
+            if (!canToggleMultiple) {
+                $menu.children(".active").removeClass("active");
+                for (let layer of ids) {
+                    map.setLayoutProperty(layer, 'visibility', 'none');
+                    toggleInsets ? toggleInsetMaps(layer, 'none') : null;
+                }
+            }
+            var clickedLayer = this.textContent;
+            e.preventDefault();
+            e.stopPropagation();
+
+            var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+            if (visibility === 'visible') {
+                map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                toggleInsets ? toggleInsetMaps(clickedLayer, 'none') : null;
+                this.className = '';
+            } else {
+                this.className = 'active';
+                toggleInsets ? toggleInsetMaps(clickedLayer, 'visible') : null;
+                map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+            }
+        };
+        $menu.append(link);
+    }
+}
+
+function toggleInsetMaps(clickedLayer, visibilityVal) {
+    for (let insetMap of insetMaps) {
+        insetMap.setLayoutProperty(clickedLayer, 'visibility', visibilityVal);
+    }
+}
+
+console.log(map);

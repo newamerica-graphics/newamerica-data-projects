@@ -5,6 +5,7 @@ let d3 = require("d3");
 import { colors } from "../helper_functions/colors.js";
 import { Legend } from "../components/legend.js";
 import { Tooltip } from "../components/tooltip.js";
+import { Trendline } from "../components/trendline.js";
 
 import { formatValue } from "../helper_functions/format_value.js";
 
@@ -14,7 +15,7 @@ let dataPointWidth = 7;
 
 export class BarChart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, primaryDataSheet, groupingVar, filterVars, legendSettings, xAxisLabelInterval, labelValues, showYAxis, tooltipVars, eventSettings} = vizSettings;
+		let {id, primaryDataSheet, groupingVar, filterVars, legendSettings, xAxisLabelInterval, labelValues, showYAxis, tooltipVars, eventSettings, hasTrendline} = vizSettings;
 		this.id = id;
 		this.primaryDataSheet = primaryDataSheet;
 		this.filterVars = filterVars;
@@ -69,6 +70,10 @@ export class BarChart {
 			let tooltipSettings = { "id":id, "tooltipVars":tooltipVars }
 			this.tooltip = new Tooltip(tooltipSettings);
 		}
+
+		if (hasTrendline) {
+			this.trendline = new Trendline(this.renderingArea, filterVars);
+		}
 	}
 
 	render(data) {
@@ -85,6 +90,10 @@ export class BarChart {
 			this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
 
 			this.legend.render(this.legendSettings);
+		}
+
+		if (this.trendline) {
+			this.renderTrendline();
 		}
 	}
 
@@ -131,6 +140,8 @@ export class BarChart {
 		this.data.forEach((d, i) => {
 		    d.vals = this.filterVars.map((filterVar) => { return {variable: filterVar.variable, format: filterVar.format, label: this.groupingScale.domain()[i], value: +d[filterVar.variable]}; });
 		});
+
+		console.log(this.data);
 
 		this.groups = this.renderingArea.selectAll(".group")
 	      	.data(this.data)
@@ -193,6 +204,10 @@ export class BarChart {
 		}
 	}
 
+	renderTrendline() {
+		this.trendline.render(this.data, this.groupingScale, this.yScales[this.filterVars[0].variable]);
+	}
+
 	calculateTicks() {
 		let currInterval;
 		if ($(this.id).width() < 575) {
@@ -239,6 +254,10 @@ export class BarChart {
 
 			this.yAxisLabel
 				.attr("x", -this.h/2);
+		}
+
+		if (this.trendline) {
+			this.trendline.resize(this.groupingScale, this.yScales[this.filterVars[0].variable]);
 		}
 	}
 

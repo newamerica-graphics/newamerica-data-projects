@@ -42,12 +42,10 @@ export function getColorScale(data, filterVar) {
 
 		// if both are not custom, get unique values
 		let uniqueVals = getUniqueVals(data, filterVar);
-		// console.log(customDomain);
 		[customDomain, customRange] = customDomain ? filterUnusedVals(uniqueVals, customDomain, customRange) : [customDomain, customRange];
-		// console.log(customDomain);
+
 		domain = setCategoricalDomain(uniqueVals, customDomain);
 		range = setCategoricalRange(uniqueVals, customRange);
-		
 
 	} else if (scaleType == "quantize") {
 		scale = d3.scaleQuantize();
@@ -132,7 +130,6 @@ function setLinearDomain(filterVar, data) {
 	let dataMin = Number(d3.min(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; })); 
 	let dataMax = Number(d3.max(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; }));
 
-	console.log(dataMin, dataMax);
 	return [dataMin, dataMax];
 }
 

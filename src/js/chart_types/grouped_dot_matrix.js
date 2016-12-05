@@ -33,11 +33,15 @@ export class GroupedDotMatrix {
 		if (dividingLine) {
 			this.dividingLineTextHeight = this.dividingLine.descriptionLines.length * dividingLineTextOffset + 30;
 		}
-		console.log(this.dotSettings);
 		
 		this.fullGroupingWidth = distanceBetweenGroups + this.dotSettings.dotsPerRow * (this.dotSettings.width + this.dotSettings.offset);
 		this.labelSettings = labelSettings;
 		this.distanceBetweenGroups = distanceBetweenGroups;
+
+		this.legendSettings.id = id;
+		this.legendSettings.markerSettings = { shape:"rect", size:this.dotSettings.width };
+		this.legendSettings.orientation = this.legendSettings.orientation ? this.legendSettings.orientation : "horizontal-center";
+
 
 		let chartContainer = d3.select(id)
 			.append("div")
@@ -53,7 +57,6 @@ export class GroupedDotMatrix {
 		this.currFilterVar = filterVars[0].variable;
 
 		if (this.eventSettings && this.eventSettings.mouseover.tooltip) {
-			console.log("adding tooltip");
 			let tooltipSettings = { "id":id, "tooltipVars":tooltipVars, tooltipImageVar:"tooltipImageVar", "imageFolderId":imageFolderId, "tooltipScrollable":tooltipScrollable }
 
 			this.tooltip = new Tooltip(tooltipSettings);
@@ -62,7 +65,6 @@ export class GroupedDotMatrix {
 		this.legendSettings.id = id;
 		this.legendSettings.markerSettings = { shape:"rect", size:this.dotSettings.width };
 		this.legendSettings.orientation = this.legendSettings.orientation ? this.legendSettings.orientation : "horizontal-center";
-		console.log(this.legendSettings);
 		this.legend = new Legend(this.legendSettings);
 	}
 
@@ -71,8 +73,6 @@ export class GroupedDotMatrix {
 
 		this.getGroupings();
 		this.setScale();
-
-		console.log(this.colorScale.domain());
 
 		let w = this.fullGroupingWidth * this.numGroupings + margin.left + margin.right;
 
@@ -124,8 +124,6 @@ export class GroupedDotMatrix {
 			.sortKeys(d3.ascending)
 			.entries(this.data);
 
-		console.log(this.groupings);
-
 		// removes values associated with -1 key (null values)
 		this.groupings[0].key == "-1" ? this.groupings.shift() : null;
 
@@ -158,9 +156,12 @@ export class GroupedDotMatrix {
 			.attr("class", "grouped-dot-matrix__label-container")
 			.attr("transform",  "translate(0," + transformY + ")");
 
+		let dotsPerRow = this.dotSettings.dotsPerRow ? this.dotSettings.dotsPerRow : 1;
+		let groupingWidth = (this.dotSettings.width + this.dotSettings.offset) * dotsPerRow - this.dotSettings.offset;
+
 		for (let i = 0; i < this.numGroupings; i = i + this.labelSettings.interval) {
 			let elem = labelWrapper.append("g")
-				.attr("transform", "translate(" + (this.calcTransformX(i) + this.dotSettings.width/2) + ")");
+				.attr("transform", "translate(" + (this.calcTransformX(i) + groupingWidth/2) + ")");
 
 			elem.append("text")
 				.text(this.groupings[i].key)
