@@ -18,6 +18,7 @@ import { ChartWithFactBox } from "./layouts/chart_with_fact_box.js";
 import { Table } from "./chart_types/table.js";
 import { FactBox } from "./chart_types/fact_box.js";
 import { LineChart } from "./chart_types/line_chart.js";
+import { MapboxMap } from "./chart_types/mapbox_map.js";
 import { SummaryBox } from "./chart_types/summary_box.js";
 import { PieChart } from "./chart_types/pie_chart.js";
 import { Bipartite } from "./chart_types/bipartite.js";
@@ -76,6 +77,10 @@ export function setupProject(projectSettings) {
 					viz = new LineChart(vizSettingsObject);
 					break;
 
+				case "mapbox_map":
+					viz = new MapboxMap(vizSettingsObject);
+					break;
+
 				case "pie_chart":
 					viz = new PieChart(vizSettingsObject);
 					break;
@@ -106,17 +111,26 @@ export function setupProject(projectSettings) {
 
 
 	function render() {
-		d3.json(projectSettings.dataUrl, (d) => {
+		if (!projectSettings.dataUrl) {
 			for (let viz of vizList) {
-				viz.render(d);
-				hideLoadingGif(viz.id);
+				viz.render();
+				// hideLoadingGif(viz.id);
 			}
-
-			setDataDownloadLinks(d);
 			
-			setProfileValues(d);
-		});
+			// setDataDownloadLinks(d);
+			// setProfileValues(d);
+		} else {
+			d3.json(projectSettings.dataUrl, (d) => {
+				for (let viz of vizList) {
+					viz.render(d);
+					hideLoadingGif(viz.id);
+				}
 
+				setDataDownloadLinks(d);
+				
+				setProfileValues(d);
+			});
+		}
 	}
 
 	function resize() {
