@@ -1,9 +1,12 @@
+require('../../../scss/index.scss');
+
 let mapboxgl = require('mapbox-gl');
 window.mapboxgl = mapboxgl;
 require('mapbox-gl-geocoder');
 
 import { getColorScale } from "../../helper_functions/get_color_scale.js";
 import { colors } from "../../helper_functions/colors.js";
+import { formatValue } from "../../helper_functions/format_value.js";
 
 import $ from 'jquery';
 // let d3 = require("d3");
@@ -15,8 +18,8 @@ mapboxgl.config.ACCESS_TOKEN = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmd
 
 let variables = {
     medhhinc: {"variable":"MEDHHINC", "displayName":"Median Household Income", "format": "price",  "scaleType": "quantize", "customDomain":[0, 250000], "customRange":[colors.grey.light, colors.black], "numBins":5},
-    minority: {"variable":"MINORITY", "displayName":"% Minority", "format": "percent", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.grey.light, colors.black], "numBins":5},
-    fampov: {"variable":"FAMPOV", "displayName":"% Families Below Poverty Line", "format": "percent", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.grey.light, colors.black], "numBins":5},
+    minority: {"variable":"MINORITY", "displayName":"% Minority", "format": "number", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.grey.light, colors.black], "numBins":5},
+    fampov: {"variable":"FAMPOV", "displayName":"% Families Below Poverty Line", "format": "number", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.grey.light, colors.black], "numBins":5},
     medval: {"variable":"MEDVAL", "displayName":"Medium Value of Houshold Units", "format": "price", "scaleType": "quantize", "customDomain":[0, 1000000], "customRange":[colors.grey.light, colors.black], "numBins":5},
 };
 
@@ -71,6 +74,18 @@ var map = new mapboxgl.Map({
     minZoom: 4,
     maxZoom: 15
 });
+
+var popupOffsets = {
+ 'left': [50, -100],
+ };
+
+var popup = new mapboxgl.Popup({
+        anchor: 'left',
+        offset: popupOffsets,
+        closeButton: false,
+        closeOnClick: false
+    });
+    
 
 createInsetMaps();
 
@@ -156,24 +171,42 @@ function addLayers() {
 }
 
 function addTooltip() {
-    map.on('click', function (e) {
-        console.log(e);
+    map.on('mousemove', function (e) {
         var features = map.queryRenderedFeatures(e.point, { layers: Object.keys(variables) });
-
+        console.log(e.lngLat);
+        console.log(features[0]);
         if (!features.length) {
+            popup.remove();
             return;
         }
 
-        var feature = features[0];
-        console.log(feature.properties);
+        let feature = features[0];
+        // console.log(feature.properties);
         // Populate the popup and set its coordinates
         // based on the feature found.
-        var popup = new mapboxgl.Popup()
-            .setLngLat(e.lngLat)
-            .setHTML(feature.properties.Geography)
-            .addTo(map);
+        // let tract = feature.properties.Geography.match(/Census Tract ([0-9]|\.)+, /),
+        
+        let splitPieces = feature.properties.Geography.split(", ");
 
-        console.log(map);
+        let popupProperties = "";
+
+        for (let variable in variables) {
+            let varName = variables[variable].variable;
+            popupProperties += "<li class='popup__property'>" +
+                        "<h5 class='popup__property__label'>" + variables[variable].displayName + "</h5>" +
+                        "<h5 class='popup__property__value'>" + formatValue(feature.properties[varName], variables[variable].format)  + "</h5>" +
+                    "</li>";
+        }
+
+        popup
+            .setLngLat(e.lngLat)
+            .setHTML(
+                "<h5 class='popup__state'>" + splitPieces[2] + "</h5>" +
+                "<h3 class='popup__county'>" + splitPieces[1] + "</h3>" +
+                "<h5 class='popup__tract'>" + splitPieces[0] + "</h5>" +
+                "<ul class='popup__properties'>" + popupProperties + "</ul>"
+            )
+            .addTo(map);
     });
 }
 
@@ -228,5 +261,3 @@ function toggleInsetMaps(clickedLayer, visibilityVal) {
         insetMap.setLayoutProperty(clickedLayer, 'visibility', visibilityVal);
     }
 }
-
-console.log(map);

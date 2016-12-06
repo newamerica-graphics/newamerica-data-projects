@@ -1,0 +1,107 @@
+.mapbox-map {
+	&__filter-group {
+        background: #fff;
+        position: absolute;
+        z-index: 1;
+        top: 40px;
+        border-radius: 5px;
+        width: 120px;
+        border: 2px solid palette-get(na-black-10);
+        font-weight: bold;
+    
+	    &:first-of-type {
+	        right: 15px;
+	    }
+
+	    &:last-of-type {
+	        right: 175px;
+	    }
+
+	    & a {
+	        font-size: 13px;
+	        color: #404040;
+	        display: block;
+	        margin: 0;
+	        padding: 0;
+	        padding: 10px;
+	        text-decoration: none;
+	        border-bottom: 1px solid palette-get(na-black-10);
+	        text-align: center;
+	    
+
+		    &:last-child {
+		        border: none;
+		    }
+
+		    &:hover {
+		        background-color: #f8f8f8;
+		        color: #404040;
+		    }
+
+		    &.active {
+		        background-color: palette-get(na-turquoise);
+		        color: #ffffff;
+		    }
+
+		    &.active:hover {
+		        background: palette-get(na-dark-turquoise);
+		    }
+		}
+	}
+
+	&__inset-container {
+		columns:7;
+        margin-top: 10px;
+	}
+
+	&__inset {
+		 min-height: 250px;
+	}
+
+
+}
+.mapboxgl {
+	&-ctrl-top-left {
+		padding: 15px 0px 0px 15px;
+	}
+
+	&-popup {
+		width: 300px;
+		background-color: white;
+		padding: 25px;
+
+		.popup {
+			&__state, &__tract {
+				color: palette-get(na-black-40);
+				font-size: 14px;
+				margin-bottom: 0px;
+
+			}
+
+			&__county {
+				color: palette-get(na-black);
+				font-size: 18px;
+				margin: 3px 0px;
+				font-weight: bold;
+			}
+
+			&__properties {
+				margin-top: 20px;
+				columns: 2;
+			}
+
+			&__property {
+				&__label {
+					font-size: 10px;
+					color: palette-get(na-black-40);
+				}
+				&__value {
+					font-size: 12px;
+					color: palette-get(na-black);
+				}
+			}
+		}
+
+	}
+
+}
