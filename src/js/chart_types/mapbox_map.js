@@ -13,49 +13,20 @@ let d3 = require("d3");
 mapboxgl.acessToken = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
 mapboxgl.config.ACCESS_TOKEN = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
 
-let insetMapSettings = [
-    {
-        title: "Atlanta",
-        center: [-84.3880, 33.7490],
-        zoom: 8
-    },
-    {
-        title: "Chicago",
-        center: [-87.6298, 41.8781],
-        zoom: 8
-    },
-    {
-        title: "Denver",
-        center: [-104.9903, 39.7392],
-        zoom: 8
-    },
-    {
-        title: "Houston",
-        center: [-95.3698, 29.7604],
-        zoom: 8
-    },
-    {
-        title: "New York",
-        center: [-74.0059, 40.7128],
-        zoom: 8
-    },
-    {
-        title: "San Francisco",
-        center: [-122.4194, 37.7749],
-        zoom: 8
-    },
-    {
-        title: "Washington D.C.",
-        center: [-77.0369, 38.9072],
-        zoom: 8
-    },
-]
+
 
 export class MapboxMap {
     constructor(vizSettings, imageFolderId) {
-        let {id, mapboxStyleUrl, layerVars} = vizSettings;
+        if (!mapboxgl.supported()) {
+            alert('Your browser does not support Mapbox GL');
+            return;
+        }
+        let {id, mapboxStyleUrl, additionalLayers, insetMapSettings, source, filters} = vizSettings;
         this.id = id;
-        this.layerVars = layerVars;
+        this.source = source;
+        this.filters = filters;
+        this.additionalLayers = additionalLayers;
+        this.insetMapSettings = insetMapSettings;
 
         d3.select(id).append("div")
             .attr("id", "map-container")
@@ -71,7 +42,9 @@ export class MapboxMap {
             maxZoom: 15
         });
 
-        this.createInsetMaps();
+        if (insetMapSettings) { 
+            this.createInsetMaps();
+        }
 
         this.setColorScales();
 
@@ -90,9 +63,9 @@ export class MapboxMap {
     render() {
         this.addControls();
         this.map.on('load', () => {
-            this.map.addSource('census-tracts',{
+            this.map.addSource(this.source.id,{
                 'type': 'vector',
-                'url': 'mapbox://newamericamapbox.7zun44wf'
+                'url': this.source.url
             });
             this.addLayers();
 
@@ -100,8 +73,6 @@ export class MapboxMap {
 
             this.addFilters();
         });
-
-       
     }
 
     addControls() {
@@ -113,28 +84,32 @@ export class MapboxMap {
     }
 
     addLayers() {
-        let i = 0;
-        for (let variable in this.layerVars) {
-            let dataMin = this.layerVars[variable].customDomain[0],
-                dataMax = this.layerVars[variable].customDomain[1];
+        this.additionalLayerNames = [];
+        for (let i = 0; i < this.additionalLayers.length; i++) {
+            let currLayer = this.additionalLayers[i],
+                numBins = currLayer.numBins,
+                dataMin = currLayer.customDomain[0],
+                dataMax = currLayer.customDomain[1];
             let dataSpread = dataMax - dataMin;
-            let binInterval = dataSpread/5;
+            let binInterval = dataSpread/numBins;
+
+            this.additionalLayerNames.push(currLayer.variable);
 
             let colorStops = [];
 
-            for (let i = 0; i < 5; i++) {
-                colorStops.push([dataMin + i*binInterval, this.colorScales[variable].range()[i]]);
+            for (let j = 0; j < numBins; j++) {
+                colorStops.push([dataMin + j*binInterval, this.colorScales[i].range()[j]]);
             }
             this.map.addLayer(
                 {
-                    'id': variable,
-                    'source': 'census-tracts',
-                    'source-layer':'CensusTracts_2014data2K_2-3r3ays',
+                    'id': currLayer.variable,
+                    'source': this.source.id,
+                    'source-layer': this.source.sourceLayer,
                     'type': 'fill',
                     // 'filter': ['>', , 0],
                     'paint': {
                         'fill-color': {
-                            property: this.layerVars[variable].variable,
+                            property: currLayer.variable,
                             stops: colorStops
                         },
                         'fill-opacity': .7
@@ -142,14 +117,13 @@ export class MapboxMap {
                 },'water'
             );
 
-            i != 0 ? this.map.setLayoutProperty(variable, 'visibility', 'none') : null;
-            i++;
+            i != 0 ? this.map.setLayoutProperty(currLayer.variable, 'visibility', 'none') : null;
         }
     }
 
     addTooltip() {
         this.map.on('mousemove', (e) => {
-            var features = this.map.queryRenderedFeatures(e.point, { layers: Object.keys(this.layerVars) });
+            var features = this.map.queryRenderedFeatures(e.point, { layers: this.additionalLayerNames });
             console.log(e.lngLat);
             console.log(features[0]);
             if (!features.length) {
@@ -163,11 +137,11 @@ export class MapboxMap {
 
             let popupProperties = "";
 
-            for (let variable in this.layerVars) {
-                let varName = this.layerVars[variable].variable;
+            for (let i = 0; i < this.additionalLayers.length; i++) {
+                let currVar = this.additionalLayers[i];
                 popupProperties += "<li class='popup__property'>" +
-                            "<h5 class='popup__property__label'>" + this.layerVars[variable].displayName + "</h5>" +
-                            "<h5 class='popup__property__value'>" + formatValue(feature.properties[varName], this.layerVars[variable].format)  + "</h5>" +
+                            "<h5 class='popup__property__label'>" + currVar.displayName + "</h5>" +
+                            "<h5 class='popup__property__value'>" + formatValue(feature.properties[currVar.variable], currVar.format)  + "</h5>" +
                         "</li>";
             }
 
@@ -184,34 +158,41 @@ export class MapboxMap {
     }
 
     addFilters() {
-        let pointLayerIds = [ 'banks', 'altcredit', 'ncua', 'usps'],
-            polygonLayerIds = Object.keys(this.layerVars);
+        let filterGroupContainer = d3.select(this.id).append("div")
+            .attr("class", "mapbox-map__filter-group-container")
+        let i = 0;
+        for (let filter of this.filters) {
+            filterGroupContainer.append("div")
+                .attr("class", "mapbox-map__filter-group")
+                .attr("id", "filter-" + i);
 
-        this.addFilter("#point-layer-menu", pointLayerIds, true, true);
-        this.addFilter("#polygon-layer-menu", polygonLayerIds, false, false);
+            this.addFilter("#filter-" + i, filter.filterVars, filter.toggleInsets, filter.canToggleMultiple);
+            i++;
+        }
     }
 
-    addFilter(menuDomId, ids, toggleInsets, canToggleMultiple) {
+    addFilter(menuDomId, filterVars, toggleInsets, canToggleMultiple) {
         let $menu = $(menuDomId);
         let map = this.map;
         let toggleInsetFunction = this.toggleInsetMaps.bind(this);
-        for (var i = 0; i < ids.length; i++) {
-            var id = ids[i];
+        for (var i = 0; i < filterVars.length; i++) {
+            var id = filterVars[i].variable;
 
             var link = document.createElement('a');
             link.href = '#';
             link.className = !canToggleMultiple && i != 0 ? '' : 'active';
-            link.textContent = id;
+            link.textContent = filterVars[i].displayName;
+            link.value = id;
 
             link.onclick = function (e) {
                 if (!canToggleMultiple) {
                     $menu.children(".active").removeClass("active");
-                    for (let layer of ids) {
-                        map.setLayoutProperty(layer, 'visibility', 'none');
+                    for (let filterVar of filterVars) {
+                        map.setLayoutProperty(filterVar.variable, 'visibility', 'none');
                         toggleInsets ? toggleInsetMaps(layer, 'none') : null;
                     }
                 }
-                var clickedLayer = this.textContent;
+                var clickedLayer = this.value;
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -237,7 +218,7 @@ export class MapboxMap {
         let insetContainer = d3.select(this.id).append("div")
             .attr("class", "mapbox-map__inset-container");
 
-        for (let settingsObject of insetMapSettings) {
+        for (let settingsObject of this.insetMapSettings) {
             insetContainer.append("div")
                 .attr('class', 'mapbox-map__inset')
                 .attr("id", 'inset-map-' + i);
@@ -246,6 +227,7 @@ export class MapboxMap {
                 container: 'inset-map-' + i,
                 style: 'mapbox://styles/newamericamapbox/civcm5ziy00d92imrwswlo1wv',
                 zoom: settingsObject.zoom,
+                minZoom: settingsObject.zoom,
                 center: settingsObject.center,
             });
             this.insetMaps.push(insetMap);
@@ -261,9 +243,10 @@ export class MapboxMap {
 
 
     setColorScales() {
-        this.colorScales = {};
-        for (let variable in this.layerVars) {
-            this.colorScales[variable] = getColorScale(null, this.layerVars[variable]);
+        this.colorScales = [];
+        for (let i = 0; i < this.additionalLayers.length; i++) {
+            this.colorScales[i] = getColorScale(null, this.additionalLayers[i]);
         }
+        console.log(this.colorScales[0].range());
     }
 }
