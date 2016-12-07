@@ -2,6 +2,7 @@ import $ from 'jquery';
 
 import { colors } from "../../helper_functions/colors.js";
 import { setupProject } from "../../viz_controller.js";
+import { formatValue } from "../../helper_functions/format_value.js";
 
 let variables = {
     medhhinc: {"variable":"MEDHHINC", "displayName":"Median Household Income", "format": "price",  "scaleType": "quantize", "customDomain":[0, 250000], "customRange":[colors.grey.light, colors.black], "numBins":5},
@@ -13,9 +14,9 @@ let variables = {
     ncua: {"variable":"ncua", "displayName":"Credit Unions", "format": "number"},
     usps: {"variable":"usps", "displayName":"Post Offices", "format": "number"},
 
-    county_altpc: {"variable":"altpc", "displayName":"Alt Credit Per Capita", "format": "number",  "scaleType": "quantize", "customDomain":[0, 0.000839], "customRange":[colors.white, colors.red.light], "numBins":4},
-    county_tradpc: {"variable":"tradpc", "displayName":"Traditional Per Capita", "format": "number",  "scaleType": "quantize", "customDomain":[0, 0.003727], "customRange":[colors.white, colors.turquoise.light], "numBins":4},
-    county_altpertrad: {"variable":"altpertrad", "displayName":"Alt Per Traditional", "format": "number",  "scaleType": "quantize", "customDomain":[0, 3], "customRange":[colors.white, colors.purple.light], "numBins":4},
+    county_altpc: {"variable":"altpc", "displayName":"Alt Credit Per Capita", "format": "number",  "scaleType": "quantize", "customDomain":[0, 0.000839], "customRange":[colors.white, colors.red.light], "numBins":3},
+    county_tradpc: {"variable":"tradpc", "displayName":"Traditional Per Capita", "format": "number",  "scaleType": "quantize", "customDomain":[0, 0.003727], "customRange":[colors.white, colors.turquoise.light], "numBins":3},
+    county_altpertrad: {"variable":"altpertrad", "displayName":"Alt Per Traditional", "format": "number",  "scaleType": "quantize", "customDomain":[0, 3], "customRange":[colors.white, colors.purple.light], "numBins":3},
 };
 
 let insetMapSettings = [
@@ -80,7 +81,8 @@ let vizSettingsList = [
     //         },
     //     ],
     //     tooltipVars: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
-    //     insetMapSettings: insetMapSettings
+    //     insetMapSettings: insetMapSettings,
+    //     popupContentFunction: censusTractMapSetPopupContent
     // },
     {
         id: "#financial-opportunity__county-map", 
@@ -100,7 +102,8 @@ let vizSettingsList = [
             },
         ],
         tooltipVars: [variables.county_altpc, variables.county_tradpc, variables.county_altpertrad],
-        insetMapSettings: false
+        insetMapSettings: false,
+        popupContentFunction: countyMapSetPopupContent
     },
 ]
 
@@ -110,3 +113,38 @@ let projectSettings = {
 
 setupProject(projectSettings);
 
+function censusTractMapSetPopupContent(feature) {
+    console.log(this);
+    let splitPieces = feature.properties.Geography.split(", ");
+
+    let popupProperties = "";
+
+    for (let i = 0; i < this.additionalLayers.length; i++) {
+        let currVar = this.additionalLayers[i];
+        popupProperties += "<li class='popup__property'>" +
+                    "<h5 class='popup__property__label'>" + currVar.displayName + "</h5>" +
+                    "<h5 class='popup__property__value'>" + formatValue(feature.properties[currVar.variable], currVar.format)  + "</h5>" +
+                "</li>";
+    }
+
+    return "<h5 class='popup__subheading'>" + splitPieces[2] + "</h5>" +
+    "<h3 class='popup__heading'>" + splitPieces[1] + "</h3>" +
+    "<h5 class='popup__subheading'>" + splitPieces[0] + "</h5>" +
+    "<ul class='popup__properties'>" + popupProperties + "</ul>"
+}
+
+function countyMapSetPopupContent(feature) {
+    console.log(this);
+    let popupProperties = "";
+
+    for (let i = 0; i < this.additionalLayers.length; i++) {
+        let currVar = this.additionalLayers[i];
+        popupProperties += "<li class='popup__property'>" +
+                    "<h5 class='popup__property__label'>" + currVar.displayName + "</h5>" +
+                    "<h5 class='popup__property__value'>" + formatValue(feature.properties[currVar.variable], currVar.format)  + "</h5>" +
+                "</li>";
+    }
+
+    return "<h3 class='popup__heading'>" + feature.properties.NAMELSAD10 + "</h3>" +
+    "<ul class='popup__properties'>" + popupProperties + "</ul>"
+}

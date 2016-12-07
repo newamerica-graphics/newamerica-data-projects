@@ -21,12 +21,13 @@ export class MapboxMap {
             alert('Your browser does not support Mapbox GL');
             return;
         }
-        let {id, mapboxStyleUrl, additionalLayers, insetMapSettings, source, filters} = vizSettings;
+        let {id, mapboxStyleUrl, additionalLayers, insetMapSettings, source, filters, popupContentFunction} = vizSettings;
         this.id = id;
         this.source = source;
         this.filters = filters;
         this.additionalLayers = additionalLayers;
         this.insetMapSettings = insetMapSettings;
+        this.popupContentFunction = popupContentFunction;
 
         d3.select(id).append("div")
             .attr("id", "map-container")
@@ -77,7 +78,7 @@ export class MapboxMap {
 
     addControls() {
         this.map.addControl(new mapboxgl.Geocoder({
-            country:'us'
+            country:'us',
         }));
 
         this.map.addControl(new mapboxgl.NavigationControl());
@@ -100,6 +101,8 @@ export class MapboxMap {
             for (let j = 0; j < numBins; j++) {
                 colorStops.push([dataMin + j*binInterval, this.colorScales[i].range()[j]]);
             }
+
+            console.log(colorStops);
             this.map.addLayer(
                 {
                     'id': currLayer.variable,
@@ -112,48 +115,61 @@ export class MapboxMap {
                             property: currLayer.variable,
                             stops: colorStops
                         },
-                        'fill-opacity': .7
+                        'fill-opacity': .85,
+                        'fill-outline-color': {
+                            stops: [
+                                [7, "rgba(0,0,0,0)"],
+                                [11, colors.white]
+                            ]
+                        }
                     }
                 },'water'
             );
 
             i != 0 ? this.map.setLayoutProperty(currLayer.variable, 'visibility', 'none') : null;
+
+            this.addClickLayer();
         }
     }
 
+    addClickLayer() {
+       this.map.addLayer({
+            "id": "click-layer",
+            "type": "fill",
+            'source': this.source.id,
+            'source-layer': this.source.sourceLayer,
+            "paint": {
+                "fill-color": "rgba(0,0,0,0)",
+                "fill-opacity": 0,
+                'fill-outline-color': colors.black
+            },
+            "filter": ["==", "GEOID2", ""]
+        },'water');
+    }
+
     addTooltip() {
-        this.map.on('mousemove', (e) => {
+        this.map.on('click', (e) => {
             var features = this.map.queryRenderedFeatures(e.point, { layers: this.additionalLayerNames });
-            console.log(e.lngLat);
-            console.log(features[0]);
+            // console.log(e.lngLat);
+            // console.log(features[0]);
             if (!features.length) {
                 this.popup.remove();
+                this.map.setFilter("click-layer", ["==", "GEOID2", ""]);
                 return;
             }
 
             let feature = features[0];
-            
-            let splitPieces = feature.properties.Geography.split(", ");
+            // console.log(feature.layer.paint);
 
-            let popupProperties = "";
-
-            for (let i = 0; i < this.additionalLayers.length; i++) {
-                let currVar = this.additionalLayers[i];
-                popupProperties += "<li class='popup__property'>" +
-                            "<h5 class='popup__property__label'>" + currVar.displayName + "</h5>" +
-                            "<h5 class='popup__property__value'>" + formatValue(feature.properties[currVar.variable], currVar.format)  + "</h5>" +
-                        "</li>";
-            }
-
+            // feature.layer.paint["fill-color"] = "green";
+            // console.log(feature.layer.paint);
+           
             this.popup
                 .setLngLat(e.lngLat)
-                .setHTML(
-                    "<h5 class='popup__state'>" + splitPieces[2] + "</h5>" +
-                    "<h3 class='popup__county'>" + splitPieces[1] + "</h3>" +
-                    "<h5 class='popup__tract'>" + splitPieces[0] + "</h5>" +
-                    "<ul class='popup__properties'>" + popupProperties + "</ul>"
-                )
+                .setHTML(this.popupContentFunction(feature))
                 .addTo(this.map);
+
+            this.map.setFilter("click-layer", ["==", "GEOID2", feature.properties.GEOID2]);
         });
     }
 

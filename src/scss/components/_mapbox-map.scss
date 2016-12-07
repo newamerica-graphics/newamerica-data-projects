@@ -63,6 +63,9 @@
 
 }
 .mapboxgl {
+	&-canvas {
+		cursor: pointer;
+	}
 	&-ctrl-top-left {
 		padding: 15px 0px 0px 15px;
 	}
@@ -73,14 +76,14 @@
 		padding: 25px;
 
 		.popup {
-			&__state, &__tract {
+			&__subheading {
 				color: palette-get(na-black-40);
 				font-size: 14px;
 				margin-bottom: 0px;
 
 			}
 
-			&__county {
+			&__heading {
 				color: palette-get(na-black);
 				font-size: 18px;
 				margin: 3px 0px;
