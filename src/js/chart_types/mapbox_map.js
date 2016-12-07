@@ -30,12 +30,12 @@ export class MapboxMap {
         this.popupContentFunction = popupContentFunction;
 
         d3.select(id).append("div")
-            .attr("id", "map-container")
+            .attr("id", id.replace("#", "") + '-map-container')
             .style("width", "100%")
             .style("height", "700px");
 
         this.map = new mapboxgl.Map({
-            container: 'map-container',
+            container: id.replace("#", "") + '-map-container',
             style: mapboxStyleUrl,
             zoom: 4,
             center: [-98.5795, 39.8282],
@@ -96,13 +96,17 @@ export class MapboxMap {
 
             this.additionalLayerNames.push(currLayer.variable);
 
-            let colorStops = [];
+            let fillColorStops = [],
+                outlineColorStops = [];
 
             for (let j = 0; j < numBins; j++) {
-                colorStops.push([dataMin + j*binInterval, this.colorScales[i].range()[j]]);
+                let outlineColor = this.colorScales[i].range()[j].replace("rgb", "rgba").replace(")", ", .75)");
+                fillColorStops.push([dataMin + j*binInterval, this.colorScales[i].range()[j]]);
+                outlineColorStops.push([{zoom: 5, value: dataMin + j*binInterval}, outlineColor]);
+                outlineColorStops.push([{zoom: 11, value: dataMin + j*binInterval}, "white"]);
             }
 
-            console.log(colorStops);
+            console.log(fillColorStops);
             this.map.addLayer(
                 {
                     'id': currLayer.variable,
@@ -113,14 +117,13 @@ export class MapboxMap {
                     'paint': {
                         'fill-color': {
                             property: currLayer.variable,
-                            stops: colorStops
+                            stops: fillColorStops
                         },
-                        'fill-opacity': .85,
+                        'fill-opacity': .7,
                         'fill-outline-color': {
-                            stops: [
-                                [7, "rgba(0,0,0,0)"],
-                                [11, colors.white]
-                            ]
+                            property: currLayer.variable,
+                            type: "interval",
+                            stops: outlineColorStops
                         }
                     }
                 },'water'
@@ -140,7 +143,7 @@ export class MapboxMap {
             'source-layer': this.source.sourceLayer,
             "paint": {
                 "fill-color": "rgba(0,0,0,0)",
-                "fill-opacity": 0,
+                "fill-opacity": 1,
                 'fill-outline-color': colors.black
             },
             "filter": ["==", "GEOID2", ""]
@@ -159,10 +162,6 @@ export class MapboxMap {
             }
 
             let feature = features[0];
-            // console.log(feature.layer.paint);
-
-            // feature.layer.paint["fill-color"] = "green";
-            // console.log(feature.layer.paint);
            
             this.popup
                 .setLngLat(e.lngLat)

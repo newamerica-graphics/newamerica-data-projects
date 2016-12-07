@@ -58,32 +58,32 @@ let insetMapSettings = [
 ]
 
 let vizSettingsList = [
-    // {
-    //     id: "#financial-opportunity__census-tract-map", 
-    //     vizType: "mapbox_map",
-    //     mapboxStyleUrl: "mapbox://styles/newamericamapbox/civcm5ziy00d92imrwswlo1wv",
-    //     source: {
-    //         id:'census-tracts',
-    //         sourceLayer: 'CensusTracts_2014data2K_2-3r3ays',
-    //         url: 'mapbox://newamericamapbox.7zun44wf'
-    //     },
-    //     additionalLayers: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
-    //     filters: [
-    //         {
-    //             filterVars: [variables.banks, variables.altcredit, variables.ncua, variables.usps],
-    //             toggleInsets: true,
-    //             canToggleMultiple: true
-    //         },
-    //         {
-    //             filterVars: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
-    //             toggleInsets: false,
-    //             canToggleMultiple: false
-    //         },
-    //     ],
-    //     tooltipVars: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
-    //     insetMapSettings: insetMapSettings,
-    //     popupContentFunction: censusTractMapSetPopupContent
-    // },
+    {
+        id: "#financial-opportunity__census-tract-map", 
+        vizType: "mapbox_map",
+        mapboxStyleUrl: "mapbox://styles/newamericamapbox/civcm5ziy00d92imrwswlo1wv",
+        source: {
+            id:'census-tracts',
+            sourceLayer: 'CensusTracts_2014data2K_2-3r3ays',
+            url: 'mapbox://newamericamapbox.7zun44wf'
+        },
+        additionalLayers: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
+        filters: [
+            {
+                filterVars: [variables.banks, variables.altcredit, variables.ncua, variables.usps],
+                toggleInsets: true,
+                canToggleMultiple: true
+            },
+            {
+                filterVars: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
+                toggleInsets: false,
+                canToggleMultiple: false
+            },
+        ],
+        tooltipVars: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
+        insetMapSettings: insetMapSettings,
+        popupContentFunction: censusTractMapSetPopupContent
+    },
     {
         id: "#financial-opportunity__county-map", 
         vizType: "mapbox_map",
