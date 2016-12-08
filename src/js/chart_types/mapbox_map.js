@@ -37,10 +37,11 @@ export class MapboxMap {
         this.map = new mapboxgl.Map({
             container: id.replace("#", "") + '-map-container',
             style: mapboxStyleUrl,
-            zoom: 4,
+            zoom: 3,
             center: [-98.5795, 39.8282],
-            minZoom: 4,
-            maxZoom: 15
+            minZoom: 3,
+            maxZoom: 15,
+            attributionControl: true
         });
 
         if (insetMapSettings) { 
@@ -49,13 +50,9 @@ export class MapboxMap {
 
         this.setColorScales();
 
-        let popupOffsets = {
-            'left': [50, -100],
-        };
 
         this.popup = new mapboxgl.Popup({
             anchor: 'left',
-            offset: popupOffsets,
             closeButton: false,
             closeOnClick: false
         });
@@ -81,7 +78,7 @@ export class MapboxMap {
             country:'us',
         }));
 
-        this.map.addControl(new mapboxgl.NavigationControl());
+        this.map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));
     }
 
     addLayers() {
@@ -100,9 +97,10 @@ export class MapboxMap {
                 outlineColorStops = [];
 
             for (let j = 0; j < numBins; j++) {
-                let outlineColor = this.colorScales[i].range()[j].replace("rgb", "rgba").replace(")", ", .75)");
+                let outlineColor = this.colorScales[i].range()[j].replace("rgb", "rgba").replace(")", ", .7)");
+                console.log(outlineColor);
                 fillColorStops.push([dataMin + j*binInterval, this.colorScales[i].range()[j]]);
-                outlineColorStops.push([{zoom: 5, value: dataMin + j*binInterval}, outlineColor]);
+                outlineColorStops.push([{zoom: 1, value: dataMin + j*binInterval}, outlineColor]);
                 outlineColorStops.push([{zoom: 11, value: dataMin + j*binInterval}, "white"]);
             }
 
@@ -119,7 +117,9 @@ export class MapboxMap {
                             property: currLayer.variable,
                             stops: fillColorStops
                         },
-                        'fill-opacity': .7,
+                        'fill-opacity': {
+                            stops: [ [0, 1], [11, .75]]
+                        },
                         'fill-outline-color': {
                             property: currLayer.variable,
                             type: "interval",
@@ -244,6 +244,7 @@ export class MapboxMap {
                 zoom: settingsObject.zoom,
                 minZoom: settingsObject.zoom,
                 center: settingsObject.center,
+                attributionControl: false
             });
             this.insetMaps.push(insetMap);
             i++;
@@ -263,5 +264,11 @@ export class MapboxMap {
             this.colorScales[i] = getColorScale(null, this.additionalLayers[i]);
         }
         console.log(this.colorScales[0].range());
+    }
+
+    resize() {
+        let insetDivs = $(".mapbox-map__inset")
+        let width = insetDivs.width();
+        insetDivs.height(width);
     }
 }
