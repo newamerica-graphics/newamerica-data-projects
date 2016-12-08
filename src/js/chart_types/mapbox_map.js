@@ -216,11 +216,11 @@ export class MapboxMap {
 
                     if (visibility === 'visible') {
                         this.map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-                        toggleInsets ? this.toggleInsetMaps(clickedLayer, 'none').bind(this) : null;
+                        toggleInsets ? this.toggleInsetMaps(clickedLayer, 'none') : null;
                         d3.select(elem[0]).classed("active", false);
                     } else {
                         d3.select(elem[0]).classed("active", true);
-                        toggleInsets ? toggleInsetFunction(clickedLayer, 'visible') : null;
+                        toggleInsets ? this.toggleInsetMaps(clickedLayer, 'none') : null;
                         this.map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
                     }
                 });
