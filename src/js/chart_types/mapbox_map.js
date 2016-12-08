@@ -37,9 +37,9 @@ export class MapboxMap {
         this.map = new mapboxgl.Map({
             container: id.replace("#", "") + '-map-container',
             style: mapboxStyleUrl,
-            zoom: 3,
+            zoom: 4,
             center: [-98.5795, 39.8282],
-            minZoom: 3,
+            minZoom: 4,
             maxZoom: 15,
             attributionControl: true
         });
@@ -50,7 +50,8 @@ export class MapboxMap {
 
         this.setColorScales();
 
-
+        this.addControls();
+        
         this.popup = new mapboxgl.Popup({
             anchor: 'left',
             closeButton: false,
@@ -59,7 +60,6 @@ export class MapboxMap {
     }
 
     render() {
-        this.addControls();
         this.map.on('load', () => {
             this.map.addSource(this.source.id,{
                 'type': 'vector',
@@ -71,6 +71,7 @@ export class MapboxMap {
 
             this.addFilters();
         });
+
     }
 
     addControls() {
@@ -177,53 +178,55 @@ export class MapboxMap {
             .attr("class", "mapbox-map__filter-group-container")
         let i = 0;
         for (let filter of this.filters) {
-            filterGroupContainer.append("div")
+            let currFilter = filterGroupContainer.append("div")
                 .attr("class", "mapbox-map__filter-group")
                 .attr("id", "filter-" + i);
 
-            this.addFilter("#filter-" + i, filter.filterVars, filter.toggleInsets, filter.canToggleMultiple);
+            this.addFilter(currFilter, filter.filterVars, filter.toggleInsets, filter.canToggleMultiple);
             i++;
         }
     }
 
-    addFilter(menuDomId, filterVars, toggleInsets, canToggleMultiple) {
-        let $menu = $(menuDomId);
+    addFilter(filterDomElem, filterVars, toggleInsets, canToggleMultiple) {
         let map = this.map;
         let toggleInsetFunction = this.toggleInsetMaps.bind(this);
-        for (var i = 0; i < filterVars.length; i++) {
-            var id = filterVars[i].variable;
+        for (let i = 0; i < filterVars.length; i++) {
+            let id = filterVars[i].variable;
 
-            var link = document.createElement('a');
-            link.href = '#';
-            link.className = !canToggleMultiple && i != 0 ? '' : 'active';
-            link.textContent = filterVars[i].displayName;
-            link.value = id;
-
-            link.onclick = function (e) {
-                if (!canToggleMultiple) {
-                    $menu.children(".active").removeClass("active");
-                    for (let filterVar of filterVars) {
-                        map.setLayoutProperty(filterVar.variable, 'visibility', 'none');
-                        toggleInsets ? toggleInsetMaps(layer, 'none') : null;
+            filterDomElem.append('a')
+                .attr("href", '#')
+                .classed("active", () => {
+                    return i == 0 || canToggleMultiple ? true : false;
+                })
+                .text(filterVars[i].displayName)
+                .attr("value", id)
+                .on("click", function (a, b, c) {
+                    console.log(a, b, c);
+                    if (!canToggleMultiple) {
+                        filterDomElem.select(".active").classed("active", false);
+                        for (let filterVar of filterVars) {
+                            map.setLayoutProperty(filterVar.variable, 'visibility', 'none');
+                            toggleInsets ? toggleInsetMaps(layer, 'none') : null;
+                        }
                     }
-                }
-                var clickedLayer = this.value;
-                e.preventDefault();
-                e.stopPropagation();
+                    var clickedLayer = this.value;
+                    d3.event.preventDefault();
+                    d3.event.stopPropagation();
 
-                var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+                    console.log();
 
-                if (visibility === 'visible') {
-                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-                    toggleInsets ? toggleInsetFunction(clickedLayer, 'none') : null;
-                    this.className = '';
-                } else {
-                    this.className = 'active';
-                    toggleInsets ? toggleInsetFunction(clickedLayer, 'visible') : null;
-                    map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-                }
-            };
-            $menu.append(link);
+                    var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+                    if (visibility === 'visible') {
+                        map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                        toggleInsets ? toggleInsetFunction(clickedLayer, 'none') : null;
+                        this.className = '';
+                    } else {
+                        this.className = 'active';
+                        toggleInsets ? toggleInsetFunction(clickedLayer, 'visible') : null;
+                        map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                    }
+                });
         }
     }
 
