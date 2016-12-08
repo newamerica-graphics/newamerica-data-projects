@@ -200,31 +200,28 @@ export class MapboxMap {
                 })
                 .text(filterVars[i].displayName)
                 .attr("value", id)
-                .on("click", function (a, b, c) {
-                    console.log(a, b, c);
+                .on("click", (a, index, elem) => {
                     if (!canToggleMultiple) {
                         filterDomElem.select(".active").classed("active", false);
                         for (let filterVar of filterVars) {
-                            map.setLayoutProperty(filterVar.variable, 'visibility', 'none');
+                            this.map.setLayoutProperty(filterVar.variable, 'visibility', 'none');
                             toggleInsets ? toggleInsetMaps(layer, 'none') : null;
                         }
                     }
-                    var clickedLayer = this.value;
+                    var clickedLayer = d3.select(elem[0]).attr("value");
                     d3.event.preventDefault();
                     d3.event.stopPropagation();
 
-                    console.log();
-
-                    var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+                    var visibility = this.map.getLayoutProperty(clickedLayer, 'visibility');
 
                     if (visibility === 'visible') {
-                        map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-                        toggleInsets ? toggleInsetFunction(clickedLayer, 'none') : null;
-                        this.className = '';
+                        this.map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                        toggleInsets ? this.toggleInsetMaps(clickedLayer, 'none').bind(this) : null;
+                        d3.select(elem[0]).classed("active", false);
                     } else {
-                        this.className = 'active';
+                        d3.select(elem[0]).classed("active", true);
                         toggleInsets ? toggleInsetFunction(clickedLayer, 'visible') : null;
-                        map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                        this.map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
                     }
                 });
         }
