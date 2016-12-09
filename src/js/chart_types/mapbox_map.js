@@ -132,8 +132,10 @@ export class MapboxMap {
 
             i != 0 ? this.map.setLayoutProperty(currLayer.variable, 'visibility', 'none') : null;
 
-            this.addClickLayer();
+            
         }
+
+        this.addClickLayer();
     }
 
     addClickLayer() {
@@ -244,7 +246,8 @@ export class MapboxMap {
                 zoom: settingsObject.zoom,
                 minZoom: settingsObject.zoom,
                 center: settingsObject.center,
-                attributionControl: false
+                attributionControl: false,
+                dragPan: false
             });
             this.insetMaps.push(insetMap);
             i++;

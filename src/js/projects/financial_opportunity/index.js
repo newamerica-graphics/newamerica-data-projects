@@ -67,6 +67,7 @@ let vizSettingsList = [
             sourceLayer: 'CensusTracts_2014data2K_2-3r3ays',
             url: 'mapbox://newamericamapbox.7zun44wf'
         },
+        existingLayers: [variables.banks, variables.altcredit, variables.ncua, variables.usps],
         additionalLayers: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
         filters: [
             {
@@ -84,27 +85,27 @@ let vizSettingsList = [
         insetMapSettings: insetMapSettings,
         popupContentFunction: censusTractMapSetPopupContent
     },
-    {
-        id: "#financial-opportunity__county-map", 
-        vizType: "mapbox_map",
-        mapboxStyleUrl: "mapbox://styles/newamericamapbox/ciwdu1mzs003j2pmq94myzf8q",
-        source: {
-            id:'counties',
-            sourceLayer: 'Countydata-4gt6se',
-            url: 'mapbox://newamericamapbox.8v8ldjz3'
-        },
-        additionalLayers: [variables.county_altpc, variables.county_tradpc, variables.county_altpertrad],
-        filters: [
-            {
-                filterVars: [variables.county_altpc, variables.county_tradpc, variables.county_altpertrad],
-                toggleInsets: false,
-                canToggleMultiple: false
-            },
-        ],
-        tooltipVars: [variables.county_altpc, variables.county_tradpc, variables.county_altpertrad],
-        insetMapSettings: false,
-        popupContentFunction: countyMapSetPopupContent
-    },
+    // {
+    //     id: "#financial-opportunity__county-map", 
+    //     vizType: "mapbox_map",
+    //     mapboxStyleUrl: "mapbox://styles/newamericamapbox/ciwdu1mzs003j2pmq94myzf8q",
+    //     source: {
+    //         id:'counties',
+    //         sourceLayer: 'Countydata-4gt6se',
+    //         url: 'mapbox://newamericamapbox.8v8ldjz3'
+    //     },
+    //     additionalLayers: [variables.county_altpc, variables.county_tradpc, variables.county_altpertrad],
+    //     filters: [
+    //         {
+    //             filterVars: [variables.county_altpc, variables.county_tradpc, variables.county_altpertrad],
+    //             toggleInsets: false,
+    //             canToggleMultiple: false
+    //         },
+    //     ],
+    //     tooltipVars: [variables.county_altpc, variables.county_tradpc, variables.county_altpertrad],
+    //     insetMapSettings: false,
+    //     popupContentFunction: countyMapSetPopupContent
+    // },
 ]
 
 let projectSettings = {
