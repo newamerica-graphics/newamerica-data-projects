@@ -160,6 +160,7 @@ export function setupProject(projectSettings) {
 			let fields = Object.keys(dataJson[sheetName][0]);
 
 			let csvString = json2csv({ data: dataJson[sheetName], fields: fields });
+
 			zip.file(sheetName + ".csv", csvString);
 		}
 
@@ -170,7 +171,6 @@ export function setupProject(projectSettings) {
 
 	function setJSONZipLink(dataJson) {
 		var jsonDataUrlString = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataJson));
-
 		$("#in-depth__download__json").attr("href", jsonDataUrlString);
 	}
 

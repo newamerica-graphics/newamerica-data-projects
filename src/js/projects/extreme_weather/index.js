@@ -157,7 +157,7 @@ let vizSettingsList = [
 let projectSettings = {
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/resourcesecurity/extreme_weather.json",
 	downloadDataLink: "https://docs.google.com/spreadsheets/d/18WEcJVDByP5bCPACgt2s9-sYIOItweq9fI9PCMIpUjY/",
-	dataSheetNames:["filtered_storm_events", "fips_by_event", "fema_declarations", "event_types", "events_year_counts"],
+	dataSheetNames:["filtered_storm_events", "fema_declarations", "event_types", "events_year_counts"],
 	vizSettingsList: vizSettingsList
 }
 

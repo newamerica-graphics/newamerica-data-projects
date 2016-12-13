@@ -60,8 +60,6 @@ export class Dashboard {
 				component = new TopoJsonMap(componentSettings);
 				break;
 		}
-
-		console.log(component);
 		
 		component.messageHandlerType = componentSettings.messageHandlerType;
 		return component;
