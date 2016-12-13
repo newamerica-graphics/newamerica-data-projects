@@ -29,7 +29,7 @@ let ordinalRange = [
 ]
 
 export function getColorScale(data, filterVar) {
-	let { scaleType, numBins, customRange, customDomain } = filterVar;
+	let { scaleType, numBins, customRange, customDomain, dontNice } = filterVar;
 	let scale, domain, range;
 
 	if (!scaleType) {
@@ -51,6 +51,7 @@ export function getColorScale(data, filterVar) {
 		scale = d3.scaleQuantize();
 		range = setColorBins(numBins, customRange);
 		domain = customDomain ? customDomain : setQuantizeDomain(filterVar, data);
+		console.log(range, domain);
 		
 	} else if (scaleType == "linear") {
 		scale = d3.scaleLinear();
@@ -66,7 +67,7 @@ export function getColorScale(data, filterVar) {
 	scale.domain(domain)
 		.range(range);
 
-	if (scaleType == "linear" || scaleType == "quantize") {
+	if (!dontNice && (scaleType == "linear" || scaleType == "quantize")) {
 		scale.nice();
 	}
 		
