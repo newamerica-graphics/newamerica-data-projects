@@ -32,7 +32,7 @@ export class SelectBox {
 	}
 
 	changeValue(value) {
-		this.selectBoxOptions.property("selected", (d, i) => {  return i == Number(value); });
+		this.selectBoxOptions.attr("selected", (d, i) => {  return i == Number(value); });
 	}
 
 }
