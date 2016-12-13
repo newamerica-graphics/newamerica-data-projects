@@ -52,7 +52,7 @@ let vizSettingsList = [
 		geometryVar: variables.fema_fips,
 		filterVars: [variables.fema_all_except_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado],
 		tooltipVars: [variables.fema_county_name, variables.fema_all_except_fire, variables.fema_flood, variables.fema_hurricane, variables.fema_severe_ice_storm, variables.fema_severe_storms, variables.fema_snow, variables.fema_tornado, variables.fema_typhoon, variables.fema_earthquake, variables.fema_other],
-		legendSettings: {"orientation": "horizontal-center", "customTitleExpression": "<<>> Declarations", "showTitle": true},
+		legendSettings: {"orientation": "horizontal-center", "customTitleExpression": "<<>> Declarations", "annotation": "*12/1964 to 10/2016","showTitle": true},
 		filterGroupSettings: { "mobileSelectBox": true },
 		zoomable: true
 	},
@@ -65,7 +65,7 @@ let vizSettingsList = [
 		geometryVar: variables.fema_fips,
 		filterVars: [variables.fema_fire],
 		tooltipVars: [variables.fema_county_name, variables.fema_fire],
-		legendSettings: {"orientation": "horizontal-center", "customTitleExpression": "<<>> Declarations", "showTitle": true},
+		legendSettings: {"orientation": "horizontal-center", "customTitleExpression": "<<>> Declarations", "annotation": "*12/1964 to 10/2016", "showTitle": true},
 		filterGroupSettings: { "mobileSelectBox": true },
 		zoomable: false
 	},

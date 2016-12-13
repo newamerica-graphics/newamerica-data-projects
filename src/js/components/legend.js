@@ -11,7 +11,7 @@ let continuousLegendHeight = 20,
 
 export class Legend {
 	constructor(legendSettings) {
-		let {id, markerSettings, showTitle, showValCounts, orientation, customTitleExpression, disableValueToggling, openEnded, customLabels} = legendSettings;
+		let {id, markerSettings, showTitle, showValCounts, orientation, customTitleExpression, annotation, disableValueToggling, openEnded, customLabels} = legendSettings;
 		this.id = id;
 		this.showTitle = showTitle;
 		this.customTitleExpression = customTitleExpression;
@@ -21,6 +21,7 @@ export class Legend {
 		this.openEnded = openEnded;
 		this.customLabels = customLabels;
 		this.showValCounts = showValCounts;
+		this.annotation = annotation;
 	}
 
 	render(legendSettings) {
@@ -36,8 +37,23 @@ export class Legend {
 			let titleContainer = this.legend.append("div")
 				.attr("class", "legend__title-container");
 
+			let title;
+			if (this.customTitleExpression) {
+				title = this.customTitleExpression.replace("<<>>",legendSettings.title);
+			} else {
+				title = legendSettings.title;
+			}
+
 			this.titleDiv = titleContainer.append("h3")
-				.attr("class", "legend__title");
+				.attr("class", "legend__title")
+				.text(title);
+
+			if (this.annotation) {
+				titleContainer.append("span")
+					.attr("class", "legend__annotation")
+					.text(this.annotation);
+			}
+
 		}
 
 		this.cellContainer = this.legend.append("div")
@@ -45,15 +61,7 @@ export class Legend {
 
 		this.colorScale = legendSettings.colorScale;
 
-		if (this.showTitle) {
-			let title;
-			if (this.customTitleExpression) {
-				title = this.customTitleExpression.replace("<<>>",legendSettings.title);
-			} else {
-				title = legendSettings.title;
-			}
-			this.titleDiv.text(title)
-		}
+		
 
 		if (legendSettings.scaleType == "linear" || legendSettings.scaleType == "logarithmic") {
 			this.renderContinuous(legendSettings);
