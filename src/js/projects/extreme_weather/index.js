@@ -5,7 +5,7 @@ import { colors } from "../../helper_functions/colors.js";
 
 let variables = {
 	year: {"variable":"year", "displayName":"Year", "format":"year"},
-	event_category: {"variable":"event_category", "displayName":"Event Category", "format":"string", "scaleType":"categorical", "customDomain":["Drought", "Wildfire", "Flooding", "Freeze", "Winter Storm", "Severe Storm", "Tropical Cyclone"], "customRange":[colors.red.light, colors.red.medium, colors.blue.light, colors.blue.medium, colors.blue.dark, colors.purple.light, colors.turquoise.light]},
+	event_category: {"variable":"event_category", "displayName":"Event Category", "format":"string", "scaleType":"categorical", "customDomain":["Drought", "Wildfire", "Flooding", "Freeze", "Winter Storm", "Severe Storm", "Tropical Cyclone"], "customRange":[colors.red.light, colors.red.medium, colors.blue.light, colors.blue.medium, colors.blue.dark, colors.purple.very_light, colors.turquoise.light]},
 	event_name: {"variable":"event_name", "displayName":"Event Name", "format":"string"},
 	deaths: {"variable":"deaths", "displayName":"Deaths", "format":"number"},
 	begin_date: {"variable":"begin_date", "displayName":"Begin Date", "format":"date"},
