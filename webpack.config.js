@@ -33,6 +33,13 @@ var config = {
     path: BUILD_DIR,
     filename: '[name].js'
   },
+  resolve: {
+    extensions: ['', '.js'],
+    alias: {
+      // webworkify: 'webworkify-webpack',
+      'mapbox-gl': path.resolve('./node_modules/mapbox-gl/dist/mapbox-gl.js')
+    }
+  },
   module: {
     loaders : [
       {
@@ -46,7 +53,16 @@ var config = {
       },
       { 
         test: /\.png$/, 
-        loader: "url-loader?limit=100000" },
+        loader: "url-loader?limit=100000" 
+      },
+      { 
+        test: /\.json$/, 
+        loader: "json-loader" 
+      },
+      {
+        test: /mapbox-gl.+\.js$/,
+        loader: 'transform/cacheable?brfs'
+      }
     ]
   },
   sassLoader: {
@@ -65,7 +81,10 @@ var config = {
         Bucket: DATA_PROJECTS_S3_BUCKET_NAME
       }
     })
-  ]
+  ],
+  node: {
+    fs: "empty"
+  }
 };
 
 module.exports = config;
