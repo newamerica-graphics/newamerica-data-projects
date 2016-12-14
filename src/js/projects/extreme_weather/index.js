@@ -33,7 +33,7 @@ let variables = {
 	
 	storm_type: {"variable":"storm_type", "displayName":"Storm Type", "format":"string", "scaleType":"categorical"},
 	frequency: {"variable":"frequency", "displayName":"Count", "format":"number", "color": colors.turquoise.light},
-	average_cost: {"variable":"average_cost", "displayName":"Average Cost (Billions)", "format":"number", "scaleType":"linear", "color": colors.blue.medium},
+	average_cost: {"variable":"average_cost", "displayName":"Average Cost (Billions)", "format":"price_with_decimal_1", "scaleType":"linear", "color": colors.blue.medium},
 
 	year_counts_year: {"variable":"year", "displayName":"Year", "format":"year"},
 	year_counts_count: {"variable":"count", "displayName":"Billion Dollar Event Count", "format":"number", "color": colors.turquoise.light},

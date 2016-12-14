@@ -13,6 +13,8 @@ export function formatValue(value, format) {
 		return value;
 	} else if (format == "price") {
 		return d3.format("$,.0f")(value);
+	} else if (format == "price_with_decimal_1") {
+		return d3.format("$,.1f")(value);
 	} else if (format == "percent") {
 		return d3.format(".0%")(value);
 	} else if (format == "string") {
