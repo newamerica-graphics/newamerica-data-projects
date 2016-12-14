@@ -5,28 +5,33 @@ let d3 = require("d3");
 var formatTime = d3.timeFormat("%B %d, %Y");
 
 export function formatValue(value, format) {
-	if (format == "number") {
-		return d3.format(",")(value);
-	} else if (format == "integer") {
-		return Math.round(value);
-	} else if (format == "year") {
-		return value;
-	} else if (format == "price") {
-		return d3.format("$,.0f")(value);
-	} else if (format == "price_with_decimal_1") {
-		return d3.format("$,.1f")(value);
-	} else if (format == "percent") {
-		return d3.format(".0%")(value);
-	} else if (format == "string") {
-		return value.replace(/<\/?[^>]+(>|$)/g, "");
-	} else if (format == "rank") {
-	    let s = ["th","st","nd","rd"];
-		let v = value%100;
-	    return value+(s[(v-20)%10]||s[v]||s[0]);
-	} else if (format == "date") {
-		return formatTime(new Date(value));
-	} else if (format == "link") {
-		return value;
+	let retVal;
+
+	switch(format) {
+		case "number":
+			return d3.format(",")(value);
+		case "number_per_ten_thousand":
+			return d3.format(",")(Number(value)*10000);
+		case "integer":
+			return Math.round(value);
+		case "year":
+			return value;
+		case "price":
+			return d3.format("$,.0f")(value);
+		case "price_with_decimal_1":
+			return d3.format("$,.1f")(value);
+		case "percent":
+			return d3.format(".0%")(value);
+		case "string":
+			return value.replace(/<\/?[^>]+(>|$)/g, "");
+		case "rank":
+		    let s = ["th","st","nd","rd"];
+			let v = value%100;
+		    return value+(s[(v-20)%10]||s[v]||s[0]);
+		case "date":
+			return formatTime(new Date(value));
+		case "link":
+			return value;
 	}
 }
 

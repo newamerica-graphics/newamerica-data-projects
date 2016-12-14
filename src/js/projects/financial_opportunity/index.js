@@ -14,9 +14,9 @@ let variables = {
     ncua: {"variable":"ncua", "displayName":"Credit Unions", "format": "number"},
     usps: {"variable":"usps", "displayName":"Post Offices", "format": "number"},
 
-    county_altpc: {"variable":"altpc", "displayName":"Alt Credit Per Capita", "format": "number",  "scaleType": "quantize", "customDomain":[0, 0.000839], "customRange":[colors.white, colors.red.light], "numBins":3},
-    county_tradpc: {"variable":"tradpc", "displayName":"Traditional Per Capita", "format": "number",  "scaleType": "quantize", "customDomain":[0, 0.003727], "customRange":[colors.white, colors.turquoise.light], "numBins":3},
-    county_altpertrad: {"variable":"altpertrad", "displayName":"Alt Per Traditional", "format": "number",  "scaleType": "quantize", "customDomain":[0, 3], "customRange":[colors.white, colors.purple.light], "numBins":3},
+    county_altpc: {"variable":"altpc", "displayName":"Alt. Financial Services Per 10,000 People", "format": "number_per_ten_thousand",  "scaleType": "quantize", "customDomain":[0, 0.000839], "customRange":[colors.white, colors.red.dark], "numBins":3},
+    county_tradpc: {"variable":"tradpc", "displayName":"Mainstream Financial Services Per 10,000 People", "format": "number_per_ten_thousand",  "scaleType": "quantize", "customDomain":[0, 0.003727], "customRange":[colors.white, colors.turquoise.dark], "numBins":3},
+    county_altpertrad: {"variable":"altpertrad", "displayName":"Ratio of Alt. Financial Services to Mainstream", "format": "number",  "scaleType": "quantize", "customDomain":[0, 3], "customRange":[colors.white, colors.purple.dark], "numBins":3},
 };
 
 let insetMapSettings = [
@@ -58,33 +58,33 @@ let insetMapSettings = [
 ]
 
 let vizSettingsList = [
-    {
-        id: "#financial-opportunity__census-tract-map", 
-        vizType: "mapbox_map",
-        mapboxStyleUrl: "mapbox://styles/newamericamapbox/civcm5ziy00d92imrwswlo1wv",
-        source: {
-            id:'census-tracts',
-            sourceLayer: 'CensusTracts_2014data2K_2-3r3ays',
-            url: 'mapbox://newamericamapbox.7zun44wf'
-        },
-        existingLayers: [variables.banks, variables.altcredit, variables.ncua, variables.usps],
-        additionalLayers: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
-        filters: [
-            {
-                filterVars: [variables.banks, variables.altcredit, variables.ncua, variables.usps],
-                toggleInsets: true,
-                canToggleMultiple: true
-            },
-            {
-                filterVars: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
-                toggleInsets: false,
-                canToggleMultiple: false
-            },
-        ],
-        tooltipVars: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
-        insetMapSettings: insetMapSettings,
-        popupContentFunction: censusTractMapSetPopupContent
-    },
+    // {
+    //     id: "#financial-opportunity__census-tract-map", 
+    //     vizType: "mapbox_map",
+    //     mapboxStyleUrl: "mapbox://styles/newamericamapbox/civcm5ziy00d92imrwswlo1wv",
+    //     source: {
+    //         id:'census-tracts',
+    //         sourceLayer: 'CensusTracts_2014data2K_2-3r3ays',
+    //         url: 'mapbox://newamericamapbox.7zun44wf'
+    //     },
+    //     existingLayers: [variables.banks, variables.altcredit, variables.ncua, variables.usps],
+    //     additionalLayers: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
+    //     filters: [
+    //         {
+    //             filterVars: [variables.banks, variables.altcredit, variables.ncua, variables.usps],
+    //             toggleInsets: true,
+    //             canToggleMultiple: true
+    //         },
+    //         {
+    //             filterVars: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
+    //             toggleInsets: false,
+    //             canToggleMultiple: false
+    //         },
+    //     ],
+    //     tooltipVars: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
+    //     insetMapSettings: insetMapSettings,
+    //     popupContentFunction: censusTractMapSetPopupContent
+    // },
     {
         id: "#financial-opportunity__county-map", 
         vizType: "mapbox_map",
@@ -94,15 +94,15 @@ let vizSettingsList = [
             sourceLayer: 'Countydata-4gt6se',
             url: 'mapbox://newamericamapbox.8v8ldjz3'
         },
-        additionalLayers: [variables.county_altpc, variables.county_tradpc, variables.county_altpertrad],
+        additionalLayers: [variables.county_altpertrad, variables.county_altpc, variables.county_tradpc],
         filters: [
             {
-                filterVars: [variables.county_altpc, variables.county_tradpc, variables.county_altpertrad],
+                filterVars: [variables.county_altpertrad, variables.county_altpc, variables.county_tradpc],
                 toggleInsets: false,
                 canToggleMultiple: false
             },
         ],
-        tooltipVars: [variables.county_altpc, variables.county_tradpc, variables.county_altpertrad],
+        tooltipVars: [variables.county_altpertrad, variables.county_altpc, variables.county_tradpc],
         insetMapSettings: false,
         popupContentFunction: countyMapSetPopupContent
     },
