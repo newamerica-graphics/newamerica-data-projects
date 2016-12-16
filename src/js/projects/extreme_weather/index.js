@@ -12,7 +12,7 @@ let variables = {
 	end_date: {"variable":"end_date", "displayName":"End Date", "format":"date"},
 	states: {"variable":"states", "displayName":"All States Affected", "format":"string"},
 	info_link: {"variable":"info_link", "displayName":"More Information", "format":"link"},
-	cpi_adjusted_cost: {"variable":"cpi_adjusted_cost", "displayName":"CPI Adjusted Cost (Billions)", "format":"number", "scaleType":"quantize", "numBins":4, "customDomain":[1, 20], "dontNice": true, "customRange":[colors.grey.medium, colors.grey.dark]},
+	cpi_adjusted_cost: {"variable":"cpi_adjusted_cost", "displayName":"CPI Adjusted Cost (Billions)", "format":"number", "scaleType":"quantize", "numBins":4, "customDomain":[1, 20], "dontNice": true, "customRange":[colors.white, colors.grey.medium, colors.grey.dark]},
 
 	event_fips: {"variable":"fips", "displayName":"County Fips", "format":"number"},
 	event_county_name: {"variable":"county_name", "displayName":"County", "format":"string"},

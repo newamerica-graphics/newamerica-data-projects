@@ -21,13 +21,14 @@ export class MapboxMap {
             alert('Your browser does not support Mapbox GL');
             return;
         }
-        let {id, mapboxStyleUrl, additionalLayers, insetMapSettings, source, filters, popupContentFunction} = vizSettings;
+        let {id, mapboxStyleUrl, additionalLayers, insetMapSettings, source, filters, popupContentFunction, toggleOffLayers} = vizSettings;
         this.id = id;
         this.source = source;
         this.filters = filters;
         this.additionalLayers = additionalLayers;
         this.insetMapSettings = insetMapSettings;
         this.popupContentFunction = popupContentFunction;
+        this.toggleOffLayers = toggleOffLayers;
 
         d3.select(id).append("div")
             .attr("id", id.replace("#", "") + '-map-container')
@@ -77,6 +78,7 @@ export class MapboxMap {
     addControls() {
         this.map.addControl(new mapboxgl.Geocoder({
             country:'us',
+            types: ['country', 'region', 'place', 'postcode', 'address']
         }));
 
         this.map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));
@@ -131,11 +133,15 @@ export class MapboxMap {
             );
 
             i != 0 ? this.map.setLayoutProperty(currLayer.variable, 'visibility', 'none') : null;
-
-            
         }
 
         this.addClickLayer();
+        
+        // if (this.toggleOffLayers) {
+        //     for (let layer of this.toggleOffLayers) {
+        //         this.map.setLayoutProperty(layer.variable, 'visibility', 'none')
+        //     }
+        // }
     }
 
     addClickLayer() {
@@ -198,7 +204,18 @@ export class MapboxMap {
             filterDomElem.append('a')
                 .attr("href", '#')
                 .classed("active", () => {
-                    return i == 0 || canToggleMultiple ? true : false;
+                    if (canToggleMultiple) {
+                        if (this.toggleOffLayers) {
+                            for (let layer of this.toggleOffLayers) {
+                                if (layer.variable === filterVars[i].variable) {
+                                    return false;
+                                }
+                            }
+                        }
+                        return true;
+                    }
+                    
+                    return i == 0;
                 })
                 .text(filterVars[i].displayName)
                 .attr("value", id)
@@ -222,7 +239,7 @@ export class MapboxMap {
                         d3.select(elem[0]).classed("active", false);
                     } else {
                         d3.select(elem[0]).classed("active", true);
-                        toggleInsets ? this.toggleInsetMaps(clickedLayer, 'none') : null;
+                        toggleInsets ? this.toggleInsetMaps(clickedLayer, 'visible') : null;
                         this.map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
                     }
                 });
@@ -240,7 +257,7 @@ export class MapboxMap {
                 .attr('class', 'mapbox-map__inset')
                 .attr("id", 'inset-map-' + i);
 
-            var insetMap = new mapboxgl.Map({
+           let insetMap = new mapboxgl.Map({
                 container: 'inset-map-' + i,
                 style: 'mapbox://styles/newamericamapbox/civcm5ziy00d92imrwswlo1wv',
                 zoom: settingsObject.zoom,
@@ -249,6 +266,13 @@ export class MapboxMap {
                 attributionControl: false,
                 dragPan: false
             });
+
+            // if (this.toggleOffLayers) {
+            //     for (let layer of this.toggleOffLayers) {
+            //         insetMap.setLayoutProperty(layer.variable, 'visibility', 'none')
+            //     }
+            // }
+
             this.insetMaps.push(insetMap);
             i++;
         }

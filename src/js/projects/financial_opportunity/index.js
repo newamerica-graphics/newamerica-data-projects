@@ -5,18 +5,18 @@ import { setupProject } from "../../viz_controller.js";
 import { formatValue } from "../../helper_functions/format_value.js";
 
 let variables = {
-    medhhinc: {"variable":"MEDHHINC", "displayName":"Median Household Income", "format": "price",  "scaleType": "quantize", "customDomain":[0, 250000], "customRange":[colors.grey.light, colors.black], "numBins":5},
-    minority: {"variable":"MINORITY", "displayName":"% Minority", "format": "number", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.grey.light, colors.black], "numBins":5},
-    fampov: {"variable":"FAMPOV", "displayName":"% Families Below Poverty Line", "format": "number", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.grey.light, colors.black], "numBins":5},
-    medval: {"variable":"MEDVAL", "displayName":"Medium Value of Houshold Units", "format": "price", "scaleType": "quantize", "customDomain":[0, 1000000], "customRange":[colors.grey.light, colors.black], "numBins":5},
+    medhhinc: {"variable":"MEDHHINC", "displayName":"Median Household Income", "format": "price",  "scaleType": "quantize", "customDomain":[0, 250000], "customRange":[colors.black, colors.grey.light, colors.white], "numBins":5},
+    minority: {"variable":"MINORITY", "displayName":"% Minority", "format": "number", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
+    fampov: {"variable":"FAMPOV", "displayName":"% Families Below Poverty Line", "format": "number", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
+    medval: {"variable":"MEDVAL", "displayName":"Medium Value of Owner-Occupied Units", "format": "price", "scaleType": "quantize", "customDomain":[0, 1000000], "customRange":[colors.black, colors.grey.light, colors.white], "numBins":5},
     banks: {"variable":"banks", "displayName":"Banks", "format": "number"},
     altcredit: {"variable":"altcredit", "displayName":"Alternative Credit", "format": "number"},
     ncua: {"variable":"ncua", "displayName":"Credit Unions", "format": "number"},
     usps: {"variable":"usps", "displayName":"Post Offices", "format": "number"},
 
-    county_altpc: {"variable":"altpc", "displayName":"Alt. Financial Services Per 10,000 People", "format": "number_per_ten_thousand",  "scaleType": "quantize", "customDomain":[0, 0.000839], "customRange":[colors.white, colors.red.dark], "numBins":3},
-    county_tradpc: {"variable":"tradpc", "displayName":"Mainstream Financial Services Per 10,000 People", "format": "number_per_ten_thousand",  "scaleType": "quantize", "customDomain":[0, 0.003727], "customRange":[colors.white, colors.turquoise.dark], "numBins":3},
-    county_altpertrad: {"variable":"altpertrad", "displayName":"Ratio of Alt. Financial Services to Mainstream", "format": "number",  "scaleType": "quantize", "customDomain":[0, 3], "customRange":[colors.white, colors.purple.dark], "numBins":3},
+    county_altpc: {"variable":"altpc", "displayName":"Alt. Financial Services Per 10,000 People", "format": "number_per_ten_thousand",  "scaleType": "quantize", "customDomain":[0, 0.000839], "customRange":[colors.white, colors.white, colors.red.dark], "numBins":3},
+    county_tradpc: {"variable":"tradpc", "displayName":"Mainstream Financial Services Per 10,000 People", "format": "number_per_ten_thousand",  "scaleType": "quantize", "customDomain":[0, 0.003727], "customRange":[colors.white, colors.white, colors.turquoise.dark], "numBins":3},
+    county_altpertrad: {"variable":"altpertrad", "displayName":"Ratio of Alt. Financial Services to Mainstream", "format": "number",  "scaleType": "quantize", "customDomain":[0, 3], "customRange":[colors.white, colors.white, colors.purple.dark], "numBins":3},
 };
 
 let insetMapSettings = [
@@ -58,33 +58,34 @@ let insetMapSettings = [
 ]
 
 let vizSettingsList = [
-    // {
-    //     id: "#financial-opportunity__census-tract-map", 
-    //     vizType: "mapbox_map",
-    //     mapboxStyleUrl: "mapbox://styles/newamericamapbox/civcm5ziy00d92imrwswlo1wv",
-    //     source: {
-    //         id:'census-tracts',
-    //         sourceLayer: 'CensusTracts_2014data2K_2-3r3ays',
-    //         url: 'mapbox://newamericamapbox.7zun44wf'
-    //     },
-    //     existingLayers: [variables.banks, variables.altcredit, variables.ncua, variables.usps],
-    //     additionalLayers: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
-    //     filters: [
-    //         {
-    //             filterVars: [variables.banks, variables.altcredit, variables.ncua, variables.usps],
-    //             toggleInsets: true,
-    //             canToggleMultiple: true
-    //         },
-    //         {
-    //             filterVars: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
-    //             toggleInsets: false,
-    //             canToggleMultiple: false
-    //         },
-    //     ],
-    //     tooltipVars: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
-    //     insetMapSettings: insetMapSettings,
-    //     popupContentFunction: censusTractMapSetPopupContent
-    // },
+    {
+        id: "#financial-opportunity__census-tract-map", 
+        vizType: "mapbox_map",
+        mapboxStyleUrl: "mapbox://styles/newamericamapbox/civcm5ziy00d92imrwswlo1wv",
+        source: {
+            id:'census-tracts',
+            sourceLayer: 'CensusTracts_2014data2K_2-3r3ays',
+            url: 'mapbox://newamericamapbox.7zun44wf'
+        },
+        existingLayers: [variables.altcredit, variables.banks, variables.ncua, variables.usps],
+        additionalLayers: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
+        toggleOffLayers: [variables.ncua, variables.usps],
+        filters: [
+            {
+                filterVars: [variables.altcredit, variables.banks, variables.ncua, variables.usps],
+                toggleInsets: true,
+                canToggleMultiple: true
+            },
+            {
+                filterVars: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
+                toggleInsets: false,
+                canToggleMultiple: false
+            },
+        ],
+        tooltipVars: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
+        insetMapSettings: insetMapSettings,
+        popupContentFunction: censusTractMapSetPopupContent
+    },
     {
         id: "#financial-opportunity__county-map", 
         vizType: "mapbox_map",

@@ -143,7 +143,7 @@ function setColorBins(numBins, customRange) {
 
 	let linearColorScale = d3.scaleLinear()
 		.domain([0, numBins/2, numBins])
-		.range(["#ffffff", customRange[0], customRange[1]]);
+		.range([customRange[0], customRange[1], customRange[2]]);
 
 	for (let i = 0; i < numBins; i++) {
 		colorBins[i] = linearColorScale(i+1);
