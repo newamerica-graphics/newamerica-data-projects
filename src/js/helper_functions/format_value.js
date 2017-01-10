@@ -20,6 +20,8 @@ export function formatValue(value, format) {
 			return d3.format("$,.0f")(value);
 		case "price_with_decimal_1":
 			return d3.format("$,.1f")(value);
+		case "percent_no_multiply":
+			return value + "%";
 		case "percent":
 			return d3.format(".0%")(value);
 		case "string":

@@ -114,7 +114,7 @@ export function setupProject(projectSettings) {
 		if (!projectSettings.dataUrl) {
 			for (let viz of vizList) {
 				viz.render();
-				// hideLoadingGif(viz.id);
+				hideLoadingGif(viz.id);
 			}
 			
 			// setDataDownloadLinks(d);
@@ -140,6 +140,7 @@ export function setupProject(projectSettings) {
 	}
 
 	function hideLoadingGif(id) {
+		console.log("hiding loading gif");
 		$(id).siblings(".dataviz__loading-gif").hide();
 	}
 
