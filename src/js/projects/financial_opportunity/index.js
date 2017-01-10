@@ -35,19 +35,14 @@ let insetMapSettings = [
         center: [-104.9903, 39.7392],
         zoom: 8
     },
-    // {
-    //     title: "Houston",
-    //     center: [-95.3698, 29.7604],
-    //     zoom: 8
-    // },
     {
         title: "New York",
         center: [-74.0059, 40.7128],
         zoom: 8
     },
     {
-        title: "San Francisco",
-        center: [-122.4194, 37.7749],
+        title: "Los Angeles",
+        center: [-118.2437, 34.0522],
         zoom: 8
     },
     {
