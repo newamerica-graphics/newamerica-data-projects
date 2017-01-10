@@ -5,10 +5,10 @@ import { setupProject } from "../../viz_controller.js";
 import { formatValue } from "../../helper_functions/format_value.js";
 
 let variables = {
-    medhhinc: {"variable":"MEDHHINC", "displayName":"Median Household Income", "format": "price",  "scaleType": "quantize", "customDomain":[0, 250000], "customRange":[colors.black, colors.grey.light, colors.white], "numBins":5},
+    medhhinc: {"variable":"MEDHHINC", "displayName":"Median Household Income", "format": "price",  "scaleType": "quantize", "customDomain":[0, 250000], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
     minority: {"variable":"MINORITY", "displayName":"% Minority", "format": "number", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
     fampov: {"variable":"FAMPOV", "displayName":"% Families Below Poverty Line", "format": "number", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
-    medval: {"variable":"MEDVAL", "displayName":"Medium Value of Owner-Occupied Units", "format": "price", "scaleType": "quantize", "customDomain":[0, 1000000], "customRange":[colors.black, colors.grey.light, colors.white], "numBins":5},
+    medval: {"variable":"MEDVAL", "displayName":"Median Value of Owner-Occupied Units", "format": "price", "scaleType": "quantize", "customDomain":[0, 1000000], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
     banks: {"variable":"banks", "displayName":"Banks", "format": "number"},
     altcredit: {"variable":"altcredit", "displayName":"Alternative Credit", "format": "number"},
     ncua: {"variable":"ncua", "displayName":"Credit Unions", "format": "number"},
@@ -35,19 +35,14 @@ let insetMapSettings = [
         center: [-104.9903, 39.7392],
         zoom: 8
     },
-    // {
-    //     title: "Houston",
-    //     center: [-95.3698, 29.7604],
-    //     zoom: 8
-    // },
     {
         title: "New York",
         center: [-74.0059, 40.7128],
         zoom: 8
     },
     {
-        title: "San Francisco",
-        center: [-122.4194, 37.7749],
+        title: "Los Angeles",
+        center: [-118.2437, 34.0522],
         zoom: 8
     },
     {

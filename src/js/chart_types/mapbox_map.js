@@ -78,7 +78,7 @@ export class MapboxMap {
     addControls() {
         this.map.addControl(new mapboxgl.Geocoder({
             country:'us',
-            types: ['country', 'region', 'place', 'postcode', 'address']
+            types: ['country', 'region', 'place', 'postcode']
         }));
 
         this.map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));
