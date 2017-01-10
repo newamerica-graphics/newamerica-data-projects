@@ -21,16 +21,17 @@ export class MapboxMap {
             alert('Your browser does not support Mapbox GL');
             return;
         }
-        let {id, mapboxStyleUrl, additionalLayers, insetMapSettings, source, filters, popupContentFunction, toggleOffLayers} = vizSettings;
+        let {id, mapboxStyleUrl, additionalLayers, tooltipVars, insetMapSettings, source, filters, popupContentFunction, toggleOffLayers} = vizSettings;
         this.id = id;
         this.source = source;
         this.filters = filters;
         this.additionalLayers = additionalLayers;
+        this.tooltipVars = tooltipVars;
         this.insetMapSettings = insetMapSettings;
         this.popupContentFunction = popupContentFunction;
         this.toggleOffLayers = toggleOffLayers;
 
-        d3.select(id).append("div")
+        let mapContainer = d3.select(id).append("div")
             .attr("id", id.replace("#", "") + '-map-container')
             .style("width", "100%")
             .style("height", "700px");
@@ -53,11 +54,9 @@ export class MapboxMap {
 
         this.addControls();
         
-        this.popup = new mapboxgl.Popup({
-            anchor: 'left',
-            closeButton: false,
-            closeOnClick: false
-        });
+        this.popup = mapContainer.append("div")
+            .attr("class", "mapbox-map__popup")
+            .style("display", "none");
     }
 
     render() {
@@ -165,7 +164,7 @@ export class MapboxMap {
             // console.log(e.lngLat);
             // console.log(features[0]);
             if (!features.length) {
-                this.popup.remove();
+                this.popup.style("display", "none");
                 this.map.setFilter("click-layer", ["==", "GEOID2", ""]);
                 return;
             }
@@ -173,9 +172,9 @@ export class MapboxMap {
             let feature = features[0];
            
             this.popup
-                .setLngLat(e.lngLat)
-                .setHTML(this.popupContentFunction(feature))
-                .addTo(this.map);
+                .html(this.popupContentFunction(feature));
+
+            this.popup.style("display", "block");
 
             this.map.setFilter("click-layer", ["==", "GEOID2", feature.properties.GEOID2]);
         });

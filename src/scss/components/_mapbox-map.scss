@@ -75,6 +75,66 @@
 		}
 	}
 
+    &__popup {
+        margin: 15px;
+        position: absolute;
+        bottom: 15px;
+        right: 0px;
+        z-index: 50;
+        width: 415px;
+        padding: 25px;
+        background-color: white;
+        border-radius: 5px;
+        border: 2px solid palette-get(na-black-10);
+
+        &__category-container {
+            width: 100%;
+            display: block;
+            margin-top: 10px;
+        }
+
+        &__category-label {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        &__subheading {
+            color: palette-get(na-black-40);
+            font-size: 14px;
+            margin-bottom: 0px;
+
+        }
+
+        &__heading {
+            color: palette-get(na-black);
+            font-size: 18px;
+            margin: 3px 0px;
+            font-weight: bold;
+        }
+
+        &__property-list {
+            -moz-column-count: 3;
+            -webkit-column-count: 3;
+            columns: 3;
+        }
+
+        &__property {
+            -webkit-column-break-inside: avoid; /* Chrome, Safari */
+            page-break-inside: avoid;           /* Theoretically FF 20+ */
+            break-inside: avoid-column;         /* IE 11 */
+            display:table;
+
+            &__label {
+                font-size: 12px;
+                color: palette-get(na-black-40);
+            }
+            &__value {
+                font-size: 12px;
+                color: palette-get(na-black);
+            }
+        }
+
+    }
 
 }
 
