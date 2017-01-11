@@ -177,6 +177,10 @@ export class MapboxMap {
             this.popup.style("display", "block");
 
             this.map.setFilter("click-layer", ["==", "GEOID2", feature.properties.GEOID2]);
+            this.map.flyTo({
+                center: e.lngLat,
+                zoom: 7
+            });
         });
     }
 

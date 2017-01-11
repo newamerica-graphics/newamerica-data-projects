@@ -14,6 +14,7 @@ let variables = {
     ncua: {"variable":"ncua", "displayName":"Credit Unions", "format": "number"},
     usps: {"variable":"usps", "displayName":"Post Offices", "format": "number"},
     totpop: {"variable":"TOTPOP", "displayName":"Total Population", "format": "number"},
+    black: {"variable":"BLACK", "displayName":"Black", "format": "percent_no_multiply"},
     white: {"variable":"WHITE", "displayName":"White", "format": "percent_no_multiply"},
     aian: {"variable":"AIAN", "displayName":"American Indian/Alaskan Native", "format": "percent_no_multiply"},
     asian: {"variable":"ASIAN", "displayName":"Asian/Native Hawaiian/Other Pacific Islander", "format": "percent_no_multiply"},
@@ -27,6 +28,11 @@ let variables = {
     titleloan: {"variable":"titleloan", "displayName":"Auto and Other Title Loans", "format": "number"},
     pawn: {"variable":"pawn", "displayName":"Pawnbrokers and Furniture Rentals", "format": "number"},
     tax: {"variable":"tax", "displayName":"Tax Return and Filing Services", "format": "number"},
+    irsVita: {"variable":"irs-vita", "displayName":"IRS-VITA", "format": "number"},
+    bankon: {"variable":"bankon", "displayName":"Bank On City", "format": "number"},
+    cdfi: {"variable":"cdfi", "displayName":"CDFI", "format": "number"},
+    ida: {"variable":"ida", "displayName":"IDA", "format": "number"},
+    nfccFec: {"variable":"nfcc-fec", "displayName":"NFCC-FEC", "format": "number"},
 
     county_altpc: {"variable":"altpc", "displayName":"Alt. Financial Services Per 10,000 People", "format": "number_per_ten_thousand",  "scaleType": "quantize", "customDomain":[0, 0.000839], "customRange":[colors.white, colors.white, colors.red.dark], "numBins":3},
     county_tradpc: {"variable":"tradpc", "displayName":"Mainstream Financial Services Per 10,000 People", "format": "number_per_ten_thousand",  "scaleType": "quantize", "customDomain":[0, 0.003727], "customRange":[colors.white, colors.white, colors.turquoise.dark], "numBins":3},
@@ -92,8 +98,8 @@ let vizSettingsList = [
             },
         ],
         tooltipVars: {
-            "Economic Metrics":[variables.medhhinc, variables.fampov, variables.medval],
-            "Population Demographics": [variables.totpop, variables.minority, variables.aian, variables.asian, variables.tworace, variables.white, variables.hispanic],
+            "Economic Metrics": [variables.medhhinc, variables.fampov, variables.medval],
+            "Population Demographics": [variables.totpop, variables.minority, variables.aian, variables.asian, variables.black, variables.tworace, variables.white, variables.hispanic],
             "Financial Services": [variables.bank2014, variables.ncua2014, variables.checkcash, variables.moneyorder, variables.payday, variables.titleloan, variables.pawn, variables.tax]
         },
         insetMapSettings: insetMapSettings,
@@ -119,6 +125,37 @@ let vizSettingsList = [
         tooltipVars: [variables.county_altpertrad, variables.county_altpc, variables.county_tradpc],
         insetMapSettings: false,
         popupContentFunction: countyMapSetPopupContent
+    },
+    {
+        id: "#financial-opportunity__census-tract-map-other-services", 
+        vizType: "mapbox_map",
+        mapboxStyleUrl: "mapbox://styles/newamericamapbox/cixql9hl200762rp5qynmxcfe",
+        source: {
+            id:'census-tracts',
+            sourceLayer: 'CensusTracts_2014data2K_2-3r3ays',
+            url: 'mapbox://newamericamapbox.7zun44wf'
+        },
+        existingLayers: [variables.irsVita, variables.bankon, variables.cdfi, variables.ida, variables.nfccFec],
+        additionalLayers: [variables.minority, variables.medhhinc, variables.fampov, variables.medval],
+        // toggleOffLayers: [variables.ncua, variables.usps],
+        filters: [
+            {
+                filterVars: [variables.irsVita, variables.bankon, variables.cdfi, variables.ida, variables.nfccFec],
+                toggleInsets: true,
+                canToggleMultiple: true
+            },
+            {
+                filterVars: [variables.minority, variables.medhhinc, variables.fampov, variables.medval],
+                toggleInsets: false,
+                canToggleMultiple: false
+            },
+        ],
+        tooltipVars: {
+            "Economic Metrics": [variables.medhhinc, variables.fampov, variables.medval],
+            "Population Demographics": [variables.totpop, variables.minority, variables.aian, variables.asian, variables.black, variables.tworace, variables.white, variables.hispanic],
+        },
+        insetMapSettings: false,
+        popupContentFunction: censusTractMapSetPopupContent
     },
 ]
 
