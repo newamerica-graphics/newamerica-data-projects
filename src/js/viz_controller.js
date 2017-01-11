@@ -38,71 +38,74 @@ export function setupProject(projectSettings) {
 
 	function initialize() {
 
+
 		for (let vizSettingsObject of vizSettingsList) {
-			let viz;
-			switch (vizSettingsObject.vizType) {
-				case "bar_chart":
-					viz = new BarChart(vizSettingsObject, imageFolderId);
-					break;
+			if($(vizSettingsObject.id).length != 0) {
+				let viz;
+				switch (vizSettingsObject.vizType) {
+					case "bar_chart":
+						viz = new BarChart(vizSettingsObject, imageFolderId);
+						break;
 
-				case "bipartite":
-					viz = new Bipartite(vizSettingsObject, imageFolderId);
-					break;
+					case "bipartite":
+						viz = new Bipartite(vizSettingsObject, imageFolderId);
+						break;
 
-				case "chart_with_fact_box":
-					viz = new ChartWithFactBox(vizSettingsObject, imageFolderId);
-					break;
+					case "chart_with_fact_box":
+						viz = new ChartWithFactBox(vizSettingsObject, imageFolderId);
+						break;
 
-				case "dashboard":
-					viz = new Dashboard(vizSettingsObject);
-					break;
+					case "dashboard":
+						viz = new Dashboard(vizSettingsObject);
+						break;
 
-				case "dot_matrix":
-					viz = new DotMatrix(vizSettingsObject, imageFolderId);
-					break;
+					case "dot_matrix":
+						viz = new DotMatrix(vizSettingsObject, imageFolderId);
+						break;
 
-				case "dot_histogram":
-					viz = new DotHistogram(vizSettingsObject, imageFolderId);
-					break;
+					case "dot_histogram":
+						viz = new DotHistogram(vizSettingsObject, imageFolderId);
+						break;
 
-				case "fact_box":
-					viz = new FactBox(vizSettingsObject);
-					break;
-				
-				case "grouped_dot_matrix":
-					viz = new GroupedDotMatrix(vizSettingsObject, imageFolderId);
-					break;
+					case "fact_box":
+						viz = new FactBox(vizSettingsObject);
+						break;
+					
+					case "grouped_dot_matrix":
+						viz = new GroupedDotMatrix(vizSettingsObject, imageFolderId);
+						break;
 
-				case "line_chart":
-					viz = new LineChart(vizSettingsObject);
-					break;
+					case "line_chart":
+						viz = new LineChart(vizSettingsObject);
+						break;
 
-				case "mapbox_map":
-					viz = new MapboxMap(vizSettingsObject);
-					break;
+					case "mapbox_map":
+						viz = new MapboxMap(vizSettingsObject);
+						break;
 
-				case "pie_chart":
-					viz = new PieChart(vizSettingsObject);
-					break;
+					case "pie_chart":
+						viz = new PieChart(vizSettingsObject);
+						break;
 
-				case "summary_box":
-					viz = new SummaryBox(vizSettingsObject);
-					break;
+					case "summary_box":
+						viz = new SummaryBox(vizSettingsObject);
+						break;
 
-				case "tabbed_chart_layout":
-					viz = new TabbedChartLayout(vizSettingsObject);
-					break;
+					case "tabbed_chart_layout":
+						viz = new TabbedChartLayout(vizSettingsObject);
+						break;
 
-				case "table":
-					viz = new Table(vizSettingsObject);
-					break;
+					case "table":
+						viz = new Table(vizSettingsObject);
+						break;
 
-				case "topo_json_map":
-					viz = new TopoJsonMap(vizSettingsObject);
-					break;
+					case "topo_json_map":
+						viz = new TopoJsonMap(vizSettingsObject);
+						break;
+				}
+
+				vizList.push(viz);
 			}
-
-			vizList.push(viz);
 		}
 
 		

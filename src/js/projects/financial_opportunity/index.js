@@ -141,7 +141,7 @@ let vizSettingsList = [
         filters: [
             {
                 filterVars: [variables.irsVita, variables.bankon, variables.cdfi, variables.ida, variables.nfccFec],
-                toggleInsets: true,
+                toggleInsets: false,
                 canToggleMultiple: true
             },
             {

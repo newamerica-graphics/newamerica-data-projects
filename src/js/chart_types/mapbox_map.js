@@ -31,11 +31,13 @@ export class MapboxMap {
         this.popupContentFunction = popupContentFunction;
         this.toggleOffLayers = toggleOffLayers;
 
+
         let mapContainer = d3.select(id).append("div")
             .attr("id", id.replace("#", "") + '-map-container')
             .style("width", "100%")
             .style("height", "700px");
 
+        console.log($(id));
         this.map = new mapboxgl.Map({
             container: id.replace("#", "") + '-map-container',
             style: mapboxStyleUrl,
