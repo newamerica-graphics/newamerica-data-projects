@@ -13,7 +13,7 @@ import { LineChart } from "../chart_types/line_chart.js";
 export class ChartWithFactBox {
 	constructor(vizSettings, imageFolderId) {
 		let { id, primaryDataSheet, chartSettings, factBoxSettings } = vizSettings;
-
+		this.id = id;
 		factBoxSettings.id = id;
 		factBoxSettings.factBoxType = "simple";
 		factBoxSettings.primaryDataSheet = primaryDataSheet;

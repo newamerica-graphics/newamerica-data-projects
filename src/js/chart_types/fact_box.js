@@ -9,6 +9,7 @@ export class FactBox {
 	constructor(vizSettings) {
 		let { id, factBoxType, factBoxVals, primaryDataSheet, alignment } = vizSettings;
 
+		this.id = id;
 		this.factBoxType = factBoxType;
 		this.factBoxVals = factBoxVals;
 		this.numBoxes = factBoxVals.length;

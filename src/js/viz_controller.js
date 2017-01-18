@@ -105,6 +105,8 @@ export function setupProject(projectSettings) {
 				}
 
 				vizList.push(viz);
+			} else {
+				hideLoadingGif(vizSettingsObject.id);
 			}
 		}
 
@@ -144,6 +146,7 @@ export function setupProject(projectSettings) {
 
 	function hideLoadingGif(id) {
 		console.log("hiding loading gif");
+		console.log(id);
 		$(id).siblings(".dataviz__loading-gif").hide();
 	}
 

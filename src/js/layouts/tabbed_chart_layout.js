@@ -10,7 +10,7 @@ import { Dashboard } from "./dashboard.js";
 export class TabbedChartLayout {
 	constructor(vizSettings) {
 		let { id, primaryDataSheet, chartSettingsList } = vizSettings;
-
+		this.id = id;
 		this.chartToggle = new ChartToggle(id);
 		this.vizList = [];
 		let i = 0;
