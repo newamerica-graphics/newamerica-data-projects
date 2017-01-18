@@ -9,10 +9,10 @@ let variables = {
     minority: {"variable":"MINORITY", "displayName":"Minority Total", "format": "number", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
     fampov: {"variable":"FAMPOV", "displayName":"% Families Below Poverty Line", "format": "number", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
     medval: {"variable":"MEDVAL", "displayName":"Median Value of Owner-Occupied Units", "format": "price", "scaleType": "quantize", "customDomain":[0, 1000000], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
-    banks: {"variable":"banks", "displayName":"Banks", "format": "number"},
-    altcredit: {"variable":"altcredit", "displayName":"Alternative Credit", "format": "number"},
-    ncua: {"variable":"ncua", "displayName":"Credit Unions", "format": "number"},
-    usps: {"variable":"usps", "displayName":"Post Offices", "format": "number"},
+    banks: {"variable":"banks", "displayName":"Banks", "format": "number", "color":"#2dc6bf"},
+    altcredit: {"variable":"altcredit", "displayName":"Alternative Credit", "format": "number", "color":"#f24b56"},
+    ncua: {"variable":"ncua", "displayName":"Credit Unions", "format": "number", "color":"#9773c7"},
+    usps: {"variable":"usps", "displayName":"Post Offices", "format": "number", "color":"#f2e079"},
     totpop: {"variable":"TOTPOP", "displayName":"Total Population", "format": "number"},
     black: {"variable":"BLACK", "displayName":"Black", "format": "percent_no_multiply"},
     white: {"variable":"WHITE", "displayName":"White", "format": "percent_no_multiply"},
@@ -28,11 +28,11 @@ let variables = {
     titleloan: {"variable":"titleloan", "displayName":"Auto and Other Title Loans", "format": "number"},
     pawn: {"variable":"pawn", "displayName":"Pawnbrokers and Furniture Rentals", "format": "number"},
     tax: {"variable":"tax", "displayName":"Tax Return and Filing Services", "format": "number"},
-    irsVita: {"variable":"irs-vita", "displayName":"IRS-VITA", "format": "number"},
-    bankon: {"variable":"bankon", "displayName":"Bank On City", "format": "number"},
-    cdfi: {"variable":"cdfi", "displayName":"CDFI", "format": "number"},
-    ida: {"variable":"ida", "displayName":"IDA", "format": "number"},
-    nfccFec: {"variable":"nfcc-fec", "displayName":"NFCC-FEC", "format": "number"},
+    irsVita: {"variable":"irs-vita", "displayName":"IRS-VITA", "format": "number", "color":colors.blue.light},
+    bankon: {"variable":"bankon", "displayName":"Bank On City", "format": "number", "color":colors.turquoise.light},
+    cdfi: {"variable":"cdfi", "displayName":"CDFI", "format": "number", "color":colors.purple.light},
+    ida: {"variable":"ida", "displayName":"IDA", "format": "number", "color":colors.turquoise.dark},
+    nfccFec: {"variable":"nfcc-fec", "displayName":"NFCC-FEC", "format": "number", "color":colors.blue.dark},
 
     county_altpc: {"variable":"altpc", "displayName":"Alt. Financial Services Per 10,000 People", "format": "number_per_ten_thousand",  "scaleType": "quantize", "customDomain":[0, 0.000839], "customRange":[colors.white, colors.white, colors.red.dark], "numBins":3},
     county_tradpc: {"variable":"tradpc", "displayName":"Mainstream Financial Services Per 10,000 People", "format": "number_per_ten_thousand",  "scaleType": "quantize", "customDomain":[0, 0.003727], "customRange":[colors.white, colors.white, colors.turquoise.dark], "numBins":3},
@@ -94,7 +94,8 @@ let vizSettingsList = [
             {
                 filterVars: [variables.medhhinc, variables.minority, variables.fampov, variables.medval],
                 toggleInsets: false,
-                canToggleMultiple: false
+                canToggleMultiple: false,
+                label: true
             },
         ],
         tooltipVars: {
@@ -146,7 +147,8 @@ let vizSettingsList = [
             {
                 filterVars: [variables.minority, variables.medhhinc, variables.fampov, variables.medval],
                 toggleInsets: false,
-                canToggleMultiple: false
+                canToggleMultiple: false,
+                label: true
             },
         ],
         tooltipVars: {

@@ -193,46 +193,64 @@ export class MapboxMap {
         let i = 0;
         for (let filter of this.filters) {
             let currFilter = filterGroupContainer.append("div")
-                .attr("class", "mapbox-map__filter-group")
                 .attr("id", "filter-" + i);
 
-            this.addFilter(currFilter, filter.filterVars, filter.toggleInsets, filter.canToggleMultiple);
+            if (filter.canToggleMultiple) {
+                this.addMultiToggleFilter(currFilter, filter.filterVars, filter.toggleInsets);
+            } else {
+                this.addSelectFilter(currFilter, filter.filterVars, filter.label);
+            }
             i++;
         }
     }
 
-    addFilter(filterDomElem, filterVars, toggleInsets, canToggleMultiple) {
+    addSelectFilter(filterDomElem, filterVars, hasLabel) {
+        filterDomElem.attr("class", "mapbox-map__filter-group select");
+
+        if (hasLabel) {
+            filterDomElem.append("div")
+                .attr("class", "mapbox-map__filter-group__label")
+                .text("Base Layer:");
+        }
+
+        let selectBox = filterDomElem.append('select')
+            .attr("class", "mapbox-map__filter-group__select")
+            .classed("has-label", hasLabel)
+            .on("change", (a, b, c) => {
+                let selectedIndex = d3.event.srcElement.selectedIndex;
+                for (let i = 0; i < filterVars.length; i++) {
+                    let visibility = i == selectedIndex ? 'visible' : 'none';
+                    this.map.setLayoutProperty(filterVars[i].variable, 'visibility', visibility);
+                }
+            });
+
+        for (let i = 0; i < filterVars.length; i++) {
+            selectBox.append('option')
+                .text(filterVars[i].displayName);
+        }
+    }
+
+    addMultiToggleFilter(filterDomElem, filterVars, toggleInsets) {
+        filterDomElem.attr("class", "mapbox-map__filter-group multi-toggle")
         let map = this.map;
         let toggleInsetFunction = this.toggleInsetMaps.bind(this);
         for (let i = 0; i < filterVars.length; i++) {
             let id = filterVars[i].variable;
 
-            filterDomElem.append('a')
-                .attr("href", '#')
+            let currFilter = filterDomElem.append('div')
+                .attr("class", "mapbox-map__filter-group__multi-toggle-option")
                 .classed("active", () => {
-                    if (canToggleMultiple) {
-                        if (this.toggleOffLayers) {
-                            for (let layer of this.toggleOffLayers) {
-                                if (layer.variable === filterVars[i].variable) {
-                                    return false;
-                                }
+                    if (this.toggleOffLayers) {
+                        for (let layer of this.toggleOffLayers) {
+                            if (layer.variable === filterVars[i].variable) {
+                                return false;
                             }
                         }
-                        return true;
                     }
-                    
-                    return i == 0;
+                    return true;
                 })
-                .text(filterVars[i].displayName)
                 .attr("value", id)
                 .on("click", (a, index, elem) => {
-                    if (!canToggleMultiple) {
-                        filterDomElem.select(".active").classed("active", false);
-                        for (let filterVar of filterVars) {
-                            this.map.setLayoutProperty(filterVar.variable, 'visibility', 'none');
-                            toggleInsets ? toggleInsetMaps(layer, 'none') : null;
-                        }
-                    }
                     var clickedLayer = d3.select(elem[0]).attr("value");
                     d3.event.preventDefault();
                     d3.event.stopPropagation();
@@ -249,6 +267,19 @@ export class MapboxMap {
                         this.map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
                     }
                 });
+
+            currFilter.append("svg")
+                .attr("height", 10)
+                .attr("width", 10)
+              .append("circle")
+                .attr("r", 4)
+                .attr("cx", 5)
+                .attr("cy", 5)
+                .attr("fill", filterVars[i].color)
+
+
+            currFilter.append("h5")
+                .text(filterVars[i].displayName);
         }
     }
 

@@ -1,21 +1,96 @@
 .mapbox-map {
+    $select-filter-group-width: 325px;
+    $select-filter-group-label-width: 100px;
 	&__filter-group {
         background: #fff;
         position: absolute;
         z-index: 1;
-        top: 15px;
+        top: 10px;
         /*border-radius: 5px;*/
-        width: 175px;
+        
         border: 1px solid palette-get(na-black-10);
-        font-weight: bold;
+
+        &.select {
+            width: $select-filter-group-width;
+            display: table;
+            height: 40px;
+        }
+
+        &.multi-toggle {
+            width: 200px;
+            padding: 10px 0px;
+        }
+
+        &__label, &__select {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        &__label {
+            font-weight: bold;
+            width: $select-filter-group-label-width;
+            font-size: 14px;
+            border-right: 1px solid palette-get(na-black-10);
+            padding: 8px 10px;
+        }
+
+        &__select {
+            margin-bottom: 0px !important;
+            border: none !important;
+            color: palette-get(na-black-40);
+            font-size: 14px;
+            padding-top: 0px !important;
+            padding-bottom: 0px !important;
+
+            width: $select-filter-group-width;
+
+            &.has-label {
+                width: $select-filter-group-width - $select-filter-group-label-width;
+            }
+        }
     
 	    &:last-of-type {
-	        right: 195px;
+	        right: 225px;
 	    }
 
 	    &:first-of-type {
 	        right: 15px;
 	    }
+
+        input, select {
+            height: 40px;
+
+        }
+
+        &__multi-toggle-option {
+            cursor: pointer;
+            h5, svg {
+                display: inline-block;
+            }
+
+            h5 {
+                color: palette-get(na-black-40);
+                font-size: 14px;
+            }
+
+            svg {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+
+            &.active {
+                h5 {
+                    color: palette-get(na-black);
+                }
+            }
+            &:not(.active) {
+                svg > circle {
+                    fill: none;
+                    stroke: palette-get(na-black-10);
+                    stroke-width: 1px;
+                }
+            }
+        }
 
 	    & a {
 	        font-size: 13px;
@@ -175,9 +250,9 @@
 .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl { margin:0 10px 10px 0; float:right; }
 
 .mapboxgl-ctrl-group {
-    -moz-box-shadow: 0px 0px 2px rgba(0,0,0,0.1);
-    -webkit-box-shadow: 0px 0px 2px rgba(0,0,0,0.1);
-    box-shadow: 0px 0px 0px 2px rgba(0,0,0,0.1);
+    /*-moz-box-shadow: 0px 0px 2px rgba(0,0,0,0.1);
+    -webkit-box-shadow: 0px 0px 2px rgba(0,0,0,0.1);*/
+    /*box-shadow: 0px 0px 0px 2px rgba(0,0,0,0.1);*/
     border: 1px solid palette-get(na-black-10);
     overflow: hidden;
     background: #fff;
@@ -236,6 +311,7 @@
 .mapboxgl-ctrl-geocoder {
     border-radius: 0px !important;
     border: 1px solid palette-get(na-black-10);
+    box-shadow: none;
 }
 
 .mapboxgl-ctrl.mapboxgl-ctrl-attrib {
