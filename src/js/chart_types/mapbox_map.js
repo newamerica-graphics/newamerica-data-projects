@@ -179,9 +179,10 @@ export class MapboxMap {
             this.popup.style("display", "block");
 
             this.map.setFilter("click-layer", ["==", "GEOID2", feature.properties.GEOID2]);
+            let newZoom = this.map.getZoom() < 7 ? 7 : this.map.getZoom();
             this.map.flyTo({
                 center: e.lngLat,
-                zoom: 7
+                zoom: newZoom
             });
         });
     }
@@ -260,16 +261,21 @@ export class MapboxMap {
         for (let settingsObject of this.insetMapSettings) {
             insetContainer.append("div")
                 .attr('class', 'mapbox-map__inset')
-                .attr("id", 'inset-map-' + i);
+                .attr("id", 'inset-map-' + i)
+                .on("click", () => { 
+                    this.map.flyTo({
+                        center: settingsObject.center,
+                        zoom: 7
+                    })
+                });
 
            let insetMap = new mapboxgl.Map({
                 container: 'inset-map-' + i,
                 style: 'mapbox://styles/newamericamapbox/civcm5ziy00d92imrwswlo1wv',
                 zoom: settingsObject.zoom,
-                minZoom: settingsObject.zoom,
                 center: settingsObject.center,
                 attributionControl: false,
-                dragPan: false
+                interactive: false
             });
 
             // if (this.toggleOffLayers) {

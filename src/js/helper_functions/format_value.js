@@ -10,8 +10,10 @@ export function formatValue(value, format) {
 	switch(format) {
 		case "number":
 			return d3.format(",")(value);
+		case "number_with_decimal_2":
+			return d3.format(",.2f")(value);
 		case "number_per_ten_thousand":
-			return d3.format(",")(Number(value)*10000);
+			return d3.format(",.2f")(Number(value)*10000);
 		case "integer":
 			return Math.round(value);
 		case "year":

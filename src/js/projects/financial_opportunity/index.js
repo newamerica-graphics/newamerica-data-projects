@@ -6,7 +6,7 @@ import { formatValue } from "../../helper_functions/format_value.js";
 
 let variables = {
     medhhinc: {"variable":"MEDHHINC", "displayName":"Median Household Income", "format": "price",  "scaleType": "quantize", "customDomain":[0, 250000], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
-    minority: {"variable":"MINORITY", "displayName":"% Minority", "format": "number", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
+    minority: {"variable":"MINORITY", "displayName":"Minority Total", "format": "number", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
     fampov: {"variable":"FAMPOV", "displayName":"% Families Below Poverty Line", "format": "number", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
     medval: {"variable":"MEDVAL", "displayName":"Median Value of Owner-Occupied Units", "format": "price", "scaleType": "quantize", "customDomain":[0, 1000000], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
     banks: {"variable":"banks", "displayName":"Banks", "format": "number"},
@@ -36,7 +36,7 @@ let variables = {
 
     county_altpc: {"variable":"altpc", "displayName":"Alt. Financial Services Per 10,000 People", "format": "number_per_ten_thousand",  "scaleType": "quantize", "customDomain":[0, 0.000839], "customRange":[colors.white, colors.white, colors.red.dark], "numBins":3},
     county_tradpc: {"variable":"tradpc", "displayName":"Mainstream Financial Services Per 10,000 People", "format": "number_per_ten_thousand",  "scaleType": "quantize", "customDomain":[0, 0.003727], "customRange":[colors.white, colors.white, colors.turquoise.dark], "numBins":3},
-    county_altpertrad: {"variable":"altpertrad", "displayName":"Ratio of Alt. Financial Services to Mainstream", "format": "number",  "scaleType": "quantize", "customDomain":[0, 3], "customRange":[colors.white, colors.white, colors.purple.dark], "numBins":3},
+    county_altpertrad: {"variable":"altpertrad", "displayName":"Ratio of Alt. Financial Services to Mainstream", "format": "number_with_decimal_2",  "scaleType": "quantize", "customDomain":[0, 3], "customRange":[colors.white, colors.white, colors.purple.dark], "numBins":3},
 };
 
 let insetMapSettings = [
@@ -99,8 +99,7 @@ let vizSettingsList = [
         ],
         tooltipVars: {
             "Economic Metrics": [variables.medhhinc, variables.fampov, variables.medval],
-            "Population Demographics": [variables.totpop, variables.minority, variables.aian, variables.asian, variables.black, variables.tworace, variables.white, variables.hispanic],
-            "Financial Services": [variables.bank2014, variables.ncua2014, variables.checkcash, variables.moneyorder, variables.payday, variables.titleloan, variables.pawn, variables.tax]
+            "Population Demographics": [variables.totpop, variables.minority, variables.aian, variables.asian, variables.black, variables.white, variables.tworace, variables.hispanic],
         },
         insetMapSettings: insetMapSettings,
         popupContentFunction: censusTractMapSetPopupContent
@@ -155,7 +154,7 @@ let vizSettingsList = [
             "Population Demographics": [variables.totpop, variables.minority, variables.aian, variables.asian, variables.black, variables.tworace, variables.white, variables.hispanic],
         },
         insetMapSettings: false,
-        popupContentFunction: censusTractMapSetPopupContent
+        popupContentFunction: censusTractOtherServicesMapSetPopupContent
     },
 ]
 
@@ -166,6 +165,70 @@ let projectSettings = {
 setupProject(projectSettings);
 
 function censusTractMapSetPopupContent(feature) {
+    console.log(this);
+    let splitPieces = feature.properties.Geography.split(", ");
+
+    console.log(feature.properties);
+
+    let popupProperties = "";
+
+    for (let key in this.tooltipVars) {
+        console.log(key);
+        popupProperties += "<div class='mapbox-map__popup__category-container'>" +
+            "<h5 class='mapbox-map__popup__category-label'>" + key + "</h5>" +
+            "<ul class='mapbox-map__popup__property-list'>";
+
+        let values = this.tooltipVars[key];
+        for (let i = 0; i < values.length; i++) {
+            let currVar = values[i];
+            popupProperties += "<li class='mapbox-map__popup__property'>" +
+                        "<h5 class='mapbox-map__popup__property__label'>" + currVar.displayName + "</h5>" +
+                        "<h5 class='mapbox-map__popup__property__value'>" + formatValue(feature.properties[currVar.variable], currVar.format)  + "</h5>" +
+                    "</li>";
+        }
+        popupProperties += "</ul></div>";
+    }
+
+    let tradTotal = 0,
+        altTotal = 0;
+
+    tradTotal += feature.properties[variables.bank2014.variable]
+        + feature.properties[variables.ncua2014.variable];
+
+    altTotal += feature.properties[variables.checkcash.variable]
+        + feature.properties[variables.moneyorder.variable]
+        + feature.properties[variables.payday.variable]
+        + feature.properties[variables.titleloan.variable]
+        + feature.properties[variables.pawn.variable]
+        + feature.properties[variables.tax.variable];
+
+    console.log(tradTotal);
+    console.log(altTotal);
+
+    popupProperties += "<div class='mapbox-map__popup__category-container'>" +
+            "<h5 class='mapbox-map__popup__category-label'>Financial Services</h5>" +
+            "<ul class='mapbox-map__popup__property-list'>";
+
+    popupProperties += "<li class='mapbox-map__popup__property'>" +
+            "<h5 class='mapbox-map__popup__property__label'>Traditional Financial Services</h5>" +
+            "<h5 class='mapbox-map__popup__property__value'>" + formatValue(tradTotal, "number")  + "</h5>" +
+        "</li>";
+
+    popupProperties += "<li class='mapbox-map__popup__property'>" +
+            "<h5 class='mapbox-map__popup__property__label'>Alternative Financial Services</h5>" +
+            "<h5 class='mapbox-map__popup__property__value'>" + formatValue(altTotal, "number")  + "</h5>" +
+        "</li>";
+        
+        popupProperties += "</ul></div>";
+
+
+    return "<h5 class='mapbox-map__popup__subheading'>" + splitPieces[2] + "</h5>" +
+    "<h3 class='mapbox-map__popup__heading'>" + splitPieces[1] + "</h3>" +
+    "<h5 class='mapbox-map__popup__subheading'>" + splitPieces[0] + "</h5>" +
+    "<div class='mapbox-map__popup__properties'>" + popupProperties + "</div>"
+}
+
+function censusTractOtherServicesMapSetPopupContent(feature) {
     console.log(this);
     let splitPieces = feature.properties.Geography.split(", ");
 

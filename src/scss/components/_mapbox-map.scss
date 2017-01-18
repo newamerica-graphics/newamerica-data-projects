@@ -4,9 +4,9 @@
         position: absolute;
         z-index: 1;
         top: 15px;
-        border-radius: 5px;
+        /*border-radius: 5px;*/
         width: 175px;
-        border: 2px solid palette-get(na-black-10);
+        border: 1px solid palette-get(na-black-10);
         font-weight: bold;
     
 	    &:last-of-type {
@@ -84,8 +84,8 @@
         width: 415px;
         padding: 25px;
         background-color: white;
-        border-radius: 5px;
-        border: 2px solid palette-get(na-black-10);
+        /*border-radius: 5px;*/
+        border: 1px solid palette-get(na-black-10);
 
         &__category-container {
             width: 100%;
@@ -175,10 +175,10 @@
 .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl { margin:0 10px 10px 0; float:right; }
 
 .mapboxgl-ctrl-group {
-    border-radius: 4px;
     -moz-box-shadow: 0px 0px 2px rgba(0,0,0,0.1);
     -webkit-box-shadow: 0px 0px 2px rgba(0,0,0,0.1);
     box-shadow: 0px 0px 0px 2px rgba(0,0,0,0.1);
+    border: 1px solid palette-get(na-black-10);
     overflow: hidden;
     background: #fff;
 }
@@ -189,7 +189,7 @@
     padding: 0;
     outline: none;
     border: none;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid palette-get(na-black-10);
     box-sizing: border-box;
     background-color: rgba(0,0,0,0);
     cursor: pointer;
@@ -231,6 +231,11 @@
     background-image: url("data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2020%2020%27%3E%0A%09%3Cpolygon%20fill%3D%27%23333333%27%20points%3D%276%2C9%2010%2C1%2014%2C9%27%2F%3E%0A%09%3Cpolygon%20fill%3D%27%23CCCCCC%27%20points%3D%276%2C11%2010%2C19%2014%2C11%20%27%2F%3E%0A%3C%2Fsvg%3E");
     background-repeat: no-repeat;
     display: inline-block;
+}
+
+.mapboxgl-ctrl-geocoder {
+    border-radius: 0px !important;
+    border: 1px solid palette-get(na-black-10);
 }
 
 .mapboxgl-ctrl.mapboxgl-ctrl-attrib {
@@ -363,7 +368,7 @@
 .mapboxgl-popup-content {
     position: relative;
     background: #fff;
-    border-radius: 3px;
+    /*border-radius: 3px;*/
     box-shadow: 0 1px 2px rgba(0,0,0,0.10);
     padding: 10px 10px 15px;
     pointer-events: auto;
