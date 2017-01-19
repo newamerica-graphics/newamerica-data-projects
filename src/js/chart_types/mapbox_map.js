@@ -30,6 +30,7 @@ export class MapboxMap {
         this.insetMapSettings = insetMapSettings;
         this.popupContentFunction = popupContentFunction;
         this.toggleOffLayers = toggleOffLayers;
+        this.colorStops = {};
 
 
         let mapContainer = d3.select(id).append("div")
@@ -109,6 +110,7 @@ export class MapboxMap {
             }
 
             console.log(fillColorStops);
+            this.colorStops[currLayer.variable] = fillColorStops;
             this.map.addLayer(
                 {
                     'id': currLayer.variable,
