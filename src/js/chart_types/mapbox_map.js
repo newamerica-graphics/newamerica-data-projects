@@ -99,7 +99,7 @@ export class MapboxMap {
             let dataSpread = dataMax - dataMin;
             dataSpread -= dataSpread/4;
             let binInterval = dataSpread/numBins;
-            
+
 
             this.additionalLayerNames.push(currLayer.variable);
 
@@ -232,7 +232,7 @@ export class MapboxMap {
                 }
 
                 this.currToggledIndex = selectedIndex;
-                this.addLegend()
+                this.setLegendContents()
             });
 
         for (let i = 0; i < filterVars.length; i++) {
@@ -347,14 +347,19 @@ export class MapboxMap {
     }
 
     addLegend() {
-        let currColorStops = this.colorStops[this.currToggledIndex];
-        console.log(currColorStops);
-        this.legend = d3.select(this.id)
+        this.legend = d3.select(this.id + " .mapboxgl-canvas-container")
             .append("div")
             .attr("class", "mapbox-map__legend")
 
         this.cellContainer = this.legend.append("div")
             .attr("class", "mapbox-map__legend__cell-container");
+
+        this.setLegendContents();
+    }
+
+    setLegendContents() {
+        let currColorStops = this.colorStops[this.currToggledIndex];
+        console.log(currColorStops);
 
         this.cellList ? this.cellList.remove() : null;
         this.cellList = this.cellContainer.append("ul")
