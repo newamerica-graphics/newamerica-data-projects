@@ -30,7 +30,8 @@ export class MapboxMap {
         this.insetMapSettings = insetMapSettings;
         this.popupContentFunction = popupContentFunction;
         this.toggleOffLayers = toggleOffLayers;
-        this.colorStops = {};
+        this.colorStops = [];
+        this.currToggledIndex = 0;
 
 
         let mapContainer = d3.select(id).append("div")
@@ -73,6 +74,8 @@ export class MapboxMap {
             this.addTooltip();
 
             this.addFilters();
+
+            this.addLegend();
         });
 
     }
@@ -94,7 +97,9 @@ export class MapboxMap {
                 dataMin = currLayer.customDomain[0],
                 dataMax = currLayer.customDomain[1];
             let dataSpread = dataMax - dataMin;
+            dataSpread -= dataSpread/4;
             let binInterval = dataSpread/numBins;
+            
 
             this.additionalLayerNames.push(currLayer.variable);
 
@@ -110,7 +115,7 @@ export class MapboxMap {
             }
 
             console.log(fillColorStops);
-            this.colorStops[currLayer.variable] = fillColorStops;
+            this.colorStops[i] = fillColorStops;
             this.map.addLayer(
                 {
                     'id': currLayer.variable,
@@ -121,6 +126,7 @@ export class MapboxMap {
                     'paint': {
                         'fill-color': {
                             property: currLayer.variable,
+                            type: "interval",
                             stops: fillColorStops
                         },
                         'fill-opacity': {
@@ -224,6 +230,9 @@ export class MapboxMap {
                     let visibility = i == selectedIndex ? 'visible' : 'none';
                     this.map.setLayoutProperty(filterVars[i].variable, 'visibility', visibility);
                 }
+
+                this.currToggledIndex = selectedIndex;
+                this.addLegend()
             });
 
         for (let i = 0; i < filterVars.length; i++) {
@@ -335,6 +344,77 @@ export class MapboxMap {
             this.colorScales[i] = getColorScale(null, this.additionalLayers[i]);
         }
         console.log(this.colorScales[0].range());
+    }
+
+    addLegend() {
+        let currColorStops = this.colorStops[this.currToggledIndex];
+        console.log(currColorStops);
+        this.legend = d3.select(this.id)
+            .append("div")
+            .attr("class", "mapbox-map__legend")
+
+        this.cellContainer = this.legend.append("div")
+            .attr("class", "mapbox-map__legend__cell-container");
+
+        this.cellList ? this.cellList.remove() : null;
+        this.cellList = this.cellContainer.append("ul")
+            .attr("class", "mapbox-map__legend__cell-list");
+
+        for (let i = 0; i < currColorStops.length; i++) {
+            let cell = this.cellList.append("li")
+                .attr("class", "mapbox-map__legend__cell");
+
+            cell.append("svg")
+                .attr("class", "mapbox-map__legend__color-swatch-container")
+                .attr("height", 10)
+                .attr("width", 10)
+               .append("rect")
+                .attr("class", "mapbox-map__legend__color-swatch")
+                .attr("x1", 0)
+                .attr("y1", 0)
+                .attr("height", 10)
+                .attr("width", 10)
+                .attr("fill", currColorStops[i][1]);
+
+            cell.append("h5")
+                .attr("class", "mapbox-map__legend__cell-label")
+                .text(this.getLegendCellLabel(currColorStops, i));
+
+        }
+
+        // [this.dataMin, this.dataMax] = this.colorScale.domain();
+        // let dataSpread = this.dataMax - this.dataMin;
+        // this.binInterval = dataSpread/this.numBins;
+        // this.legendCellDivs = [];
+
+        // for (let i = 0; i < this.numBins; i++) {
+        //     this.valsShown.push(i);
+        //     let cell = this.cellList.append("li")
+        //         .classed("legend__cell", true);
+
+        //     if (this.disableValueToggling) {
+        //         cell.style("cursor", "initial");
+        //     } else {
+        //         cell.on("click", () => { this.toggleValsShown(i); valChangedFunction(this.valsShown); });
+        //     }
+        //     this.appendCellMarker(cell, i);
+        //     valCounts ? this.appendValCount(cell, i, valCounts) : null;
+        //     this.appendCellText(cell, i, scaleType, format);
+            
+        //     this.legendCellDivs[i] = cell;
+        // }
+
+    }
+
+    getLegendCellLabel(currColorStops, i) {
+        let format = this.additionalLayers[this.currToggledIndex].format;
+        if (i == 0) {
+            return "Less than " + formatValue(currColorStops[1][0], format);
+        } else if (i == currColorStops.length - 1) {
+            return "More than " + formatValue(currColorStops[i][0], format);
+        } else {
+            return formatValue(currColorStops[i][0], format) + " - " + formatValue(currColorStops[i+1][0], format);
+        }
     }
 
     resize() {

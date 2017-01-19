@@ -212,6 +212,34 @@
 
     }
 
+    &__legend {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        background-color: white;
+        border: 1px solid palette-get(na-black-10);
+        padding: 10px 18px;
+
+        &__cell {
+            display: block;
+        }
+
+        &__color-swatch-container {
+            margin-right: 10px;
+        }
+
+        &__color-swatch, &__cell-label {
+            display: inline-block;
+        }
+
+        &__cell-label {
+            font-size: 14px;
+            color: palette-get(na-black-40);
+            margin-bottom: 0px;
+        }
+
+    }
+
 }
 
 .mapboxgl-map {
