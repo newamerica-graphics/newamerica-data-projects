@@ -21,7 +21,7 @@ export class MapboxMap {
             alert('Your browser does not support Mapbox GL');
             return;
         }
-        let {id, mapboxStyleUrl, additionalLayers, tooltipVars, insetMapSettings, source, filters, popupContentFunction, toggleOffLayers} = vizSettings;
+        let {id, mapboxStyleUrl, additionalLayers, tooltipVars, insetMapSettings, source, filters, popupContentFunction, popupColumns, toggleOffLayers} = vizSettings;
         this.id = id;
         this.source = source;
         this.filters = filters;
@@ -59,8 +59,18 @@ export class MapboxMap {
         this.addControls();
         
         this.popup = mapContainer.append("div")
-            .attr("class", "mapbox-map__popup")
+            .attr("class", "mapbox-map__popup columns-"  + popupColumns)
             .style("display", "none");
+
+        this.popupClose = this.popup.append("div")
+            .attr("class", "mapbox-map__popup__close")
+            .on("click", () => {
+                this.popup.style("display", "none");
+                this.map.setFilter("click-layer", ["==", "GEOID2", ""]);
+            });
+
+        this.popupContent = this.popup.append("div");
+
     }
 
     render() {
@@ -83,7 +93,7 @@ export class MapboxMap {
     addControls() {
         this.map.addControl(new mapboxgl.Geocoder({
             country:'us',
-            types: ['country', 'region', 'place', 'postcode']
+            types: ['country', 'region', 'district', 'place', 'postcode']
         }));
 
         this.map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));
@@ -115,6 +125,8 @@ export class MapboxMap {
             }
 
             console.log(fillColorStops);
+            console.log(this.colorScales[i].domain());
+            console.log(this.colorScales[i].range());
             this.colorStops[i] = fillColorStops;
             this.map.addLayer(
                 {
@@ -165,7 +177,7 @@ export class MapboxMap {
                 'fill-outline-color': colors.black
             },
             "filter": ["==", "GEOID2", ""]
-        },'water');
+        },'admin-2-boundaries-dispute');
     }
 
     addTooltip() {
@@ -181,10 +193,11 @@ export class MapboxMap {
 
             let feature = features[0];
            
-            this.popup
+            this.popupContent
                 .html(this.popupContentFunction(feature));
 
             this.popup.style("display", "block");
+
 
             this.map.setFilter("click-layer", ["==", "GEOID2", feature.properties.GEOID2]);
             let newZoom = this.map.getZoom() < 7 ? 7 : this.map.getZoom();
@@ -307,7 +320,7 @@ export class MapboxMap {
                 .on("click", () => { 
                     this.map.flyTo({
                         center: settingsObject.center,
-                        zoom: 7
+                        zoom: 9
                     })
                 });
 
