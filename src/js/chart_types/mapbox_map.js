@@ -13,7 +13,23 @@ let d3 = require("d3");
 mapboxgl.acessToken = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
 mapboxgl.config.ACCESS_TOKEN = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
 
-
+let cityCoords = [
+    {"city": "Baltimore", "ltLng":[-76.6122, 39.2904]},
+    {"city": "BatonRouge", "ltLng":[-91.1536895874024, 30.449347293721914]},
+    {"city": "Birmingham", "ltLng":[-86.8025, 33.5207]},
+    {"city": "Boston", "ltLng":[-71.0589, 42.3601]},
+    {"city": "Dallas", "ltLng":[-96.7970, 32.7767]},
+    {"city": "Jacksonville", "ltLng":[-81.6557, 30.3322]},
+    {"city": "KansasCity", "ltLng":[-94.56289298400809, 39.088708678050665]},
+    {"city": "Minneapolis", "ltLng":[-93.2650, 44.9778]},
+    {"city": "NewHaven", "ltLng":[-72.9279, 41.3083]},
+    {"city": "Oakland", "ltLng":[-122.2711, 37.8044]},
+    {"city": "Phoenix", "ltLng":[-112.0740, 33.4484]},
+    {"city": "Portland", "ltLng":[-122.6765, 45.5231]},
+    {"city": "SaltLakeCity", "ltLng":[-111.8910, 40.765545689215514]},
+    {"city": "Seattle", "ltLng":[-122.3321, 47.6062]},
+    {"city": "StLouis", "ltLng":[-90.1994, 38.6270]}
+];
 
 export class MapboxMap {
     constructor(vizSettings, imageFolderId) {
@@ -21,11 +37,12 @@ export class MapboxMap {
             alert('Your browser does not support Mapbox GL');
             return;
         }
-        let {id, mapboxStyleUrl, additionalLayers, tooltipVars, insetMapSettings, source, filters, popupContentFunction, popupColumns, toggleOffLayers} = vizSettings;
+        let {id, mapboxStyleUrl, additionalLayers, tooltipVars, insetMapSettings, source, filters, popupContentFunction, popupColumns, toggleOffLayers, existingLayers} = vizSettings;
         this.id = id;
         this.source = source;
         this.filters = filters;
         this.additionalLayers = additionalLayers;
+        this.existingLayers = existingLayers;
         this.tooltipVars = tooltipVars;
         this.insetMapSettings = insetMapSettings;
         this.popupContentFunction = popupContentFunction;
@@ -33,21 +50,25 @@ export class MapboxMap {
         this.colorStops = [];
         this.currToggledIndex = 0;
 
+        this.currSnapshotIndex = 0;
+
 
         let mapContainer = d3.select(id).append("div")
             .attr("id", id.replace("#", "") + '-map-container')
-            .style("width", "100%")
-            .style("height", "700px");
+            .style("width", "1350px")
+            .style("height", "1350px")
+            .style("margin", "30px");
 
         console.log($(id));
         this.map = new mapboxgl.Map({
             container: id.replace("#", "") + '-map-container',
             style: mapboxStyleUrl,
-            zoom: 4,
-            center: [-98.5795, 39.8282],
-            minZoom: 4,
-            maxZoom: 15,
-            attributionControl: true
+            zoom: 13,
+            center: cityCoords[this.currSnapshotIndex].ltLng,
+            minZoom: 13,
+            maxZoom: 13,
+            attributionControl: false,
+            interactive: false
         });
 
         if (insetMapSettings) { 
@@ -56,7 +77,7 @@ export class MapboxMap {
 
         this.setColorScales();
 
-        this.addControls();
+        // this.addControls();
         
         this.popup = mapContainer.append("div")
             .attr("class", "mapbox-map__popup columns-"  + popupColumns)
@@ -71,6 +92,8 @@ export class MapboxMap {
 
         this.popupContent = this.popup.append("div");
 
+        
+
     }
 
     render() {
@@ -81,13 +104,55 @@ export class MapboxMap {
             });
             this.addLayers();
 
-            this.addTooltip();
+            // this.addTooltip();
 
-            this.addFilters();
+            // this.addFilters();
 
-            this.addLegend();
+            // this.addLegend();
         });
 
+        let loadNumber = 0;
+        let currCity = cityCoords[this.currSnapshotIndex];
+
+        this.map.on("render", () => {
+            // console.log("rendered!");
+            // console.log(this.map.loaded());
+            console.log(loadNumber);
+            console.log(this.map.getCenter());
+
+          if(this.map.loaded() && loadNumber > 0) {
+            
+            
+            let canvas = this.map.getCanvas();
+                        // console.log(canvas);
+                        // var image = new Image();
+                        // image.src = canvas.toDataURL("image/png");
+                        var link = document.createElement("a");
+                        link.download = currCity.city + 'FamPov.png';
+                        link.href = canvas.toDataURL("image/png");
+                        link.click();
+                        link.remove();
+                        // console.log(image);
+                        // $("#image-export").append(image);
+
+            
+            this.currSnapshotIndex++;
+            currCity = cityCoords[this.currSnapshotIndex];
+            console.log(currCity);
+            this.map.setCenter(currCity.ltLng);
+            
+          }
+
+          if(this.map.loaded()) {
+                loadNumber++;
+            }
+          
+        });
+
+        // for (let cityCoord of cityCoords) {
+        //     console.log(cityCoord);
+        //     this.map.setCenter(cityCoord);
+        // }
     }
 
     addControls() {
@@ -101,7 +166,7 @@ export class MapboxMap {
 
     addLayers() {
         this.additionalLayerNames = [];
-        for (let i = 0; i < this.additionalLayers.length; i++) {
+        for (let i = 0; i < 1; i++) {
             let currLayer = this.additionalLayers[i],
                 numBins = currLayer.numBins,
                 dataMin = currLayer.customDomain[0],
@@ -128,6 +193,7 @@ export class MapboxMap {
             console.log(this.colorScales[i].domain());
             console.log(this.colorScales[i].range());
             this.colorStops[i] = fillColorStops;
+
             this.map.addLayer(
                 {
                     'id': currLayer.variable,
@@ -153,10 +219,19 @@ export class MapboxMap {
                 },'water'
             );
 
+            
+
             i != 0 ? this.map.setLayoutProperty(currLayer.variable, 'visibility', 'none') : null;
         }
 
-        this.addClickLayer();
+        for (let layer of this.existingLayers) {
+            console.log(layer);
+            this.map.setLayoutProperty(layer.variable, 'visibility', 'none')
+        }
+
+        
+
+        // this.addClickLayer();
         
         // if (this.toggleOffLayers) {
         //     for (let layer of this.toggleOffLayers) {
