@@ -10,7 +10,7 @@ let variables = {
     fampov: {"variable":"FAMPOV", "displayName":"Families Below Poverty Line (%)", "format": "percent_no_multiply", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
     medval: {"variable":"MEDVAL", "displayName":"Median Value of Owner-Occupied Units", "format": "price", "scaleType": "quantize", "customDomain":[0, 1000000], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
     banks: {"variable":"banks", "displayName":"Banks", "format": "number", "color":"#2dc6bf"},
-    altcredit: {"variable":"altcredit", "displayName":"Alternative Credit", "format": "number", "color":"#f24b56"},
+    altcredit: {"variable":"altcredit", "displayName":"Alternative Services", "format": "number", "color":"#f24b56"},
     ncua: {"variable":"ncua", "displayName":"Credit Unions", "format": "number", "color":"#9773c7"},
     usps: {"variable":"usps", "displayName":"Post Offices", "format": "number", "color":"#f2e079"},
     totpop: {"variable":"TOTPOP", "displayName":"Total Population", "format": "number"},
@@ -138,7 +138,7 @@ let vizSettingsList = [
             url: 'mapbox://newamericamapbox.7zun44wf'
         },
         existingLayers: [variables.irsVita, variables.bankon, variables.cdfi, variables.ida, variables.nfccFec],
-        additionalLayers: [variables.minority, variables.medhhinc, variables.fampov, variables.medval],
+        additionalLayers: [variables.minority, variables.fampov, variables.medhhinc, variables.medval],
         // toggleOffLayers: [variables.ncua, variables.usps],
         filters: [
             {
@@ -147,7 +147,7 @@ let vizSettingsList = [
                 canToggleMultiple: true
             },
             {
-                filterVars: [variables.minority, variables.medhhinc, variables.fampov, variables.medval],
+                filterVars: [variables.minority, variables.fampov, variables.medhhinc, variables.medval],
                 toggleInsets: false,
                 canToggleMultiple: false,
                 label: true
