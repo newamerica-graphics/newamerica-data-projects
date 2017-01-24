@@ -6,13 +6,13 @@
         position: absolute;
         z-index: 1;
         top: 10px;
-        /*border-radius: 5px;*/
+        display: none;
         
         border: 1px solid palette-get(na-black-10);
 
         &.select {
             width: $select-filter-group-width;
-            display: table;
+            display: none;
             height: 40px;
         }
 
@@ -52,10 +52,22 @@
     
 	    &:last-of-type {
 	        right: 225px;
+            @media (min-width: 750px) {
+                display: block;
+                &.select {
+                    display: table;
+                }
+            }
 	    }
 
 	    &:first-of-type {
 	        right: 15px;
+            @media (min-width: 500px) {
+                display: block;
+                &.select {
+                    display: table;
+                }
+            }
 	    }
 
         input, select {
@@ -159,6 +171,10 @@
         padding: 25px 25px 20px 25px;
         background-color: white;
         border: 1px solid palette-get(na-black-10);
+
+        @media (max-width: 430px) {
+            display: none !important;
+        }
 
         &.columns-1 {
             width: 215px;
