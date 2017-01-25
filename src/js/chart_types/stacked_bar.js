@@ -13,11 +13,11 @@ import { formatValue } from "../helper_functions/format_value.js";
 
 export class StackedBar {
 	constructor(vizSettings, imageFolderId) {
-		let {id, primaryDataSheet, xVar, filterVars, legendSettings, xAxisLabelInterval, labelValues, showYAxis, tooltipVars, eventSettings} = vizSettings;
+		let {id, primaryDataSheet, xVar, filterVars, legendSettings, xAxisLabelInterval, labelValues, showYAxis, tooltipTitleVar, eventSettings} = vizSettings;
 		this.id = id;
 		this.primaryDataSheet = primaryDataSheet;
 		this.filterVars = filterVars;
-		this.tooltipVars = tooltipVars;
+		this.tooltipTitleVar = tooltipTitleVar;
 		this.eventSettings = eventSettings;
 		this.xVar = xVar;
 		this.legendSettings = legendSettings;
@@ -58,10 +58,8 @@ export class StackedBar {
 			this.legend = new Legend(this.legendSettings);
 		}
 
-		// if (tooltipVars) {
-		// 	let tooltipSettings = { "id":id, "tooltipVars":tooltipVars }
-		// 	this.tooltip = new Tooltip(tooltipSettings);
-		// }
+		let tooltipSettings = { "id":id, "tooltipVars":[tooltipTitleVar].concat(filterVars) }
+		this.tooltip = new Tooltip(tooltipSettings);
 	}
 
 	setDimensions() {
@@ -144,14 +142,17 @@ export class StackedBar {
 	renderBars() {
 		this.barGroups = this.renderingArea.selectAll("g")
 			.data(this.nestedVals)
-		  .enter().append("g");
+		  .enter().append("g")
+		  	.on("mouseover", (d, index, paths) => {  return this.mouseover(d, paths[index], d3.event); })
+		  	.on("mouseout", (d, index, paths) => {  return this.mouseout(paths[index]); });
 
 		let currCumulativeY = 0;
 		this.bars = this.barGroups.selectAll("rect")
 			.data((d) => { console.log(d); return d.value; })
 		  .enter().append("rect")
 		  	.attr("x", 0)
-			.attr("fill", (d, i) => { return this.filterVars[i].color; });
+			.style("fill", (d, i) => { return this.filterVars[i].color; })
+			.style("fill-opacity", .8);
 
 		this.setBarHeights();
 	}
@@ -242,29 +243,37 @@ export class StackedBar {
 	}
 
 	mouseover(datum, path, eventObject) {
-		d3.select(path)
-			.style("fill", this.eventSettings.mouseover.fill);
+		console.log(datum, path, eventObject);
+		d3.select(path).selectAll("rect")
+			.style("fill-opacity", 1)
+			.style("stroke", colors.black);
 		
 		let mousePos = [];
 		mousePos[0] = eventObject.pageX;
 		mousePos[1] = eventObject.pageY;
 
 		let tooltipData = {};
-		tooltipData[this.tooltipVars[0].variable] = datum.label;
-		tooltipData[datum.variable] = datum.value;
+		tooltipData[this.tooltipTitleVar.variable] = datum.key;
+		let i = 0;
+		for (let filter of this.filterVars) {
+			tooltipData[filter.variable] = datum.value[i];
+			i++;
+		}
+
 		this.tooltip.show(tooltipData, mousePos);
 	}
 
 	mouseout(path) {
-		d3.select(path)
-			.style("fill", (d) => { return this.colorScale(d.variable); });
+		d3.select(path).selectAll("rect")
+			.style("fill-opacity", .8)
+			.style("stroke", "none");
 
 	    this.tooltip.hide();
 	}
 
 	changeVariableValsShown(valsShown) {
 		this.bars
-			.attr("fill", (d, i) => {
+			.style("fill", (d, i) => {
 	   			if (valsShown.indexOf(i) > -1) {
 	   				return this.filterVars[i].color;
 	   			}

@@ -25,7 +25,7 @@ let vizSettingsList = [
 		labelValues: false,
 		showYAxis: true,
 		hasTrendline: false,
-		tooltipVars: [ variables.year, variables.militants_avg, variables.unknown_avg, variables.civilians_avg ],
+		tooltipTitleVar: [ variables.year ],
 		eventSettings: {
 			"mouseover":{ "tooltip": true, "fill": colors.turquoise.medium, "stroke": false }
 		}
