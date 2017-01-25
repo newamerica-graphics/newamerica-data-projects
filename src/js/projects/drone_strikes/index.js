@@ -7,9 +7,9 @@ let variables = {
 	country: {"variable":"country", "displayName":"Country", "format": "string"},
 	year: {"variable":"year", "displayName":"Year", "format": "year"},
 	total_avg: {"variable":"total_avg", "displayName":"Total Average", "format": "number", "color": colors.turquoise.light},
-	civilians_avg: {"variable":"civilians_avg", "displayName":"Civilians Average", "format": "number", "color": colors.turquoise.light},
-	unknown_avg: {"variable":"unknown_avg", "displayName":"Unknown Average", "format": "number", "color": colors.blue.light},
-	militants_avg: {"variable":"militants_avg", "displayName":"Militants Average", "format": "number", "color": colors.purple.light},
+	civilians_avg: {"variable":"civilians_avg", "displayName":"Civilians", "format": "number", "color": colors.turquoise.light},
+	unknown_avg: {"variable":"unknown_avg", "displayName":"Unknown", "format": "number", "color": colors.blue.light},
+	militants_avg: {"variable":"militants_avg", "displayName":"Militants", "format": "number", "color": colors.purple.light},
 
 }
 

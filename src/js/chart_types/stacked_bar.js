@@ -39,13 +39,24 @@ export class StackedBar {
 
 		this.setDimensions();
 
-		// if (filterVars.length > 1) {
-		// 	this.legendSettings.id = id;
-		// 	this.legendSettings.markerSettings = { shape:"rect", size:10 };
-		// 	this.legendSettings.customLabels = colorLabels;
+		let colorVals = [],
+			colorLabels = [];
+		
+		for (let filterVar of filterVars) {
+			colorVals.push(filterVar.color);
+			colorLabels.push(filterVar.displayName);
+		}
 
-		// 	this.legend = new Legend(this.legendSettings);
-		// }
+		this.colorScale = d3.scaleOrdinal()
+			.range(colorVals);
+
+		if (filterVars.length > 1) {
+			this.legendSettings.id = id;
+			this.legendSettings.markerSettings = { shape:"rect", size:10 };
+			this.legendSettings.customLabels = colorLabels;
+
+			this.legend = new Legend(this.legendSettings);
+		}
 
 		// if (tooltipVars) {
 		// 	let tooltipSettings = { "id":id, "tooltipVars":tooltipVars }
@@ -86,13 +97,13 @@ export class StackedBar {
 		this.renderBars();
 		this.renderAxes();
 
-		// if (this.filterVars.length > 1) {
-		// 	this.legendSettings.scaleType = "categorical";
-		// 	this.legendSettings.colorScale = this.colorScale;
-		// 	this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
+		if (this.filterVars.length > 1) {
+			this.legendSettings.scaleType = "categorical";
+			this.legendSettings.colorScale = this.colorScale;
+			this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
 
-		// 	this.legend.render(this.legendSettings);
-		// }
+			this.legend.render(this.legendSettings);
+		}
 	}
 
 	setScaleDomains() {
@@ -124,6 +135,9 @@ export class StackedBar {
 
 		this.yScale.domain([0, maxVal]);
 		this.xScale.domain(Array.from(keyList).sort());
+
+		this.colorScale
+			.domain(this.xScale.domain());
 
 	}
 
@@ -250,10 +264,9 @@ export class StackedBar {
 
 	changeVariableValsShown(valsShown) {
 		this.bars
-			.style("fill", (d) => {
-	   			let binIndex = this.colorScale.domain().indexOf(d.variable);
-	   			if (valsShown.indexOf(binIndex) > -1) {
-	   				return this.colorScale(d.variable);
+			.attr("fill", (d, i) => {
+	   			if (valsShown.indexOf(i) > -1) {
+	   				return this.filterVars[i].color;
 	   			}
 		   		return colors.grey.light;
 		    });
