@@ -37,7 +37,7 @@ let variables = {
 
 	year_counts_year: {"variable":"year", "displayName":"Year", "format":"year"},
 	year_counts_count: {"variable":"count", "displayName":"Billion Dollar Event Count", "format":"number", "color": colors.turquoise.light},
-	year_counts_cost_total: {"variable":"cost_total", "displayName":"Total Cost", "format":"Total Cost"},
+	year_counts_cost_total: {"variable":"cost_total", "displayName":"Total Cost", "format":"price"},
 }
 
 let numBillionDollarEvents = 142;
