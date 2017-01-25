@@ -8,6 +8,7 @@ let d3 = require("d3");
 import domtoimage from 'dom-to-image';
 
 import { BarChart } from "./chart_types/bar_chart.js";
+import { StackedBar } from "./chart_types/stacked_bar.js";
 import { Dashboard } from "./layouts/dashboard.js";
 import { DotMatrix } from "./chart_types/dot_matrix.js";
 import { DotHistogram } from "./chart_types/dot_histogram.js";
@@ -85,6 +86,10 @@ export function setupProject(projectSettings) {
 
 					case "pie_chart":
 						viz = new PieChart(vizSettingsObject);
+						break;
+
+					case "stacked_bar":
+						viz = new StackedBar(vizSettingsObject);
 						break;
 
 					case "summary_box":
