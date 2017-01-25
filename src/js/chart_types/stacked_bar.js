@@ -62,10 +62,10 @@ export class StackedBar {
 			.attr("width", "100%")
 		    .attr("height", this.h + this.margin.top + this.margin.bottom);
 
-		// this.renderingArea
-		//     .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
-		//     .attr("width", this.w - margin.left - margin.right)
-  //           .attr("height", height);
+		this.renderingArea
+		    .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
+		    .attr("width", this.w - this.margin.left - this.margin.right)
+            .attr("height", this.h);
 
 		this.setScaleRanges();
 
@@ -84,7 +84,7 @@ export class StackedBar {
 		this.setScaleDomains();
 
 		this.renderBars();
-		// this.renderAxes();
+		this.renderAxes();
 
 		// if (this.filterVars.length > 1) {
 		// 	this.legendSettings.scaleType = "categorical";
@@ -92,10 +92,6 @@ export class StackedBar {
 		// 	this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
 
 		// 	this.legend.render(this.legendSettings);
-		// }
-
-		// if (this.trendline) {
-		// 	this.renderTrendline();
 		// }
 	}
 
@@ -132,7 +128,7 @@ export class StackedBar {
 	}
 
 	renderBars() {
-		this.barGroups = this.svg.selectAll("g")
+		this.barGroups = this.renderingArea.selectAll("g")
 			.data(this.nestedVals)
 		  .enter().append("g");
 
@@ -147,40 +143,21 @@ export class StackedBar {
 	}
 
 	renderAxes() {
-		let ticks = this.calculateTicks();
+		this.yAxis = this.svg.append("g")
+            .attr("class", "axis axis--y");
 
-		this.groupingAxis = this.renderingArea.append("g")
-			.attr("class", "axis axis-x")
-			.attr("transform", "translate(0," + this.h + ")")
-			.call(d3.axisBottom(this.groupingScale).tickValues(ticks));
+        this.yAxisLabel = this.yAxis.append("text")
+            .attr("class", "data-block__viz__y-axis-label")
+            .attr("transform", "rotate(-90)")
+            .attr("y", -30)
+            .attr("fill", "#000")
+            .text("Value");
 
-		if (this.filterVars.length == 1) {
-			this.groupingAxisLabel = this.groupingAxis.append("text")
-				.attr("x", this.w/2)
-				.attr("y", 50)
-				.attr("class", "axis__title")
-				.style("text-anchor", "middle")
-				.text(this.groupingVar.displayName);
-		}
+        this.xAxis = this.svg.append("g")
+            .attr("class", "axis axis--x");
 
-		if (this.showYAxis) {
-			this.yAxis = this.renderingArea.append("g")
-				.attr("class", "y axis")
-				.call(d3.axisLeft(this.yScales[this.filterVars[0].variable]));
-		    
-		    this.yAxisLabel = this.yAxis.append("text")
-				.attr("transform", "rotate(-90)")
-				.attr("x", -this.h/2)
-				.attr("y", -40)
-				.attr("class", "axis__title")
-				.style("text-anchor", "middle")
-				.text(this.filterVars[0].displayName);
-		}
-	}
-
-	renderTrendline() {
-		this.trendline.render(this.data, this.groupingScale, this.yScales[this.filterVars[0].variable]);
-	}
+        this.setAxes();
+    }
 
 	calculateTicks() {
 		let currInterval;
@@ -209,23 +186,23 @@ export class StackedBar {
 			.attr("width", this.xScale.bandwidth());
 	}
 
+	setAxes() {
+		this.yAxis
+			.attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
+            .call(d3.axisLeft(this.yScale));
+
+        this.yAxisLabel
+            .attr("x", -this.h/2)
+
+        this.xAxis
+            .attr("transform", "translate(" + this.margin.left + "," + (this.h + this.margin.top) + ")")
+            .call(d3.axisBottom(this.xScale));
+	}
+
 	resize() {
 		this.setDimensions();
 		this.setBarHeights();
-		// this.groups
-		// 	.attr("transform", (d) => { return "translate(" + this.groupingScale(d[this.groupingVar.variable]) + ",0)"; });
-
-		// this.bars
-		// 	.attr("width", this.xScale.bandwidth())
-		// 	.attr("x", (d) => { return this.xScale(d.variable); })
-		// 	.attr("y", (d) => { return this.yScales[d.variable](d.value); })
-		// 	.attr("height", (d) => { return this.h - this.yScales[d.variable](d.value); });
-
-		// if (this.labelValues) {
-		// 	this.labels
-		// 	 	.attr("x", (d) => { return this.xScale(d.variable) + this.xScale.bandwidth()/2; })
-		//       	.attr("y", (d) => { return this.yScales[d.variable](d.value) - 5; })
-		// }
+		this.setAxes();
 
 	 //    let ticks = this.calculateTicks();
 
