@@ -9,8 +9,6 @@ import { Trendline } from "../components/trendline.js";
 
 import { formatValue } from "../helper_functions/format_value.js";
 
-
-
 export class StackedBar {
 	constructor(vizSettings, imageFolderId) {
 		let {id, primaryDataSheet, xVar, filterVars, legendSettings, xAxisLabelInterval, labelValues, showYAxis, tooltipTitleVar, eventSettings} = vizSettings;
@@ -18,7 +16,6 @@ export class StackedBar {
 		this.primaryDataSheet = primaryDataSheet;
 		this.filterVars = filterVars;
 		this.tooltipTitleVar = tooltipTitleVar;
-		this.eventSettings = eventSettings;
 		this.xVar = xVar;
 		this.legendSettings = legendSettings;
 		this.xAxisLabelInterval = xAxisLabelInterval;
@@ -127,9 +124,6 @@ export class StackedBar {
 				return retVal;
 			})
 			.entries(this.data);
-
-		console.log(this.nestedVals);
-		console.log(maxVal);
 
 		this.yScale.domain([0, maxVal]);
 		this.xScale.domain(Array.from(keyList).sort());
@@ -243,7 +237,6 @@ export class StackedBar {
 	}
 
 	mouseover(datum, path, eventObject) {
-		console.log(datum, path, eventObject);
 		d3.select(path).selectAll("rect")
 			.style("fill-opacity", 1);
 		
