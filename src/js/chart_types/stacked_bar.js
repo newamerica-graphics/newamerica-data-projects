@@ -68,6 +68,7 @@ export class StackedBar {
   //           .attr("height", height);
 
 		this.setScaleRanges();
+
 	}
 
 	setScaleRanges() {
@@ -133,57 +134,16 @@ export class StackedBar {
 	renderBars() {
 		this.barGroups = this.svg.selectAll("g")
 			.data(this.nestedVals)
-		  .enter().append("g")
-		   	.attr("transform", (d) => { console.log(d); return "translate(" + this.xScale(d.key) + ")"})
+		  .enter().append("g");
 
-		// for (let filter of this.filterVars) {
-
-		// }
 		let currCumulativeY = 0;
-		this.barGroups.selectAll("rect")
+		this.bars = this.barGroups.selectAll("rect")
 			.data((d) => { console.log(d); return d.value; })
 		  .enter().append("rect")
 		  	.attr("x", 0)
-			.attr("y", (d, i) => { 
-				let barHeight = this.h - this.yScale(d);
-				currCumulativeY = i == 0 ? this.h - barHeight : currCumulativeY - barHeight;
-				return currCumulativeY; 
-			})
-			.attr("height", (d) => { return this.h - this.yScale(d); })
-			.attr("width", this.xScale.bandwidth())
 			.attr("fill", (d, i) => { return this.filterVars[i].color; });
 
-		// for (let filter of this.filterVars) {
-
-		// }
-
-		// this.groups = this.renderingArea.selectAll(".group")
-	 //      	.data(this.data)
-	 //      .enter().append("g")
-	 //      	.attr("class", "group")
-	 //      	.attr("transform", (d) => { return "translate(" + this.groupingScale(d[this.groupingVar.variable]) + ",0)"; });
-
-	 // 	this.bars = this.groups.selectAll("rect")
-	 //      	.data((d) => { return d.vals; })
-	 //      .enter().append("rect")
-		// 	.attr("width", this.xScale.bandwidth())
-		// 	.attr("x", (d) => { return this.xScale(d.variable); })
-		// 	.attr("y", (d) => { return this.yScales[d.variable](d.value); })
-		// 	.attr("height", (d) => { return this.h - this.yScales[d.variable](d.value); })
-		// 	.style("fill", (d) => { return this.colorScale(d.variable); })
-		// 	.on("mouseover", (d, index, paths) => {  return this.eventSettings && this.eventSettings.mouseover ? this.mouseover(d, paths[index], d3.event) : null; })
-		// 	.on("mouseout", (d, index, paths) => {  return this.eventSettings && this.eventSettings.mouseover ? this.mouseout(paths[index]) : null; });
-
-		// if (this.labelValues) {
-		//     this.labels = this.groups.selectAll("text")
-		//       	.data((d) => { return d.vals; })
-		//       .enter().append("text")
-		//       	.attr("x", (d) => { return this.xScale(d.variable) + this.xScale.bandwidth()/2; })
-		//       	.attr("y", (d) => { return this.yScales[d.variable](d.value) - 5; })
-		//       	.text((d) => { return formatValue(d.value, d.format) })
-		//       	.attr("text-anchor", "middle")
-		//       	.attr("class", "label__value");
-		// }
+		this.setBarHeights();
 	}
 
 	renderAxes() {
@@ -234,45 +194,60 @@ export class StackedBar {
 		return this.groupingScale.domain().filter( (d, i) => { return !(i%currInterval);});
 	}
 
+	setBarHeights() {
+		this.barGroups
+			.attr("transform", (d) => { console.log(d); return "translate(" + this.xScale(d.key) + ")"})
+		
+		let currCumulativeY = 0;
+		this.bars
+			.attr("y", (d, i) => { 
+				let barHeight = this.h - this.yScale(d);
+				currCumulativeY = i == 0 ? this.h - barHeight : currCumulativeY - barHeight;
+				return currCumulativeY; 
+			})
+			.attr("height", (d) => { return this.h - this.yScale(d); })
+			.attr("width", this.xScale.bandwidth());
+	}
+
 	resize() {
 		this.setDimensions();
+		this.setBarHeights();
+		// this.groups
+		// 	.attr("transform", (d) => { return "translate(" + this.groupingScale(d[this.groupingVar.variable]) + ",0)"; });
 
-		this.groups
-			.attr("transform", (d) => { return "translate(" + this.groupingScale(d[this.groupingVar.variable]) + ",0)"; });
+		// this.bars
+		// 	.attr("width", this.xScale.bandwidth())
+		// 	.attr("x", (d) => { return this.xScale(d.variable); })
+		// 	.attr("y", (d) => { return this.yScales[d.variable](d.value); })
+		// 	.attr("height", (d) => { return this.h - this.yScales[d.variable](d.value); });
 
-		this.bars
-			.attr("width", this.xScale.bandwidth())
-			.attr("x", (d) => { return this.xScale(d.variable); })
-			.attr("y", (d) => { return this.yScales[d.variable](d.value); })
-			.attr("height", (d) => { return this.h - this.yScales[d.variable](d.value); });
+		// if (this.labelValues) {
+		// 	this.labels
+		// 	 	.attr("x", (d) => { return this.xScale(d.variable) + this.xScale.bandwidth()/2; })
+		//       	.attr("y", (d) => { return this.yScales[d.variable](d.value) - 5; })
+		// }
 
-		if (this.labelValues) {
-			this.labels
-			 	.attr("x", (d) => { return this.xScale(d.variable) + this.xScale.bandwidth()/2; })
-		      	.attr("y", (d) => { return this.yScales[d.variable](d.value) - 5; })
-		}
+	 //    let ticks = this.calculateTicks();
 
-	    let ticks = this.calculateTicks();
+		// this.groupingAxis
+		// 	.attr("transform", "translate(0," + this.h + ")")
+		// 	.call(d3.axisBottom(this.groupingScale).tickValues(ticks));
 
-		this.groupingAxis
-			.attr("transform", "translate(0," + this.h + ")")
-			.call(d3.axisBottom(this.groupingScale).tickValues(ticks));
+		// if (this.groupingAxisLabel) {
+		// 	this.groupingAxisLabel.attr("x", this.w/2);
+		// }
 
-		if (this.groupingAxisLabel) {
-			this.groupingAxisLabel.attr("x", this.w/2);
-		}
+		// if (this.showYAxis) {
+		// 	this.yAxis
+		// 		.call(d3.axisLeft(this.yScales[this.filterVars[0].variable]));
 
-		if (this.showYAxis) {
-			this.yAxis
-				.call(d3.axisLeft(this.yScales[this.filterVars[0].variable]));
+		// 	this.yAxisLabel
+		// 		.attr("x", -this.h/2);
+		// }
 
-			this.yAxisLabel
-				.attr("x", -this.h/2);
-		}
-
-		if (this.trendline) {
-			this.trendline.resize(this.groupingScale, this.yScales[this.filterVars[0].variable]);
-		}
+		// if (this.trendline) {
+		// 	this.trendline.resize(this.groupingScale, this.yScales[this.filterVars[0].variable]);
+		// }
 	}
 
 	mouseover(datum, path, eventObject) {
