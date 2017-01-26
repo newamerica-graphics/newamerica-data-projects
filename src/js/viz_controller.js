@@ -9,6 +9,7 @@ import domtoimage from 'dom-to-image';
 
 import { BarChart } from "./chart_types/bar_chart.js";
 import { StackedBar } from "./chart_types/stacked_bar.js";
+import { PercentageStackedBar } from "./chart_types/percentage_stacked_bar.js";
 import { Dashboard } from "./layouts/dashboard.js";
 import { DotMatrix } from "./chart_types/dot_matrix.js";
 import { DotHistogram } from "./chart_types/dot_histogram.js";
@@ -82,6 +83,10 @@ export function setupProject(projectSettings) {
 
 					case "mapbox_map":
 						viz = new MapboxMap(vizSettingsObject);
+						break;
+
+					case "percentage_stacked_bar":
+						viz = new PercentageStackedBar(vizSettingsObject);
 						break;
 
 					case "pie_chart":
