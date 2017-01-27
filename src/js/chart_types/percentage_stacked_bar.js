@@ -37,6 +37,7 @@ export class PercentageStackedBar {
 
 	setDimensions() {
 		this.w = $(this.id).width() - this.margin.left - this.margin.right;
+
 		this.h = 1*this.w/3;
 		this.h = this.h - this.margin.top - this.margin.bottom;
 
@@ -116,6 +117,7 @@ export class PercentageStackedBar {
 		  	.attr("y", 0)
 		  	.attr("fill", (d) => { console.log(d); return this.colorScale(d.key); })
 			.style("fill-opacity", .75)
+			.style("cursor", "pointer")
 			.on("mouseover", (d, index, paths) => {  return this.mouseover(d, paths[index], d3.event); })
 		  	.on("mouseout", (d, index, paths) => {  return this.mouseout(paths[index]); });
 
