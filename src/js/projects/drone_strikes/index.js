@@ -14,7 +14,7 @@ let variables = {
 	president_bush: {"variable":"president_bush", "displayName":"Bush", "format": "number", "color": colors.red.light},
 	president_obama: {"variable":"president_obama", "displayName":"Obama", "format": "number", "color": colors.blue.light},
 	president_trump: {"variable":"president_trump", "displayName":"Trump", "format": "number", "color": colors.red.dark},
-	target_organization_name: {"variable":"target_organization_name", "displayName":"Target Organization", "format": "string"},
+	target_organization_name: {"variable":"target_organization_name", "displayName":"Target Organization", "format": "string", "scaleType":"categorical"},
 }
 
 let vizSettingsList = [

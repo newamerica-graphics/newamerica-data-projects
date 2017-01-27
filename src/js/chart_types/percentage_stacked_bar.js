@@ -3,11 +3,12 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 import { colors } from "../helper_functions/colors.js";
+import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { Legend } from "../components/legend.js";
-import { Tooltip } from "../components/tooltip.js";
-import { Trendline } from "../components/trendline.js";
 
 import { formatValue } from "../helper_functions/format_value.js";
+
+const barLabelPadding = 10;
 
 export class PercentageStackedBar {
 	constructor(vizSettings, imageFolderId) {
@@ -17,16 +18,17 @@ export class PercentageStackedBar {
 		this.groupingVar = groupingVar;
 		this.filterVar = filterVar;
 		
-		this.margin = {top: 20, right: 20};
-		this.margin.left = this.showYAxis ? 70 : 20;
-		this.margin.bottom = 50;
+		this.margin = {top: 0, right: 300, bottom: 0, left: 0};
 
-		this.svg = d3.select(id).append("svg").attr("class", "bar-chart");
+		this.svg = d3.select(id).append("svg").attr("class", "percentage-stacked-bar");
 
 		this.renderingArea = this.svg.append("g");
 
+		this.dataPanel = this.svg.append("g")
+			.attr("width", 250);
+
 		this.groupingScale = d3.scaleBand()
-			.padding(1);
+			.padding(.5);
 
 		this.lengthScale = d3.scaleLinear();
 
@@ -35,8 +37,10 @@ export class PercentageStackedBar {
 
 	setDimensions() {
 		this.w = $(this.id).width() - this.margin.left - this.margin.right;
-		this.h = 2*this.w/3;
+		this.h = 1*this.w/3;
 		this.h = this.h - this.margin.top - this.margin.bottom;
+
+		this.h = this.h > 500 ? 500 : this.h;
 
 		this.svg
 			.attr("width", "100%")
@@ -47,148 +51,178 @@ export class PercentageStackedBar {
 		    .attr("width", this.w - this.margin.left - this.margin.right)
             .attr("height", this.h);
 
-		this.setScaleRanges();
+        this.dataPanel
+        	.attr("transform", "translate(" + (this.margin.left + this.w) + "," + this.margin.top + ")")
+        	.attr("height", this.h);
 
+		this.setScaleRanges();
 	}
 
 	setScaleRanges() {
-		this.groupingScale.rangeRound([0, this.w]);
-		this.lengthScale.range([this.h, 0]);
+		this.groupingScale.rangeRound([0, this.h]);
+		this.lengthScale.range([this.w, 0]);
 	}
 
 	render(data) {
 		this.data = data[this.primaryDataSheet];
 
 		console.log(this.data);
+
+		this.colorScale = getColorScale(this.data, this.filterVar);
+
+		console.log(this.colorScale.domain());
+		console.log(this.colorScale.range());
 	    
 		this.setScaleDomains();
 
-		// this.renderBars();
-		// this.renderAxes();
+		this.renderBars();
+		this.renderBarGroupLabels();
+		this.renderBarLabels();
 	}
 
 	setScaleDomains() {
+		let groupingVals = new Set();
+
+		this.groupingSums = d3.nest()
+			.key((d) => { groupingVals.add(d[this.groupingVar.variable]); return d[this.groupingVar.variable]; })
+			.rollup((v) => {return v.length })
+			.map(this.data);
+
 		this.nestedVals = d3.nest()
 			.key((d) => { return d[this.groupingVar.variable]; })
 			.key((d) => { return d[this.filterVar.variable]; })
-			.rollup((v) => { console.log(v); return v; })
+			.sortKeys((a, b) => { console.log(a); return this.colorScale.domain().indexOf(a) - this.colorScale.domain().indexOf(b); })
+			.rollup((v) => { let currGroupingVal = v[0][this.groupingVar.variable]; return {"count":v.length, "percent": v.length/this.groupingSums.get(currGroupingVal)}; })
 			.entries(this.data);
 
-
 		console.log(this.nestedVals);
-		// this.lengthScale.domain([0, maxVal]);
-		// this.groupingScale.domain(Array.from(keyList).sort());
 
-		// this.colorScale
-		// 	.domain(this.groupingScale.domain());
+		this.lengthScale.domain([0, 1]);
+		this.groupingScale.domain(Array.from(groupingVals));
+
+		console.log(this.groupingScale.domain());
+
 
 	}
 
 	renderBars() {
 		this.barGroups = this.renderingArea.selectAll("g")
 			.data(this.nestedVals)
-		  .enter().append("g")
-		  	.on("mouseover", (d, index, paths) => {  return this.mouseover(d, paths[index], d3.event); })
+		  .enter().append("g");
+
+		this.bars = this.barGroups.selectAll("rect")
+			.data((d) => { console.log(d); return d.values; })
+		  .enter().append("rect")
+		  	.attr("y", 0)
+		  	.attr("fill", (d) => { console.log(d); return this.colorScale(d.key); })
+			.style("fill-opacity", .75)
+			.on("mouseover", (d, index, paths) => {  return this.mouseover(d, paths[index], d3.event); })
 		  	.on("mouseout", (d, index, paths) => {  return this.mouseout(paths[index]); });
 
-		let currCumulativeY = 0;
-		this.bars = this.barGroups.selectAll("rect")
-			.data((d) => { console.log(d); return d.value; })
-		  .enter().append("rect")
-		  	.attr("x", 0)
-			.style("fill", (d, i) => { return this.filterVars[i].color; })
-			.style("fill-opacity", .75);
-
-		this.setBarHeights();
+		this.setBarLengths();
 	}
 
-	renderAxes() {
-		this.yAxis = this.svg.append("g")
-            .attr("class", "axis axis--y");
-
-        this.yAxisLabel = this.yAxis.append("text")
-            .attr("class", "data-block__viz__y-axis-label")
-            .attr("transform", "rotate(-90)")
-            .attr("y", -30)
-            .attr("fill", "#000")
-            .text("Value");
-
-        this.xAxis = this.svg.append("g")
-            .attr("class", "axis axis--x");
-
-        this.setAxes();
-    }
-
-	calculateTicks() {
-		let currInterval;
-		if ($(this.id).width() < 575) {
-			currInterval = this.xAxisLabelInterval.small;
-		} else if ($(this.id).width() > 1100) {
-			currInterval = this.xAxisLabelInterval.large;
-		} else {
-			currInterval = this.xAxisLabelInterval.medium;
-		}
-		return this.groupingScale.domain().filter( (d, i) => { return !(i%currInterval);});
-	}
-
-	setBarHeights() {
+	setBarLengths() {
 		this.barGroups
-			.attr("transform", (d) => { console.log(d); return "translate(" + this.groupingScale(d.key) + ")"})
+			.attr("transform", (d) => { return "translate(0," + this.groupingScale(d.key) + ")"})
 		
-		let currCumulativeY = 0;
+		let currCumulativeLength = 0;
 		this.bars
-			.attr("y", (d, i) => { 
-				let barHeight = this.h - this.lengthScale(d);
-				currCumulativeY = i == 0 ? this.h - barHeight : currCumulativeY - barHeight;
-				return currCumulativeY; 
+			.attr("x", (d, i) => {
+				let barLength = this.w - this.lengthScale(d.value.percent);
+				currCumulativeLength = i == 0 ? 0 : currCumulativeLength;
+				let retVal = currCumulativeLength;
+				currCumulativeLength += barLength;
+
+				return retVal; 
 			})
-			.attr("height", (d) => { return this.h - this.lengthScale(d); })
-			.attr("width", this.groupingScale.bandwidth());
+			.attr("width", (d) => { return this.w - this.lengthScale(d.value.percent); })
+			.attr("height", this.groupingScale.bandwidth())
+			.attr("stroke", "white");
 	}
 
-	setAxes() {
-		this.yAxis
-			.attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
-            .call(d3.axisLeft(this.lengthScale));
-
-        this.yAxisLabel
-            .attr("x", -this.h/2)
-
-        this.xAxis
-            .attr("transform", "translate(" + this.margin.left + "," + (this.h + this.margin.top) + ")")
-            .call(d3.axisBottom(this.groupingScale));
+	renderBarGroupLabels() {
+		console.log("rendering labels");
+		this.barGroupLabels = this.barGroups
+			.append("text")
+			.style("font-weight", "bold")
+			.text(((d) => { return d.key; }));
 	}
+
+	renderBarLabels() {
+		this.barLabels = this.barGroups.selectAll("text.percentage-stacked-bar__bar-label")
+			.data((d) => { console.log(d.values); return d.values; })
+		  .enter().append("text")
+		  	.attr("class", "percentage-stacked-bar__bar-label")
+			.text((d) => { console.log(d); return d.key; });
+
+		this.setBarLabelPositions();
+	}
+
+	setBarLabelPositions() {
+		this.barGroupLabels
+			.attr("transform", "translate(0,-" + this.groupingScale.bandwidth()/2 + ")");
+
+		let currCumulativeLength = barLabelPadding;
+		this.barLabels
+			.classed("visible", (d, i, paths) => {
+				let textLength = paths[i].getBBox().width + 2*barLabelPadding;
+				let barLength = this.w - this.lengthScale(d.value.percent);
+
+				return textLength < barLength;
+			})
+			.attr("y", this.groupingScale.bandwidth()/2)
+			.attr("x", (d, i) => {
+				console.log(d, i);
+				console.log(currCumulativeLength);
+				let barLength = this.w - this.lengthScale(d.value.percent);
+				currCumulativeLength = i == 0 ? barLabelPadding : currCumulativeLength;
+				console.log(currCumulativeLength);
+				let retVal = currCumulativeLength;
+				currCumulativeLength += barLength;
+
+				return retVal; 
+			});
+			
+	}
+
 
 	resize() {
 		this.setDimensions();
-		this.setBarHeights();
-		this.setAxes();
+		this.setBarLengths();
+		this.setBarLabelPositions();
 	}
 
 	mouseover(datum, path, eventObject) {
-		d3.select(path).selectAll("rect")
-			.style("fill-opacity", 1);
-		
-		let mousePos = [];
-		mousePos[0] = eventObject.pageX;
-		mousePos[1] = eventObject.pageY;
+		this.bars
+			.style("fill-opacity", (d) => { return d.key == datum.key ? 1 : .2; });
 
-		let tooltipData = {};
-		tooltipData[this.tooltipTitleVar.variable] = datum.key;
-		let i = 0;
-		for (let filter of this.filterVars) {
-			tooltipData[filter.variable] = datum.value[i];
-			i++;
-		}
-
-		this.tooltip.show(tooltipData, mousePos);
+		this.barGroupHoverLabels = this.barGroups
+			// .style("fill", (d) => { console.log(d); return "white"; })
+			.append("text")
+			.attr("transform", "translate(" + (this.w + 25) + "," + this.groupingScale.bandwidth()/2 + ")")
+			.attr("class", "percentage-stacked-bar__bar-group-hover-label")
+			.html((d) => { 
+				let count, percent;
+				d.values.map((entry) => {
+					if (entry.key == datum.key) {
+						count = entry.value.count;
+						percent = formatValue(entry.value.percent, "percent");
+					}
+				})
+				if (count) {
+					return "<tspan class='percentage-stacked-bar__bar-group-hover-label__title' fill=" + this.colorScale(datum.key) + ">" + datum.key + ":</tspan>" + 
+						"<tspan class='percentage-stacked-bar__bar-group-hover-label__percent'> " + percent + "</tspan>" + 
+						"<tspan class='percentage-stacked-bar__bar-group-hover-label__count'> (" + count + " of " + this.groupingSums.get(d.key) + " strikes) </tspan>";
+				}
+			});
 	}
 
 	mouseout(path) {
-		d3.select(path).selectAll("rect")
+		this.bars
 			.style("fill-opacity", .75);
 
-	    this.tooltip.hide();
+		this.barGroupHoverLabels.remove();
 	}
 
 	changeVariableValsShown(valsShown) {

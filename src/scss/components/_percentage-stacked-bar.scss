@@ -1,0 +1,38 @@
+.percentage-stacked-bar {
+	text, tspan {
+		text-align: middle;
+		alignment-baseline: middle;
+	}
+
+	&__bar-label {
+		fill: white;
+		font-weight: bold;
+		text-align: middle;
+		alignment-baseline: middle;
+		pointer-events: none;
+		visibility: hidden;
+
+		&.visible {
+			visibility: visible;
+		}
+	}
+
+	&__bar-group-hover-label {
+		text-align: middle;
+		alignment-baseline: middle;
+
+		&__title {
+			font-weight: bold;
+		}
+
+		&__percent {
+			font-weight: bold;
+			fill: palette-get(na-black);
+		}
+
+		&__count {
+			font-weight: normal;
+			fill: palette-get(na-black);
+		}
+	}
+}
