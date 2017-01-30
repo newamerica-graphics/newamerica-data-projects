@@ -28,57 +28,88 @@ let variables = {
 }
 
 let vizSettingsList = [
+	// {
+	// 	id: "#drone-strikes__casualties", 
+	// 	vizType: "stacked_bar",
+	// 	primaryDataSheet: "strike_data",
+	// 	xVar: variables.year,
+	// 	filterVars: [ variables.militants_avg, variables.unknown_avg, variables.civilians_avg ],
+	// 	legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
+	// 	xAxisLabelInterval: {"small": 10, "medium": 5, "large": 2},
+	// 	showYAxis: true,
+	// 	tooltipTitleVar: variables.year,
+	// },
+	// {
+	// 	id: "#drone-strikes__strikes-by-president", 
+	// 	vizType: "stacked_bar",
+	// 	primaryDataSheet: "strike_data",
+	// 	xVar: variables.year,
+	// 	filterVars: [ variables.president_bush, variables.president_obama, variables.president_trump ],
+	// 	legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
+	// 	xAxisLabelInterval: {"small": 10, "medium": 5, "large": 2},
+	// 	showYAxis: true,
+	// 	tooltipTitleVar: variables.year,
+	// },
+	// {
+	// 	id: "#drone-strikes__targets", 
+	// 	vizType: "percentage_stacked_bar",
+	// 	primaryDataSheet: "strike_data",
+	// 	groupingVar: variables.president,
+	// 	filterVar: variables.target_organization_name,
+	// },
+	// {
+	// 	id: "#drone-strikes__strike-list", 
+	// 	primaryDataSheet: "strike_data",
+	// 	vizType: "table",
+	// 	tableVars: [ variables.date, variables.country, variables.village, variables.province, variables.civilians_avg, variables.militants_avg, variables.unknown_avg, variables.total_avg, variables.target_organization_name, variables.target_description ],
+	// 	defaultOrdering: [0, "desc"],
+	// 	pagination: true,
+	// 	numPerPage: 25,
+	// 	colorScaling: false
+	// },
+	// {
+	// 	id: "#drone-strikes__strike-totals-by-president", 
+	// 	primaryDataSheet: "strikes_by_president",
+	// 	vizType: "table",
+	// 	tableVars: [ variables.president, variables.total_strikes, variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh],
+	// 	defaultOrdering: [0, "asc"],
+	// 	pagination: false,
+	// 	numPerPage: 25,
+	// 	colorScaling: false,
+	// 	disableSearching: true,
+	//  	disableOrdering: true
+	// },
 	{
-		id: "#drone-strikes__casualties", 
-		vizType: "stacked_bar",
-		primaryDataSheet: "strike_data",
-		xVar: variables.year,
-		filterVars: [ variables.militants_avg, variables.unknown_avg, variables.civilians_avg ],
-		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
-		xAxisLabelInterval: {"small": 10, "medium": 5, "large": 2},
-		showYAxis: true,
-		tooltipTitleVar: variables.year,
-	},
-	{
-		id: "#drone-strikes__strikes-by-president", 
-		vizType: "stacked_bar",
-		primaryDataSheet: "strike_data",
-		xVar: variables.year,
-		filterVars: [ variables.president_bush, variables.president_obama, variables.president_trump ],
-		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
-		xAxisLabelInterval: {"small": 10, "medium": 5, "large": 2},
-		showYAxis: true,
-		tooltipTitleVar: variables.year,
-	},
-	{
-		id: "#drone-strikes__targets", 
-		vizType: "percentage_stacked_bar",
-		primaryDataSheet: "strike_data",
-		groupingVar: variables.president,
-		filterVar: variables.target_organization_name,
-	},
-	{
-		id: "#drone-strikes__strike-list", 
-		primaryDataSheet: "strike_data",
-		vizType: "table",
-		tableVars: [ variables.date, variables.country, variables.village, variables.province, variables.civilians_avg, variables.militants_avg, variables.unknown_avg, variables.total_avg, variables.target_organization_name, variables.target_description ],
-		defaultOrdering: [0, "desc"],
-		pagination: true,
-		numPerPage: 25,
-		colorScaling: false
-	},
-	{
-		id: "#drone-strikes__strike-totals-by-president", 
-		primaryDataSheet: "strikes_by_president",
-		vizType: "table",
-		tableVars: [ variables.president, variables.total_strikes, variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh],
-		defaultOrdering: [0, "asc"],
-		pagination: false,
-		numPerPage: 25,
-		colorScaling: false,
-		disableSearching: true,
-	 	disableOrdering: true
-	}
+        id: "#drone-strikes__strike-map",
+        primaryDataSheet: "strike_data",
+        vizType: "mapbox_map",
+        mapboxStyleUrl: "mapbox://styles/newamericamapbox/ciyg8yk9i001g2smyfazdaobb",
+        colorVar: variables.president,
+        radiusVar: variables.total_avg,
+
+        // existingLayers: [variables.altcredit, variables.banks, variables.ncua, variables.usps],
+        // additionalLayers: [variables.minority, variables.fampov, variables.medhhinc, variables.medval],
+        // toggleOffLayers: [variables.ncua, variables.usps],
+        // filters: [
+        //     {
+        //         filterVars: [variables.altcredit, variables.banks, variables.ncua, variables.usps],
+        //         toggleInsets: true,
+        //         canToggleMultiple: true
+        //     },
+        //     {
+        //         filterVars: [variables.minority, variables.fampov, variables.medhhinc, variables.medval],
+        //         toggleInsets: false,
+        //         canToggleMultiple: false,
+        //         label: true
+        //     },
+        // ],
+        // tooltipVars: {
+        //     "Economic Metrics": [variables.medhhinc, variables.fampov, variables.medval],
+        //     "Population Demographics": [variables.totpop, variables.minority, variables.aian, variables.asian, variables.black, variables.white, variables.tworace, variables.hispanic],
+        // },
+        // popupContentFunction: censusTractMapSetPopupContent,
+        // popupColumns: 3
+    },
 ]
 
 let projectSettings = {

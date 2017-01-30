@@ -1,7 +1,6 @@
 let mapboxgl = require('mapbox-gl');
 window.mapboxgl = mapboxgl;
 require('mapbox-gl-geocoder');
-let GeoJSON = require('geojson');
 
 import { colors } from "../helper_functions/colors.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
@@ -20,12 +19,15 @@ export class MapboxMap {
             alert('Your browser does not support Mapbox GL');
             return;
         }
-        let {id, mapboxStyleUrl, primaryDataSheet, tooltipVars, filters, popupContentFunction, popupColumns} = vizSettings;
+        let {id, mapboxStyleUrl, additionalLayers, tooltipVars, insetMapSettings, source, filters, popupContentFunction, popupColumns, toggleOffLayers} = vizSettings;
         this.id = id;
-        this.primaryDataSheet = primaryDataSheet;
+        this.source = source;
         this.filters = filters;
+        this.additionalLayers = additionalLayers;
         this.tooltipVars = tooltipVars;
+        this.insetMapSettings = insetMapSettings;
         this.popupContentFunction = popupContentFunction;
+        this.toggleOffLayers = toggleOffLayers;
         this.colorStops = [];
         this.currToggledIndex = 0;
 
@@ -40,84 +42,50 @@ export class MapboxMap {
             container: id.replace("#", "") + '-map-container',
             style: mapboxStyleUrl,
             zoom: 4,
-            center: [69.3451, 30.3753],
+            center: [-98.5795, 39.8282],
             minZoom: 4,
             maxZoom: 15,
             attributionControl: true
         });
 
-        // this.setColorScales();
+        if (insetMapSettings) { 
+            this.createInsetMaps();
+        }
 
-        // this.addControls();
+        this.setColorScales();
+
+        this.addControls();
         
-        // this.popup = mapContainer.append("div")
-        //     .attr("class", "mapbox-map__popup columns-"  + popupColumns)
-        //     .style("display", "none");
+        this.popup = mapContainer.append("div")
+            .attr("class", "mapbox-map__popup columns-"  + popupColumns)
+            .style("display", "none");
 
-        // this.popupClose = this.popup.append("div")
-        //     .attr("class", "mapbox-map__popup__close")
-        //     .on("click", () => {
-        //         this.popup.style("display", "none");
-        //         this.map.setFilter("click-layer", ["==", "GEOID2", ""]);
-        //     });
-
-        // this.popupContent = this.popup.append("div");
-
-    }
-
-    render(data) {
-        console.log(data);
-        this.processData(data[this.primaryDataSheet]);
-        this.map.on('load', () => {
-            this.map.addSource("dataSource", this.source);
-            this.map.addLayer({
-                "id": "points",
-                "type": "circle",
-                "source": "dataSource",
-                "paint": {
-                  'circle-color': {
-                        property: 'president',
-                        type: 'categorical',
-                        stops: [
-                            ['Bush', '#fbb03b'],
-                            ['Obama', '#223b53'],
-                            ['Trump', '#e55e5e']
-                        ]
-                    },
-                    'circle-radius': {
-                        property: 'total_avg',
-                        stops: [
-                            [3, 3],
-                            [5, 10]
-                        ]
-                    }
-                }
+        this.popupClose = this.popup.append("div")
+            .attr("class", "mapbox-map__popup__close")
+            .on("click", () => {
+                this.popup.style("display", "none");
+                this.map.setFilter("click-layer", ["==", "GEOID2", ""]);
             });
 
-            console.log(this.map.getSource("dataSource"));
-            // this.map.addSource(this.source.id,{
-            //     'type': 'vector',
-            //     'url': this.source.url
-            // });
-            // this.addLayers();
-
-            // this.addTooltip();
-
-            // this.addFilters();
-
-            // this.addLegend();
-        });
+        this.popupContent = this.popup.append("div");
 
     }
 
-    processData(data) {
-        console.log(data);
-        this.data = GeoJSON.parse(data, {Point: ['geo_lat', 'geo_lon']});
-        this.source = {
-            "type": "geojson",
-            "data" : this.data
-        }
-        console.log(this.data);
+    render() {
+        this.map.on('load', () => {
+            this.map.addSource(this.source.id,{
+                'type': 'vector',
+                'url': this.source.url
+            });
+            this.addLayers();
+
+            this.addTooltip();
+
+            this.addFilters();
+
+            this.addLegend();
+        });
+
     }
 
     addControls() {
@@ -429,29 +397,6 @@ export class MapboxMap {
                 .text(this.getLegendCellLabel(currColorStops, i));
 
         }
-
-        // [this.dataMin, this.dataMax] = this.colorScale.domain();
-        // let dataSpread = this.dataMax - this.dataMin;
-        // this.binInterval = dataSpread/this.numBins;
-        // this.legendCellDivs = [];
-
-        // for (let i = 0; i < this.numBins; i++) {
-        //     this.valsShown.push(i);
-        //     let cell = this.cellList.append("li")
-        //         .classed("legend__cell", true);
-
-        //     if (this.disableValueToggling) {
-        //         cell.style("cursor", "initial");
-        //     } else {
-        //         cell.on("click", () => { this.toggleValsShown(i); valChangedFunction(this.valsShown); });
-        //     }
-        //     this.appendCellMarker(cell, i);
-        //     valCounts ? this.appendValCount(cell, i, valCounts) : null;
-        //     this.appendCellText(cell, i, scaleType, format);
-            
-        //     this.legendCellDivs[i] = cell;
-        // }
-
     }
 
     getLegendCellLabel(currColorStops, i) {
