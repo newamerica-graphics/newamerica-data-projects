@@ -10,7 +10,7 @@ import { formatValue } from "../helper_functions/format_value.js";
 
 export class Table {
 	constructor(vizSettings) {
-		let {id, tableVars, colorScaling, primaryDataSheet, pagination, numPerPage, defaultOrdering} = vizSettings;
+		let {id, tableVars, colorScaling, primaryDataSheet, pagination, numPerPage, defaultOrdering, disableSearching, disableOrdering} = vizSettings;
 
 		this.id = id;
 		this.tableVars = tableVars;
@@ -19,6 +19,8 @@ export class Table {
 		this.numPerPage = numPerPage;
 		this.defaultOrdering = defaultOrdering;
 		this.primaryDataSheet = primaryDataSheet;
+		this.disableSearching = disableSearching;
+		this.disableOrdering = disableOrdering;
 
 		d3.select(id).append("table")
 			.attr("id", "dataTable")
@@ -34,7 +36,9 @@ export class Table {
 		    paging: this.pagination ? true : false,
 		    pageLength: this.numPerPage,
 		    scrollX: false,
-		    order: this.defaultOrdering ? this.defaultOrdering : ["0", "asc"]
+		    ordering: this.disableOrdering? false : true,
+		    order: this.defaultOrdering ? this.defaultOrdering : ["0", "asc"],
+		    searching: this.disableSearching ? false : true
 		});
 
 		if (this.colorScaling) {
@@ -44,6 +48,9 @@ export class Table {
 		$(this.id + ' input').addClass("search-box__input").attr("placeholder", "Search");
 
 		$(this.id + " #dataTable").wrap( "<div class='block-table'></div>" );
+
+		// hide "showing _ of _ results footer if no searching and pagination"
+		this.disableSearching && !this.pagination ? $(this.id + " .dataTables_info").hide() : null;
 	}
 
 	getColumnNames() {
@@ -58,6 +65,8 @@ export class Table {
         			return formatValue(data, tableVar.format);
         		}
         	};
+
+        	tableVar.format == "date" ? varObject["type"] = "date" : null;
         	console.log(varObject);
 			columnNames.push(varObject);
 		}
