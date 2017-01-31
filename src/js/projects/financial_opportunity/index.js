@@ -5,10 +5,10 @@ import { setupProject } from "../../viz_controller.js";
 import { formatValue } from "../../helper_functions/format_value.js";
 
 let variables = {
-    medhhinc: {"variable":"MEDHHINC", "displayName":"Median Household Income", "format": "price",  "scaleType": "quantize", "customDomain":[0, 250000], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
-    minority: {"variable":"MINORITY", "displayName":"Minority (%)", "format": "percent_no_multiply", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
-    fampov: {"variable":"FAMPOV", "displayName":"Families Below Poverty Line (%)", "format": "percent_no_multiply", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
-    medval: {"variable":"MEDVAL", "displayName":"Median Value of Owner-Occupied Units", "format": "price", "scaleType": "quantize", "customDomain":[0, 1000000], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
+    medhhinc: {"variable":"MEDHHINC", "displayName":"Median Household Income", "format": "price",  "scaleType": "quantize", "customDomain":[0, 37500, 75000, 112500, 150000], "customRange":["rgb(247, 247, 247)","rgb(238, 238, 239)","rgb(196, 197, 199)","rgb(120, 122, 126)","rgb(44, 47, 53)"], "numBins":5},
+    minority: {"variable":"MINORITY", "displayName":"Minority (%)", "format": "percent_no_multiply", "scaleType": "quantize", "customDomain":[0, 15, 30, 45, 60], "customRange":["rgb(247, 247, 247)","rgb(238, 238, 239)","rgb(196, 197, 199)","rgb(120, 122, 126)","rgb(44, 47, 53)"], "numBins":5},
+    fampov: {"variable":"FAMPOV", "displayName":"Families Below Poverty Line (%)", "format": "percent_no_multiply", "scaleType": "quantize", "customDomain":[0, 10, 20, 30, 40], "customRange":["rgb(247, 247, 247)","rgb(238, 238, 239)","rgb(196, 197, 199)","rgb(120, 122, 126)","rgb(44, 47, 53)"], "numBins":5},
+    medval: {"variable":"MEDVAL", "displayName":"Median Value of Owner-Occupied Units", "format": "price", "scaleType": "quantize", "customDomain":[0, 150000, 300000, 450000, 600000], "customRange":["rgb(247, 247, 247)","rgb(238, 238, 239)","rgb(196, 197, 199)","rgb(120, 122, 126)","rgb(44, 47, 53)"], "numBins":5},
     banks: {"variable":"banks", "displayName":"Banks", "format": "number", "color":"#2dc6bf"},
     altcredit: {"variable":"altcredit", "displayName":"Alternative Services", "format": "number", "color":"#f24b56"},
     ncua: {"variable":"ncua", "displayName":"Credit Unions", "format": "number", "color":"#9773c7"},
@@ -34,10 +34,11 @@ let variables = {
     ida: {"variable":"ida", "displayName":"IDA", "format": "number", "color":"#6B91D3"},
     nfccFec: {"variable":"nfcc-fec", "displayName":"NFCC-FEC", "format": "number", "color":"#2dc6bf"},
 
-    county_altpc: {"variable":"altpc", "displayName":"Alt. Financial Services Per 10,000 People", "format": "number_per_ten_thousand",  "scaleType": "quantize", "customDomain":[0, 0.000839], "customRange":["#5FA0C6", "#F2E079", "#F24B56"], "numBins":5},
-    county_tradpc: {"variable":"tradpc", "displayName":"Mainstream Financial Services Per 10,000 People", "format": "number_per_ten_thousand",  "scaleType": "quantize", "customDomain":[0, 0.003727], "customRange":["#F24B56", "#F2E079", "rgb(154, 186, 167)"], "numBins":5},
-    county_altpertrad: {"variable":"altpertrad", "displayName":"Ratio of Alt. Financial Services to Mainstream", "format": "number_with_decimal_2",  "scaleType": "quantize", "customDomain":[0, 3], "customRange":["#5FA0C6", "#F2E079", "#F24B56"], "numBins":5},
+    county_altpc: {"variable":"altpc", "displayName":"Alt. Financial Services Per 10,000 People", "format": "number_per_ten_thousand", "customDomain": [0, 0.000025, 0.000075, 0.000125, 0.0003], "customRange":["rgb(154, 186, 167)","rgb(189, 201, 149)","rgb(224, 216, 130)","rgb(242, 194, 114)","rgb(242, 135, 100)"], "customLabels":["Very Low", "Low", "Average", "High", "Very High"], "numBins":5},
+    county_tradpc: {"variable":"tradpc", "displayName":"Mainstream Financial Services Per 10,000 People", "format": "number_per_ten_thousand", "customDomain": [0, 0.0002, 0.0004, 0.0006, 0.001], "customRange":["rgb(242, 135, 100)","rgb(242, 194, 114)","rgb(224, 216, 130)","rgb(189, 201, 149)","rgb(154, 186, 167)"], "customLabels":["Very Low", "Low", "Average", "High", "Very High"], "numBins":5},
+    county_altpertrad: {"variable":"altpertrad", "displayName":"Ratio of Alt. Financial Services to Mainstream", "format": "number_with_decimal_2", "customDomain": [0, 0.1, 0.23, 0.5, 1], "customRange":["rgb(154, 186, 167)","rgb(189, 201, 149)","rgb(224, 216, 130)","rgb(242, 194, 114)","rgb(242, 135, 100)"], "customLabels":["Very Low", "Low", "Average", "High", "Very High"], "numBins":5},
 };
+
 
 let insetMapSettings = [
     {
