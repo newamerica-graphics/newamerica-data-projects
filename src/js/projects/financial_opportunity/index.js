@@ -5,10 +5,10 @@ import { setupProject } from "../../viz_controller.js";
 import { formatValue } from "../../helper_functions/format_value.js";
 
 let variables = {
-    medhhinc: {"variable":"MEDHHINC", "displayName":"Median Household Income", "format": "price",  "scaleType": "quantize", "customDomain":[0, 250000], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
-    minority: {"variable":"MINORITY", "displayName":"Minority (%)", "format": "percent_no_multiply", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
-    fampov: {"variable":"FAMPOV", "displayName":"Families Below Poverty Line (%)", "format": "percent_no_multiply", "scaleType": "quantize", "customDomain":[0, 100], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
-    medval: {"variable":"MEDVAL", "displayName":"Median Value of Owner-Occupied Units", "format": "price", "scaleType": "quantize", "customDomain":[0, 1000000], "customRange":[colors.white, colors.grey.light, colors.black], "numBins":5},
+    medhhinc: {"variable":"MEDHHINC", "displayName":"Median Household Income", "format": "price",  "scaleType": "quantize", "customDomain":[0, 37500, 75000, 112500, 150000], "customRange":["rgb(247, 247, 247)","rgb(238, 238, 239)","rgb(196, 197, 199)","rgb(120, 122, 126)","rgb(44, 47, 53)"], "numBins":5},
+    minority: {"variable":"MINORITY", "displayName":"Minority (%)", "format": "percent_no_multiply", "scaleType": "quantize", "customDomain":[0, 15, 30, 45, 60], "customRange":["rgb(247, 247, 247)","rgb(238, 238, 239)","rgb(196, 197, 199)","rgb(120, 122, 126)","rgb(44, 47, 53)"], "numBins":5},
+    fampov: {"variable":"FAMPOV", "displayName":"Families Below Poverty Line (%)", "format": "percent_no_multiply", "scaleType": "quantize", "customDomain":[0, 10, 20, 30, 40], "customRange":["rgb(247, 247, 247)","rgb(238, 238, 239)","rgb(196, 197, 199)","rgb(120, 122, 126)","rgb(44, 47, 53)"], "numBins":5},
+    medval: {"variable":"MEDVAL", "displayName":"Median Value of Owner-Occupied Units", "format": "price", "scaleType": "quantize", "customDomain":[0, 150000, 300000, 450000, 600000], "customRange":["rgb(247, 247, 247)","rgb(238, 238, 239)","rgb(196, 197, 199)","rgb(120, 122, 126)","rgb(44, 47, 53)"], "numBins":5},
     banks: {"variable":"banks", "displayName":"Banks", "format": "number", "color":"#2dc6bf"},
     altcredit: {"variable":"altcredit", "displayName":"Alternative Services", "format": "number", "color":"#f24b56"},
     ncua: {"variable":"ncua", "displayName":"Credit Unions", "format": "number", "color":"#9773c7"},
@@ -74,39 +74,39 @@ let insetMapSettings = [
 ]
 
 let vizSettingsList = [
-    // {
-    //     id: "#financial-opportunity__census-tract-map", 
-    //     vizType: "mapbox_map",
-    //     mapboxStyleUrl: "mapbox://styles/newamericamapbox/civcm5ziy00d92imrwswlo1wv",
-    //     source: {
-    //         id:'census-tracts',
-    //         sourceLayer: 'CensusTracts_2014data2K_2-3r3ays',
-    //         url: 'mapbox://newamericamapbox.7zun44wf'
-    //     },
-    //     existingLayers: [variables.altcredit, variables.banks, variables.ncua, variables.usps],
-    //     additionalLayers: [variables.minority, variables.fampov, variables.medhhinc, variables.medval],
-    //     toggleOffLayers: [variables.ncua, variables.usps],
-    //     filters: [
-    //         {
-    //             filterVars: [variables.altcredit, variables.banks, variables.ncua, variables.usps],
-    //             toggleInsets: true,
-    //             canToggleMultiple: true
-    //         },
-    //         {
-    //             filterVars: [variables.minority, variables.fampov, variables.medhhinc, variables.medval],
-    //             toggleInsets: false,
-    //             canToggleMultiple: false,
-    //             label: true
-    //         },
-    //     ],
-    //     tooltipVars: {
-    //         "Economic Metrics": [variables.medhhinc, variables.fampov, variables.medval],
-    //         "Population Demographics": [variables.totpop, variables.minority, variables.aian, variables.asian, variables.black, variables.white, variables.tworace, variables.hispanic],
-    //     },
-    //     insetMapSettings: insetMapSettings,
-    //     popupContentFunction: censusTractMapSetPopupContent,
-    //     popupColumns: 3
-    // },
+    {
+        id: "#financial-opportunity__census-tract-map", 
+        vizType: "mapbox_map",
+        mapboxStyleUrl: "mapbox://styles/newamericamapbox/civcm5ziy00d92imrwswlo1wv",
+        source: {
+            id:'census-tracts',
+            sourceLayer: 'CensusTracts_2014data2K_2-3r3ays',
+            url: 'mapbox://newamericamapbox.7zun44wf'
+        },
+        existingLayers: [variables.altcredit, variables.banks, variables.ncua, variables.usps],
+        additionalLayers: [variables.minority, variables.fampov, variables.medhhinc, variables.medval],
+        toggleOffLayers: [variables.ncua, variables.usps],
+        filters: [
+            {
+                filterVars: [variables.altcredit, variables.banks, variables.ncua, variables.usps],
+                toggleInsets: true,
+                canToggleMultiple: true
+            },
+            {
+                filterVars: [variables.minority, variables.fampov, variables.medhhinc, variables.medval],
+                toggleInsets: false,
+                canToggleMultiple: false,
+                label: true
+            },
+        ],
+        tooltipVars: {
+            "Economic Metrics": [variables.medhhinc, variables.fampov, variables.medval],
+            "Population Demographics": [variables.totpop, variables.minority, variables.aian, variables.asian, variables.black, variables.white, variables.tworace, variables.hispanic],
+        },
+        insetMapSettings: insetMapSettings,
+        popupContentFunction: censusTractMapSetPopupContent,
+        popupColumns: 3
+    },
     {
         id: "#financial-opportunity__county-map", 
         vizType: "mapbox_map",
@@ -129,39 +129,39 @@ let vizSettingsList = [
         popupContentFunction: countyMapSetPopupContent,
         popupColumns: 1
     },
-    // {
-    //     id: "#financial-opportunity__census-tract-map-other-services", 
-    //     vizType: "mapbox_map",
-    //     mapboxStyleUrl: "mapbox://styles/newamericamapbox/cixql9hl200762rp5qynmxcfe",
-    //     source: {
-    //         id:'census-tracts',
-    //         sourceLayer: 'CensusTracts_2014data2K_2-3r3ays',
-    //         url: 'mapbox://newamericamapbox.7zun44wf'
-    //     },
-    //     existingLayers: [variables.irsVita, variables.bankon, variables.cdfi, variables.ida, variables.nfccFec],
-    //     additionalLayers: [variables.minority, variables.fampov, variables.medhhinc, variables.medval],
-    //     // toggleOffLayers: [variables.ncua, variables.usps],
-    //     filters: [
-    //         {
-    //             filterVars: [variables.irsVita, variables.bankon, variables.cdfi, variables.ida, variables.nfccFec],
-    //             toggleInsets: false,
-    //             canToggleMultiple: true
-    //         },
-    //         {
-    //             filterVars: [variables.minority, variables.fampov, variables.medhhinc, variables.medval],
-    //             toggleInsets: false,
-    //             canToggleMultiple: false,
-    //             label: true
-    //         },
-    //     ],
-    //     tooltipVars: {
-    //         "Economic Metrics": [variables.medhhinc, variables.fampov, variables.medval],
-    //         "Population Demographics": [variables.totpop, variables.minority, variables.aian, variables.asian, variables.black, variables.tworace, variables.white, variables.hispanic],
-    //     },
-    //     insetMapSettings: false,
-    //     popupContentFunction: censusTractOtherServicesMapSetPopupContent,
-    //     popupColumns: 3
-    // },
+    {
+        id: "#financial-opportunity__census-tract-map-other-services", 
+        vizType: "mapbox_map",
+        mapboxStyleUrl: "mapbox://styles/newamericamapbox/cixql9hl200762rp5qynmxcfe",
+        source: {
+            id:'census-tracts',
+            sourceLayer: 'CensusTracts_2014data2K_2-3r3ays',
+            url: 'mapbox://newamericamapbox.7zun44wf'
+        },
+        existingLayers: [variables.irsVita, variables.bankon, variables.cdfi, variables.ida, variables.nfccFec],
+        additionalLayers: [variables.minority, variables.fampov, variables.medhhinc, variables.medval],
+        // toggleOffLayers: [variables.ncua, variables.usps],
+        filters: [
+            {
+                filterVars: [variables.irsVita, variables.bankon, variables.cdfi, variables.ida, variables.nfccFec],
+                toggleInsets: false,
+                canToggleMultiple: true
+            },
+            {
+                filterVars: [variables.minority, variables.fampov, variables.medhhinc, variables.medval],
+                toggleInsets: false,
+                canToggleMultiple: false,
+                label: true
+            },
+        ],
+        tooltipVars: {
+            "Economic Metrics": [variables.medhhinc, variables.fampov, variables.medval],
+            "Population Demographics": [variables.totpop, variables.minority, variables.aian, variables.asian, variables.black, variables.tworace, variables.white, variables.hispanic],
+        },
+        insetMapSettings: false,
+        popupContentFunction: censusTractOtherServicesMapSetPopupContent,
+        popupColumns: 3
+    },
 ]
 
 let projectSettings = {
