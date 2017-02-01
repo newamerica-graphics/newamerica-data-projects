@@ -83,8 +83,8 @@ let vizSettingsList = [
             url: 'mapbox://newamericamapbox.7zun44wf'
         },
         existingLayers: [variables.altcredit, variables.banks, variables.ncua, variables.usps],
-        additionalLayers: [variables.fampov, variables.medhhinc, variables.medval],
-        toggleOffLayers: [variables.ncua, variables.usps],
+        additionalLayers: [variables.fampov],
+        toggleOffLayers: [variables.altcredit, variables.banks, variables.ncua, variables.usps],
         filters: [
             {
                 filterVars: [variables.altcredit, variables.banks, variables.ncua, variables.usps],

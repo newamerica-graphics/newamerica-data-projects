@@ -102,6 +102,16 @@ export class MapboxMap {
                 'type': 'vector',
                 'url': this.source.url
             });
+
+            // this.map.setLayoutProperty('ncua', 'visibility', 'visible');
+            // this.map.setPaintProperty('altcredit', 'circle-radius', 10);
+            // this.map.setPaintProperty('banks', 'circle-radius', 10);
+            // this.map.setPaintProperty('ncua', 'circle-radius', 10);
+
+            // this.map.setPaintProperty('altcredit', 'circle-blur', 0);
+            // this.map.setPaintProperty('banks', 'circle-blur', 0);
+            // this.map.setPaintProperty('ncua', 'circle-blur', 0);
+
             this.addLayers();
 
             // this.addTooltip();
@@ -109,50 +119,57 @@ export class MapboxMap {
             // this.addFilters();
 
             // this.addLegend();
+
+            let loadNumber = 0;
+            let currCity = cityCoords[this.currSnapshotIndex];
+
+            this.map.on("render", () => {
+                // console.log("rendered!");
+                // console.log(this.map.loaded());
+                console.log(loadNumber);
+                console.log(this.map.getCenter());
+
+              if(this.map.loaded() && loadNumber >= 0) {
+                
+                
+                let canvas = this.map.getCanvas();
+                            // console.log(canvas);
+                            // var image = new Image();
+                            // image.src = canvas.toDataURL("image/png");
+                            var link = document.createElement("a");
+                            link.download = currCity.city + 'FamPov.png';
+                            link.href = canvas.toDataURL("image/png");
+                            link.click();
+                            link.remove();
+                            // console.log(image);
+                            // $("#image-export").append(image);
+
+                
+                this.currSnapshotIndex++;
+                currCity = cityCoords[this.currSnapshotIndex];
+                console.log(currCity);
+                console.log(this.map.getPaintProperty('ncua', 'circle-radius'));
+                this.map.setCenter(currCity.ltLng);
+                
+              }
+
+                if(this.map.loaded()) {
+                    loadNumber++;
+                }
+              
+            });
         });
 
-        let loadNumber = 0;
-        let currCity = cityCoords[this.currSnapshotIndex];
+        
 
-        this.map.on("render", () => {
-            // console.log("rendered!");
-            // console.log(this.map.loaded());
-            console.log(loadNumber);
-            console.log(this.map.getCenter());
-
-          if(this.map.loaded() && loadNumber > 0) {
-            
-            
-            let canvas = this.map.getCanvas();
-                        // console.log(canvas);
-                        // var image = new Image();
-                        // image.src = canvas.toDataURL("image/png");
-                        var link = document.createElement("a");
-                        link.download = currCity.city + 'FamPov.png';
-                        link.href = canvas.toDataURL("image/png");
-                        link.click();
-                        link.remove();
-                        // console.log(image);
-                        // $("#image-export").append(image);
-
-            
-            this.currSnapshotIndex++;
-            currCity = cityCoords[this.currSnapshotIndex];
-            console.log(currCity);
-            this.map.setCenter(currCity.ltLng);
-            
-          }
-
-          if(this.map.loaded()) {
-                loadNumber++;
-            }
-          
-        });
+        
 
         // for (let cityCoord of cityCoords) {
         //     console.log(cityCoord);
         //     this.map.setCenter(cityCoord);
+        //     loadNumber = 0;
         // }
+
     }
 
     addControls() {
