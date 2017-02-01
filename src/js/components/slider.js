@@ -13,13 +13,13 @@ let animationButtonPaths = {pause: "M11,10 L17,10 17,26 11,26 M20,10 L26,10 26,2
 
 export class Slider {
 	constructor(componentSettings) {
-		let { id, filterChangeFunction, primaryDataSheet, variable } = componentSettings;
+		let { id, filterChangeFunction, primaryDataSheet, variable, automated } = componentSettings;
 		this.id = id;
 		this.primaryDataSheet = primaryDataSheet;
 		this.variable = variable.variable;
 		this.filterChangeFunction = filterChangeFunction;
 
-		this.animationState = "playing";
+		this.animationState = automated ? "playing" : "paused";
 
 		this.h = 30;
 
@@ -29,7 +29,7 @@ export class Slider {
 		this.animationButton = this.svg.append("path")
 			.style("fill", "grey")
 			.style("cursor", "pointer")
-			.attr("d", animationButtonPaths.pause)
+			.attr("d", automated ? animationButtonPaths.pause : animationButtonPaths.play)
 			.on("click", () => { return this.toggleAnimation(this.currAnimationVal); });
 
 		this.slider = this.svg.append("g")
@@ -85,10 +85,12 @@ export class Slider {
 
 	render(data) {
 		this.data = data[this.primaryDataSheet];
-		let dataExtents = d3.extent(this.data, (d) => { return Number(d[this.variable]); });
+		let dataExtents = d3.extent(this.data, (d) => { return Number(d[this.variable]) != 0 ? Number(d[this.variable]) : null; });
 		this.scale.domain([dataExtents[0], dataExtents[1]]);
 		this.sliderVal = dataExtents[0];
 
+		console.log(this.data);
+		console.log(dataExtents);
 		this.setDimensions();
 		this.currAnimationVal = this.scale.range()[0];
  
@@ -155,17 +157,17 @@ export class Slider {
 	}
 
 	addAnimationTrigger() {
-		let id = this.id.replace("#", "");
-		let waypoint = new Waypoint({
-		  element: document.getElementById(id),
-		  offset: '50%',
-		  handler: () => {
-		    console.log(this);
-		    this.animationState = "paused";
-			this.toggleAnimation(this.scale.range()[0])
-			waypoint.destroy();
-		  }
-		});
+		// let id = this.id.replace("#", "");
+		// let waypoint = new Waypoint({
+		//   element: document.getElementById(id),
+		//   offset: '50%',
+		//   handler: () => {
+		//     console.log(this);
+		//     this.animationState = "paused";
+		// 	this.toggleAnimation(this.scale.range()[0])
+		// 	waypoint.destroy();
+		//   }
+		// });
 	}
 	
 	resize() {

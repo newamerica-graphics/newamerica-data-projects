@@ -9,11 +9,11 @@ let variables = {
 	year: {"variable":"year", "displayName":"Year", "format": "year"},
 	village: {"variable":"village", "displayName":"Village", "format": "string"},
 	province: {"variable":"province", "displayName":"Province", "format": "string"},
-	total_avg: {"variable":"total_avg", "displayName":"Total Average", "format": "number", "color": colors.turquoise.light},
+	total_avg: {"variable":"total_avg", "displayName":"Total Average", "format": "number", "color": colors.turquoise.light, "scaleType": "linear"},
 	civilians_avg: {"variable":"civilians_avg", "displayName":"Civilians", "format": "number", "color": colors.turquoise.light},
 	unknown_avg: {"variable":"unknown_avg", "displayName":"Unknown", "format": "number", "color": colors.blue.light},
 	militants_avg: {"variable":"militants_avg", "displayName":"Militants", "format": "number", "color": colors.purple.light},
-	president: {"variable":"president", "displayName":"President", "format": "string"},
+	president: {"variable":"president", "displayName":"President", "format": "string", "scaleType": "categorical", "customDomain": ["Bush", "Obama", "Trump"], "customRange": [colors.red.light, colors.blue.dark, colors.red.dark]},
 	president_bush: {"variable":"president_bush", "displayName":"Bush", "format": "number", "color": colors.red.light},
 	president_obama: {"variable":"president_obama", "displayName":"Obama", "format": "number", "color": colors.blue.light},
 	president_trump: {"variable":"president_trump", "displayName":"Trump", "format": "number", "color": colors.red.dark},
@@ -80,12 +80,44 @@ let vizSettingsList = [
 	//  	disableOrdering: true
 	// },
 	{
-        id: "#drone-strikes__strike-map",
-        primaryDataSheet: "strike_data",
-        vizType: "mapbox_map",
-        mapboxStyleUrl: "mapbox://styles/newamericamapbox/ciyg8yk9i001g2smyfazdaobb",
-        colorVar: variables.president,
-        radiusVar: variables.total_avg,
+		id: "#drone-strikes__strike-map",
+		vizType: "dashboard",
+		// getDefaultValueFunction: getDefaultValue,
+		layoutRows: [
+			[
+				{
+					vizType: "slider",
+					primaryDataSheet: "strike_data",
+					variable: variables.year,
+					isMessagePasser: true,
+					automated: false
+				}
+			],
+			[
+				{
+					vizType: "mapbox_map",
+					primaryDataSheet: "strike_data",
+			        mapboxSettings: {
+			        	style: "mapbox://styles/newamericamapbox/ciynaplyx001k2sqepxshx05u",
+			        	center: [69.3451, 30.3753],
+			        	zoom: 4,
+			        },
+			        colorVar: variables.president,
+			        radiusVar: variables.total_avg,
+			        timeSliderVar: variables.year,
+					messageHandlerType: "change_value",
+				}
+			]
+		]
+	},
+	{
+        
+        // primaryDataSheet: "strike_data",
+        // vizType: "mapbox_map",
+        // mapboxStyleUrl: "mapbox://styles/newamericamapbox/ciyg8yk9i001g2smyfazdaobb",
+        // colorVar: variables.president,
+        // radiusVar: variables.total_avg,
+        // timeSliderVar: variables.year
 
         // existingLayers: [variables.altcredit, variables.banks, variables.ncua, variables.usps],
         // additionalLayers: [variables.minority, variables.fampov, variables.medhhinc, variables.medval],
