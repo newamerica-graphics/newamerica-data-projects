@@ -130,6 +130,7 @@ export class TopoJsonMap {
 	render(data) {
 
 		this.data = data[this.primaryDataSheet];
+		console.log(data);
 
 		// this.processData();
 		this.setScale();
@@ -154,6 +155,7 @@ export class TopoJsonMap {
 
 	setScale() {
 		this.colorScale = getColorScale(this.data, this.filterVars[this.currFilterIndex]);
+		console.log(this.colorScale.domain());
 	}
 
 
