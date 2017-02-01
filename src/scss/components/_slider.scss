@@ -14,5 +14,17 @@
 		stroke-opacity: 1;
 		stroke-width: 1.25px;
 		cursor: pointer;
-	}  
+	}
+}
+
+.mapboxgl-map {
+	#slider-container {
+		width: calc(100% - 300px);
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        z-index: 100;
+        /*background-color: white;
+        border: 1px solid palette-get(na-black-10);*/
+	}
 }

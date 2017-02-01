@@ -81,37 +81,41 @@ let vizSettingsList = [
 	// },
 	{
 		id: "#drone-strikes__strike-map",
-		vizType: "dashboard",
-		// getDefaultValueFunction: getDefaultValue,
-		layoutRows: [
-			[
-				{
-					vizType: "slider",
-					primaryDataSheet: "strike_data",
-					variable: variables.year,
-					isMessagePasser: true,
-					automated: false
-				}
-			],
-			[
-				{
-					vizType: "mapbox_map",
-					primaryDataSheet: "strike_data",
-			        mapboxSettings: {
-			        	style: "mapbox://styles/newamericamapbox/ciynaplyx001k2sqepxshx05u",
-			        	center: [69.3451, 30.3753],
-			        	zoom: 4,
-			        },
-			        colorVar: variables.president,
-			        radiusVar: variables.total_avg,
-			        timeSliderVar: variables.year,
-					messageHandlerType: "change_value",
-				}
-			]
-		]
+		vizType: "mapbox_map",
+		primaryDataSheet: "strike_data",
+        mapboxSettings: {
+        	style: "mapbox://styles/newamericamapbox/ciynaplyx001k2sqepxshx05u",
+        	center: [69.3451, 30.3753],
+        	zoom: 4,
+        },
+        colorVar: variables.president,
+        radiusVar: variables.total_avg,
+        sliderSettings: {
+			variable: variables.year,
+			automated: false,
+        },
+        dataBoxVars: {
+        	title: variables.date,
+        	subtitle: [variables.village, variables.province],
+        	categories: [
+	        	{ 
+	        		label: "Target",
+	        		fields: [variables.target_organization_name, variables.target_description] 
+	        	},
+	        	{ 
+	        		label: "Casualties",
+	        		fields: [variables.civilians_avg, variables.militants_avg, variables.unknown_avg, variables.total_avg]
+	        	},
+        	]
+        }
 	},
-	{
-        
+
+	// {
+     //    vizType: "slider",
+					// primaryDataSheet: "strike_data",
+					// variable: variables.year,
+					// isMessagePasser: true,
+					// automated: false,
         // primaryDataSheet: "strike_data",
         // vizType: "mapbox_map",
         // mapboxStyleUrl: "mapbox://styles/newamericamapbox/ciyg8yk9i001g2smyfazdaobb",
@@ -141,7 +145,7 @@ let vizSettingsList = [
         // },
         // popupContentFunction: censusTractMapSetPopupContent,
         // popupColumns: 3
-    },
+    // },
 ]
 
 let projectSettings = {

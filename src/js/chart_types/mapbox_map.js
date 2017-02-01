@@ -6,6 +6,8 @@ let GeoJSON = require('geojson');
 import { colors } from "../helper_functions/colors.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { formatValue } from "../helper_functions/format_value.js";
+import { PopupDataBox } from "../components/popup_data_box.js";
+import { Slider } from "../components/slider.js";
 
 import $ from 'jquery';
 
@@ -28,6 +30,8 @@ export class MapboxMap {
             .style("width", "100%")
             .style("height", "700px");
 
+        this.addSlider();
+
         Object.assign(this.mapboxSettings, {
             container: this.id.replace("#", "") + '-map-container',
             minZoom: 4,
@@ -39,29 +43,36 @@ export class MapboxMap {
 
         this.map = new mapboxgl.Map(this.mapboxSettings);
 
-        // this.setColorScales();
-
         this.addControls();
-        
-        // this.popup = mapContainer.append("div")
-        //     .attr("class", "mapbox-map__popup columns-"  + popupColumns)
-        //     .style("display", "none");
 
-        // this.popupClose = this.popup.append("div")
-        //     .attr("class", "mapbox-map__popup__close")
-        //     .on("click", () => {
-        //         this.popup.style("display", "none");
-        //         this.map.setFilter("click-layer", ["==", "GEOID2", ""]);
-        //     });
+        this.map.on('click', (e) => {
+            let features = this.map.queryRenderedFeatures(e.point, { layers: ['points'] });
+            
+            console.log(features);
+            if (!features.length) {
+                this.dataBox.hide();
+                return;
+            }
 
-        // this.popupContent = this.popup.append("div");
+            this.dataBox.show(features[0].properties);
+            
+            let newZoom = this.map.getZoom() < 7 ? 7 : this.map.getZoom();
+            this.map.flyTo({
+                center: e.lngLat,
+                zoom: newZoom
+            });
+        });
 
     }
 
     render(data) {
         console.log(data);
+
+        this.setPopupDataBox();
         this.setColorScale(data[this.primaryDataSheet]);
         this.setRadiusScale(data[this.primaryDataSheet]);
+
+        this.slider.render(data);
 
         console.log(this.colorScale.domain());
         console.log(this.colorScale.range());
@@ -73,7 +84,7 @@ export class MapboxMap {
                 "type": "circle",
                 "source": "dataSource",
                 "paint": {
-                  'circle-color': {
+                    'circle-color': {
                         property: this.colorVar.variable,
                         type: 'categorical',
                         stops: this.colorStops
@@ -81,11 +92,9 @@ export class MapboxMap {
                     'circle-radius': {
                         property: this.radiusVar.variable,
                         stops: this.radiusStops
-                    }
+                    },
                 }
             });
-
-            console.log(this.map.getSource("dataSource"));
 
             // this.addTooltip();
 
@@ -113,6 +122,17 @@ export class MapboxMap {
         }));
 
         this.map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));
+    }
+
+    addSlider() {
+        this.sliderContainer = d3.select(this.id + '-map-container')
+            .append("div")
+            .attr("id", "slider-container");
+
+        this.sliderSettings.id = "#slider-container";
+        this.sliderSettings.primaryDataSheet = this.primaryDataSheet;
+        this.sliderSettings.filterChangeFunction = this.changeValue.bind(this);
+        this.slider = new Slider(this.sliderSettings);
     }
 
     // addTooltip() {
@@ -260,11 +280,15 @@ export class MapboxMap {
             .range([5, 30]);
 
         this.radiusStops = [];
-
         this.radiusStops.push([this.radiusScale.domain()[0], this.radiusScale.range()[0]]);
         this.radiusStops.push([this.radiusScale.domain()[1], this.radiusScale.range()[1]]);
+    }
 
-        console.log(this.radiusStops);
+    setPopupDataBox() {
+        this.dataBox = new PopupDataBox({
+            id: this.id,
+            dataBoxVars: this.dataBoxVars
+        });
     }
 
     // addLegend() {
@@ -344,9 +368,7 @@ export class MapboxMap {
     // }
 
     resize() {
-        let insetDivs = $(".mapbox-map__inset")
-        let width = insetDivs.width();
-        insetDivs.height(width);
+        this.slider.resize();
     }
 
     changeValue(value) {
