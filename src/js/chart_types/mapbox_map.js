@@ -1,6 +1,8 @@
 let mapboxgl = require('mapbox-gl');
+
 window.mapboxgl = mapboxgl;
-require('mapbox-gl-geocoder');
+var MapboxGeocoder = require('mapbox-gl-geocoder/mapbox-gl-geocoder.min.js');
+// require('mapbox-gl-geocoder');
 let GeoJSON = require('geojson');
 
 import { colors } from "../helper_functions/colors.js";
@@ -15,6 +17,10 @@ let d3 = require("d3");
 
 mapboxgl.acessToken = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
 mapboxgl.config.ACCESS_TOKEN = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
+// MapboxGeocoder.acessToken = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
+
+// window.mapboxgl.acessToken = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
+
 
 export class MapboxMap {
     constructor(vizSettings, imageFolderId) {
@@ -46,6 +52,8 @@ export class MapboxMap {
         this.addControls();
 
         this.map.on('click', (e) => {
+            console.log(e);
+            console.log(e.ltLng);
             let features = this.map.queryRenderedFeatures(e.point, { layers: ['points'] });
             
             console.log(features);
@@ -95,8 +103,8 @@ export class MapboxMap {
                         property: this.radiusVar.variable,
                         stops: this.radiusStops
                     },
-                    // 'circle-stroke-color': "#ffffff",
-                    // 'circle-stroke-width': 2,
+                    'circle-stroke-color': "#ffffff",
+                    'circle-stroke-width': 1,
                 }
             });
         });
@@ -114,12 +122,13 @@ export class MapboxMap {
     }
 
     addControls() {
-        this.map.addControl(new mapboxgl.Geocoder({
+        this.map.addControl(new MapboxGeocoder({
+            accessToken: mapboxgl.accessToken, 
             country:'pk',
             types: ['region', 'district', 'place', 'postcode']
-        }));
+        }), 'top-left');
 
-        this.map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));
+        this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
     }
 
     addSlider() {

@@ -88,7 +88,11 @@ let vizSettingsList = [
         mapboxSettings: {
         	style: "mapbox://styles/newamericamapbox/ciynaplyx001k2sqepxshx05u",
         	center: [69.3451, 30.3753],
-        	zoom: 4,
+        	zoom: 5,
+        	// maxBounds: [
+        	// 	[],
+        	// 	[]
+        	// ],
         },
         colorVar: variables.president,
         radiusVar: variables.total_avg,
