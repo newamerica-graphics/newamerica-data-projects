@@ -14,16 +14,41 @@ let variables = {
 }
 
 let vizSettingsList = [
+	// {
+	// 	id: "#dll-work-group__map", 
+	// 	vizType: "topo_json_map",
+	// 	primaryDataSheet: "states",
+	// 	filterVars: [ variables.show_on_map ],
+	// 	geometryType: "states",
+	// 	geometryVar: variables.state_id,
+	// 	stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
+	// 	filterGroupSettings: {"hidden": false},
+	// },
 	{
 		id: "#dll-work-group__map", 
-		vizType: "topo_json_map",
-		primaryDataSheet: "states",
-		filterVars: [ variables.show_on_map ],
-		geometryType: "states",
-		geometryVar: variables.state_id,
-		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
-		filterGroupSettings: {"hidden": false},
-	},
+		vizType: "dashboard",
+		layoutRows: [
+			[
+				{
+					vizType: "topo_json_map",
+					primaryDataSheet: "states",
+					width: "50%",
+					filterVars: [ variables.show_on_map ],
+					geometryType: "states",
+					geometryVar: variables.state_id,
+					stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
+					filterGroupSettings: {"hidden": false},
+					isMessagePasser: true,
+					messageHandlerType: "change_value",
+				},
+				{
+					vizType: "content_stream",
+					primaryDataSheet: "dll_work",
+					width: "50%",
+				}
+			],
+		]
+	}
 	
 ]
 
