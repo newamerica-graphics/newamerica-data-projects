@@ -58,9 +58,11 @@ export class TopoJsonMap {
 
 		this.g = this.svg.append("g");
 
-		let tooltipSettings = { "id":id, "tooltipVars":tooltipVars }
+		if (tooltipVars) {
+			let tooltipSettings = { "id":id, "tooltipVars":tooltipVars }
 
-		this.tooltip = new Tooltip(tooltipSettings);
+			this.tooltip = new Tooltip(tooltipSettings);
+		}
 
 		if (legendSettings) {
 			this.legendSettings.id = id;
@@ -276,7 +278,7 @@ export class TopoJsonMap {
 		let mousePos = [];
 		mousePos[0] = eventObject.pageX;
 		mousePos[1] = eventObject.pageY;
-		this.tooltip.show(datum.data, mousePos);
+		this.tooltip ? this.tooltip.show(datum.data, mousePos) : null;
 	}
 
 	mouseout(path) {
@@ -284,7 +286,7 @@ export class TopoJsonMap {
 			.style("stroke", this.stroke.color || "white")
 		    .style("stroke-width", this.stroke.width || "1")
 		    .style("stroke-opacity", this.stroke.opacity || "1")
-	    this.tooltip.hide();
+	    this.tooltip ? this.tooltip.hide() : null;
 	}
 
 	clicked(datum, path, eventObject) {
