@@ -84,6 +84,7 @@ let vizSettingsList = [
 		id: "#drone-strikes__strike-map",
 		vizType: "mapbox_map",
 		primaryDataSheet: "strike_data",
+		filterInitialDataBy: { field: "country", value:"Pakistan"},
         mapboxSettings: {
         	style: "mapbox://styles/newamericamapbox/ciynaplyx001k2sqepxshx05u",
         	center: [69.3451, 30.3753],

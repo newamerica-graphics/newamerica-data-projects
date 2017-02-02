@@ -54,6 +54,8 @@ export class MapboxMap {
                 return;
             }
 
+            // this.map.setPaintProperty("points","")
+
             this.dataBox.show(features[0].properties);
             
             let newZoom = this.map.getZoom() < 7 ? 7 : this.map.getZoom();
@@ -65,18 +67,18 @@ export class MapboxMap {
 
     }
 
-    render(data) {
-        console.log(data);
+    render(d) {
+        if (this.filterInitialDataBy) {
+            d[this.primaryDataSheet] = d[this.primaryDataSheet].filter((d) => { return d[this.filterInitialDataBy.field] == this.filterInitialDataBy.value; })
+        }
 
         this.setPopupDataBox();
-        this.setColorScale(data[this.primaryDataSheet]);
-        this.setRadiusScale(data[this.primaryDataSheet]);
+        this.setColorScale(d[this.primaryDataSheet]);
+        this.setRadiusScale(d[this.primaryDataSheet]);
 
-        this.slider.render(data);
+        this.slider.render(d);
 
-        console.log(this.colorScale.domain());
-        console.log(this.colorScale.range());
-        this.processData(data[this.primaryDataSheet]);
+        this.processData(d[this.primaryDataSheet]);
         this.map.on('load', () => {
             this.map.addSource("dataSource", this.source);
             this.map.addLayer({
@@ -93,14 +95,10 @@ export class MapboxMap {
                         property: this.radiusVar.variable,
                         stops: this.radiusStops
                     },
+                    // 'circle-stroke-color': "#ffffff",
+                    // 'circle-stroke-width': 2,
                 }
             });
-
-            // this.addTooltip();
-
-            // this.addFilters();
-
-            // this.addLegend();
         });
 
     }
@@ -134,133 +132,6 @@ export class MapboxMap {
         this.sliderSettings.filterChangeFunction = this.changeValue.bind(this);
         this.slider = new Slider(this.sliderSettings);
     }
-
-    // addTooltip() {
-    //     this.map.on('click', (e) => {
-    //         var features = this.map.queryRenderedFeatures(e.point, { layers: this.additionalLayerNames });
-    //         // console.log(e.lngLat);
-    //         // console.log(features[0]);
-    //         if (!features.length) {
-    //             this.popup.style("display", "none");
-    //             this.map.setFilter("click-layer", ["==", "GEOID2", ""]);
-    //             return;
-    //         }
-
-    //         let feature = features[0];
-           
-    //         this.popupContent
-    //             .html(this.popupContentFunction(feature));
-
-    //         this.popup.style("display", "block");
-
-
-    //         this.map.setFilter("click-layer", ["==", "GEOID2", feature.properties.GEOID2]);
-    //         let newZoom = this.map.getZoom() < 7 ? 7 : this.map.getZoom();
-    //         this.map.flyTo({
-    //             center: e.lngLat,
-    //             zoom: newZoom
-    //         });
-    //     });
-    // }
-
-    // addFilters() {
-    //     let filterGroupContainer = d3.select(this.id).append("div")
-    //         .attr("class", "mapbox-map__filter-group-container")
-    //     let i = 0;
-    //     for (let filter of this.filters) {
-    //         let currFilter = filterGroupContainer.append("div")
-    //             .attr("id", "filter-" + i);
-
-    //         if (filter.canToggleMultiple) {
-    //             this.addMultiToggleFilter(currFilter, filter.filterVars, filter.toggleInsets);
-    //         } else {
-    //             this.addSelectFilter(currFilter, filter.filterVars, filter.label);
-    //         }
-    //         i++;
-    //     }
-    // }
-
-    // addSelectFilter(filterDomElem, filterVars, hasLabel) {
-    //     filterDomElem.attr("class", "mapbox-map__filter-group select");
-
-    //     if (hasLabel) {
-    //         filterDomElem.append("div")
-    //             .attr("class", "mapbox-map__filter-group__label")
-    //             .text("Base Layer:");
-    //     }
-
-    //     let selectBox = filterDomElem.append('select')
-    //         .attr("class", "mapbox-map__filter-group__select")
-    //         .classed("has-label", hasLabel)
-    //         .on("change", (a, b, c) => {
-    //             let selectedIndex = d3.event.srcElement.selectedIndex;
-    //             for (let i = 0; i < filterVars.length; i++) {
-    //                 let visibility = i == selectedIndex ? 'visible' : 'none';
-    //                 this.map.setLayoutProperty(filterVars[i].variable, 'visibility', visibility);
-    //             }
-
-    //             this.currToggledIndex = selectedIndex;
-    //             this.setLegendContents()
-    //         });
-
-    //     for (let i = 0; i < filterVars.length; i++) {
-    //         selectBox.append('option')
-    //             .text(filterVars[i].displayName);
-    //     }
-    // }
-
-    // addMultiToggleFilter(filterDomElem, filterVars, toggleInsets) {
-    //     filterDomElem.attr("class", "mapbox-map__filter-group multi-toggle")
-    //     let map = this.map;
-    //     let toggleInsetFunction = this.toggleInsetMaps.bind(this);
-    //     for (let i = 0; i < filterVars.length; i++) {
-    //         let id = filterVars[i].variable;
-
-    //         let currFilter = filterDomElem.append('div')
-    //             .attr("class", "mapbox-map__filter-group__multi-toggle-option")
-    //             .classed("active", () => {
-    //                 if (this.toggleOffLayers) {
-    //                     for (let layer of this.toggleOffLayers) {
-    //                         if (layer.variable === filterVars[i].variable) {
-    //                             return false;
-    //                         }
-    //                     }
-    //                 }
-    //                 return true;
-    //             })
-    //             .attr("value", id)
-    //             .on("click", (a, index, elem) => {
-    //                 var clickedLayer = d3.select(elem[0]).attr("value");
-    //                 d3.event.preventDefault();
-    //                 d3.event.stopPropagation();
-
-    //                 var visibility = this.map.getLayoutProperty(clickedLayer, 'visibility');
-
-    //                 if (visibility === 'visible') {
-    //                     this.map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-    //                     toggleInsets ? this.toggleInsetMaps(clickedLayer, 'none') : null;
-    //                     d3.select(elem[0]).classed("active", false);
-    //                 } else {
-    //                     d3.select(elem[0]).classed("active", true);
-    //                     toggleInsets ? this.toggleInsetMaps(clickedLayer, 'visible') : null;
-    //                     this.map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-    //                 }
-    //             });
-
-    //         currFilter.append("svg")
-    //             .attr("height", 10)
-    //             .attr("width", 10)
-    //           .append("circle")
-    //             .attr("r", 4)
-    //             .attr("cx", 5)
-    //             .attr("cy", 5)
-    //             .attr("fill", filterVars[i].color)
-
-
-    //         currFilter.append("h5")
-    //             .text(filterVars[i].displayName);
-    //     }
-    // }
 
 
     setColorScale(data) {
