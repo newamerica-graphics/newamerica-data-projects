@@ -36,6 +36,7 @@ export class ContentStream {
 	}
 
 	changeValue(value) {
+		if (!value) { return; }
 		let valueList = this.dataNest.get(value);
 		let sortedList = valueList.sort((a, b) => { return new Date(a.date) - new Date(b.date); });
 

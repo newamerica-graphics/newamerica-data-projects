@@ -39,12 +39,13 @@ let vizSettingsList = [
 					stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
 					filterGroupSettings: {"hidden": false},
 					isMessagePasser: true,
-					messageHandlerType: "change_value",
 				},
 				{
 					vizType: "content_stream",
 					primaryDataSheet: "dll_work",
 					width: "50%",
+					isMessagePasser: false,
+					messageHandlerType: "change_value",
 				}
 			],
 		]
