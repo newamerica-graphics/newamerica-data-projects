@@ -52,17 +52,21 @@ export class MapboxMap {
         this.addControls();
 
         this.map.on('click', (e) => {
+            console.log(e.point);
             console.log(e);
-            console.log(e.ltLng);
             let features = this.map.queryRenderedFeatures(e.point, { layers: ['points'] });
             
             console.log(features);
             if (!features.length) {
+                this.map.setFilter("points-selected", ["==", "id", ""]);
                 this.dataBox.hide();
                 return;
             }
 
-            // this.map.setPaintProperty("points","")
+            console.log(features[0].properties.id);
+            console.log(features[0].properties._id_deprecated);
+
+            this.map.setFilter("points-selected", ["==", "id", features[0].properties.id]);
 
             this.dataBox.show(features[0].properties);
             
@@ -107,6 +111,26 @@ export class MapboxMap {
                     'circle-stroke-width': 1,
                 }
             });
+
+            this.map.addLayer({
+                "id": "points-selected",
+                "type": "circle",
+                "source": "dataSource",
+                "paint": {
+                    'circle-color': {
+                        property: this.colorVar.variable,
+                        type: 'categorical',
+                        stops: this.colorStops
+                    },
+                    'circle-radius': {
+                        property: this.radiusVar.variable,
+                        stops: this.radiusStops
+                    },
+                    'circle-stroke-color': "#ffffff",
+                    'circle-stroke-width': 5,
+                },
+                "filter": ["==", "id", ""]
+            });
         });
 
     }
@@ -125,7 +149,7 @@ export class MapboxMap {
         this.map.addControl(new MapboxGeocoder({
             accessToken: mapboxgl.accessToken, 
             country:'pk',
-            types: ['region', 'district', 'place', 'postcode']
+            // types: ['region', 'district', 'place', 'postcode']
         }), 'top-left');
 
         this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');

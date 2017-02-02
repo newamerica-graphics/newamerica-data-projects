@@ -22,12 +22,13 @@
 	&__subtitle {
 		color: palette-get(na-black-40);
         font-size: 14px;
+        padding-bottom: 10px;
         margin-bottom: 0px;
 	}
 
 	&__category-label {
 		font-weight: bold;
-        font-size: 16px;
+        font-size: 14px;
         padding: 10px 0px;
         margin-bottom: 0px;
         color: palette-get(na-black);
@@ -39,6 +40,7 @@
 	}
 
 	&__value-container {
+		padding-left: 3px;
 		&.hidden {
 			display: none;
 		}

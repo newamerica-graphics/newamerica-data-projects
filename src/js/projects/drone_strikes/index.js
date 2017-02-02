@@ -87,7 +87,7 @@ let vizSettingsList = [
 		filterInitialDataBy: { field: "country", value:"Pakistan"},
         mapboxSettings: {
         	style: "mapbox://styles/newamericamapbox/ciynaplyx001k2sqepxshx05u",
-        	center: [69.3451, 30.3753],
+        	center: [69.3451, 32.3753],
         	zoom: 5,
         	// maxBounds: [
         	// 	[],
