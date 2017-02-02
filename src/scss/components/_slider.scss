@@ -26,5 +26,16 @@
         z-index: 100;
         /*background-color: white;
         border: 1px solid palette-get(na-black-10);*/
+
+        & > .has-show-all {
+        	width: calc(100% - 50px);
+        	right: 50px;
+        }
+
+        & > .show-all-button {
+        	position: absolute;
+        	right: 0px;
+        	top: 0px;
+        }
 	}
 }

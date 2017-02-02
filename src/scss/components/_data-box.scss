@@ -27,14 +27,15 @@
 
 	&__category-label {
 		font-weight: bold;
-        font-size: 14px;
+        font-size: 16px;
+        padding: 10px 0px;
+        margin-bottom: 0px;
         color: palette-get(na-black);
 	}
 
 	&__category-container {
 		width: 100%;
         display: block;
-        margin-top: 10px;
 	}
 
 	&__value-container {
@@ -50,11 +51,11 @@
 
 	&__value-label {
 		padding-right: 5px;
-		font-weight: bold;
-        color: palette-get(na-black);
+		font-weight: normal;
+        color: palette-get(na-black-40);
 	}
 
 	&__value {
-		color: palette-get(na-black-40);
+		color: palette-get(na-black);
 	}
 }

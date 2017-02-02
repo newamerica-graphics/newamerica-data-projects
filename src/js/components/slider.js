@@ -13,7 +13,7 @@ let animationButtonPaths = {pause: "M11,10 L17,10 17,26 11,26 M20,10 L26,10 26,2
 
 export class Slider {
 	constructor(componentSettings) {
-		let { id, filterChangeFunction, primaryDataSheet, variable, automated } = componentSettings;
+		let { id, filterChangeFunction, primaryDataSheet, variable, automated, showAllButton } = componentSettings;
 		this.id = id;
 		this.primaryDataSheet = primaryDataSheet;
 		this.variable = variable.variable;
@@ -23,7 +23,11 @@ export class Slider {
 
 		this.h = 30;
 
-		this.svg = d3.select(this.id)
+		this.containerDiv = d3.select(this.id)
+			.append("div")
+			.attr("class", "slider-div");
+
+		this.svg = this.containerDiv
 			.append("svg");
 
 		this.animationButton = this.svg.append("path")
@@ -54,10 +58,20 @@ export class Slider {
 		    .attr("r", 9)
 		    .attr("cx", margin.left);
 
+		if(showAllButton) {
+			this.containerDiv
+				.classed("has-show-all", true);
+
+			this.showAll = d3.select(this.id)
+				.append("div")
+				.attr("class", "button show-all-button")
+				.text("Show All")
+				.on("click", () => { filterChangeFunction("all"); });
+		}
 	}
 
 	setDimensions() {
-		this.w = $(this.id).width();
+		this.w = $(this.id + " > .slider-div").width();
 		
 		this.svg
 			.attr("width", "100%")
@@ -103,6 +117,15 @@ export class Slider {
 	        .on("start.interrupt", () => { this.slider.interrupt(); })
 	        .on("start drag",() => { this.dragEvent(d3.event.x); }));
 	        // .on("end", () => { this.endEvent(d3.event.x); }));
+		
+		console.log(d3.selectAll(".tick > text"));
+		d3.selectAll(".tick > text")
+			.style("cursor", "pointer")
+			.on("click", (d) => {
+				this.sliderVal = d;
+				this.handle.attr("cx", this.scale(d));
+				this.filterChangeFunction(this.sliderVal);
+			})
 	}
 
 	dragEvent(newX) {

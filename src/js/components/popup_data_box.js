@@ -2,6 +2,8 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
+import { formatValue } from "../helper_functions/format_value.js";
+
 export class PopupDataBox {
 	constructor(componentSettings) {
 		Object.assign(this, componentSettings);
@@ -52,13 +54,13 @@ export class PopupDataBox {
 		this.dataBox.classed("hidden", false);
 
 		this.title
-			.text(featureProps[this.dataBoxVars.title.variable]);
+			.text(formatValue(featureProps[this.dataBoxVars.title.variable], this.dataBoxVars.title.format));
 
 		let subtitleText = "",
 			i = 0;
 		for (let subTitleVar of this.dataBoxVars.subtitle) {
 			subtitleText += i != 0 ? ", " : "";
-			subtitleText += featureProps[subTitleVar.variable];
+			subtitleText += formatValue(featureProps[subTitleVar.variable], subTitleVar.format);
 			i++;
 		}
 
@@ -67,12 +69,20 @@ export class PopupDataBox {
 
 		for (let category of this.dataBoxVars.categories) {
 			for (let field of category.fields) {
-				let val = featureProps[field.variable];
+				let val = featureProps[field.variable],
+				format = field.format;
 				if (val && val != "null") {
-					this.valueFields[field.variable]
-						.classed("hidden", false)
-					.select(".data-box__value")
-						.text(featureProps[field.variable]);
+					if (format != "link") {
+						this.valueFields[field.variable]
+							.classed("hidden", false)
+						  .select(".data-box__value")
+							.text(formatValue(featureProps[field.variable], format));
+					} else {
+						this.valueFields[field.variable]
+							.classed("hidden", false)
+						  .select(".data-box__value")
+							.html(formatValue(featureProps[field.variable], format));
+					}
 				} else {
 					this.valueFields[field.variable]
 						.classed("hidden", true)

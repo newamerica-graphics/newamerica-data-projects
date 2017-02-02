@@ -374,7 +374,11 @@ export class MapboxMap {
     changeValue(value) {
         console.log("changing mapbox value " + value);
         if (this.map.loaded() && value) {
-            this.map.setFilter('points', ['==', 'year', String(value)]);
+            if (value == "all") {
+                this.map.setFilter('points', ['!=', 'year', ""]);
+            } else {
+                this.map.setFilter('points', ['==', 'year', String(value)]);
+            }
         }
     }
 }

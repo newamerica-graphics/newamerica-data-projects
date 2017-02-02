@@ -19,6 +19,7 @@ let variables = {
 	president_trump: {"variable":"president_trump", "displayName":"Trump", "format": "number", "color": colors.red.dark},
 	target_organization_name: {"variable":"target_organization_name", "displayName":"Target Organization", "format": "string", "scaleType":"categorical"},
 	target_description: {"variable":"target_description", "displayName":"Target Description", "format": "string", "disableTableOrdering": true},
+	sources_combined: {"variable":"sources_combined", "displayName":"Sources", "format": "link"},
 
 	total_strikes: {"variable":"total_strikes", "displayName":"Total Strikes", "format": "number"},
 	civilians_lowhigh: {"variable":"civilians_lowhigh", "displayName":"Civilians", "format": "string", "disableTableOrdering": true},
@@ -92,6 +93,7 @@ let vizSettingsList = [
         radiusVar: variables.total_avg,
         sliderSettings: {
 			variable: variables.year,
+			showAllButton: true,
 			automated: false,
         },
         dataBoxVars: {
@@ -106,7 +108,11 @@ let vizSettingsList = [
 	        		label: "Casualties",
 	        		fields: [variables.civilians_avg, variables.militants_avg, variables.unknown_avg, variables.total_avg]
 	        	},
-        	]
+	        	{
+	        		label: "Sources",
+	        		fields: [variables.sources_combined]
+	        	}
+        	],
         }
 	},
 
