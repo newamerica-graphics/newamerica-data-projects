@@ -191,7 +191,7 @@ export class TopoJsonMap {
 		    .style("stroke", this.stroke.color || "white")
 		    .style("stroke-width", this.stroke.width || "1")
 		    .style("stroke-opacity", this.stroke.opacity || "1")
-		    .style("cursor", this.zoomable ? "pointer" : "auto")
+		    .style("cursor", this.zoomable || this.interaction == "click" ? "pointer" : "auto")
 		    .on("mouseover", (d, index, paths) => { return this.interaction != "click" ? this.mouseover(d, paths[index], d3.event) : null })
 		    .on("mouseout", (d, index, paths) => { return this.interaction != "click" ? this.mouseout(paths[index]) : null })
 		    .on("click", (d, index, paths) => {

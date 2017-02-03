@@ -44,6 +44,7 @@ let vizSettingsList = [
 				{
 					vizType: "content_stream",
 					primaryDataSheet: "dll_work",
+					defaultText: "The Dual Language Learner Working Group has been engaging in projects and with communities across the country for the past two years.  Click on a state to explore the work we have undertaken there.",
 					width: "50%",
 					isMessagePasser: false,
 					messageHandlerType: "change_value",

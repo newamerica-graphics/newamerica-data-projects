@@ -10,6 +10,20 @@ export class ContentStream {
 			.append("div")
 			.attr("class", "content-stream__container");
 
+		this.defaultText = contentStreamContainer
+			.append("div")
+			.append("h5")
+			.attr("class", "content-stream__default-text")
+			.text(this.defaultText);
+
+		let contentStreamTitleContainer = contentStreamContainer
+			.append("div")
+			.attr("class", "content-stream__title-container");
+
+		this.contentStreamTitle = contentStreamTitleContainer
+			.append("div")
+			.attr("class", "content-stream__title");
+
 		this.contentStream = contentStreamContainer
 			.append("ul")
 			.attr("class", "content-stream");
@@ -27,15 +41,25 @@ export class ContentStream {
 
 	hide() {
 		if (this.entries) { this.entries.remove(); }
+
+		this.contentStreamTitle
+			.text("");
+
+		this.defaultText.classed("hidden", false);
 	}
 
 	changeValue(value) {
 		if (!value) { return; }
 		let valueList = this.dataNest.get(String(value));
 		if (!valueList) { this.hide(); return; }
+		this.defaultText.classed("hidden", true);
 		let sortedList = valueList.sort((a, b) => { return new Date(a.date) - new Date(b.date); });
 
 		if (this.entries) { this.entries.remove(); }
+		if (this.fadeout) { this.fadeout.remove(); }
+
+		this.contentStreamTitle
+			.text(sortedList[0].state);
 
 		this.entries = this.contentStream.selectAll("li")
 			.data(sortedList)
@@ -69,6 +93,9 @@ export class ContentStream {
 			.text((d) => { return d.description; });
 
 
+		this.fadeout = this.contentStream
+			.append("div")
+			.attr("class", "content-stream__fadeout");
 		   	
 	}
 
