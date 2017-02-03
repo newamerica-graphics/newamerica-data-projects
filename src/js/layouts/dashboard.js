@@ -8,6 +8,7 @@ import { MapboxMap } from "../chart_types/mapbox_map.js";
 import { SelectBox } from "../components/select_box.js";
 import { TextBox } from "../components/text_box.js";
 import { Slider } from "../components/slider.js";
+import { ContentStream } from "../components/content_stream.js";
 
 export class Dashboard {
 	constructor(vizSettings) {
@@ -45,6 +46,9 @@ export class Dashboard {
 			
 		let component;
 		switch (componentSettings.vizType) {
+			case "content_stream":
+				component = new ContentStream(componentSettings);
+				break;
 			case "dot_histogram":
 				component = new DotHistogram(componentSettings);
 				break;

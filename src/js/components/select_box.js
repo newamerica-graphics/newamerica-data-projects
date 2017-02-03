@@ -5,6 +5,7 @@ let d3 = require("d3");
 export class SelectBox {
 	constructor(componentSettings) {
 		let { id, filterChangeFunction, primaryDataSheet, variable } = componentSettings;
+		this.id = id;
 		this.primaryDataSheet = primaryDataSheet;
 		this.variable = variable;
 		this.selectBox = d3.select(id).append("select")
@@ -32,7 +33,9 @@ export class SelectBox {
 	}
 
 	changeValue(value) {
+		console.log("changing value" + value);
 		this.selectBoxOptions.attr("selected", (d, i) => {  return i == Number(value); });
+		$(this.id + " .select-box").val(value);
 	}
 
 }
