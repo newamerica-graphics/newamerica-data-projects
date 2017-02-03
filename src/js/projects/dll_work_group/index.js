@@ -39,6 +39,7 @@ let vizSettingsList = [
 					stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
 					filterGroupSettings: {"hidden": false},
 					isMessagePasser: true,
+					interaction: "click",
 				},
 				{
 					vizType: "content_stream",

@@ -19,7 +19,7 @@ let topojson = require("topojson");
 
 export class TopoJsonMap {
 	constructor(vizSettings) {
-		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, stroke, legendSettings, filterGroupSettings, zoomable, defaultFill } = vizSettings;
+		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, stroke, legendSettings, filterGroupSettings, zoomable, defaultFill, valChangedFunction, filterChangeFunction, interaction } = vizSettings;
 
 		this.id = id;
 		this.filterVars = filterVars;
@@ -32,6 +32,10 @@ export class TopoJsonMap {
 		this.currFilterIndex = 0;
 		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
 		this.zoomable = zoomable;
+		this.dashboardChangeFunc = filterChangeFunction;
+		this.interaction = interaction;
+
+		if (this.interaction == "click") { this.currClicked == null}; 
 
 		this.defaultFill = defaultFill ? defaultFill : "#fff";
 
@@ -49,7 +53,7 @@ export class TopoJsonMap {
 				.append("div")
 				.attr("class", "zoom-out-prompt")
 				.text("Return to Full Map")
-				.on("click", () => { return this.clicked(null, null, null); });
+				.on("click", () => { return this.zoom(null, null, null); });
 		}
 
 		this.svg = mapContainer
@@ -188,9 +192,15 @@ export class TopoJsonMap {
 		    .style("stroke-width", this.stroke.width || "1")
 		    .style("stroke-opacity", this.stroke.opacity || "1")
 		    .style("cursor", this.zoomable ? "pointer" : "auto")
-		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event); })
-		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); })
-		    .on("click", (d, index, paths) => { return this.zoomable ? this.clicked(d, paths[index], d3.event) : null; });
+		    .on("mouseover", (d, index, paths) => { return this.interaction != "click" ? this.mouseover(d, paths[index], d3.event) : null })
+		    .on("mouseout", (d, index, paths) => { return this.interaction != "click" ? this.mouseout(paths[index]) : null })
+		    .on("click", (d, index, paths) => {
+		    	if (this.zoomable) {
+		    		return this.zoom(d, paths[index], d3.event);
+		    	} else if (this.interaction == "click") {
+		    		return this.clicked(d, paths[index], d3.event);
+		    	}
+		    });
 	}
 
 	setFill(d) {
@@ -270,6 +280,7 @@ export class TopoJsonMap {
 	}
 
 	mouseover(datum, path, eventObject) {
+		console.log(datum, path, eventObject);
 		d3.select(path)
 			.style("stroke", this.stroke.hoverColor || "white")
 			.style("stroke-width", this.stroke.hoverWidth || "3")
@@ -279,6 +290,7 @@ export class TopoJsonMap {
 		mousePos[0] = eventObject.pageX;
 		mousePos[1] = eventObject.pageY;
 		this.tooltip ? this.tooltip.show(datum.data, mousePos) : null;
+		this.dashboardChangeFunc ? this.dashboardChangeFunc(datum.id, this) : null;
 	}
 
 	mouseout(path) {
@@ -290,6 +302,19 @@ export class TopoJsonMap {
 	}
 
 	clicked(datum, path, eventObject) {
+		console.log(this.currClicked);
+		if (this.currClicked) {
+			this.mouseout(this.currClicked);
+			this.currClicked = null;
+		}
+
+		if (datum && datum[this.currFilterVar] != 0) {
+			this.mouseover(datum, path, eventObject);
+			this.currClicked = path
+		}
+	}
+
+	zoom(datum, path, eventObject) {
 		let x, y, k;
 
 		if (datum && this.centered !== datum) {

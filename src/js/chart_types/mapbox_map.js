@@ -1,6 +1,6 @@
 let mapboxgl = require('mapbox-gl');
 window.mapboxgl = mapboxgl;
-require('mapbox-gl-geocoder');
+// require('mapbox-gl-geocoder');
 
 import { colors } from "../helper_functions/colors.js";
 // import { getColorScale } from "../helper_functions/get_color_scale.js";
