@@ -37,7 +37,9 @@ var config = {
     extensions: ['', '.js'],
     alias: {
       // webworkify: 'webworkify-webpack',
-      'mapbox-gl': path.resolve('./node_modules/mapbox-gl/dist/mapbox-gl.js')
+
+      'mapbox-gl': path.resolve('./node_modules/mapbox-gl/dist/mapbox-gl.js'),
+      'mapbox-gl-geocoder': path.resolve('./node_modules/mapbox-gl/plugins/src/mapbox-gl-geocoder/v2.0.1/'),
     }
   },
   module: {
@@ -83,7 +85,10 @@ var config = {
     })
   ],
   node: {
-    fs: "empty"
+    fs: "empty",
+    net: 'empty',
+    tls: 'empty',
+    console: true
   }
 };
 

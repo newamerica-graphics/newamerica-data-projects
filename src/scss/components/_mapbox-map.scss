@@ -273,6 +273,12 @@
             margin-top: 3px;
         }
 
+        &__cell-container__label, &__proportional-circle__label {
+            font-weight: bold;
+            font-size: 14px;
+            padding-top: 10px;
+        }
+
     }
 
 }

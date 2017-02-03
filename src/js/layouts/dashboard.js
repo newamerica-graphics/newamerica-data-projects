@@ -4,6 +4,7 @@ let d3 = require("d3");
 
 import { DotHistogram } from "../chart_types/dot_histogram.js";
 import { TopoJsonMap } from "../chart_types/topo_json_map.js";
+import { MapboxMap } from "../chart_types/mapbox_map.js";
 import { SelectBox } from "../components/select_box.js";
 import { TextBox } from "../components/text_box.js";
 import { Slider } from "../components/slider.js";
@@ -50,6 +51,9 @@ export class Dashboard {
 				break;
 			case "dot_histogram":
 				component = new DotHistogram(componentSettings);
+				break;
+			case "mapbox_map":
+				component = new MapboxMap(componentSettings);
 				break;
 			case "select_box":
 				component = new SelectBox(componentSettings);

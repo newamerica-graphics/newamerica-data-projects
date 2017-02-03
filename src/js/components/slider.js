@@ -13,23 +13,27 @@ let animationButtonPaths = {pause: "M11,10 L17,10 17,26 11,26 M20,10 L26,10 26,2
 
 export class Slider {
 	constructor(componentSettings) {
-		let { id, filterChangeFunction, primaryDataSheet, variable } = componentSettings;
+		let { id, filterChangeFunction, primaryDataSheet, variable, automated, showAllButton } = componentSettings;
 		this.id = id;
 		this.primaryDataSheet = primaryDataSheet;
 		this.variable = variable.variable;
 		this.filterChangeFunction = filterChangeFunction;
 
-		this.animationState = "playing";
+		this.animationState = automated ? "playing" : "paused";
 
 		this.h = 30;
 
-		this.svg = d3.select(this.id)
+		this.containerDiv = d3.select(this.id)
+			.append("div")
+			.attr("class", "slider-div");
+
+		this.svg = this.containerDiv
 			.append("svg");
 
 		this.animationButton = this.svg.append("path")
 			.style("fill", "grey")
 			.style("cursor", "pointer")
-			.attr("d", animationButtonPaths.pause)
+			.attr("d", automated ? animationButtonPaths.pause : animationButtonPaths.play)
 			.on("click", () => { return this.toggleAnimation(this.currAnimationVal); });
 
 		this.slider = this.svg.append("g")
@@ -54,10 +58,20 @@ export class Slider {
 		    .attr("r", 9)
 		    .attr("cx", margin.left);
 
+		if(showAllButton) {
+			this.containerDiv
+				.classed("has-show-all", true);
+
+			this.showAll = d3.select(this.id)
+				.append("div")
+				.attr("class", "button show-all-button")
+				.text("Show All")
+				.on("click", () => { filterChangeFunction("all"); });
+		}
 	}
 
 	setDimensions() {
-		this.w = $(this.id).width();
+		this.w = $(this.id + " > .slider-div").width();
 		
 		this.svg
 			.attr("width", "100%")
@@ -85,10 +99,12 @@ export class Slider {
 
 	render(data) {
 		this.data = data[this.primaryDataSheet];
-		let dataExtents = d3.extent(this.data, (d) => { return Number(d[this.variable]); });
+		let dataExtents = d3.extent(this.data, (d) => { return Number(d[this.variable]) != 0 ? Number(d[this.variable]) : null; });
 		this.scale.domain([dataExtents[0], dataExtents[1]]);
 		this.sliderVal = dataExtents[0];
 
+		console.log(this.data);
+		console.log(dataExtents);
 		this.setDimensions();
 		this.currAnimationVal = this.scale.range()[0];
  
@@ -101,6 +117,15 @@ export class Slider {
 	        .on("start.interrupt", () => { this.slider.interrupt(); })
 	        .on("start drag",() => { this.dragEvent(d3.event.x); }));
 	        // .on("end", () => { this.endEvent(d3.event.x); }));
+		
+		console.log(d3.selectAll(".tick > text"));
+		d3.selectAll(".tick > text")
+			.style("cursor", "pointer")
+			.on("click", (d) => {
+				this.sliderVal = d;
+				this.handle.attr("cx", this.scale(d));
+				this.filterChangeFunction(this.sliderVal);
+			})
 	}
 
 	dragEvent(newX) {
@@ -155,17 +180,17 @@ export class Slider {
 	}
 
 	addAnimationTrigger() {
-		let id = this.id.replace("#", "");
-		let waypoint = new Waypoint({
-		  element: document.getElementById(id),
-		  offset: '50%',
-		  handler: () => {
-		    console.log(this);
-		    this.animationState = "paused";
-			this.toggleAnimation(this.scale.range()[0])
-			waypoint.destroy();
-		  }
-		});
+		// let id = this.id.replace("#", "");
+		// let waypoint = new Waypoint({
+		//   element: document.getElementById(id),
+		//   offset: '50%',
+		//   handler: () => {
+		//     console.log(this);
+		//     this.animationState = "paused";
+		// 	this.toggleAnimation(this.scale.range()[0])
+		// 	waypoint.destroy();
+		//   }
+		// });
 	}
 	
 	resize() {

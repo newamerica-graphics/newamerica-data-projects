@@ -1,10 +1,15 @@
 let mapboxgl = require('mapbox-gl');
+
 window.mapboxgl = mapboxgl;
+var MapboxGeocoder = require('mapbox-gl-geocoder/mapbox-gl-geocoder.min.js');
 // require('mapbox-gl-geocoder');
+let GeoJSON = require('geojson');
 
 import { colors } from "../helper_functions/colors.js";
-// import { getColorScale } from "../helper_functions/get_color_scale.js";
+import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { formatValue } from "../helper_functions/format_value.js";
+import { PopupDataBox } from "../components/popup_data_box.js";
+import { Slider } from "../components/slider.js";
 
 import $ from 'jquery';
 
@@ -12,7 +17,9 @@ let d3 = require("d3");
 
 mapboxgl.acessToken = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
 mapboxgl.config.ACCESS_TOKEN = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
+// MapboxGeocoder.acessToken = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
 
+// window.mapboxgl.acessToken = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
 
 
 export class MapboxMap {
@@ -21,346 +28,172 @@ export class MapboxMap {
             alert('Your browser does not support Mapbox GL');
             return;
         }
-        let {id, mapboxStyleUrl, additionalLayers, tooltipVars, insetMapSettings, source, filters, popupContentFunction, popupColumns, toggleOffLayers} = vizSettings;
-        this.id = id;
-        this.source = source;
-        this.filters = filters;
-        this.additionalLayers = additionalLayers;
-        this.tooltipVars = tooltipVars;
-        this.insetMapSettings = insetMapSettings;
-        this.popupContentFunction = popupContentFunction;
-        this.toggleOffLayers = toggleOffLayers;
-        this.colorStops = [];
-        this.currToggledIndex = 0;
+        
+        Object.assign(this, vizSettings);
 
-
-        let mapContainer = d3.select(id).append("div")
-            .attr("id", id.replace("#", "") + '-map-container')
+        let mapContainer = d3.select(this.id).append("div")
+            .attr("id", this.id.replace("#", "") + '-map-container')
             .style("width", "100%")
             .style("height", "700px");
 
-        console.log($(id));
-        this.map = new mapboxgl.Map({
-            container: id.replace("#", "") + '-map-container',
-            style: mapboxStyleUrl,
-            zoom: 4,
-            center: [-98.5795, 39.8282],
+        this.addSlider();
+
+        Object.assign(this.mapboxSettings, {
+            container: this.id.replace("#", "") + '-map-container',
             minZoom: 4,
             maxZoom: 15,
             attributionControl: true
-        });
+        })
 
-        if (insetMapSettings) { 
-            this.createInsetMaps();
-        }
-
-        // this.setColorScales();
+        this.map = new mapboxgl.Map(this.mapboxSettings);
 
         this.addControls();
-        
-        this.popup = mapContainer.append("div")
-            .attr("class", "mapbox-map__popup columns-"  + popupColumns)
-            .style("display", "none");
 
-        this.popupClose = this.popup.append("div")
-            .attr("class", "mapbox-map__popup__close")
-            .on("click", () => {
-                this.popup.style("display", "none");
-                this.map.setFilter("click-layer", ["==", "GEOID2", ""]);
-            });
-
-        this.popupContent = this.popup.append("div");
-
-    }
-
-    render() {
-        this.map.on('load', () => {
-            this.map.addSource(this.source.id,{
-                'type': 'vector',
-                'url': this.source.url
-            });
-            this.addLayers();
-
-            this.addTooltip();
-
-            this.addFilters();
-
-            this.addLegend();
-        });
-
-    }
-
-    addControls() {
-        this.map.addControl(new mapboxgl.Geocoder({
-            country:'us',
-            types: ['country', 'region', 'district', 'place', 'postcode']
-        }));
-
-        this.map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));
-    }
-
-    addLayers() {
-        this.additionalLayerNames = [];
-        for (let i = 0; i < this.additionalLayers.length; i++) {
-            let currLayer = this.additionalLayers[i],
-                numBins = currLayer.numBins,
-                customDomain = currLayer.customDomain,
-                customRange = currLayer.customRange;
-            //     dataMin = currLayer.customDomain[0],
-            //     dataMax = currLayer.customDomain[1];
-
-            // let dataSpread = dataMax - dataMin;
-            // dataSpread -= dataSpread/4;
-            // let binInterval = dataSpread/numBins;
-
-
-            this.additionalLayerNames.push(currLayer.variable);
-
-            let fillColorStops = [],
-                outlineColorStops = [];
-
-            for (let j = 0; j < numBins; j++) {
-                fillColorStops.push([customDomain[j], customRange[j]]);
-                // let outlineColor = this.colorScales[i].range()[j].replace("rgb", "rgba").replace(")", ", .7)");
-
-                // console.log(outlineColor);
-                // fillColorStops.push([dataMin + j*binInterval, this.colorScales[i].range()[j]]);
-                // outlineColorStops.push([{zoom: 1, value: dataMin + j*binInterval}, outlineColor]);
-                // outlineColorStops.push([{zoom: 11, value: dataMin + j*binInterval}, "white"]);
-            }
-
-            console.log(fillColorStops);
-            this.colorStops[i] = fillColorStops;
-            this.map.addLayer(
-                {
-                    'id': currLayer.variable,
-                    'source': this.source.id,
-                    'source-layer': this.source.sourceLayer,
-                    'type': 'fill',
-                    // 'filter': ['>', , 0],
-                    'paint': {
-                        'fill-color': {
-                            property: currLayer.variable,
-                            type: "interval",
-                            stops: fillColorStops
-                        },
-                        'fill-opacity': {
-                            stops: [ [0, 1], [11, .75]]
-                        },
-                        // 'fill-outline-color': {
-                        //     property: currLayer.variable,
-                        //     type: "interval",
-                        //     stops: outlineColorStops
-                        // }
-                    }
-                },'water'
-            );
-
-            i != 0 ? this.map.setLayoutProperty(currLayer.variable, 'visibility', 'none') : null;
-        }
-
-        this.addClickLayer();
-        
-        // if (this.toggleOffLayers) {
-        //     for (let layer of this.toggleOffLayers) {
-        //         this.map.setLayoutProperty(layer.variable, 'visibility', 'none')
-        //     }
-        // }
-    }
-
-    addClickLayer() {
-       this.map.addLayer({
-            "id": "click-layer",
-            "type": "fill",
-            'source': this.source.id,
-            'source-layer': this.source.sourceLayer,
-            "paint": {
-                "fill-color": "rgba(0,0,0,0)",
-                "fill-opacity": 1,
-                'fill-outline-color': colors.black
-            },
-            "filter": ["==", "GEOID2", ""]
-        },'admin-2-boundaries-dispute');
-    }
-
-    addTooltip() {
         this.map.on('click', (e) => {
-            var features = this.map.queryRenderedFeatures(e.point, { layers: this.additionalLayerNames });
-            // console.log(e.lngLat);
-            // console.log(features[0]);
+            console.log(e.point);
+            console.log(e);
+            let features = this.map.queryRenderedFeatures(e.point, { layers: ['points'] });
+            
+            console.log(features);
             if (!features.length) {
-                this.popup.style("display", "none");
-                this.map.setFilter("click-layer", ["==", "GEOID2", ""]);
+                this.map.setFilter("points-selected", ["==", "id", ""]);
+                this.dataBox.hide();
                 return;
             }
 
-            let feature = features[0];
-           
-            this.popupContent
-                .html(this.popupContentFunction(feature));
+            console.log(features[0].properties.id);
+            console.log(features[0].properties._id_deprecated);
 
-            this.popup.style("display", "block");
+            this.map.setFilter("points-selected", ["==", "id", features[0].properties.id]);
 
-
-            this.map.setFilter("click-layer", ["==", "GEOID2", feature.properties.GEOID2]);
+            this.dataBox.show(features[0].properties);
+            
             let newZoom = this.map.getZoom() < 7 ? 7 : this.map.getZoom();
             this.map.flyTo({
                 center: e.lngLat,
                 zoom: newZoom
             });
         });
+
     }
 
-    addFilters() {
-        let filterGroupContainer = d3.select(this.id).append("div")
-            .attr("class", "mapbox-map__filter-group-container")
-        let i = 0;
-        for (let filter of this.filters) {
-            let currFilter = filterGroupContainer.append("div")
-                .attr("id", "filter-" + i);
-
-            if (filter.canToggleMultiple) {
-                this.addMultiToggleFilter(currFilter, filter.filterVars, filter.toggleInsets);
-            } else {
-                this.addSelectFilter(currFilter, filter.filterVars, filter.label);
-            }
-            i++;
-        }
-    }
-
-    addSelectFilter(filterDomElem, filterVars, hasLabel) {
-        filterDomElem.attr("class", "mapbox-map__filter-group select");
-
-        if (hasLabel) {
-            filterDomElem.append("div")
-                .attr("class", "mapbox-map__filter-group__label")
-                .text("Base Layer:");
+    render(d) {
+        if (this.filterInitialDataBy) {
+            d[this.primaryDataSheet] = d[this.primaryDataSheet].filter((d) => { return d[this.filterInitialDataBy.field] == this.filterInitialDataBy.value; })
         }
 
-        let selectBox = filterDomElem.append('select')
-            .attr("class", "mapbox-map__filter-group__select")
-            .classed("has-label", hasLabel)
-            .on("change", (a, b, c) => {
-                let selectedIndex = d3.event.srcElement.selectedIndex;
-                for (let i = 0; i < filterVars.length; i++) {
-                    let visibility = i == selectedIndex ? 'visible' : 'none';
-                    this.map.setLayoutProperty(filterVars[i].variable, 'visibility', visibility);
+        this.setPopupDataBox();
+        this.setColorScale(d[this.primaryDataSheet]);
+        this.setRadiusScale(d[this.primaryDataSheet]);
+
+        this.slider.render(d);
+
+        this.addLegend();
+
+        this.processData(d[this.primaryDataSheet]);
+        this.map.on('load', () => {
+            this.map.addSource("dataSource", this.source);
+            this.map.addLayer({
+                "id": "points",
+                "type": "circle",
+                "source": "dataSource",
+                "paint": {
+                    'circle-color': {
+                        property: this.colorVar.variable,
+                        type: 'categorical',
+                        stops: this.colorStops
+                    },
+                    'circle-radius': {
+                        property: this.radiusVar.variable,
+                        stops: this.radiusStops
+                    },
+                    'circle-stroke-color': "#ffffff",
+                    'circle-stroke-width': 1,
                 }
-
-                this.currToggledIndex = selectedIndex;
-                this.setLegendContents()
             });
 
-        for (let i = 0; i < filterVars.length; i++) {
-            selectBox.append('option')
-                .text(filterVars[i].displayName);
-        }
-    }
-
-    addMultiToggleFilter(filterDomElem, filterVars, toggleInsets) {
-        filterDomElem.attr("class", "mapbox-map__filter-group multi-toggle")
-        let map = this.map;
-        let toggleInsetFunction = this.toggleInsetMaps.bind(this);
-        for (let i = 0; i < filterVars.length; i++) {
-            let id = filterVars[i].variable;
-
-            let currFilter = filterDomElem.append('div')
-                .attr("class", "mapbox-map__filter-group__multi-toggle-option")
-                .classed("active", () => {
-                    if (this.toggleOffLayers) {
-                        for (let layer of this.toggleOffLayers) {
-                            if (layer.variable === filterVars[i].variable) {
-                                return false;
-                            }
-                        }
-                    }
-                    return true;
-                })
-                .attr("value", id)
-                .on("click", (a, index, elem) => {
-                    var clickedLayer = d3.select(elem[0]).attr("value");
-                    d3.event.preventDefault();
-                    d3.event.stopPropagation();
-
-                    var visibility = this.map.getLayoutProperty(clickedLayer, 'visibility');
-
-                    if (visibility === 'visible') {
-                        this.map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-                        toggleInsets ? this.toggleInsetMaps(clickedLayer, 'none') : null;
-                        d3.select(elem[0]).classed("active", false);
-                    } else {
-                        d3.select(elem[0]).classed("active", true);
-                        toggleInsets ? this.toggleInsetMaps(clickedLayer, 'visible') : null;
-                        this.map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-                    }
-                });
-
-            currFilter.append("svg")
-                .attr("height", 10)
-                .attr("width", 10)
-              .append("circle")
-                .attr("r", 4)
-                .attr("cx", 5)
-                .attr("cy", 5)
-                .attr("fill", filterVars[i].color)
-
-
-            currFilter.append("h5")
-                .text(filterVars[i].displayName);
-        }
-    }
-
-    createInsetMaps() {
-        this.insetMaps = [];
-        let i = 1;
-        let insetContainer = d3.select(this.id).append("div")
-            .attr("class", "mapbox-map__inset-container");
-
-        for (let settingsObject of this.insetMapSettings) {
-            insetContainer.append("div")
-                .attr('class', 'mapbox-map__inset')
-                .attr("id", 'inset-map-' + i)
-                .on("click", () => { 
-                    this.map.flyTo({
-                        center: settingsObject.center,
-                        zoom: 9
-                    })
-                });
-
-           let insetMap = new mapboxgl.Map({
-                container: 'inset-map-' + i,
-                style: 'mapbox://styles/newamericamapbox/civcm5ziy00d92imrwswlo1wv',
-                zoom: settingsObject.zoom,
-                center: settingsObject.center,
-                attributionControl: false,
-                interactive: false
+            this.map.addLayer({
+                "id": "points-selected",
+                "type": "circle",
+                "source": "dataSource",
+                "paint": {
+                    'circle-color': {
+                        property: this.colorVar.variable,
+                        type: 'categorical',
+                        stops: this.colorStops
+                    },
+                    'circle-radius': {
+                        property: this.radiusVar.variable,
+                        stops: this.radiusStops
+                    },
+                    'circle-stroke-color': "#ffffff",
+                    'circle-stroke-width': 5,
+                },
+                "filter": ["==", "id", ""]
             });
+        });
 
-            // if (this.toggleOffLayers) {
-            //     for (let layer of this.toggleOffLayers) {
-            //         insetMap.setLayoutProperty(layer.variable, 'visibility', 'none')
-            //     }
-            // }
+    }
 
-            this.insetMaps.push(insetMap);
-            i++;
+    processData(data) {
+        console.log(data);
+        this.data = GeoJSON.parse(data, {Point: ['geo_lat', 'geo_lon']});
+        this.source = {
+            "type": "geojson",
+            "data" : this.data
+        }
+        console.log(this.data);
+    }
+
+    addControls() {
+        this.map.addControl(new MapboxGeocoder({
+            accessToken: mapboxgl.accessToken, 
+            country:'pk',
+            // types: ['region', 'district', 'place', 'postcode']
+        }), 'top-left');
+
+        this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+    }
+
+    addSlider() {
+        this.sliderContainer = d3.select(this.id + '-map-container')
+            .append("div")
+            .attr("id", "slider-container");
+
+        this.sliderSettings.id = "#slider-container";
+        this.sliderSettings.primaryDataSheet = this.primaryDataSheet;
+        this.sliderSettings.filterChangeFunction = this.changeValue.bind(this);
+        this.slider = new Slider(this.sliderSettings);
+    }
+
+
+    setColorScale(data) {
+        this.colorScale = getColorScale(data, this.colorVar);
+        
+        this.colorStops = [];
+        for (let i = 0; i < this.colorScale.domain().length; i++) {
+            this.colorStops.push([this.colorScale.domain()[i], this.colorScale.range()[i]]);
         }
     }
 
-    toggleInsetMaps(clickedLayer, visibilityVal) {
-        for (let insetMap of this.insetMaps) {
-            insetMap.setLayoutProperty(clickedLayer, 'visibility', visibilityVal);
-        }
+    setRadiusScale(data) {
+        let extents = d3.extent(data, (d) => { return Number(d[this.radiusVar.variable]); });
+        console.log(extents);
+        this.radiusScale = d3.scaleLinear()
+            .domain(extents)
+            .range([5, 30]);
+
+        this.radiusStops = [];
+        this.radiusStops.push([this.radiusScale.domain()[0], this.radiusScale.range()[0]]);
+        this.radiusStops.push([this.radiusScale.domain()[1], this.radiusScale.range()[1]]);
     }
 
-
-    // setColorScales() {
-    //     this.colorScales = [];
-    //     for (let i = 0; i < this.additionalLayers.length; i++) {
-    //         this.colorScales[i] = getColorScale(null, this.additionalLayers[i]);
-    //     }
-
-    // }
+    setPopupDataBox() {
+        this.dataBox = new PopupDataBox({
+            id: this.id,
+            dataBoxVars: this.dataBoxVars
+        });
+    }
 
     addLegend() {
         this.legend = d3.select(this.id + " .mapboxgl-canvas-container")
@@ -370,83 +203,148 @@ export class MapboxMap {
         this.cellContainer = this.legend.append("div")
             .attr("class", "mapbox-map__legend__cell-container");
 
-        this.setLegendContents();
+        this.cellContainer.append("h5")
+            .attr("class", "mapbox-map__legend__cell-container__label")
+            .text(this.colorVar.displayName);
+
+        this.setLegendCellContents();
+
+        this.propCircleContainer = this.legend.append("div")
+            .attr("class", "mapbox-map__legend__proportional-circle");
+
+        this.propCircleContainer.append("h5")
+            .attr("class", "mapbox-map__legend__proportional-circle__label")
+            .text(this.radiusVar.displayName);
+
+        this.setLegendPropCircleContents();
     }
 
-    setLegendContents() {
-        let currColorStops = this.colorStops[this.currToggledIndex];
-        console.log(currColorStops);
+    setLegendCellContents() {
+        let legendCells = this.cellContainer.selectAll("div")
+            .data(this.colorStops)
+          .enter().append("div")
+            .attr("class", "mapbox-map__legend__cell");
 
-        this.cellList ? this.cellList.remove() : null;
-        this.cellList = this.cellContainer.append("ul")
-            .attr("class", "mapbox-map__legend__cell-list");
+        legendCells.append("svg")
+            .attr("class", "mapbox-map__legend__color-swatch-container")
+            .attr("height", 10)
+            .attr("width", 10)
+           .append("circle")
+            .attr("class", "mapbox-map__legend__color-swatch")
+            .attr("cx", 5)
+            .attr("cy", 5)
+            .attr("r", 5)
+            .attr("fill", (d) => { return d[1]; });
 
-        for (let i = 0; i < currColorStops.length; i++) {
-            let cell = this.cellList.append("li")
-                .attr("class", "mapbox-map__legend__cell");
+        legendCells.append("h5")
+            .attr("class", "mapbox-map__legend__cell-label")
+            .text((d) => { return d[0]; }); 
+    }
 
-            cell.append("svg")
-                .attr("class", "mapbox-map__legend__color-swatch-container")
-                .attr("height", 10)
-                .attr("width", 10)
-               .append("rect")
-                .attr("class", "mapbox-map__legend__color-swatch")
-                .attr("x1", 0)
-                .attr("y1", 0)
-                .attr("height", 10)
-                .attr("width", 10)
-                .attr("fill", currColorStops[i][1]);
+    setLegendPropCircleContents() {
+        let width = 80,
+            height = 90;
+        
+        let svg = this.propCircleContainer.append("svg")
+            .attr("height", height)
+            .attr("width", width);
 
-            cell.append("h5")
-                .attr("class", "mapbox-map__legend__cell-label")
-                .text(this.getLegendCellLabel(currColorStops, i));
+        svg.selectAll("circle")
+            .data(this.radiusStops)
+          .enter().append("circle")
+            .attr("fill", "none")
+            .attr("stroke", "#6b6d71")
+            .attr("stroke-width", 1)
+            .attr("cx", width/2)
+            .attr("cy", height/2)
+            .attr("r", (d) => { console.log(d); return d[1]; });
 
-        }
+        svg.selectAll("text")
+            .data(this.radiusStops)
+          .enter().append("text")
+            .attr("x", width/2)
+            .attr("y", (d) => { console.log(d); return height/2 - d[1] - 3; })
+            .attr("fill", "#6b6d71")
+            .style("text-anchor", "middle")
+            .text((d) => { console.log(d); return d[0]; });
 
-        // [this.dataMin, this.dataMax] = this.colorScale.domain();
-        // let dataSpread = this.dataMax - this.dataMin;
-        // this.binInterval = dataSpread/this.numBins;
-        // this.legendCellDivs = [];
+    }
+    //     let currColorStops = this.colorStops[this.currToggledIndex];
+    //     console.log(currColorStops);
 
-        // for (let i = 0; i < this.numBins; i++) {
-        //     this.valsShown.push(i);
-        //     let cell = this.cellList.append("li")
-        //         .classed("legend__cell", true);
+    //     this.cellList ? this.cellList.remove() : null;
+    //     this.cellList = this.cellContainer.append("ul")
+    //         .attr("class", "mapbox-map__legend__cell-list");
 
-        //     if (this.disableValueToggling) {
-        //         cell.style("cursor", "initial");
-        //     } else {
-        //         cell.on("click", () => { this.toggleValsShown(i); valChangedFunction(this.valsShown); });
-        //     }
-        //     this.appendCellMarker(cell, i);
-        //     valCounts ? this.appendValCount(cell, i, valCounts) : null;
-        //     this.appendCellText(cell, i, scaleType, format);
+    //     for (let i = 0; i < currColorStops.length; i++) {
+    //         let cell = this.cellList.append("li")
+    //             .attr("class", "mapbox-map__legend__cell");
+
+    //         cell.append("svg")
+    //             .attr("class", "mapbox-map__legend__color-swatch-container")
+    //             .attr("height", 10)
+    //             .attr("width", 10)
+    //            .append("rect")
+    //             .attr("class", "mapbox-map__legend__color-swatch")
+    //             .attr("x1", 0)
+    //             .attr("y1", 0)
+    //             .attr("height", 10)
+    //             .attr("width", 10)
+    //             .attr("fill", currColorStops[i][1]);
+
+    //         cell.append("h5")
+    //             .attr("class", "mapbox-map__legend__cell-label")
+    //             .text(this.getLegendCellLabel(currColorStops, i));
+
+    //     }
+
+    //     // [this.dataMin, this.dataMax] = this.colorScale.domain();
+    //     // let dataSpread = this.dataMax - this.dataMin;
+    //     // this.binInterval = dataSpread/this.numBins;
+    //     // this.legendCellDivs = [];
+
+    //     // for (let i = 0; i < this.numBins; i++) {
+    //     //     this.valsShown.push(i);
+    //     //     let cell = this.cellList.append("li")
+    //     //         .classed("legend__cell", true);
+
+    //     //     if (this.disableValueToggling) {
+    //     //         cell.style("cursor", "initial");
+    //     //     } else {
+    //     //         cell.on("click", () => { this.toggleValsShown(i); valChangedFunction(this.valsShown); });
+    //     //     }
+    //     //     this.appendCellMarker(cell, i);
+    //     //     valCounts ? this.appendValCount(cell, i, valCounts) : null;
+    //     //     this.appendCellText(cell, i, scaleType, format);
             
-        //     this.legendCellDivs[i] = cell;
-        // }
+    //     //     this.legendCellDivs[i] = cell;
+    //     // }
 
-    }
+    // }
 
-    getLegendCellLabel(currColorStops, i) {
-        let format = this.additionalLayers[this.currToggledIndex].format,
-            customLabels = this.additionalLayers[this.currToggledIndex].customLabels;
-
-        if (customLabels) {
-            return customLabels[i];
-        }
-
-        if (i == 0) {
-            return "Less than " + formatValue(currColorStops[1][0], format);
-        } else if (i == currColorStops.length - 1) {
-            return "More than " + formatValue(currColorStops[i][0], format);
-        } else {
-            return formatValue(currColorStops[i][0], format) + " - " + formatValue(currColorStops[i+1][0], format);
-        }
-    }
+    // getLegendCellLabel(currColorStops, i) {
+    //     let format = this.additionalLayers[this.currToggledIndex].format;
+    //     if (i == 0) {
+    //         return "Less than " + formatValue(currColorStops[1][0], format);
+    //     } else if (i == currColorStops.length - 1) {
+    //         return "More than " + formatValue(currColorStops[i][0], format);
+    //     } else {
+    //         return formatValue(currColorStops[i][0], format) + " - " + formatValue(currColorStops[i+1][0], format);
+    //     }
+    // }
 
     resize() {
-        let insetDivs = $(".mapbox-map__inset")
-        let width = insetDivs.width();
-        insetDivs.height(width);
+        this.slider.resize();
+    }
+
+    changeValue(value) {
+        console.log("changing mapbox value " + value);
+        if (this.map.loaded() && value) {
+            if (value == "all") {
+                this.map.setFilter('points', ['!=', 'year', ""]);
+            } else {
+                this.map.setFilter('points', ['==', 'year', String(value)]);
+            }
+        }
     }
 }

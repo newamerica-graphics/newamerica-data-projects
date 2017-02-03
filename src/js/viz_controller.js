@@ -119,8 +119,6 @@ export function setupProject(projectSettings) {
 				hideLoadingGif(vizSettingsObject.id);
 			}
 		}
-
-		
 	}
 
 

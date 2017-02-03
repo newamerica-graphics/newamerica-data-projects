@@ -4,6 +4,7 @@ let d3 = require("d3");
 
 import { ChartToggle } from "../components/chart_toggle.js";
 import { TopoJsonMap } from "../chart_types/topo_json_map.js";
+import { MapboxMap } from "../chart_types/mapbox_map.js";
 import { Table } from "../chart_types/table.js";
 import { Dashboard } from "./dashboard.js";
 
@@ -29,6 +30,9 @@ export class TabbedChartLayout {
 			switch (chartSettingsObject.vizType) {
 				case "dashboard":
 					viz = new Dashboard(chartSettingsObject);
+					break;
+				case "mapbox_map":
+					viz = new MapboxMap(chartSettingsObject);
 					break;
 				case "table":
 					viz = new Table(chartSettingsObject);
