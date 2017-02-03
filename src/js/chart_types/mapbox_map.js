@@ -45,8 +45,6 @@ export class MapboxMap {
             attributionControl: true
         })
 
-        console.log(this.mapboxSettings);
-
         this.map = new mapboxgl.Map(this.mapboxSettings);
 
         this.addControls();
@@ -89,6 +87,8 @@ export class MapboxMap {
         this.setRadiusScale(d[this.primaryDataSheet]);
 
         this.slider.render(d);
+
+        this.addLegend();
 
         this.processData(d[this.primaryDataSheet]);
         this.map.on('load', () => {
@@ -195,18 +195,80 @@ export class MapboxMap {
         });
     }
 
-    // addLegend() {
-    //     this.legend = d3.select(this.id + " .mapboxgl-canvas-container")
-    //         .append("div")
-    //         .attr("class", "mapbox-map__legend")
+    addLegend() {
+        this.legend = d3.select(this.id + " .mapboxgl-canvas-container")
+            .append("div")
+            .attr("class", "mapbox-map__legend")
 
-    //     this.cellContainer = this.legend.append("div")
-    //         .attr("class", "mapbox-map__legend__cell-container");
+        this.cellContainer = this.legend.append("div")
+            .attr("class", "mapbox-map__legend__cell-container");
 
-    //     this.setLegendContents();
-    // }
+        this.cellContainer.append("h5")
+            .attr("class", "mapbox-map__legend__cell-container__label")
+            .text(this.colorVar.displayName);
 
-    // setLegendContents() {
+        this.setLegendCellContents();
+
+        this.propCircleContainer = this.legend.append("div")
+            .attr("class", "mapbox-map__legend__proportional-circle");
+
+        this.propCircleContainer.append("h5")
+            .attr("class", "mapbox-map__legend__proportional-circle__label")
+            .text(this.radiusVar.displayName);
+
+        this.setLegendPropCircleContents();
+    }
+
+    setLegendCellContents() {
+        let legendCells = this.cellContainer.selectAll("div")
+            .data(this.colorStops)
+          .enter().append("div")
+            .attr("class", "mapbox-map__legend__cell");
+
+        legendCells.append("svg")
+            .attr("class", "mapbox-map__legend__color-swatch-container")
+            .attr("height", 10)
+            .attr("width", 10)
+           .append("circle")
+            .attr("class", "mapbox-map__legend__color-swatch")
+            .attr("cx", 5)
+            .attr("cy", 5)
+            .attr("r", 5)
+            .attr("fill", (d) => { return d[1]; });
+
+        legendCells.append("h5")
+            .attr("class", "mapbox-map__legend__cell-label")
+            .text((d) => { return d[0]; }); 
+    }
+
+    setLegendPropCircleContents() {
+        let width = 80,
+            height = 90;
+        
+        let svg = this.propCircleContainer.append("svg")
+            .attr("height", height)
+            .attr("width", width);
+
+        svg.selectAll("circle")
+            .data(this.radiusStops)
+          .enter().append("circle")
+            .attr("fill", "none")
+            .attr("stroke", "#6b6d71")
+            .attr("stroke-width", 1.5)
+            .attr("cx", width/2)
+            .attr("cy", height/2)
+            .attr("r", (d) => { console.log(d); return d[1]; });
+
+        svg.selectAll("text")
+            .data(this.radiusStops)
+          .enter().append("text")
+            .attr("x", width/2)
+            .attr("y", (d) => { console.log(d); return height/2 - d[1] - 3; })
+            .attr("fill", "#6b6d71")
+            .style("text-anchor", "middle")
+            .text((d) => { console.log(d); return d[0]; });
+
+    }
     //     let currColorStops = this.colorStops[this.currToggledIndex];
     //     console.log(currColorStops);
 
