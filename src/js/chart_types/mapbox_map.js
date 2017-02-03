@@ -254,7 +254,7 @@ export class MapboxMap {
           .enter().append("circle")
             .attr("fill", "none")
             .attr("stroke", "#6b6d71")
-            .attr("stroke-width", 1.5)
+            .attr("stroke-width", 1)
             .attr("cx", width/2)
             .attr("cy", height/2)
             .attr("r", (d) => { console.log(d); return d[1]; });
