@@ -59,9 +59,12 @@ export class PopupDataBox {
 		let subtitleText = "",
 			i = 0;
 		for (let subTitleVar of this.dataBoxVars.subtitle) {
-			subtitleText += i != 0 ? ", " : "";
-			subtitleText += formatValue(featureProps[subTitleVar.variable], subTitleVar.format);
-			i++;
+			console.log(featureProps[subTitleVar.variable]);
+			if (featureProps[subTitleVar.variable] && featureProps[subTitleVar.variable] != "null") {
+				subtitleText += i != 0 ? ", " : "";
+				subtitleText += formatValue(featureProps[subTitleVar.variable], subTitleVar.format);
+				i++;
+			}
 		}
 
 		this.subtitle

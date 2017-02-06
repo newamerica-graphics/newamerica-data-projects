@@ -13,11 +13,12 @@ let animationButtonPaths = {pause: "M11,10 L17,10 17,26 11,26 M20,10 L26,10 26,2
 
 export class Slider {
 	constructor(componentSettings) {
-		let { id, filterChangeFunction, primaryDataSheet, variable, automated, showAllButton } = componentSettings;
+		let { id, filterChangeFunction, primaryDataSheet, variable, automated, showAllButton, startStopFunction } = componentSettings;
 		this.id = id;
 		this.primaryDataSheet = primaryDataSheet;
 		this.variable = variable.variable;
 		this.filterChangeFunction = filterChangeFunction;
+		this.startStopFunction = startStopFunction;
 
 		this.animationState = automated ? "playing" : "paused";
 
@@ -146,6 +147,7 @@ export class Slider {
 
 	toggleAnimation(newAnimationVal) {
 		console.log("toggling animation " + this.animationState + " " + this.currAnimationVal);
+
 		if (this.animationState == "playing") {
 			this.animationState = "paused";
 			this.currAnimationVal = newAnimationVal;
@@ -176,7 +178,9 @@ export class Slider {
 				.duration(75)
 				.attr("d", animationButtonPaths.pause);
 		}
+
 		console.log("done toggling animation " + this.animationState + " " + this.currAnimationVal);
+		this.startStopFunction(this.animationState);
 	}
 
 	addAnimationTrigger() {

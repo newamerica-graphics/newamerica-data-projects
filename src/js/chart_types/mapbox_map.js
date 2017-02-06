@@ -36,8 +36,6 @@ export class MapboxMap {
             .style("width", "100%")
             .style("height", "700px");
 
-        this.addSlider();
-
         Object.assign(this.mapboxSettings, {
             container: this.id.replace("#", "") + '-map-container',
             minZoom: 4,
@@ -61,9 +59,6 @@ export class MapboxMap {
                 return;
             }
 
-            console.log(features[0].properties.id);
-            console.log(features[0].properties._id_deprecated);
-
             this.map.setFilter("points-selected", ["==", "id", features[0].properties.id]);
 
             this.dataBox.show(features[0].properties);
@@ -86,6 +81,7 @@ export class MapboxMap {
         this.setColorScale(d[this.primaryDataSheet]);
         this.setRadiusScale(d[this.primaryDataSheet]);
 
+        this.addSlider();
         this.slider.render(d);
 
         this.addLegend();
@@ -163,6 +159,7 @@ export class MapboxMap {
         this.sliderSettings.id = "#slider-container";
         this.sliderSettings.primaryDataSheet = this.primaryDataSheet;
         this.sliderSettings.filterChangeFunction = this.changeValue.bind(this);
+        this.sliderSettings.startStopFunction = this.sliderStartStop.bind(this);
         this.slider = new Slider(this.sliderSettings);
     }
 
@@ -269,69 +266,6 @@ export class MapboxMap {
             .text((d) => { console.log(d); return d[0]; });
 
     }
-    //     let currColorStops = this.colorStops[this.currToggledIndex];
-    //     console.log(currColorStops);
-
-    //     this.cellList ? this.cellList.remove() : null;
-    //     this.cellList = this.cellContainer.append("ul")
-    //         .attr("class", "mapbox-map__legend__cell-list");
-
-    //     for (let i = 0; i < currColorStops.length; i++) {
-    //         let cell = this.cellList.append("li")
-    //             .attr("class", "mapbox-map__legend__cell");
-
-    //         cell.append("svg")
-    //             .attr("class", "mapbox-map__legend__color-swatch-container")
-    //             .attr("height", 10)
-    //             .attr("width", 10)
-    //            .append("rect")
-    //             .attr("class", "mapbox-map__legend__color-swatch")
-    //             .attr("x1", 0)
-    //             .attr("y1", 0)
-    //             .attr("height", 10)
-    //             .attr("width", 10)
-    //             .attr("fill", currColorStops[i][1]);
-
-    //         cell.append("h5")
-    //             .attr("class", "mapbox-map__legend__cell-label")
-    //             .text(this.getLegendCellLabel(currColorStops, i));
-
-    //     }
-
-    //     // [this.dataMin, this.dataMax] = this.colorScale.domain();
-    //     // let dataSpread = this.dataMax - this.dataMin;
-    //     // this.binInterval = dataSpread/this.numBins;
-    //     // this.legendCellDivs = [];
-
-    //     // for (let i = 0; i < this.numBins; i++) {
-    //     //     this.valsShown.push(i);
-    //     //     let cell = this.cellList.append("li")
-    //     //         .classed("legend__cell", true);
-
-    //     //     if (this.disableValueToggling) {
-    //     //         cell.style("cursor", "initial");
-    //     //     } else {
-    //     //         cell.on("click", () => { this.toggleValsShown(i); valChangedFunction(this.valsShown); });
-    //     //     }
-    //     //     this.appendCellMarker(cell, i);
-    //     //     valCounts ? this.appendValCount(cell, i, valCounts) : null;
-    //     //     this.appendCellText(cell, i, scaleType, format);
-            
-    //     //     this.legendCellDivs[i] = cell;
-    //     // }
-
-    // }
-
-    // getLegendCellLabel(currColorStops, i) {
-    //     let format = this.additionalLayers[this.currToggledIndex].format;
-    //     if (i == 0) {
-    //         return "Less than " + formatValue(currColorStops[1][0], format);
-    //     } else if (i == currColorStops.length - 1) {
-    //         return "More than " + formatValue(currColorStops[i][0], format);
-    //     } else {
-    //         return formatValue(currColorStops[i][0], format) + " - " + formatValue(currColorStops[i+1][0], format);
-    //     }
-    // }
 
     resize() {
         this.slider.resize();
@@ -345,6 +279,13 @@ export class MapboxMap {
             } else {
                 this.map.setFilter('points', ['==', 'year', String(value)]);
             }
+        }
+    }
+
+    sliderStartStop(animationState) {
+        if (animationState == "playing") {
+            this.map.setFilter("points-selected", ["==", "id", ""]);
+            this.dataBox.hide();
         }
     }
 }
