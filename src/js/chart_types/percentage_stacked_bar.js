@@ -18,14 +18,14 @@ export class PercentageStackedBar {
 		this.groupingVar = groupingVar;
 		this.filterVar = filterVar;
 		
-		this.margin = {top: 0, right: 300, bottom: 0, left: 0};
+		this.margin = {top: 0, right: 280, bottom: 0, left: 0};
 
 		this.svg = d3.select(id).append("svg").attr("class", "percentage-stacked-bar");
 
 		this.renderingArea = this.svg.append("g");
 
 		this.dataPanel = this.svg.append("g")
-			.attr("width", 250);
+			.attr("width", 200);
 
 		this.groupingScale = d3.scaleBand()
 			.padding(.5);
@@ -38,10 +38,11 @@ export class PercentageStackedBar {
 	setDimensions() {
 		this.w = $(this.id).width() - this.margin.left - this.margin.right;
 
-		this.h = 1*this.w/3;
+		this.h = 2*this.w/3;
 		this.h = this.h - this.margin.top - this.margin.bottom;
-
+		console.log(this.h);
 		this.h = this.h > 500 ? 500 : this.h;
+		this.h = this.h < 300 ? 300 : this.h;
 
 		this.svg
 			.attr("width", "100%")

@@ -11,7 +11,7 @@ import { formatValue } from "../helper_functions/format_value.js";
 
 export class StackedBar {
 	constructor(vizSettings, imageFolderId) {
-		let {id, primaryDataSheet, xVar, filterVars, legendSettings, xAxisLabelInterval, labelValues, showYAxis, tooltipTitleVar, eventSettings} = vizSettings;
+		let {id, primaryDataSheet, xVar, filterVars, legendSettings, xAxisLabelInterval, labelValues, showYAxis, tooltipTitleVar, eventSettings, yAxisLabelText} = vizSettings;
 		this.id = id;
 		this.primaryDataSheet = primaryDataSheet;
 		this.filterVars = filterVars;
@@ -24,6 +24,7 @@ export class StackedBar {
 		this.margin = {top: 20, right: 20};
 		this.margin.left = this.showYAxis ? 70 : 20;
 		this.margin.bottom = this.filterVars.length == 1 ? 50 : 30;
+		this.yAxisLabelText = yAxisLabelText;
 
 		this.svg = d3.select(id).append("svg").attr("class", "bar-chart");
 
@@ -158,9 +159,10 @@ export class StackedBar {
         this.yAxisLabel = this.yAxis.append("text")
             .attr("class", "data-block__viz__y-axis-label")
             .attr("transform", "rotate(-90)")
-            .attr("y", -30)
+            .attr("y", -45)
             .attr("fill", "#000")
-            .text("Value");
+            .style("text-anchor", "middle")
+            .text(this.yAxisLabelText);
 
         this.xAxis = this.svg.append("g")
             .attr("class", "axis axis--x");
@@ -170,14 +172,14 @@ export class StackedBar {
 
 	calculateTicks() {
 		let currInterval;
-		if ($(this.id).width() < 575) {
+		if (this.w < 575) {
 			currInterval = this.xAxisLabelInterval.small;
-		} else if ($(this.id).width() > 1100) {
+		} else if (this.w > 1100) {
 			currInterval = this.xAxisLabelInterval.large;
 		} else {
 			currInterval = this.xAxisLabelInterval.medium;
 		}
-		return this.groupingScale.domain().filter( (d, i) => { return !(i%currInterval);});
+		return this.xScale.domain().filter( (d, i) => { return !(i%currInterval);});
 	}
 
 	setBarHeights() {
@@ -203,9 +205,11 @@ export class StackedBar {
         this.yAxisLabel
             .attr("x", -this.h/2)
 
+        let ticks = this.calculateTicks();
+
         this.xAxis
             .attr("transform", "translate(" + this.margin.left + "," + (this.h + this.margin.top) + ")")
-            .call(d3.axisBottom(this.xScale));
+            .call(d3.axisBottom(this.xScale).tickValues(ticks));
 	}
 
 	resize() {
