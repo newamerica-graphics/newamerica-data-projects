@@ -8,24 +8,23 @@ import { Legend } from "../components/legend.js";
 
 import { formatValue } from "../helper_functions/format_value.js";
 
-const barLabelPadding = 10;
+const barLabelPadding = 10,
+	mobileBreakpoint = 500;
 
 export class PercentageStackedBar {
 	constructor(vizSettings, imageFolderId) {
-		let {id, primaryDataSheet, groupingVar, filterVar} = vizSettings;
+		let {id, primaryDataSheet, groupingVar, filterVar, filterInitialDataBy} = vizSettings;
 		this.id = id;
 		this.primaryDataSheet = primaryDataSheet;
 		this.groupingVar = groupingVar;
 		this.filterVar = filterVar;
+		this.filterInitialDataBy = filterInitialDataBy;
 		
 		this.margin = {top: 0, right: 300, bottom: 0, left: 0};
 
 		this.svg = d3.select(id).append("svg").attr("class", "percentage-stacked-bar");
 
 		this.renderingArea = this.svg.append("g");
-
-		this.dataPanel = this.svg.append("g")
-			.attr("width", 250);
 
 		this.groupingScale = d3.scaleBand()
 			.padding(.5);
@@ -37,11 +36,21 @@ export class PercentageStackedBar {
 
 	setDimensions() {
 		this.w = $(this.id).width() - this.margin.left - this.margin.right;
+		console.log(this.w);
 
-		this.h = 1*this.w/3;
+		if (this.w < 300) {
+			this.foldupMode = "mobile";
+			this.w += this.margin.right;
+		} else {
+			this.foldupMode = "desktop";
+		}
+
+		this.h = 2*this.w/3;
 		this.h = this.h - this.margin.top - this.margin.bottom;
-
 		this.h = this.h > 500 ? 500 : this.h;
+		this.h = this.h < 300 ? 300 : this.h;
+
+		console.log(this.w);
 
 		this.svg
 			.attr("width", "100%")
@@ -51,10 +60,6 @@ export class PercentageStackedBar {
 		    .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
 		    .attr("width", this.w - this.margin.left - this.margin.right)
             .attr("height", this.h);
-
-        this.dataPanel
-        	.attr("transform", "translate(" + (this.margin.left + this.w) + "," + this.margin.top + ")")
-        	.attr("height", this.h);
 
 		this.setScaleRanges();
 	}
@@ -66,13 +71,11 @@ export class PercentageStackedBar {
 
 	render(data) {
 		this.data = data[this.primaryDataSheet];
-
-		console.log(this.data);
+		if (this.filterInitialDataBy) {
+            this.data = this.data.filter((d) => { return d[this.filterInitialDataBy.field] == this.filterInitialDataBy.value; })
+        }
 
 		this.colorScale = getColorScale(this.data, this.filterVar);
-
-		console.log(this.colorScale.domain());
-		console.log(this.colorScale.range());
 	    
 		this.setScaleDomains();
 
@@ -96,14 +99,8 @@ export class PercentageStackedBar {
 			.rollup((v) => { let currGroupingVal = v[0][this.groupingVar.variable]; return {"count":v.length, "percent": v.length/this.groupingSums.get(currGroupingVal)}; })
 			.entries(this.data);
 
-		console.log(this.nestedVals);
-
 		this.lengthScale.domain([0, 1]);
 		this.groupingScale.domain(Array.from(groupingVals));
-
-		console.log(this.groupingScale.domain());
-
-
 	}
 
 	renderBars() {
@@ -144,7 +141,6 @@ export class PercentageStackedBar {
 	}
 
 	renderBarGroupLabels() {
-		console.log("rendering labels");
 		this.barGroupLabels = this.barGroups
 			.append("text")
 			.style("font-weight", "bold")
@@ -175,11 +171,8 @@ export class PercentageStackedBar {
 			})
 			.attr("y", this.groupingScale.bandwidth()/2)
 			.attr("x", (d, i) => {
-				console.log(d, i);
-				console.log(currCumulativeLength);
 				let barLength = this.w - this.lengthScale(d.value.percent);
 				currCumulativeLength = i == 0 ? barLabelPadding : currCumulativeLength;
-				console.log(currCumulativeLength);
 				let retVal = currCumulativeLength;
 				currCumulativeLength += barLength;
 
@@ -202,7 +195,14 @@ export class PercentageStackedBar {
 		this.barGroupHoverLabels = this.barGroups
 			// .style("fill", (d) => { console.log(d); return "white"; })
 			.append("text")
-			.attr("transform", "translate(" + (this.w + 25) + "," + this.groupingScale.bandwidth()/2 + ")")
+			.attr("transform", () => {
+				if (this.foldupMode == "desktop") {
+					return "translate(" + (this.w + 25) + "," + this.groupingScale.bandwidth()/2 + ")";
+				} else {
+					return "translate(" + this.w + ",-" + this.groupingScale.bandwidth()/2 + ")";
+				}
+			})
+			.style("text-anchor", this.foldupMode == "desktop" ? "start" : "end")
 			.attr("class", "percentage-stacked-bar__bar-group-hover-label")
 			.html((d) => { 
 				let count, percent;
