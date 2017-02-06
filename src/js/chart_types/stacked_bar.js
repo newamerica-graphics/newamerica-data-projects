@@ -200,7 +200,7 @@ export class StackedBar {
 	setAxes() {
 		this.yAxis
 			.attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
-            .call(d3.axisLeft(this.yScale));
+            .call(d3.axisLeft(this.yScale).ticks(5));
 
         this.yAxisLabel
             .attr("x", -this.h/2)
