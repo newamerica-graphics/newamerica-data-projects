@@ -20,11 +20,12 @@ export class PopupDataBox {
 			.attr("class", "data-box__subtitle")
 
 		this.valueFields = {};
+		this.categoryLabels = {};
 
 		for (let category of this.dataBoxVars.categories) {
 			console.log(category);
 
-			this.dataBox.append("h5")
+			this.categoryLabels[category.label] = this.dataBox.append("h5")
 				.attr("class", "data-box__category-label")
 				.text(category.label);
 
@@ -71,10 +72,12 @@ export class PopupDataBox {
 			.text(subtitleText);
 
 		for (let category of this.dataBoxVars.categories) {
+			let hasVals = false;
 			for (let field of category.fields) {
 				let val = featureProps[field.variable],
 				format = field.format;
 				if (val && val != "null") {
+					hasVals = true;
 					if (format != "link") {
 						this.valueFields[field.variable]
 							.classed("hidden", false)
@@ -91,6 +94,15 @@ export class PopupDataBox {
 						.classed("hidden", true)
 				}
 				
+			}
+			console.log(this.categoryContainers);
+			console.log("has vals?", hasVals, category);
+			if (!hasVals) {
+				this.categoryLabels[category.label]
+					.style("display", "none");
+			} else {
+				this.categoryLabels[category.label]
+					.style("display", "block");
 			}
 		}
 

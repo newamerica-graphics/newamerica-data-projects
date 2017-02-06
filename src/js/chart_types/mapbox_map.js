@@ -77,6 +77,8 @@ export class MapboxMap {
             d[this.primaryDataSheet] = d[this.primaryDataSheet].filter((d) => { return d[this.filterInitialDataBy.field] == this.filterInitialDataBy.value; })
         }
 
+        d[this.primaryDataSheet] = d[this.primaryDataSheet].filter((d) => { return d[this.radiusVar.variable] && Number(d[this.radiusVar.variable]) > 0 });
+
         this.setPopupDataBox();
         this.setColorScale(d[this.primaryDataSheet]);
         this.setRadiusScale(d[this.primaryDataSheet]);

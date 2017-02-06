@@ -13,11 +13,12 @@ const barLabelPadding = 10,
 
 export class PercentageStackedBar {
 	constructor(vizSettings, imageFolderId) {
-		let {id, primaryDataSheet, groupingVar, filterVar} = vizSettings;
+		let {id, primaryDataSheet, groupingVar, filterVar, filterInitialDataBy} = vizSettings;
 		this.id = id;
 		this.primaryDataSheet = primaryDataSheet;
 		this.groupingVar = groupingVar;
 		this.filterVar = filterVar;
+		this.filterInitialDataBy = filterInitialDataBy;
 		
 		this.margin = {top: 0, right: 300, bottom: 0, left: 0};
 
@@ -70,6 +71,9 @@ export class PercentageStackedBar {
 
 	render(data) {
 		this.data = data[this.primaryDataSheet];
+		if (this.filterInitialDataBy) {
+            this.data = this.data.filter((d) => { return d[this.filterInitialDataBy.field] == this.filterInitialDataBy.value; })
+        }
 
 		this.colorScale = getColorScale(this.data, this.filterVar);
 	    

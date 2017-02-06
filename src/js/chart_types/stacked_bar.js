@@ -11,7 +11,7 @@ import { formatValue } from "../helper_functions/format_value.js";
 
 export class StackedBar {
 	constructor(vizSettings, imageFolderId) {
-		let {id, primaryDataSheet, xVar, filterVars, legendSettings, xAxisLabelInterval, labelValues, showYAxis, tooltipTitleVar, eventSettings, yAxisLabelText} = vizSettings;
+		let {id, primaryDataSheet, xVar, filterVars, legendSettings, xAxisLabelInterval, labelValues, showYAxis, tooltipTitleVar, eventSettings, yAxisLabelText, filterInitialDataBy} = vizSettings;
 		this.id = id;
 		this.primaryDataSheet = primaryDataSheet;
 		this.filterVars = filterVars;
@@ -25,6 +25,7 @@ export class StackedBar {
 		this.margin.left = this.showYAxis ? 70 : 20;
 		this.margin.bottom = this.filterVars.length == 1 ? 50 : 30;
 		this.yAxisLabelText = yAxisLabelText;
+		this.filterInitialDataBy = filterInitialDataBy;
 
 		this.svg = d3.select(id).append("svg").attr("class", "bar-chart");
 
@@ -85,6 +86,10 @@ export class StackedBar {
 
 	render(data) {
 		this.data = data[this.primaryDataSheet];
+		if (this.filterInitialDataBy) {
+            this.data = this.data.filter((d) => { return d[this.filterInitialDataBy.field] == this.filterInitialDataBy.value; })
+        }
+
 
 		console.log(this.data);
 	    
