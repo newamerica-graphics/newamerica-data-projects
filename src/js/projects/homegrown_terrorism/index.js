@@ -8,7 +8,7 @@ let variables = {
 	full_name: {"variable":"full_name", "displayName":"Full Name", "format":"string"},
 	date_charged: {"variable":"date_charged", "displayName":"Date Charged", "format":"string"},
 	terror_plot: {"variable":"terror_plot", "displayName":"Terror Plot", "format":"string"},
-	citizenship_status: {"variable":"citizenship_status", "displayName":"Citizenship Status", "format":"string", "scaleType":"categorical", "customDomain":["U.S. Born Citizen", "Naturalized Citizen", "Citizen of Unknown Status", "Permanent Resident", "Nonimmigrant Visa", "Illegal Immigrant", "Refugee", "Unknown"], "customRange":[colors.turquoise.dark, colors.turquoise.medium, colors.turquoise.light, colors.blue.dark, colors.blue.light, colors.purple.dark, colors.purple.light, colors.grey.medium_light]},
+	citizenship_status: {"variable":"citizenship_status", "displayName":"Citizenship Status", "format":"string", "scaleType":"categorical", "customDomain":["U.S. Born Citizen", "Naturalized Citizen", "Citizen of Unknown Status", "Permanent Resident", "Nonimmigrant Visa", "Illegal Immigrant", "Refugee or Asylum Seeker", "Unknown"], "customRange":[colors.turquoise.dark, colors.turquoise.medium, colors.turquoise.light, colors.blue.dark, colors.blue.light, colors.purple.dark, colors.purple.light, colors.grey.medium_light]},
 	char_awlaki: {"variable":"char_awlaki", "displayName":"Involvement with Awlaki", "format":"string", "scaleType":"categorical", "customDomain":["Ties", "Contact", "None"], "customRange":[colors.red.light, colors.purple.light, colors.grey.medium_light]},
 	field_kids: {"variable":"field_kids", "displayName":"Kids", "format":"string", "scaleType":"categorical", "color":"blue"},
 	age: {"variable":"age", "displayName":"Age", "format":"number", "scaleType":"categorical", "color":"turquoise"},
@@ -32,19 +32,31 @@ let variables = {
 let vizSettingsList = [
 	{
 		id: "#homegrown__outcome-for-extremist", 
-		vizType: "grouped_dot_matrix",
+		vizType: "chart_with_fact_box",
 		primaryDataSheet: "people_protected",
-		dotSettings: { "width": 10, "offset": 3, "dotsPerRow": 5},
-		distanceBetweenGroups: 15,
-		groupingVars: [ variables.year_charged_or_deceased ],
-		filterVars: [ variables.charged_or_deceased ],
-		tooltipVars: [ variables.full_name, variables.charged_or_deceased, variables.date_charged, variables.terror_plot],
-		tooltipImageVar: variables.headshot,
-		labelSettings: { interval: 1, showNumVals: true},
-		legendSettings: {"orientation": "horizontal-center"},
-		eventSettings: {
-			"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
-		}
+		chartSettings: {
+			vizType: "grouped_dot_matrix",
+			dotSettings: { "width": 10, "offset": 3, "dotsPerRow": 5},
+			distanceBetweenGroups: 15,
+			groupingVars: [ variables.year_charged_or_deceased ],
+			filterVars: [ variables.charged_or_deceased ],
+			tooltipVars: [ variables.full_name, variables.charged_or_deceased, variables.date_charged, variables.terror_plot],
+			tooltipImageVar: variables.headshot,
+			labelSettings: { interval: 1, showNumVals: true},
+			legendSettings: {"orientation": "horizontal-center"},
+			eventSettings: {
+				"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
+			}
+		},
+		factBoxSettings: {
+			alignment: "left-aligned",
+			factBoxVals: [ 
+				{ variable: variables.charged_or_deceased, value: "Charged", type:"count", text: "Charged"},
+				{ variable: variables.charged_or_deceased, value: "Charged outside U.S.", type:"count", text: "Charged outside U.S."},
+				{ variable: variables.charged_or_deceased, value: "Deceased", type:"count", text: "Deceased"},
+			],
+		},
+
 	},
 	{
 		id: "#homegrown__awlaki-over-time", 
