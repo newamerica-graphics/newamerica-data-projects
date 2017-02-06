@@ -119,7 +119,7 @@ export class Slider {
 	        // .on("end", () => { this.endEvent(d3.event.x); }));
 		
 		console.log(d3.selectAll(".tick > text"));
-		d3.selectAll(".tick > text")
+		d3.selectAll(".slider .tick > text")
 			.style("cursor", "pointer")
 			.on("click", (d) => {
 				this.sliderVal = d;

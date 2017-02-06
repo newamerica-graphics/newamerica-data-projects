@@ -61,16 +61,6 @@ let vizSettingsList = [
 		filterVar: variables.target_organization_name,
 	},
 	{
-		id: "#drone-strikes__strike-list", 
-		primaryDataSheet: "strike_data",
-		vizType: "table",
-		tableVars: [ variables.date, variables.country, variables.village, variables.province, variables.civilians_avg, variables.militants_avg, variables.unknown_avg, variables.total_avg, variables.target_organization_name, variables.target_description ],
-		defaultOrdering: [0, "desc"],
-		pagination: true,
-		numPerPage: 25,
-		colorScaling: false
-	},
-	{
 		id: "#drone-strikes__strike-totals-by-president", 
 		primaryDataSheet: "strikes_by_president",
 		vizType: "table",
