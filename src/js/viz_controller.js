@@ -153,9 +153,8 @@ export function setupProject(projectSettings) {
 	}
 
 	function hideLoadingGif(id) {
-		console.log("hiding loading gif");
-		console.log(id);
 		$(id).siblings(".dataviz__loading-gif").hide();
+		$(id).css("visibility", "visible").css("min-height","none");
 	}
 
 	function setDataDownloadLinks(data) {
