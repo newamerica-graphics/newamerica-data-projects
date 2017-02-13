@@ -74,6 +74,7 @@ export class TopoJsonMap {
 
 			this.legend = new Legend(legendSettings);
 		}
+
 		this.setDimensions();
 		this.centered = true;
 	}
@@ -94,6 +95,7 @@ export class TopoJsonMap {
 
 		let translateX = this.w/2;
 		let scalingFactor = 5*this.w/4;
+		this.smallStateInsetLabelXPos = this.w - this.w/10;
 
 		if (this.legendSettings && this.legendSettings.orientation == "vertical-right") {
 			if (containerWidth > global.showLegendBreakpoint) {
@@ -101,6 +103,7 @@ export class TopoJsonMap {
 				this.h = this.w/2;
 				scalingFactor = this.w;
 				this.legend.setOrientation("vertical-right");
+				this.smallStateInsetLabelXPos -= this.w > 900 ? this.w/6 : this.w/5;
 			} else {
 				this.legend.setOrientation("horizontal-left");
 			}
@@ -109,6 +112,10 @@ export class TopoJsonMap {
 		this.svg
 			.attr("height", this.h)
 			.attr("width", "100%");
+
+		if (this.smallStateInsetLabel) {
+			this.setSmallStateInsetLabelPosition();
+		}
 
 		//Define map projection
 		let projection = this.setProjection(scalingFactor, translateX);
@@ -134,7 +141,6 @@ export class TopoJsonMap {
 	}
 
 	render(data) {
-
 		this.data = data[this.primaryDataSheet];
 		console.log(data);
 
@@ -184,7 +190,7 @@ export class TopoJsonMap {
 		   .enter()
 		   .append("path");
 
-		this.paths.attr("d", this.pathGenerator)
+		this.paths.attr("d", (d) => {return this.geometryType == "states" && d.id == 11 ? this.smallStateCirclePathGenerator() : this.pathGenerator(d)})
 		    .style("fill", (d) => { return this.setFill(d); })
 		    .style("opacity", ".9")
 		    .attr("value", function(d,i) { return i; })
@@ -201,6 +207,19 @@ export class TopoJsonMap {
 		    		return this.clicked(d, paths[index], d3.event);
 		    	}
 		    });
+
+		if (this.geometryType == "states") {
+			this.smallStateInsetLabel = this.g.append("text")
+				.attr("fill", "white")
+				.style("alignment-baseline", "middle")
+				.style("pointer-events", "none")
+				.style("font-weight", "bold")
+				.style("text-anchor", "middle")
+				.style("font-size", "13px")
+				.text("DC");
+
+			this.setSmallStateInsetLabelPosition();
+		}
 	}
 
 	setFill(d) {
@@ -229,7 +248,7 @@ export class TopoJsonMap {
 	
 	resize() {
 		this.setDimensions();
-		this.paths.attr("d", this.pathGenerator);
+		this.paths.attr("d", (d) => {return this.geometryType == "states" && d.id == 11 ? this.smallStateCirclePathGenerator() : this.pathGenerator(d)});
 		this.legendSettings ? this.legend.resize() : null;
 	}
 
@@ -312,6 +331,18 @@ export class TopoJsonMap {
 			this.mouseover(datum, path, eventObject);
 			this.currClicked = path
 		}
+	}
+
+	smallStateCirclePathGenerator(d) {
+		let diameter = 25,
+			radius = diameter/2;
+
+		return "M " + this.smallStateInsetLabelXPos + ", " + this.h/2 + "m -" + radius + ", 0a " + radius + "," + radius + " 0 1,0 " + diameter + ",0a " + radius + "," + radius + " 0 1,0 -" + diameter + ",0";
+	}
+
+	setSmallStateInsetLabelPosition() {
+		this.smallStateInsetLabel
+			.attr("transform", "translate(" +  this.smallStateInsetLabelXPos + "," + this.h/2 + ")");
 	}
 
 	zoom(datum, path, eventObject) {
