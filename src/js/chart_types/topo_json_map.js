@@ -14,8 +14,6 @@ import { formatValue, deformatValue } from "../helper_functions/format_value.js"
 
 import * as global from "./../utilities.js";
 
-const circlePath = "M 100, 100m -75, 0a 75,75 0 1,0 150,0a 75,75 0 1,0 -150,0";
-
 let d3 = require("d3");
 let topojson = require("topojson");
 
