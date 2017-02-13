@@ -76,7 +76,7 @@ let insetMapSettings = [
 let vizSettingsList = [
     {
         id: "#financial-opportunity__census-tract-map", 
-        vizType: "mapbox_map",
+        vizType: "financial_opportunity_map",
         mapboxStyleUrl: "mapbox://styles/newamericamapbox/civcm5ziy00d92imrwswlo1wv",
         source: {
             id:'census-tracts',
@@ -109,7 +109,7 @@ let vizSettingsList = [
     },
     {
         id: "#financial-opportunity__county-map", 
-        vizType: "mapbox_map",
+        vizType: "financial_opportunity_map",
         mapboxStyleUrl: "mapbox://styles/newamericamapbox/ciwdu1mzs003j2pmq94myzf8q",
         source: {
             id:'counties',
@@ -131,7 +131,7 @@ let vizSettingsList = [
     },
     {
         id: "#financial-opportunity__census-tract-map-other-services", 
-        vizType: "mapbox_map",
+        vizType: "financial_opportunity_map",
         mapboxStyleUrl: "mapbox://styles/newamericamapbox/cixql9hl200762rp5qynmxcfe",
         source: {
             id:'census-tracts',
@@ -174,8 +174,6 @@ function censusTractMapSetPopupContent(feature) {
     console.log(this);
     let splitPieces = feature.properties.Geography.split(", ");
 
-    console.log(feature.properties);
-
     let popupProperties = "";
 
     for (let key in this.tooltipVars) {
@@ -208,9 +206,6 @@ function censusTractMapSetPopupContent(feature) {
         + feature.properties[variables.pawn.variable]
         + feature.properties[variables.tax.variable];
 
-    console.log(tradTotal);
-    console.log(altTotal);
-
     popupProperties += "<div class='mapbox-map__popup__category-container'>" +
             "<h5 class='mapbox-map__popup__category-label'>Financial Services</h5>" +
             "<ul class='mapbox-map__popup__property-list'>";
@@ -235,15 +230,11 @@ function censusTractMapSetPopupContent(feature) {
 }
 
 function censusTractOtherServicesMapSetPopupContent(feature) {
-    console.log(this);
     let splitPieces = feature.properties.Geography.split(", ");
-
-    console.log(feature.properties);
 
     let popupProperties = "";
 
     for (let key in this.tooltipVars) {
-        console.log(key);
         popupProperties += "<div class='mapbox-map__popup__category-container'>" +
             "<h5 class='mapbox-map__popup__category-label'>" + key + "</h5>" +
             "<ul class='mapbox-map__popup__property-list'>";
@@ -266,10 +257,7 @@ function censusTractOtherServicesMapSetPopupContent(feature) {
 }
 
 function countyMapSetPopupContent(feature) {
-    console.log(this);
     let popupProperties = "";
-
-    console.log(feature.properties);
 
     for (let i = 0; i < this.additionalLayers.length; i++) {
         let currVar = this.additionalLayers[i];

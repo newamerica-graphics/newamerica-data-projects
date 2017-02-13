@@ -1,9 +1,8 @@
 let mapboxgl = require('mapbox-gl');
 window.mapboxgl = mapboxgl;
-require('mapbox-gl-geocoder');
+var MapboxGeocoder = require('mapbox-gl-geocoder/mapbox-gl-geocoder.min.js');
 
 import { colors } from "../helper_functions/colors.js";
-import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { formatValue } from "../helper_functions/format_value.js";
 
 import $ from 'jquery';
@@ -13,7 +12,7 @@ let d3 = require("d3");
 mapboxgl.acessToken = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
 mapboxgl.config.ACCESS_TOKEN = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
 
-export class MapboxMap {
+export class FinancialOpportunityMap {
     constructor(vizSettings, imageFolderId) {
         if (!mapboxgl.supported()) {
             alert('Your browser does not support Mapbox GL');
@@ -52,8 +51,6 @@ export class MapboxMap {
             this.createInsetMaps();
         }
 
-        this.setColorScales();
-
         this.addControls();
         
         this.popup = mapContainer.append("div")
@@ -89,12 +86,13 @@ export class MapboxMap {
     }
 
     addControls() {
-        this.map.addControl(new mapboxgl.Geocoder({
+        this.map.addControl(new MapboxGeocoder({
+            accessToken: mapboxgl.accessToken,
             country:'us',
             types: ['country', 'region', 'district', 'place', 'postcode']
-        }));
+        }), 'top-left');
 
-        this.map.addControl(new mapboxgl.NavigationControl({position: 'top-left'}));
+        this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
     }
 
     addLayers() {
@@ -102,12 +100,8 @@ export class MapboxMap {
         for (let i = 0; i < this.additionalLayers.length; i++) {
             let currLayer = this.additionalLayers[i],
                 numBins = currLayer.numBins,
-                dataMin = currLayer.customDomain[0],
-                dataMax = currLayer.customDomain[1];
-            let dataSpread = dataMax - dataMin;
-            dataSpread -= dataSpread/4;
-            let binInterval = dataSpread/numBins;
-
+                customDomain = currLayer.customDomain,
+                customRange = currLayer.customRange;
 
             this.additionalLayerNames.push(currLayer.variable);
 
@@ -115,16 +109,13 @@ export class MapboxMap {
                 outlineColorStops = [];
 
             for (let j = 0; j < numBins; j++) {
-                let outlineColor = this.colorScales[i].range()[j].replace("rgb", "rgba").replace(")", ", .7)");
-                console.log(outlineColor);
-                fillColorStops.push([dataMin + j*binInterval, this.colorScales[i].range()[j]]);
-                outlineColorStops.push([{zoom: 1, value: dataMin + j*binInterval}, outlineColor]);
-                outlineColorStops.push([{zoom: 11, value: dataMin + j*binInterval}, "white"]);
+                // let outlineColor = this.colorScales[i].range()[j].replace("rgb", "rgba").replace(")", ", .7)");
+                // console.log(outlineColor);
+                fillColorStops.push([customDomain[j], customRange[j]]);
+                // outlineColorStops.push([{zoom: 1, value: dataMin + j*binInterval}, outlineColor]);
+                // outlineColorStops.push([{zoom: 11, value: dataMin + j*binInterval}, "white"]);
             }
-
-            console.log(fillColorStops);
-            console.log(this.colorScales[i].domain());
-            console.log(this.colorScales[i].range());
+            
             this.colorStops[i] = fillColorStops;
             this.map.addLayer(
                 {
@@ -142,11 +133,11 @@ export class MapboxMap {
                         'fill-opacity': {
                             stops: [ [0, 1], [11, .75]]
                         },
-                        'fill-outline-color': {
-                            property: currLayer.variable,
-                            type: "interval",
-                            stops: outlineColorStops
-                        }
+                        // 'fill-outline-color': {
+                        //     property: currLayer.variable,
+                        //     type: "interval",
+                        //     stops: outlineColorStops
+                        // }
                     }
                 },'water'
             );
@@ -400,7 +391,13 @@ export class MapboxMap {
     }
 
     getLegendCellLabel(currColorStops, i) {
-        let format = this.additionalLayers[this.currToggledIndex].format;
+        let format = this.additionalLayers[this.currToggledIndex].format,
+            customLabels = this.additionalLayers[this.currToggledIndex].customLabels;
+
+        if (customLabels) {
+            return customLabels[i];
+        }
+
         if (i == 0) {
             return "Less than " + formatValue(currColorStops[1][0], format);
         } else if (i == currColorStops.length - 1) {
