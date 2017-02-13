@@ -21,6 +21,7 @@ import { Table } from "./chart_types/table.js";
 import { FactBox } from "./chart_types/fact_box.js";
 import { LineChart } from "./chart_types/line_chart.js";
 import { MapboxMap } from "./chart_types/mapbox_map.js";
+import { FinancialOpportunityMap } from "./chart_types/financial_opportunity_map.js";
 import { SummaryBox } from "./chart_types/summary_box.js";
 import { PieChart } from "./chart_types/pie_chart.js";
 import { Bipartite } from "./chart_types/bipartite.js";
@@ -71,6 +72,10 @@ export function setupProject(projectSettings) {
 
 					case "fact_box":
 						viz = new FactBox(vizSettingsObject);
+						break;
+
+					case "financial_opportunity_map":
+						viz = new FinancialOpportunityMap(vizSettingsObject);
 						break;
 					
 					case "grouped_dot_matrix":
