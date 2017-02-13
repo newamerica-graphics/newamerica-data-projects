@@ -14,6 +14,8 @@ import { formatValue, deformatValue } from "../helper_functions/format_value.js"
 
 import * as global from "./../utilities.js";
 
+const circlePath = "M 100, 100m -75, 0a 75,75 0 1,0 150,0a 75,75 0 1,0 -150,0";
+
 let d3 = require("d3");
 let topojson = require("topojson");
 
@@ -74,6 +76,18 @@ export class TopoJsonMap {
 
 			this.legend = new Legend(legendSettings);
 		}
+
+		// if (smallStateInsets) {
+			this.smallStateInsetLabel = this.svg.append("text")
+				.attr("fill", "white")
+				.style("alignment-baseline", "middle")
+				.style("pointer-events", "none")
+				.style("font-weight", "bold")
+				.style("text-anchor", "middle")
+				.style("font-size", "13px")
+				.text("DC");
+		// }
+
 		this.setDimensions();
 		this.centered = true;
 	}
@@ -110,6 +124,9 @@ export class TopoJsonMap {
 			.attr("height", this.h)
 			.attr("width", "100%");
 
+		this.smallStateInsetLabel
+			.attr("transform", "translate(" + (this.w - this.w/10) + "," + this.h/2 + ")");
+
 		//Define map projection
 		let projection = this.setProjection(scalingFactor, translateX);
 
@@ -134,7 +151,6 @@ export class TopoJsonMap {
 	}
 
 	render(data) {
-
 		this.data = data[this.primaryDataSheet];
 		console.log(data);
 
@@ -184,7 +200,7 @@ export class TopoJsonMap {
 		   .enter()
 		   .append("path");
 
-		this.paths.attr("d", this.pathGenerator)
+		this.paths.attr("d", (d) => {return d.id == 11 ? this.smallStateCirclePathGenerator() : this.pathGenerator(d)})
 		    .style("fill", (d) => { return this.setFill(d); })
 		    .style("opacity", ".9")
 		    .attr("value", function(d,i) { return i; })
@@ -229,7 +245,7 @@ export class TopoJsonMap {
 	
 	resize() {
 		this.setDimensions();
-		this.paths.attr("d", this.pathGenerator);
+		this.paths.attr("d", (d) => {return d.id == 11 ? this.smallStateCirclePathGenerator() : this.pathGenerator(d)});
 		this.legendSettings ? this.legend.resize() : null;
 	}
 
@@ -312,6 +328,12 @@ export class TopoJsonMap {
 			this.mouseover(datum, path, eventObject);
 			this.currClicked = path
 		}
+	}
+
+	smallStateCirclePathGenerator(d) {
+		let diameter = 25,
+			radius = diameter/2;
+		return "M " + (this.w - this.w/10) + ", " + this.h/2 + "m -" + radius + ", 0a " + radius + "," + radius + " 0 1,0 " + diameter + ",0a " + radius + "," + radius + " 0 1,0 -" + diameter + ",0";
 	}
 
 	zoom(datum, path, eventObject) {
