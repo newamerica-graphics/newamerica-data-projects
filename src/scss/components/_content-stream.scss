@@ -1,25 +1,27 @@
 .content-stream {
 	max-height: 500px;
 	overflow-y: scroll;
+	margin-right: 20px;
 
 	&::-webkit-scrollbar {
     	-webkit-appearance: none; 
     	width: 7px; 
     	height: 7px;
+    	z-index: 1000;
 	}
 	/* Handle */
 	&::-webkit-scrollbar-thumb {
-	    border-radius: 10px; 
 		background-color: rgba(0,0,0,.2); 
 		-webkit-box-shadow: 0 0 1px rgba(255,255,255,.2);
+		z-index: 1000;
 	}
 	&::-webkit-scrollbar-thumb:window-inactive {
 		background-color: rgba(0,0,0,.2); 
 		-webkit-box-shadow: 0 0 1px rgba(255,255,255,.2);
+		z-index: 1000;
 	}
 
 	&__container {
-		
 		padding-left: 25px;
 		max-height: 550px;
 		min-height: 300px;
