@@ -1,16 +1,19 @@
 var project = getQueryVariable("project");
 var vizId = getQueryVariable("vizId");
 
-var nodeList = document.querySelectorAll(".dataviz__chart-area:not(#" + vizId + ")");
-for (var i = 0; i < nodeList.length; i++) {
-    nodeList[i].style.display = 'none';
-}
+if (!project) { alert("Please provide the project id."); }
+if (!vizId) { alert("Please provide the visualization id."); }
 
 var body= document.getElementsByTagName('body')[0];
 var script= document.createElement('script');
 script.type= 'text/javascript';
-script.src= "build/" + project + '.js';
+script.src= "https://na-data-projects.s3.amazonaws.com/projects/" + project + '.js';
 body.appendChild(script);
+
+var nodeList = document.querySelectorAll(".dataviz__chart-area:not(#" + vizId + ")");
+for (var i = 0; i < nodeList.length; i++) {
+    nodeList[i].style.display = 'none';
+}
 
 function getQueryVariable(variable) {
     var query = window.location.search.substring(1);
