@@ -59,7 +59,7 @@ let vizSettingsList = [
 			},
 			{
 				vizType: "table",
-				tableVars: [variables.name, variables.description, variables.domestic_production],
+				tableVars: [variables.name, variables.description],
 				defaultOrdering: [0, "asc"],
 				pagination: true,
 				numPerPage: 15,
