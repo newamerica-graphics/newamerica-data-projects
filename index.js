@@ -4,11 +4,11 @@ var vizId = getQueryVariable("vizId");
 if (!project) { alert("Please provide the project id."); }
 if (!vizId) { alert("Please provide the visualization id."); }
 
-var body= document.getElementsByTagName('body')[0];
+var head= document.getElementsByTagName('head')[0];
 var script= document.createElement('script');
 script.type= 'text/javascript';
 script.src= "https://na-data-projects.s3.amazonaws.com/projects/" + project + '.js';
-body.appendChild(script);
+head.appendChild(script);
 
 var nodeList = document.querySelectorAll(".dataviz__chart-area:not(#" + vizId + ")");
 for (var i = 0; i < nodeList.length; i++) {
