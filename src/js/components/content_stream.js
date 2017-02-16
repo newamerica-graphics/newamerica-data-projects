@@ -10,6 +10,7 @@ export class ContentStream {
 			.append("div")
 			.attr("class", "content-stream__container");
 
+		console.log(vizSettings);
 		this.defaultText = contentStreamContainer
 			.append("div")
 			.append("h5")
@@ -53,7 +54,7 @@ export class ContentStream {
 		let valueList = this.dataNest.get(String(value));
 		if (!valueList) { this.hide(); return; }
 		this.defaultText.classed("hidden", true);
-		let sortedList = valueList.sort((a, b) => { return new Date(a.date) - new Date(b.date); });
+		let sortedList = valueList.sort((a, b) => { return new Date(b.date) - new Date(a.date); });
 
 		if (this.entries) { this.entries.remove(); }
 		if (this.fadeout) { this.fadeout.remove(); }
