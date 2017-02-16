@@ -12,7 +12,7 @@ let variables = {
     banks: {"variable":"banks", "displayName":"Banks", "format": "number", "color":"#2dc6bf"},
     altcredit: {"variable":"altcredit", "displayName":"Alternative Services", "format": "number", "color":"#f24b56"},
     ncua: {"variable":"ncua", "displayName":"Credit Unions", "format": "number", "color":"#9773c7"},
-    usps: {"variable":"usps", "displayName":"Post Offices", "format": "number", "color":"#f2e079"},
+    usps: {"variable":"usps", "displayName":"Post Offices", "format": "number", "color":"#fdcb6d"},
     totpop: {"variable":"TOTPOP", "displayName":"Total Population", "format": "number"},
     black: {"variable":"BLACK", "displayName":"Black", "format": "percent_no_multiply"},
     white: {"variable":"WHITE", "displayName":"White", "format": "percent_no_multiply"},
@@ -107,61 +107,61 @@ let vizSettingsList = [
         popupContentFunction: censusTractMapSetPopupContent,
         popupColumns: 3
     },
-    {
-        id: "#financial-opportunity__county-map", 
-        vizType: "financial_opportunity_map",
-        mapboxStyleUrl: "mapbox://styles/newamericamapbox/ciwdu1mzs003j2pmq94myzf8q",
-        source: {
-            id:'counties',
-            sourceLayer: 'Countydata-4gt6se',
-            url: 'mapbox://newamericamapbox.8v8ldjz3'
-        },
-        additionalLayers: [variables.county_altpertrad, variables.county_altpc, variables.county_tradpc],
-        filters: [
-            {
-                filterVars: [variables.county_altpertrad, variables.county_altpc, variables.county_tradpc],
-                toggleInsets: false,
-                canToggleMultiple: false
-            },
-        ],
-        tooltipVars: [variables.county_altpertrad, variables.county_altpc, variables.county_tradpc],
-        insetMapSettings: false,
-        popupContentFunction: countyMapSetPopupContent,
-        popupColumns: 1
-    },
-    {
-        id: "#financial-opportunity__census-tract-map-other-services", 
-        vizType: "financial_opportunity_map",
-        mapboxStyleUrl: "mapbox://styles/newamericamapbox/cixql9hl200762rp5qynmxcfe",
-        source: {
-            id:'census-tracts',
-            sourceLayer: 'CensusTracts_2014data2K_2-3r3ays',
-            url: 'mapbox://newamericamapbox.7zun44wf'
-        },
-        existingLayers: [variables.irsVita, variables.bankon, variables.cdfi, variables.ida, variables.nfccFec],
-        additionalLayers: [variables.minority, variables.fampov, variables.medhhinc, variables.medval],
-        // toggleOffLayers: [variables.ncua, variables.usps],
-        filters: [
-            {
-                filterVars: [variables.irsVita, variables.bankon, variables.cdfi, variables.ida, variables.nfccFec],
-                toggleInsets: false,
-                canToggleMultiple: true
-            },
-            {
-                filterVars: [variables.minority, variables.fampov, variables.medhhinc, variables.medval],
-                toggleInsets: false,
-                canToggleMultiple: false,
-                label: true
-            },
-        ],
-        tooltipVars: {
-            "Economic Metrics": [variables.medhhinc, variables.fampov, variables.medval],
-            "Population Demographics": [variables.totpop, variables.minority, variables.aian, variables.asian, variables.black, variables.tworace, variables.white, variables.hispanic],
-        },
-        insetMapSettings: false,
-        popupContentFunction: censusTractOtherServicesMapSetPopupContent,
-        popupColumns: 3
-    },
+    // {
+    //     id: "#financial-opportunity__county-map", 
+    //     vizType: "financial_opportunity_map",
+    //     mapboxStyleUrl: "mapbox://styles/newamericamapbox/ciwdu1mzs003j2pmq94myzf8q",
+    //     source: {
+    //         id:'counties',
+    //         sourceLayer: 'Countydata-4gt6se',
+    //         url: 'mapbox://newamericamapbox.8v8ldjz3'
+    //     },
+    //     additionalLayers: [variables.county_altpertrad, variables.county_altpc, variables.county_tradpc],
+    //     filters: [
+    //         {
+    //             filterVars: [variables.county_altpertrad, variables.county_altpc, variables.county_tradpc],
+    //             toggleInsets: false,
+    //             canToggleMultiple: false
+    //         },
+    //     ],
+    //     tooltipVars: [variables.county_altpertrad, variables.county_altpc, variables.county_tradpc],
+    //     insetMapSettings: false,
+    //     popupContentFunction: countyMapSetPopupContent,
+    //     popupColumns: 1
+    // },
+    // {
+    //     id: "#financial-opportunity__census-tract-map-other-services", 
+    //     vizType: "financial_opportunity_map",
+    //     mapboxStyleUrl: "mapbox://styles/newamericamapbox/cixql9hl200762rp5qynmxcfe",
+    //     source: {
+    //         id:'census-tracts',
+    //         sourceLayer: 'CensusTracts_2014data2K_2-3r3ays',
+    //         url: 'mapbox://newamericamapbox.7zun44wf'
+    //     },
+    //     existingLayers: [variables.irsVita, variables.bankon, variables.cdfi, variables.ida, variables.nfccFec],
+    //     additionalLayers: [variables.minority, variables.fampov, variables.medhhinc, variables.medval],
+    //     // toggleOffLayers: [variables.ncua, variables.usps],
+    //     filters: [
+    //         {
+    //             filterVars: [variables.irsVita, variables.bankon, variables.cdfi, variables.ida, variables.nfccFec],
+    //             toggleInsets: false,
+    //             canToggleMultiple: true
+    //         },
+    //         {
+    //             filterVars: [variables.minority, variables.fampov, variables.medhhinc, variables.medval],
+    //             toggleInsets: false,
+    //             canToggleMultiple: false,
+    //             label: true
+    //         },
+    //     ],
+    //     tooltipVars: {
+    //         "Economic Metrics": [variables.medhhinc, variables.fampov, variables.medval],
+    //         "Population Demographics": [variables.totpop, variables.minority, variables.aian, variables.asian, variables.black, variables.tworace, variables.white, variables.hispanic],
+    //     },
+    //     insetMapSettings: false,
+    //     popupContentFunction: censusTractOtherServicesMapSetPopupContent,
+    //     popupColumns: 3
+    // },
 ]
 
 let projectSettings = {

@@ -36,7 +36,6 @@ export class FinancialOpportunityMap {
             .style("width", "100%")
             .style("height", "700px");
 
-        console.log($(id));
         this.map = new mapboxgl.Map({
             container: id.replace("#", "") + '-map-container',
             style: mapboxStyleUrl,
@@ -110,7 +109,6 @@ export class FinancialOpportunityMap {
 
             for (let j = 0; j < numBins; j++) {
                 // let outlineColor = this.colorScales[i].range()[j].replace("rgb", "rgba").replace(")", ", .7)");
-                // console.log(outlineColor);
                 fillColorStops.push([customDomain[j], customRange[j]]);
                 // outlineColorStops.push([{zoom: 1, value: dataMin + j*binInterval}, outlineColor]);
                 // outlineColorStops.push([{zoom: 11, value: dataMin + j*binInterval}, "white"]);
@@ -172,8 +170,6 @@ export class FinancialOpportunityMap {
     addTooltip() {
         this.map.on('click', (e) => {
             var features = this.map.queryRenderedFeatures(e.point, { layers: this.additionalLayerNames });
-            // console.log(e.lngLat);
-            // console.log(features[0]);
             if (!features.length) {
                 this.popup.style("display", "none");
                 this.map.setFilter("click-layer", ["==", "GEOID2", ""]);
@@ -241,6 +237,9 @@ export class FinancialOpportunityMap {
             selectBox.append('option')
                 .text(filterVars[i].displayName);
         }
+
+        selectBox.append('option')
+            .text("None");
     }
 
     addMultiToggleFilter(filterDomElem, filterVars, toggleInsets) {
@@ -345,7 +344,6 @@ export class FinancialOpportunityMap {
         for (let i = 0; i < this.additionalLayers.length; i++) {
             this.colorScales[i] = getColorScale(null, this.additionalLayers[i]);
         }
-        console.log(this.colorScales[0].range());
     }
 
     addLegend() {
@@ -361,9 +359,16 @@ export class FinancialOpportunityMap {
 
     setLegendContents() {
         let currColorStops = this.colorStops[this.currToggledIndex];
-        console.log(currColorStops);
 
         this.cellList ? this.cellList.remove() : null;
+
+        if (currColorStops) {
+            this.legend.style("display", "block"); 
+        } else {
+            this.legend.style("display", "none"); 
+            return; 
+        }
+
         this.cellList = this.cellContainer.append("ul")
             .attr("class", "mapbox-map__legend__cell-list");
 
