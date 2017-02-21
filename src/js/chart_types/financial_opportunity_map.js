@@ -1,6 +1,6 @@
 let mapboxgl = require('mapbox-gl');
 window.mapboxgl = mapboxgl;
-var MapboxGeocoder = require('mapbox-gl-geocoder/mapbox-gl-geocoder.min.js');
+var MapboxGeocoder = require('mapbox-gl-geocoder/mapbox-gl-geocoder.js');
 
 import { colors } from "../helper_functions/colors.js";
 import { formatValue } from "../helper_functions/format_value.js";
@@ -29,7 +29,7 @@ export class FinancialOpportunityMap {
         this.toggleOffLayers = toggleOffLayers;
         this.colorStops = [];
         this.currToggledIndex = 0;
-
+        console.log(MapboxGeocoder);
 
         let mapContainer = d3.select(id).append("div")
             .attr("id", id.replace("#", "") + '-map-container')
@@ -88,7 +88,7 @@ export class FinancialOpportunityMap {
         this.map.addControl(new MapboxGeocoder({
             accessToken: mapboxgl.accessToken,
             country:'us',
-            types: ['country', 'region', 'district', 'place', 'postcode']
+            types: 'country,region,district,place,postcode'
         }), 'top-left');
 
         this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
