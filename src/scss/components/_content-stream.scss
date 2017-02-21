@@ -8,13 +8,13 @@
     	width: 7px;
 
     	&-thumb {
-    		background-color: palette-get(na-black-10);
-			-webkit-box-shadow: 0 0 1px rgba(255,255,255,.2);
+    		background-color: palette-get(na-black-30);
+			-webkit-box-shadow: 0 0 1px rgba(255,255,255,.3);
 			z-index: 1000;
 
 			&:window-inactive {
-				background-color: palette-get(na-black-10);
-				-webkit-box-shadow: 0 0 1px rgba(255,255,255,.2);
+				background-color: palette-get(na-black-30);
+				-webkit-box-shadow: 0 0 1px rgba(255,255,255,.3);
 				z-index: 1000;
 		    }
 		}
@@ -43,8 +43,10 @@
 
 	&__default-text {
 		padding-right: 20px;
-		font-size: 20px;
 		color: palette-get(na-black-40);
+		font-size: 1.2rem;
+	    line-height: 1.65;
+
 		&.hidden {
 			display: none;
 		}

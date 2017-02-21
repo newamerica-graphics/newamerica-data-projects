@@ -18,5 +18,9 @@
 		.chart-wrapper {
 			padding-bottom: 0px;
 		}
+
+		&:first-child {
+			padding-top: 20px;
+		}
 	}
 }
