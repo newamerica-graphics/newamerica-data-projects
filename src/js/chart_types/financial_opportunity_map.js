@@ -88,7 +88,7 @@ export class FinancialOpportunityMap {
         this.map.addControl(new MapboxGeocoder({
             accessToken: mapboxgl.accessToken,
             country:'us',
-            types: ['country', 'region', 'district', 'place', 'postcode']
+            types: 'country,region,district,place,postcode'
         }), 'top-left');
 
         this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
