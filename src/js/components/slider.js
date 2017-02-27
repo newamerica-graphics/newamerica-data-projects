@@ -28,6 +28,17 @@ export class Slider {
 			.append("div")
 			.attr("class", "slider-div");
 
+		if(showAllButton) {
+			this.containerDiv
+				.classed("has-show-all", true);
+
+			this.showAll = d3.select(this.id)
+				.append("div")
+				.attr("class", "button show-all-button")
+				.text("Show All")
+				.on("click", () => { filterChangeFunction("all"); });
+		}
+
 		this.svg = this.containerDiv
 			.append("svg");
 
