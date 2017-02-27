@@ -15,7 +15,7 @@ export function formatValue(value, format) {
 		case "number_per_ten_thousand":
 			return d3.format(",.2f")(Number(value)*10000);
 		case "integer":
-			return Math.round(value);
+			return d3.format(",")(Math.round(value));
 		case "year":
 			return value;
 		case "price":

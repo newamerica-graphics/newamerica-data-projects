@@ -180,7 +180,7 @@ export class MapboxMap {
         console.log(extents);
         this.radiusScale = d3.scaleLinear()
             .domain(extents)
-            .range([5, 30]);
+            .range([3, 30]);
 
         this.radiusStops = [];
         this.radiusStops.push([this.radiusScale.domain()[0], this.radiusScale.range()[0]]);
@@ -244,7 +244,12 @@ export class MapboxMap {
         let width = 80,
             height = 90;
         
-        let svg = this.propCircleContainer.append("svg")
+        let svg = this.propCircleContainer
+            .append("div")
+            .attr("class", "mapbox-map__legend__proportional-circle__wrapper")
+            .style("width", width + "px")
+            .style("margin", "auto")
+            .append("svg")
             .attr("height", height)
             .attr("width", width);
 
@@ -274,7 +279,6 @@ export class MapboxMap {
     }
 
     changeValue(value) {
-        console.log("changing mapbox value " + value);
         if (this.map.loaded() && value) {
             if (value == "all") {
                 this.map.setFilter('points', ['!=', 'year', ""]);

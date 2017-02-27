@@ -24,22 +24,43 @@ export class Slider {
 
 		this.h = 30;
 
+		let buttonContainer = d3.select(this.id)
+			.append("div")
+			.attr("class", "slider__button-container");
+
 		this.containerDiv = d3.select(this.id)
 			.append("div")
 			.attr("class", "slider-div");
+		
+		if(showAllButton) {
+			this.containerDiv
+				.classed("has-show-all", true);
+
+			this.showAll = buttonContainer
+				.append("div")
+				.attr("class", "button slider__button selected")
+				.text("Show All")
+				.on("click", () => { 
+					this.showAll.classed("selected", true); 
+					this.handle.classed("hidden", true); 
+					
+					this.toggleAnimation(this.scale.range()[0], "pause");
+					filterChangeFunction("all"); 
+				});
+		}
+
+		this.animationButton = buttonContainer
+			.append("div")
+			.attr("class", "button slider__button")
+			.text(automated ? "Pause" : "Play")
+			.on("click", () => { this.handle.classed("hidden", false); return this.toggleAnimation(this.currAnimationVal); });
 
 		this.svg = this.containerDiv
-			.append("svg");
-
-		this.animationButton = this.svg.append("path")
-			.style("fill", "grey")
-			.style("cursor", "pointer")
-			.attr("d", automated ? animationButtonPaths.pause : animationButtonPaths.play)
-			.on("click", () => { return this.toggleAnimation(this.currAnimationVal); });
-
+			.append("svg")
+			.attr("class", "slider")
+			
 		this.slider = this.svg.append("g")
-		    .attr("class", "slider")
-		    .attr("transform", "translate(0," + this.h / 2 + ")");
+			.attr("transform", "translate(0," + this.h / 2 + ")");
 
 		this.scale = d3.scaleLinear()
 			.clamp(true);
@@ -55,20 +76,9 @@ export class Slider {
 		    .attr("x2", (this.w - margin.right));
 
 		this.handle = this.slider.insert("circle", ".track-overlay")
-		    .attr("class", "slider__handle")
+		    .attr("class", "slider__handle hidden")
 		    .attr("r", 9)
 		    .attr("cx", margin.left);
-
-		if(showAllButton) {
-			this.containerDiv
-				.classed("has-show-all", true);
-
-			this.showAll = d3.select(this.id)
-				.append("div")
-				.attr("class", "button show-all-button")
-				.text("Show All")
-				.on("click", () => { filterChangeFunction("all"); });
-		}
 	}
 
 	setDimensions() {
@@ -111,21 +121,24 @@ export class Slider {
  
 		this.track.call(d3.drag()
 	        .on("start.interrupt", () => { this.slider.interrupt(); })
-	        .on("start drag", () => { this.animationState == "playing" ? this.toggleAnimation(d3.event.x) : null; this.dragEvent(d3.event.x); }));
+	        .on("start drag", () => { this.showAll.classed("selected", false); this.handle.classed("hidden", false); this.animationState == "playing" ? this.toggleAnimation(d3.event.x) : null; this.dragEvent(d3.event.x); }));
 	    	// .on("end", () => { this.endEvent(d3.event.x); }));
 
 		this.handle.call(d3.drag()
 	        .on("start.interrupt", () => { this.slider.interrupt(); })
-	        .on("start drag",() => { this.dragEvent(d3.event.x); }));
+	        .on("start drag",() => { this.showAll.classed("selected", false); this.handle.classed("hidden", false); this.dragEvent(d3.event.x); }));
 	        // .on("end", () => { this.endEvent(d3.event.x); }));
 		
 		console.log(d3.selectAll(".tick > text"));
 		d3.selectAll(".slider .tick > text")
 			.style("cursor", "pointer")
 			.on("click", (d) => {
+				this.showAll.classed("selected", false);
+				this.handle.classed("hidden", false);
 				this.sliderVal = d;
 				this.handle.attr("cx", this.scale(d));
 				this.filterChangeFunction(this.sliderVal);
+				this.animationState == "playing" ? this.toggleAnimation(this.scale(d), "pause") : null;
 			})
 	}
 
@@ -145,19 +158,17 @@ export class Slider {
 		this.currAnimationVal = newX;
 	}
 
-	toggleAnimation(newAnimationVal) {
+	toggleAnimation(newAnimationVal, forceState) {
 		console.log("toggling animation " + this.animationState + " " + this.currAnimationVal);
 
-		if (this.animationState == "playing") {
+		if (this.animationState == "playing" || forceState == "pause") {
 			this.animationState = "paused";
 			this.currAnimationVal = newAnimationVal;
 			console.log("stopping animation " + this.animationState + " " + this.currAnimationVal);
 			window.clearInterval(this.intervalFunction);
 			
-			this.animationButton
-				.transition()
-				.duration(75)
-				.attr("d", animationButtonPaths.play);
+			this.animationButton.text("Play");
+
 			console.log("resting state " + this.animationState + " " + this.currAnimationVal);
 		} else {
 			this.animationState = "playing";
@@ -166,6 +177,9 @@ export class Slider {
 			let interval = 7000/this.w;
 			this.intervalFunction = window.setInterval(() => {
 				if (this.currAnimationVal >= this.scale.range()[1]) {
+					this.filterChangeFunction("all");
+					this.showAll.classed("selected", true);
+					this.handle.classed("hidden", true);
 					this.toggleAnimation(this.scale.range()[0]);
 					return;
 				}
@@ -174,9 +188,10 @@ export class Slider {
 			}, interval);
 
 			this.animationButton
-				.transition()
-				.duration(75)
-				.attr("d", animationButtonPaths.pause);
+				.text("Pause")
+
+			this.showAll.classed("selected", false);
+			this.handle.classed("hidden", false);
 		}
 
 		console.log("done toggling animation " + this.animationState + " " + this.currAnimationVal);
