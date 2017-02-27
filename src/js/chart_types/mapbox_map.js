@@ -274,7 +274,6 @@ export class MapboxMap {
     }
 
     changeValue(value) {
-        console.log("changing mapbox value " + value);
         if (this.map.loaded() && value) {
             if (value == "all") {
                 this.map.setFilter('points', ['!=', 'year', ""]);
