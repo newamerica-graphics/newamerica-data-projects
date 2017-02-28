@@ -25,6 +25,9 @@ export class Table {
 		d3.select(id).append("table")
 			.attr("id", "dataTable")
 			.attr("class", "table");
+
+		this.popup = d3.select("body").append("div")
+			.attr("class", "table__popup hidden");
 	}
 
 	render(data) {
@@ -51,6 +54,7 @@ export class Table {
 
 		// hide "showing _ of _ results footer if no searching and pagination"
 		this.disableSearching && !this.pagination ? $(this.id + " .dataTables_info").hide() : null;
+		this.attachPopup();
 	}
 
 	getColumnNames() {
@@ -62,7 +66,12 @@ export class Table {
 				"data": tableVar.variable,
 				"orderable" : tableVar.disableTableOrdering ? false : true,
 				"render": function ( data, type, row ) {
-        			return formatValue(data, tableVar.format);
+					if (tableVar.format == "long_text") {
+						return "<div class='table__content'>" + formatValue(data, tableVar.format) + "</div>";
+					} else {
+						return formatValue(data, tableVar.format);
+					}
+        			
         		}
         	};
 
@@ -97,6 +106,36 @@ export class Table {
 			.style("border-left", "7px solid")
 			.style("border-left-color", function() { return colorScale($(this).text());});
 
+	}
+
+	attachPopup() {
+		$(".table__content")
+			.on("mouseover", (e) => {
+				this.showPopup(e);
+			})
+			.on("mouseout", () => {
+				this.popup.classed("hidden", true);
+			});
+
+		$(this.id).on("touchstart", (e) => {
+			if ($(e.target).hasClass("table__content")) {
+				this.showPopup(e);
+			} else {
+				this.popup.classed("hidden", true);
+			}
+		})
+	}
+
+	showPopup(e) {
+		let text = e.target.innerText;
+
+		if (text.length > 150) {
+			this.popup
+				.classed("hidden", false)
+				.html(text)
+				.style("top", (e.pageY + 35) + "px")
+				.style("left", (e.pageX - 150) + "px");
+		}
 	}
 
 	applyColorScale() {

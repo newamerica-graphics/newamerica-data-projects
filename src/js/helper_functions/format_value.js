@@ -8,6 +8,8 @@ export function formatValue(value, format) {
 	let retVal;
 
 	switch(format) {
+		case "long_text":
+			return value ? value.replace(/<\/?[^>]+(>|$)/g, "") : "";
 		case "number":
 			return d3.format(",")(value);
 		case "number_with_decimal_2":

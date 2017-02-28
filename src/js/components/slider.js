@@ -95,7 +95,7 @@ export class Slider {
 			.attr("x1", this.scale.range()[0])
 		    .attr("x2", this.scale.range()[1])
 
-		let numTicks = this.w > 500 ? 10 : 5;
+		let numTicks = this.w > 600 ? 10 : 5;
 
 		let axis = d3.axisBottom(this.scale)
 			.ticks(numTicks, "f")
