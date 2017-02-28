@@ -1,5 +1,34 @@
 .table {
 	width: 100% !important;
+
+	&__content {
+		a {
+			color: palette-get(na-black);
+			font-weight: bold;
+			border: none !important;
+		}
+
+		span {
+			pointer-events: none;
+		}
+
+		&__hidden {
+			display: none;
+		}
+	}
+
+	&__popup {
+		position: absolute;
+		padding: 15px;
+		border: 2px solid palette-get(na-black-10);
+		background-color: white;
+		width: 300px;
+		color: palette-get(na-black-40);
+		line-height: 1.4rem;
+		&.hidden {
+			display: none;
+		}
+	}
 }
 
 .dataTables_filter {
@@ -21,16 +50,19 @@ table.dataTable {
 	border-bottom: none !important;
 	td {
 		color: palette-get(na-black-40);
+		
 
 		&.sorting_1 {
 			color: palette-get(na-black);
 			font-weight: bold;
 		}
+
+
 	}
 
 	th, td {
 		padding: 10px;
-		min-width: 130px;
+		min-width:130px;
 		vertical-align: top;
 		text-align: left;
 		line-height: 1.3;
