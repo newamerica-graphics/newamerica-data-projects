@@ -152,7 +152,7 @@ export class StackedBar {
 		  .enter().append("rect")
 		  	.attr("x", 0)
 			.style("fill", (d, i) => { return this.filterVars[i].color; })
-			.style("fill-opacity", .75);
+			.style("fill-opacity", 1);
 
 		this.setBarHeights();
 	}
@@ -247,7 +247,7 @@ export class StackedBar {
 
 	mouseover(datum, path, eventObject) {
 		d3.select(path).selectAll("rect")
-			.style("fill-opacity", 1);
+			.style("fill-opacity", .75);
 		
 		let mousePos = [];
 		mousePos[0] = eventObject.pageX;

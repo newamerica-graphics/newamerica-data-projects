@@ -276,6 +276,7 @@ export class MapboxMap {
 
     resize() {
         this.slider.resize();
+        
     }
 
     changeValue(value) {
