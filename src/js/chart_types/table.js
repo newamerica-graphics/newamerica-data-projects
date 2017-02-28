@@ -66,8 +66,8 @@ export class Table {
 				"data": tableVar.variable,
 				"orderable" : tableVar.disableTableOrdering ? false : true,
 				"render": function ( data, type, row ) {
-					if (tableVar.format == "long_text") {
-						return "<div class='table__content'>" + formatValue(data, tableVar.format) + "</div>";
+					if (tableVar.format == "long_text" && data && data.length > 100) {
+						return "<div class='table__content'><span class='table__content__shown'>" + data.slice(0, 100) + "...</span><span class='table__content__hidden'>" + data.slice(100, data.length) + "</span></div>";
 					} else {
 						return formatValue(data, tableVar.format);
 					}
@@ -127,7 +127,11 @@ export class Table {
 	}
 
 	showPopup(e) {
-		let text = e.target.innerText;
+		let shownText = $(e.target).children(".table__content__shown")[0].innerText,
+			hiddenText = $(e.target).children(".table__content__hidden")[0].innerText;
+
+		console.log(shownText);
+		let text = shownText.replace("...", "") + hiddenText;
 
 		if (text.length > 150) {
 			this.popup

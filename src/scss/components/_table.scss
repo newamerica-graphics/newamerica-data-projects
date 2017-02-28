@@ -2,13 +2,18 @@
 	width: 100% !important;
 
 	&__content {
-		height: 36px;
-		overflow: hidden;
-
 		a {
 			color: palette-get(na-black);
 			font-weight: bold;
 			border: none !important;
+		}
+
+		span {
+			pointer-events: none;
+		}
+
+		&__hidden {
+			display: none;
 		}
 	}
 
