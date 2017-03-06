@@ -25,6 +25,7 @@ import { FinancialOpportunityMap } from "./chart_types/financial_opportunity_map
 import { SummaryBox } from "./chart_types/summary_box.js";
 import { PieChart } from "./chart_types/pie_chart.js";
 import { Bipartite } from "./chart_types/bipartite.js";
+import { Timeline } from "./chart_types/timeline.js";
 
 import { formatValue } from "./helper_functions/format_value.js";
 
@@ -112,6 +113,10 @@ export function setupProject(projectSettings) {
 
 					case "table":
 						viz = new Table(vizSettingsObject);
+						break;
+
+					case "timeline":
+						viz = new Timeline(vizSettingsObject);
 						break;
 
 					case "topo_json_map":
