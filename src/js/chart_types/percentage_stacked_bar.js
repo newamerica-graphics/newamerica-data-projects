@@ -38,19 +38,17 @@ export class PercentageStackedBar {
 		this.w = $(this.id).width() - this.margin.left - this.margin.right;
 		console.log(this.w);
 
-		if (this.w < 300) {
+		// if (this.w < 300) {
 			this.foldupMode = "mobile";
 			this.w += this.margin.right;
-		} else {
-			this.foldupMode = "desktop";
-		}
+		// } else {
+		// 	this.foldupMode = "desktop";
+		// }
 
 		this.h = 2*this.w/3;
 		this.h = this.h - this.margin.top - this.margin.bottom;
 		this.h = this.h > 500 ? 500 : this.h;
 		this.h = this.h < 300 ? 300 : this.h;
-
-		console.log(this.w);
 
 		this.svg
 			.attr("width", "100%")
@@ -196,11 +194,11 @@ export class PercentageStackedBar {
 			// .style("fill", (d) => { console.log(d); return "white"; })
 			.append("text")
 			.attr("transform", () => {
-				if (this.foldupMode == "desktop") {
-					return "translate(" + (this.w + 25) + "," + this.groupingScale.bandwidth()/2 + ")";
-				} else {
+				// if (this.foldupMode == "desktop") {
+				// 	return "translate(" + (this.w + 25) + "," + this.groupingScale.bandwidth()/2 + ")";
+				// } else {
 					return "translate(" + this.w + ",-" + this.groupingScale.bandwidth()/2 + ")";
-				}
+				// }
 			})
 			.style("text-anchor", this.foldupMode == "desktop" ? "start" : "end")
 			.attr("class", "percentage-stacked-bar__bar-group-hover-label")
