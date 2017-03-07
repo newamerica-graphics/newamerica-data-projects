@@ -9,6 +9,7 @@ let variables = {
 	date_charged: {"variable":"date_charged", "displayName":"Date Charged", "format":"string"},
 	terror_plot: {"variable":"terror_plot", "displayName":"Terror Plot", "format":"string"},
 	citizenship_status: {"variable":"citizenship_status", "displayName":"Citizenship Status", "format":"string", "scaleType":"categorical", "customDomain":["U.S. Born Citizen", "Naturalized Citizen", "Citizen of Unknown Status", "Permanent Resident", "Nonimmigrant Visa", "Illegal Immigrant", "Refugee or Asylum Seeker", "Unknown"], "customRange":[colors.turquoise.dark, colors.turquoise.medium, colors.turquoise.light, colors.blue.dark, colors.blue.light, colors.purple.dark, colors.purple.light, colors.grey.medium_light]},
+	field_convert: {"variable":"field_convert", "displayName":"Convert Status", "format":"string", "scaleType":"categorical", "customDomain":["Yes", "No", "Not Muslim", "Unknown" ], "customRange":[colors.turquoise.light, colors.blue.medium, colors.purple.medium, colors.grey.medium_light]},
 	char_awlaki: {"variable":"char_awlaki", "displayName":"Involvement with Awlaki", "format":"string", "scaleType":"categorical", "customDomain":["Ties", "Contact", "None"], "customRange":[colors.red.light, colors.purple.light, colors.grey.medium_light]},
 	field_kids: {"variable":"field_kids", "displayName":"Kids", "format":"string", "scaleType":"categorical", "color":"blue"},
 	age: {"variable":"age", "displayName":"Age", "format":"number", "scaleType":"categorical", "color":"turquoise"},
@@ -111,6 +112,36 @@ let vizSettingsList = [
 		tooltipVars: [ variables.full_name, variables.citizenship_status ],
 		tooltipImageVar: variables.headshot,
 		split: { splitFilterVar:variables.citizenship_status, splitVal: "Permanent Resident", leftLabel: "Citizens and Permanent Residents", rightLabel: "Non-residents and Unknown", splitAggregate: "percent"},
+		legendSettings: {"orientation": "horizontal-center", "showValCounts": true  },
+		eventSettings: {
+			"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
+		}
+	},
+	{
+		id: "#homegrown__convert-status", 
+		vizType: "dot_matrix",
+		primaryDataSheet: "people_protected",
+		orientation: "horizontal",
+		dotSettings: { "width": 10, "offset": 3},
+		filterVars: [ variables.field_convert ],
+		tooltipVars: [ variables.full_name, variables.field_convert ],
+		tooltipImageVar: variables.headshot,
+		// split: { splitFilterVar:variables.field_convert, splitVal: "No", leftLabel: "Muslims", rightLabel: "Non-Muslims", splitAggregate: "percent"},
+		legendSettings: {"orientation": "horizontal-center", "showValCounts": true  },
+		eventSettings: {
+			"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
+		}
+	},
+	{
+		id: "#homegrown__convert-status-2", 
+		vizType: "dot_matrix",
+		primaryDataSheet: "people_protected",
+		orientation: "horizontal",
+		dotSettings: { "width": 10, "offset": 3},
+		filterVars: [ variables.field_convert ],
+		tooltipVars: [ variables.full_name, variables.field_convert ],
+		tooltipImageVar: variables.headshot,
+		split: { splitFilterVar:variables.field_convert, splitVal: "No", leftLabel: "Muslims", rightLabel: "Non-Muslims and Unknown", splitAggregate: "percent"},
 		legendSettings: {"orientation": "horizontal-center", "showValCounts": true  },
 		eventSettings: {
 			"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
