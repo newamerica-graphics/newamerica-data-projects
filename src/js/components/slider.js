@@ -19,6 +19,7 @@ export class Slider {
 		this.variable = variable.variable;
 		this.filterChangeFunction = filterChangeFunction;
 		this.startStopFunction = startStopFunction;
+		this.automated = automated;
 
 		this.animationState = automated ? "playing" : "paused";
 
@@ -106,6 +107,19 @@ export class Slider {
 
 		this.handle.attr("cx", this.scale(this.sliderVal));
 		this.currAnimationVal = this.scale(this.sliderVal);
+
+		d3.selectAll(".slider .tick > text")
+			.style("cursor", "pointer")
+			.on("click", (d) => {
+				let newXVal = this.scale(d);
+				this.showAll ? this.showAll.classed("selected", false) : null;
+				this.handle.classed("hidden", false);
+				this.sliderVal = d;
+				this.handle.attr("cx", newXVal);
+				this.currAnimationVal = newXVal;
+				this.filterChangeFunction(this.sliderVal, this);
+				this.animationState == "playing" ? this.toggleAnimation(newXVal, "pause") : null;
+			})
 	}
 
 	render(data) {
@@ -121,24 +135,25 @@ export class Slider {
  
 		this.track.call(d3.drag()
 	        .on("start.interrupt", () => { this.slider.interrupt(); })
-	        .on("start drag", () => { this.showAll.classed("selected", false); this.handle.classed("hidden", false); this.animationState == "playing" ? this.toggleAnimation(d3.event.x) : null; this.dragEvent(d3.event.x); }));
+	        .on("start drag", () => { this.showAll ? this.showAll.classed("selected", false) : null; this.handle.classed("hidden", false); this.animationState == "playing" ? this.toggleAnimation(d3.event.x) : null; this.dragEvent(d3.event.x); }));
 	    	// .on("end", () => { this.endEvent(d3.event.x); }));
 
 		this.handle.call(d3.drag()
 	        .on("start.interrupt", () => { this.slider.interrupt(); })
-	        .on("start drag",() => { this.showAll.classed("selected", false); this.handle.classed("hidden", false); this.dragEvent(d3.event.x); }));
+	        .on("start drag",() => { this.showAll ? this.showAll.classed("selected", false) : null; this.handle.classed("hidden", false); this.dragEvent(d3.event.x); }));
 	        // .on("end", () => { this.endEvent(d3.event.x); }));
 		
-		console.log(d3.selectAll(".tick > text"));
 		d3.selectAll(".slider .tick > text")
 			.style("cursor", "pointer")
 			.on("click", (d) => {
-				this.showAll.classed("selected", false);
+				let newXVal = this.scale(d);
+				this.showAll ? this.showAll.classed("selected", false) : null;
 				this.handle.classed("hidden", false);
 				this.sliderVal = d;
-				this.handle.attr("cx", this.scale(d));
-				this.filterChangeFunction(this.sliderVal);
-				this.animationState == "playing" ? this.toggleAnimation(this.scale(d), "pause") : null;
+				this.handle.attr("cx", newXVal);
+				this.currAnimationVal = newXVal;
+				this.filterChangeFunction(this.sliderVal, this);
+				this.animationState == "playing" ? this.toggleAnimation(newXVal, "pause") : null;
 			})
 	}
 
@@ -146,13 +161,13 @@ export class Slider {
 		newX = newX < this.scale.range()[0] ? this.scale.range()[0] : newX;
 		newX = newX > this.scale.range()[1] ? this.scale.range()[1] : newX;
 		this.handle.attr("cx", newX);
-		this.sliderVal = Math.floor(this.scale.invert(newX));
+		this.sliderVal = Math.floor(this.scale.invert(newX + 1));
 		this.filterChangeFunction(this.sliderVal, this);
 		this.currAnimationVal = newX;
 	}
 
 	endEvent(newX) {
-		this.sliderVal = Math.round(this.scale.invert(newX));
+		this.sliderVal = Math.round(this.scale.invert(newX + 1));
 		this.handle.attr("cx", this.scale(this.sliderVal));
 		this.filterChangeFunction(this.sliderVal, this);
 		this.currAnimationVal = newX;
@@ -173,14 +188,23 @@ export class Slider {
 		} else {
 			this.animationState = "playing";
 			this.currAnimationVal = newAnimationVal;
+			if (this.currAnimationVal >= this.scale.range()[1]) {
+				this.currAnimationVal = this.scale.range()[0];
+			}
 			console.log("starting animation " + this.animationState + " " + this.currAnimationVal);
 			let interval = 7000/this.w;
+
 			this.intervalFunction = window.setInterval(() => {
 				if (this.currAnimationVal >= this.scale.range()[1]) {
-					this.filterChangeFunction("all");
-					this.showAll.classed("selected", true);
-					this.handle.classed("hidden", true);
-					this.toggleAnimation(this.scale.range()[0]);
+					if (this.automated) {
+						this.toggleAnimation(this.scale.range()[1], "pause");
+					} else {
+						this.showAll ? this.showAll.classed("selected", true) : null;
+						this.filterChangeFunction("all", this);
+						this.handle.classed("hidden", true);
+						this.toggleAnimation(this.scale.range()[0]);
+					}
+					
 					return;
 				}
 				this.dragEvent(this.currAnimationVal);
@@ -190,26 +214,26 @@ export class Slider {
 			this.animationButton
 				.text("Pause")
 
-			this.showAll.classed("selected", false);
+			this.showAll ? this.showAll.classed("selected", false) : null;
 			this.handle.classed("hidden", false);
 		}
 
 		console.log("done toggling animation " + this.animationState + " " + this.currAnimationVal);
-		this.startStopFunction(this.animationState);
+		// this.startStopFunction(this.animationState);
 	}
 
 	addAnimationTrigger() {
-		// let id = this.id.replace("#", "");
-		// let waypoint = new Waypoint({
-		//   element: document.getElementById(id),
-		//   offset: '50%',
-		//   handler: () => {
-		//     console.log(this);
-		//     this.animationState = "paused";
-		// 	this.toggleAnimation(this.scale.range()[0])
-		// 	waypoint.destroy();
-		//   }
-		// });
+		let id = this.id.replace("#", "");
+		let waypoint = new Waypoint({
+		  element: document.getElementById(id),
+		  offset: '50%',
+		  handler: () => {
+		    console.log(this);
+		    this.animationState = "paused";
+			this.toggleAnimation(this.scale.range()[0])
+			waypoint.destroy();
+		  }
+		});
 	}
 	
 	resize() {

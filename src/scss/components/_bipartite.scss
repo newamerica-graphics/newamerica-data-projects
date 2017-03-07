@@ -19,7 +19,7 @@
     &__node {
   		fill: palette-get(na-black);
     	cursor: pointer;
-    	font-size: 16px;
+    	font-size: 14px;
     	alignment-baseline: middle;
     	&:hover {
     		font-weight: bold;
@@ -31,5 +31,9 @@
     	&.active {
     		font-weight: bold;
     	}
+    }
+
+    &__column-title {
+        font-weight: bold;
     }
 }

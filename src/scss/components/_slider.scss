@@ -26,17 +26,13 @@
 
     }
 
-    .slider-div {
-        display: inline-block;
-    }
-
     &__button-container {
         position: relative;
         left: 20px;
         top: -12px;
         padding-right: 10px;
         display: inline-block;
-        width: 150px
+        width: 75px
     }
 
     &__button {
@@ -63,6 +59,11 @@
     }
 }
 
+.slider-div {
+    display: inline-block;
+    width: calc(100% - 75px);
+}
+
 .mapboxgl-map {
 	#slider-container {
 		width: calc(100% - 300px);
@@ -86,6 +87,10 @@
         & > .show-all-button {
         	position: relative;
         	
+        }
+
+        .slider__button-container {
+            width: 150px;
         }
 	}
 }

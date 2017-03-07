@@ -19,7 +19,7 @@ let topojson = require("topojson");
 
 export class TopoJsonMap {
 	constructor(vizSettings) {
-		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, stroke, legendSettings, filterGroupSettings, zoomable, defaultFill, valChangedFunction, filterChangeFunction, interaction } = vizSettings;
+		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, stroke, legendSettings, filterGroupSettings, zoomable, defaultFill, valChangedFunction, filterChangeFunction, interaction, mouseoverOnlyIfValue } = vizSettings;
 
 		this.id = id;
 		this.filterVars = filterVars;
@@ -34,6 +34,7 @@ export class TopoJsonMap {
 		this.zoomable = zoomable;
 		this.dashboardChangeFunc = filterChangeFunction;
 		this.interaction = interaction;
+		this.mouseoverOnlyIfValue = mouseoverOnlyIfValue;
 
 		if (this.interaction == "click") { this.currClicked == null}; 
 
@@ -167,7 +168,7 @@ export class TopoJsonMap {
 
 	setScale() {
 		this.colorScale = getColorScale(this.data, this.filterVars[this.currFilterIndex]);
-		console.log(this.colorScale.domain());
+		console.log(this.colorScale.range());
 	}
 
 
@@ -225,6 +226,7 @@ export class TopoJsonMap {
 	setFill(d) {
 		if (d.data) {
 	   		var value = d.data[this.currFilterVar];
+	   		console.log(this.colorScale(value));
 	   		return value ? this.colorScale(value) : this.defaultFill;
 	   	} else {
 	   		return this.defaultFill;
@@ -266,7 +268,7 @@ export class TopoJsonMap {
 		let newRange = [];
 		for (let value of this.colorScale.domain()) {
 			if (Number(value) <= newVal) {
-				newRange[i] = colors.turquoise.light;
+				newRange[i] = this.filterVars[this.currFilterIndex].customRange[0];
 			} else {
 				newRange[i] = "#ccc";
 			}
@@ -278,7 +280,9 @@ export class TopoJsonMap {
 			.style("fill", (d) => {
 				if (d.data) {
 					let value = Number(d.data[this.currFilterVar]);
-			   		return this.colorScale(value);
+					if (value) {
+			   			return this.colorScale(value);
+			   		}
 			   	}
 			   	return "#ccc";
 		    });
@@ -300,6 +304,13 @@ export class TopoJsonMap {
 
 	mouseover(datum, path, eventObject) {
 		console.log(datum, path, eventObject);
+		if (this.mouseoverOnlyIfValue) {
+			console.log("here!!!!")
+			if (!datum.data || !datum.data[this.currFilterVar]) {
+				return;
+			}
+		} 
+
 		d3.select(path)
 			.style("stroke", this.stroke.hoverColor || "white")
 			.style("stroke-width", this.stroke.hoverWidth || "3")
@@ -308,8 +319,9 @@ export class TopoJsonMap {
 		let mousePos = [];
 		mousePos[0] = eventObject.pageX;
 		mousePos[1] = eventObject.pageY;
-		this.tooltip ? this.tooltip.show(datum.data, mousePos) : null;
 		this.dashboardChangeFunc ? this.dashboardChangeFunc(datum.id, this) : null;
+		
+		this.tooltip ? this.tooltip.show(datum.data, mousePos) : null;
 	}
 
 	mouseout(path) {
