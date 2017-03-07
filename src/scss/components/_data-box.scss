@@ -7,6 +7,8 @@
 	background-color: white;
     border: 1px solid palette-get(na-black-10);
     max-width: 40%;
+    max-height: 400px;
+    overflow-y: scroll;
 
 	&.hidden {
 		display: none;
@@ -60,5 +62,8 @@
 
 	&__value {
 		color: palette-get(na-black);
+		a {
+			border: none !important;
+		}
 	}
 }

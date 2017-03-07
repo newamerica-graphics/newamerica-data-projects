@@ -157,6 +157,7 @@ export class BarChart {
 			.attr("y", (d) => { return this.yScales[d.variable](d.value); })
 			.attr("height", (d) => { return this.h - this.yScales[d.variable](d.value); })
 			.style("fill", (d) => { return this.colorScale(d.variable); })
+			.style("cursor", "pointer")
 			.on("mouseover", (d, index, paths) => {  return this.eventSettings && this.eventSettings.mouseover ? this.mouseover(d, paths[index], d3.event) : null; })
 			.on("mouseout", (d, index, paths) => {  return this.eventSettings && this.eventSettings.mouseover ? this.mouseout(paths[index]) : null; });
 
