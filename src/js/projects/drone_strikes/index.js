@@ -140,63 +140,63 @@ let vizSettingsList = [
 			}
 		]
 	},
-	// {
-	// 	id: "#drone-strikes__leaders-map",
-	// 	vizType: "tabbed_chart_layout",
-	// 	primaryDataSheet: "strike_data",
-	// 	chartSettingsList: [
-	// 		{
-	// 			vizType: "mapbox_map",
-	// 			// filterInitialDataBy: { field: "country", value:"Pakistan" },
-	// 	        mapboxSettings: {
-	// 	        	style: "mapbox://styles/newamericamapbox/ciynaplyx001k2sqepxshx05u",
-	// 	        	center: [69.3451, 32.3753],
-	// 	        	zoom: 5,
-	// 	        	maxBounds: [
-	// 	        		[55.00301398655583, 21.96600122382982],
-	// 	        		[83.30379523654886, 39.012806004755106]
-	// 	        	],
-	// 	        },
-	// 	        colorVar: variables.president,
-	// 	        radiusVar: variables.leaders_killed,
-	// 	        sliderSettings: {
-	// 				variable: variables.year,
-	// 				showAllButton: true,
-	// 				automated: false,
-	// 	        },
-	// 	        dataBoxVars: {
-	// 	        	title: variables.date,
-	// 	        	subtitle: [variables.village, variables.region],
-	// 	        	categories: [
-	// 	        		{ 
-	// 		        		label: "Leaders Killed",
-	// 		        		fields: [variables.leader_names, variables.leader_description]
-	// 		        	},
-	// 		        	// { 
-	// 		        	// 	label: "Target",
-	// 		        	// 	fields: [variables.target_organization_name, variables.target_description] 
-	// 		        	// },
-	// 		        	// { 
-	// 		        	// 	label: "Casualties",
-	// 		        	// 	fields: [variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh]
-	// 		        	// },
-	// 		        	{
-	// 		        		label: "Sources",
-	// 		        		fields: [variables.sources_combined]
-	// 		        	}
-	// 	        	],
-	// 	        }
-	// 	    },
-	// 	    {
-	// 			vizType: "table",
-	// 			tableVars: [ variables.date, variables.leader_names, variables.leader_description, variables.village, variables.region, variables.sources_combined],
-	// 			defaultOrdering: [0, "desc"],
-	// 			pagination: true,
-	// 			numPerPage: 25,
-	// 			colorScaling: false
-	// 		}
-	// 	]
-	// },
+	{
+		id: "#drone-strikes__leaders-map",
+		vizType: "tabbed_chart_layout",
+		primaryDataSheet: "strike_data",
+		chartSettingsList: [
+			{
+				vizType: "mapbox_map",
+				// filterInitialDataBy: { field: "country", value:"Pakistan" },
+		        mapboxSettings: {
+		        	style: "mapbox://styles/newamericamapbox/ciynaplyx001k2sqepxshx05u",
+		        	center: [69.3451, 32.3753],
+		        	zoom: 5,
+		        	maxBounds: [
+		        		[55.00301398655583, 21.96600122382982],
+		        		[83.30379523654886, 39.012806004755106]
+		        	],
+		        },
+		        colorVar: variables.president,
+		        radiusVar: variables.leaders_killed,
+		        sliderSettings: {
+					variable: variables.year,
+					showAllButton: true,
+					automated: false,
+		        },
+		        dataBoxVars: {
+		        	title: variables.date,
+		        	subtitle: [variables.village, variables.region],
+		        	categories: [
+		        		{ 
+			        		label: "Leaders Killed",
+			        		fields: [variables.leader_names, variables.leader_description]
+			        	},
+			        	// { 
+			        	// 	label: "Target",
+			        	// 	fields: [variables.target_organization_name, variables.target_description] 
+			        	// },
+			        	// { 
+			        	// 	label: "Casualties",
+			        	// 	fields: [variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh]
+			        	// },
+			        	{
+			        		label: "Sources",
+			        		fields: [variables.sources_combined]
+			        	}
+		        	],
+		        }
+		    },
+		    {
+				vizType: "table",
+				tableVars: [ variables.date, variables.leader_names, variables.leader_description, variables.village, variables.region, variables.sources_combined],
+				defaultOrdering: [0, "desc"],
+				pagination: true,
+				numPerPage: 25,
+				colorScaling: false
+			}
+		]
+	},
 ]
 
 let projectSettings = {
