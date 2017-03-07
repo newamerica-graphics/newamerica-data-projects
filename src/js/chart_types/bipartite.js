@@ -7,7 +7,7 @@ let minNodeOffset = 20,
 
 let nodeXPadding = 7;
 
-let graphTopPadding = 20;
+let graphTopPadding = 60;
 
 let transitionDuration = 850,
 	transitionOffset = 100;
@@ -25,6 +25,26 @@ export class Bipartite {
 		this.svg = d3.select(id).append("svg")
 			.attr("class", "bipartite");
 
+		// this.leftColumnTitle = this.svg.append("g");
+
+		this.leftColumnTitle = this.svg
+			.append("text")
+			.attr("y", 0)
+			.attr("x", 0)
+			.style("text-anchor", "end")
+			.attr("class", "bipartite__column-title")
+			.text(leftVar.displayName);
+
+		// this.rightColumnTitle = this.svg.append("g");
+
+		this.rightColumnTitle = this.svg
+			.append("text")
+			.attr("y", 0)
+			.attr("x", 0)
+			.style("text-anchor", "beginning")
+			.attr("class", "bipartite__column-title")
+			.text(rightVar.displayName)
+
 		this.leftNodeBox = this.svg.append("g");
 
 		this.rightNodeBox = this.svg.append("g");
@@ -40,6 +60,16 @@ export class Bipartite {
 		this.rightX = this.w - (nodeWidth - transitionOffset);
 		this.transformLeftX = nodeWidth;
 		this.transformRightX = this.w - (nodeWidth - transitionOffset) - transitionOffset;
+
+		this.leftColumnTitle
+			// .attr("width", nodeWidth)
+			// .attr("height", "100")
+			.attr("transform", "translate(" + (nodeWidth - transitionOffset) + "," + graphTopPadding/2 + ")");
+
+		this.rightColumnTitle
+			// .attr("width", nodeWidth)
+			// .attr("height", "100")
+			.attr("transform", "translate(" + (this.w - nodeWidth + transitionOffset) + "," + graphTopPadding/2 + ")");
 
 		this.leftNodeBox
 			.attr("width", nodeWidth)
@@ -271,7 +301,7 @@ export class Bipartite {
 	}
 
 	setTransformYBase(coord, listLen) {
-		coord += graphTopPadding - 10;
+		coord += 10;
 		// transform would bring nodes out the bottom of the svg
 		if (coord - (listLen * minNodeOffset)/2 < 0) {
 			console.log("less!");

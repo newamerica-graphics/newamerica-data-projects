@@ -7,8 +7,8 @@ let d3 = require("d3");
 let variables = {
 	id: {"variable": "id", "displayName":"ID", "format":"number"},
 	name: {"variable": "name", "displayName":"Country", "format":"string"},
-	exports_to: {"variable": "exports_to", "displayName":"Exports to", "format":"string"},
-	imports_from: {"variable": "imports_from", "displayName":"Imports from", "format":"string"},
+	exports_to: {"variable": "exports_to", "displayName":"Exporters", "format":"string"},
+	imports_from: {"variable": "imports_from", "displayName":"Importers", "format":"string"},
 	domestic_production: {"variable": "domestic_production", "displayName":"Domestic Production", "format":"string", "scaleType":"categorical", "customRange":[colors.grey.light, colors.turquoise.light]},
 	fake_year_data: {"variable": "fake_year_data", "displayName":"Fake Year", "format":"year", "scaleType":"categorical", "customRange":[colors.turquoise.light]},
 	description: {"variable": "description", "displayName":"Description", "format":"string", "disableTableOrdering": true},
