@@ -12,6 +12,8 @@ let variables = {
 	domestic_production: {"variable": "domestic_production", "displayName":"Domestic Production", "format":"string", "scaleType":"categorical", "customRange":[colors.grey.light, colors.turquoise.light]},
 	fake_year_data: {"variable": "fake_year_data", "displayName":"Fake Year", "format":"year", "scaleType":"categorical", "customRange":[colors.turquoise.light]},
 	description: {"variable": "description", "displayName":"Description", "format":"string", "disableTableOrdering": true},
+	developing_armed_drones_year: {"variable": "developing_armed_drones_year", "displayName":"Year", "format":"year", "scaleType":"categorical", "customRange":[colors.turquoise.light]},
+	developing_armed_drones_description: {"variable": "developing_armed_drones_description", "displayName":"Description", "format":"string", "disableTableOrdering": true},
 }
 
 let vizSettingsList = [
@@ -36,7 +38,7 @@ let vizSettingsList = [
 						{
 							vizType: "slider",
 							primaryDataSheet: "countries",
-							variable: variables.fake_year_data,
+							variable: variables.developing_armed_drones_year,
 							isMessagePasser: true,
 							automated: true
 						}
@@ -49,8 +51,9 @@ let vizSettingsList = [
 							stroke: {"color": "white", "width":"1", "opacity": "1", "hoverColor": "white", "hoverWidth": "3"},
 							defaultFill: colors.grey.light,
 							geometryVar: variables.id,
-							filterVars: [variables.fake_year_data],
-							tooltipVars: [variables.name, variables.description],
+							filterVars: [variables.developing_armed_drones_year],
+							tooltipVars: [variables.name, variables.developing_armed_drones_year, variables.developing_armed_drones_description],
+							mouseoverOnlyIfValue: true,
 							zoomable: false,
 							messageHandlerType: "change_value",
 						}
@@ -59,7 +62,8 @@ let vizSettingsList = [
 			},
 			{
 				vizType: "table",
-				tableVars: [variables.name, variables.description],
+				filterInitialDataBy: { field: "developing_armed_drones_year" },
+				tableVars: [variables.name, variables.developing_armed_drones_description],
 				defaultOrdering: [0, "asc"],
 				pagination: true,
 				numPerPage: 15,
@@ -67,6 +71,50 @@ let vizSettingsList = [
 			}
 		]
 	},
+	// {
+	// 	id: "#world-of-drones__domestic-production",
+	// 	vizType: "tabbed_chart_layout",
+	// 	primaryDataSheet: "countries",
+	// 	chartSettingsList: [
+	// 		{
+	// 			vizType: "dashboard",
+	// 			getDefaultValueFunction: getDefaultValue,
+	// 			layoutRows: [
+	// 				[
+	// 					{
+	// 						vizType: "slider",
+	// 						primaryDataSheet: "countries",
+	// 						variable: variables.fake_year_data,
+	// 						isMessagePasser: true,
+	// 						automated: true
+	// 					}
+	// 				],
+	// 				[
+	// 					{
+	// 						vizType: "topo_json_map",
+	// 						primaryDataSheet: "countries",
+	// 						geometryType: "world",
+	// 						stroke: {"color": "white", "width":"1", "opacity": "1", "hoverColor": "white", "hoverWidth": "3"},
+	// 						defaultFill: colors.grey.light,
+	// 						geometryVar: variables.id,
+	// 						filterVars: [variables.fake_year_data],
+	// 						tooltipVars: [variables.name, variables.description],
+	// 						zoomable: false,
+	// 						messageHandlerType: "change_value",
+	// 					}
+	// 				]
+	// 			]
+	// 		},
+	// 		{
+	// 			vizType: "table",
+	// 			tableVars: [variables.name, variables.description],
+	// 			defaultOrdering: [0, "asc"],
+	// 			pagination: true,
+	// 			numPerPage: 15,
+	// 			colorScaling: false
+	// 		}
+	// 	]
+	// },
 ]
 
 let projectSettings = {

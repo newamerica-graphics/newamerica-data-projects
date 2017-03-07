@@ -10,7 +10,7 @@ import { formatValue } from "../helper_functions/format_value.js";
 
 export class Table {
 	constructor(vizSettings) {
-		let {id, tableVars, colorScaling, primaryDataSheet, pagination, numPerPage, defaultOrdering, disableSearching, disableOrdering} = vizSettings;
+		let {id, tableVars, colorScaling, primaryDataSheet, pagination, numPerPage, defaultOrdering, disableSearching, disableOrdering, filterInitialDataBy} = vizSettings;
 
 		this.id = id;
 		this.tableVars = tableVars;
@@ -21,6 +21,7 @@ export class Table {
 		this.primaryDataSheet = primaryDataSheet;
 		this.disableSearching = disableSearching;
 		this.disableOrdering = disableOrdering;
+		this.filterInitialDataBy = filterInitialDataBy;
 
 		d3.select(id).append("table")
 			.attr("id", "dataTable")
@@ -32,6 +33,13 @@ export class Table {
 
 	render(data) {
 		this.data = data[this.primaryDataSheet];
+		if (this.filterInitialDataBy) {
+			if (this.filterInitialDataBy.value) {
+            	this.data = this.data.filter((d) => { return d[this.filterInitialDataBy.field] == this.filterInitialDataBy.value; });
+            } else {
+            	this.data = this.data.filter((d) => { return d[this.filterInitialDataBy.field] });
+            }
+        }
 		this.table = $(this.id + " #dataTable").DataTable({
 			data: this.data,
 			columns: this.getColumnNames(),
