@@ -168,7 +168,7 @@ export class TopoJsonMap {
 
 	setScale() {
 		this.colorScale = getColorScale(this.data, this.filterVars[this.currFilterIndex]);
-		console.log(this.colorScale.domain());
+		console.log(this.colorScale.range());
 	}
 
 
@@ -226,6 +226,7 @@ export class TopoJsonMap {
 	setFill(d) {
 		if (d.data) {
 	   		var value = d.data[this.currFilterVar];
+	   		console.log(this.colorScale(value));
 	   		return value ? this.colorScale(value) : this.defaultFill;
 	   	} else {
 	   		return this.defaultFill;
@@ -267,7 +268,7 @@ export class TopoJsonMap {
 		let newRange = [];
 		for (let value of this.colorScale.domain()) {
 			if (Number(value) <= newVal) {
-				newRange[i] = colors.turquoise.light;
+				newRange[i] = this.filterVars[this.currFilterIndex].customRange[0];
 			} else {
 				newRange[i] = "#ccc";
 			}

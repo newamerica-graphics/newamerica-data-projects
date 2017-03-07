@@ -161,13 +161,13 @@ export class Slider {
 		newX = newX < this.scale.range()[0] ? this.scale.range()[0] : newX;
 		newX = newX > this.scale.range()[1] ? this.scale.range()[1] : newX;
 		this.handle.attr("cx", newX);
-		this.sliderVal = Math.floor(this.scale.invert(newX));
+		this.sliderVal = Math.floor(this.scale.invert(newX + 1));
 		this.filterChangeFunction(this.sliderVal, this);
 		this.currAnimationVal = newX;
 	}
 
 	endEvent(newX) {
-		this.sliderVal = Math.round(this.scale.invert(newX));
+		this.sliderVal = Math.round(this.scale.invert(newX + 1));
 		this.handle.attr("cx", this.scale(this.sliderVal));
 		this.filterChangeFunction(this.sliderVal, this);
 		this.currAnimationVal = newX;
