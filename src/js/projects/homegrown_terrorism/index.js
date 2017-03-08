@@ -118,7 +118,7 @@ let vizSettingsList = [
 		}
 	},
 	{
-		id: "#homegrown__convert-status-2", 
+		id: "#homegrown__convert-status", 
 		vizType: "dot_matrix",
 		primaryDataSheet: "people_protected",
 		orientation: "horizontal",
