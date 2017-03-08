@@ -6,6 +6,8 @@ import { Legend } from "../components/legend.js";
 
 import { colors } from "../helper_functions/colors.js";
 
+import { formatValue } from "../helper_functions/format_value.js";
+
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 
 import { Tooltip } from "../components/tooltip.js";
@@ -207,11 +209,22 @@ export class DotMatrix {
 	}
 
 	setLegend() {
+		let { valCountType, showValCounts } = this.legendSettings;
+		let dataLength = this.data.length;
 		
-		if ( this.legendSettings.showValCounts ) {
+		if ( showValCounts ) {
 			this.legendSettings.valCounts = d3.nest()
 				.key((d) => { return d[this.currFilterVar]; })
-				.rollup(function(v) { return v.length; })
+				.rollup(function(v) {
+					if (valCountType == "percent") {
+						return formatValue(v.length/dataLength, "percent"); 
+					} else if (valCountType == "both") {
+						return v.length + " (" + formatValue(v.length/dataLength, "percent") + ")";
+					} else {
+						return v.length;
+					}
+					
+				})
 				.map(this.data);
 		}
 
