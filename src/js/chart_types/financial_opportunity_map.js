@@ -222,8 +222,8 @@ export class FinancialOpportunityMap {
         let selectBox = filterDomElem.append('select')
             .attr("class", "mapbox-map__filter-group__select")
             .classed("has-label", hasLabel)
-            .on("change", (a, b, c) => {
-                let selectedIndex = d3.event.srcElement.selectedIndex;
+            .on("change", (a, b, path) => {
+                let selectedIndex = path[0].selectedIndex;
                 for (let i = 0; i < filterVars.length; i++) {
                     let visibility = i == selectedIndex ? 'visible' : 'none';
                     this.map.setLayoutProperty(filterVars[i].variable, 'visibility', visibility);
