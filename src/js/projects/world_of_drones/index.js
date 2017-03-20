@@ -76,98 +76,98 @@ let vizSettingsList = [
 			}
 		]
 	},
-	// {
-	// 	id: "#world-of-drones__have-armed-drones",
-	// 	vizType: "tabbed_chart_layout",
-	// 	primaryDataSheet: "countries",
-	// 	chartSettingsList: [
-	// 		{
-	// 			vizType: "dashboard",
-	// 			getDefaultValueFunction: getDefaultValue,
-	// 			layoutRows: [
-	// 				[
-	// 					{
-	// 						vizType: "slider",
-	// 						primaryDataSheet: "countries",
-	// 						variable: variables.have_armed_drones_year,
-	// 						isMessagePasser: true,
-	// 						automated: true
-	// 					}
-	// 				],
-	// 				[
-	// 					{
-	// 						vizType: "topo_json_map",
-	// 						primaryDataSheet: "countries",
-	// 						geometryType: "world",
-	// 						stroke: {"color": "white", "width":"1", "opacity": "1", "hoverColor": "white", "hoverWidth": "3"},
-	// 						defaultFill: colors.grey.light,
-	// 						geometryVar: variables.id,
-	// 						filterVars: [variables.have_armed_drones_year],
-	// 						tooltipVars: [variables.name, variables.have_armed_drones_year, variables.have_armed_drones_description],
-	// 						mouseoverOnlyIfValue: true,
-	// 						zoomable: false,
-	// 						messageHandlerType: "change_value",
-	// 					}
-	// 				]
-	// 			]
-	// 		},
-	// 		{
-	// 			vizType: "table",
-	// 			filterInitialDataBy: [{ field: "developing_armed_drones_year" }, { field: "id" }],
-	// 			tableVars: [variables.name, variables.have_armed_drones_year, variables.have_armed_drones_description],
-	// 			defaultOrdering: [1, "asc"],
-	// 			pagination: false,
-	// 			numPerPage: 20,
-	// 			colorScaling: false
-	// 		}
-	// 	]
-	// },
-	// {
-	// 	id: "#world-of-drones__drones-in-combat",
-	// 	vizType: "tabbed_chart_layout",
-	// 	primaryDataSheet: "countries",
-	// 	chartSettingsList: [
-	// 		{
-	// 			vizType: "dashboard",
-	// 			getDefaultValueFunction: getDefaultValue,
-	// 			layoutRows: [
-	// 				[
-	// 					{
-	// 						vizType: "slider",
-	// 						primaryDataSheet: "countries",
-	// 						variable: variables.drones_in_combat_year,
-	// 						isMessagePasser: true,
-	// 						automated: true
-	// 					}
-	// 				],
-	// 				[
-	// 					{
-	// 						vizType: "topo_json_map",
-	// 						primaryDataSheet: "countries",
-	// 						geometryType: "world",
-	// 						stroke: {"color": "white", "width":"1", "opacity": "1", "hoverColor": "white", "hoverWidth": "3"},
-	// 						defaultFill: colors.grey.light,
-	// 						geometryVar: variables.id,
-	// 						filterVars: [variables.drones_in_combat_year],
-	// 						tooltipVars: [variables.name, variables.drones_in_combat_date, variables.drones_in_combat_country_of_use, variables.drones_in_combat_drone_model_used, variables.drones_in_combat_in_arsenal],
-	// 						mouseoverOnlyIfValue: true,
-	// 						zoomable: false,
-	// 						messageHandlerType: "change_value",
-	// 					}
-	// 				]
-	// 			]
-	// 		},
-	// 		{
-	// 			vizType: "table",
-	// 			filterInitialDataBy: [{ field: "developing_armed_drones_year" }, { field: "id" }],
-	// 			tableVars: [variables.name, variables.drones_in_combat_date, variables.drones_in_combat_country_of_use, variables.drones_in_combat_drone_model_used, variables.drones_in_combat_in_arsenal],
-	// 			defaultOrdering: [1, "asc"],
-	// 			pagination: false,
-	// 			numPerPage: 20,
-	// 			colorScaling: false
-	// 		}
-	// 	]
-	// },
+	{
+		id: "#world-of-drones__have-armed-drones",
+		vizType: "tabbed_chart_layout",
+		primaryDataSheet: "countries",
+		chartSettingsList: [
+			{
+				vizType: "dashboard",
+				getDefaultValueFunction: getDefaultValue,
+				layoutRows: [
+					[
+						{
+							vizType: "slider",
+							primaryDataSheet: "countries",
+							variable: variables.have_armed_drones_year,
+							isMessagePasser: true,
+							automated: true
+						}
+					],
+					[
+						{
+							vizType: "topo_json_map",
+							primaryDataSheet: "countries",
+							geometryType: "world",
+							stroke: {"color": "white", "width":"1", "opacity": "1", "hoverColor": "white", "hoverWidth": "3"},
+							defaultFill: colors.grey.light,
+							geometryVar: variables.id,
+							filterVars: [variables.have_armed_drones_year],
+							tooltipVars: [variables.name, variables.have_armed_drones_year, variables.have_armed_drones_description],
+							mouseoverOnlyIfValue: true,
+							zoomable: false,
+							messageHandlerType: "change_value",
+						}
+					]
+				]
+			},
+			{
+				vizType: "table",
+				filterInitialDataBy: [{ field: "developing_armed_drones_year" }, { field: "id" }],
+				tableVars: [variables.name, variables.have_armed_drones_year, variables.have_armed_drones_description],
+				defaultOrdering: [1, "asc"],
+				pagination: false,
+				numPerPage: 20,
+				colorScaling: false
+			}
+		]
+	},
+	{
+		id: "#world-of-drones__drones-in-combat",
+		vizType: "tabbed_chart_layout",
+		primaryDataSheet: "countries",
+		chartSettingsList: [
+			{
+				vizType: "dashboard",
+				getDefaultValueFunction: getDefaultValue,
+				layoutRows: [
+					[
+						{
+							vizType: "slider",
+							primaryDataSheet: "countries",
+							variable: variables.drones_in_combat_year,
+							isMessagePasser: true,
+							automated: true
+						}
+					],
+					[
+						{
+							vizType: "topo_json_map",
+							primaryDataSheet: "countries",
+							geometryType: "world",
+							stroke: {"color": "white", "width":"1", "opacity": "1", "hoverColor": "white", "hoverWidth": "3"},
+							defaultFill: colors.grey.light,
+							geometryVar: variables.id,
+							filterVars: [variables.drones_in_combat_year],
+							tooltipVars: [variables.name, variables.drones_in_combat_date, variables.drones_in_combat_country_of_use, variables.drones_in_combat_drone_model_used, variables.drones_in_combat_in_arsenal],
+							mouseoverOnlyIfValue: true,
+							zoomable: false,
+							messageHandlerType: "change_value",
+						}
+					]
+				]
+			},
+			{
+				vizType: "table",
+				filterInitialDataBy: [{ field: "developing_armed_drones_year" }, { field: "id" }],
+				tableVars: [variables.name, variables.drones_in_combat_date, variables.drones_in_combat_country_of_use, variables.drones_in_combat_drone_model_used, variables.drones_in_combat_in_arsenal],
+				defaultOrdering: [1, "asc"],
+				pagination: false,
+				numPerPage: 20,
+				colorScaling: false
+			}
+		]
+	},
 ]
 
 let projectSettings = {
