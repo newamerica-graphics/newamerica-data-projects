@@ -22,14 +22,14 @@ let variables = {
 }
 
 let vizSettingsList = [
-	// {
-	// 	id: "#world-of-drones__import-export", 
-	// 	vizType: "bipartite",
-	// 	primaryDataSheet: "countries",
-	// 	keyVar: variables.name,
-	// 	leftVar: variables.exports_to,
-	// 	rightVar: variables.imports_from,
-	// },
+	{
+		id: "#world-of-drones__import-export", 
+		vizType: "bipartite",
+		primaryDataSheet: "countries",
+		keyVar: variables.name,
+		leftVar: variables.exports_to,
+		rightVar: variables.imports_from,
+	},
 	{
 		id: "#world-of-drones__developing-armed-drones",
 		vizType: "tabbed_chart_layout",
