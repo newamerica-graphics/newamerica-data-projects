@@ -67,11 +67,11 @@ let vizSettingsList = [
 			},
 			{
 				vizType: "table",
-				filterInitialDataBy: { field: "developing_armed_drones_year" },
+				filterInitialDataBy: [{ field: "developing_armed_drones_year" }, { field: "id" }],
 				tableVars: [variables.name, variables.developing_armed_drones_year, variables.developing_armed_drones_description],
 				defaultOrdering: [1, "asc"],
-				pagination: true,
-				numPerPage: 15,
+				pagination: false,
+				numPerPage: 20,
 				colorScaling: false
 			}
 		]
@@ -113,11 +113,11 @@ let vizSettingsList = [
 			},
 			{
 				vizType: "table",
-				filterInitialDataBy: { field: "have_armed_drones_year" },
+				filterInitialDataBy: [{ field: "developing_armed_drones_year" }, { field: "id" }],
 				tableVars: [variables.name, variables.have_armed_drones_year, variables.have_armed_drones_description],
 				defaultOrdering: [1, "asc"],
-				pagination: true,
-				numPerPage: 15,
+				pagination: false,
+				numPerPage: 20,
 				colorScaling: false
 			}
 		]
@@ -159,16 +159,15 @@ let vizSettingsList = [
 			},
 			{
 				vizType: "table",
-				filterInitialDataBy: { field: "drones_in_combat_year" },
+				filterInitialDataBy: [{ field: "developing_armed_drones_year" }, { field: "id" }],
 				tableVars: [variables.name, variables.drones_in_combat_date, variables.drones_in_combat_country_of_use, variables.drones_in_combat_drone_model_used, variables.drones_in_combat_in_arsenal],
 				defaultOrdering: [1, "asc"],
-				pagination: true,
-				numPerPage: 15,
+				pagination: false,
+				numPerPage: 20,
 				colorScaling: false
 			}
 		]
 	},
-	
 ]
 
 let projectSettings = {

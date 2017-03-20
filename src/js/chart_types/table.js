@@ -34,11 +34,14 @@ export class Table {
 	render(data) {
 		this.data = data[this.primaryDataSheet];
 		if (this.filterInitialDataBy) {
-			if (this.filterInitialDataBy.value) {
-            	this.data = this.data.filter((d) => { return d[this.filterInitialDataBy.field] == this.filterInitialDataBy.value; });
-            } else {
-            	this.data = this.data.filter((d) => { return d[this.filterInitialDataBy.field] });
-            }
+			for (let filter of this.filterInitialDataBy) {
+				if (filter.value) {
+	            	this.data = this.data.filter((d) => { return d[filter.field] == filter.value; });
+	            } else {
+	            	this.data = this.data.filter((d) => { return d[filter.field] });
+	            }
+			}
+			
         }
 		this.table = $(this.id + " #dataTable").DataTable({
 			data: this.data,
