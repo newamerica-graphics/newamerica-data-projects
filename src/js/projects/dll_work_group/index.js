@@ -22,7 +22,7 @@ let vizSettingsList = [
 				{
 					vizType: "topo_json_map",
 					primaryDataSheet: "states",
-					width: "50%",
+					width: "100%",
 					filterVars: [ variables.show_on_map ],
 					geometryType: "states",
 					geometryVar: variables.state_id,
@@ -31,12 +31,14 @@ let vizSettingsList = [
 					isMessagePasser: true,
 					interaction: "click",
 					smallStateInsets: true,
-				},
+				}
+			],
+			[
 				{
 					vizType: "content_stream",
 					primaryDataSheet: "dll_work",
 					defaultText: "Since its founding in 2014, the Dual Language Learners National Work Group has conducted a significant amount of research in — and on — diverse communities across the country. This sort of place-based reporting is critical. It allows us to highlight new policy reforms as well as promising teaching practices for supporting DLLs' linguistic and academic development.",
-					width: "50%",
+					width: "100%",
 					isMessagePasser: false,
 					messageHandlerType: "change_value",
 				}
