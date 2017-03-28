@@ -173,7 +173,7 @@ let vizSettingsList = [
 		primaryDataSheet: "people_protected",
 		factBoxType: "colored_boxes",
 		factBoxVals: [ 
-			{ variable: variables.char_online_radicalization, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Maintained a social media profile with jihadist material or utilized encryption for plotting"},
+			{ variable: variables.online_radicalization, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Maintained a social media profile with jihadist material or utilized encryption for plotting"},
 		],
 	},
 	{
