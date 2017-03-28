@@ -15,7 +15,7 @@ let dataPointWidth = 7;
 
 export class BarChart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, primaryDataSheet, groupingVar, filterVars, legendSettings, xAxisLabelInterval, labelValues, showYAxis, tooltipVars, eventSettings, hasTrendline} = vizSettings;
+		let {id, primaryDataSheet, groupingVar, filterVars, legendSettings, xAxisLabelInterval, labelValues, showYAxis, tooltipVars, eventSettings, hasTrendline, dataNest} = vizSettings;
 		this.id = id;
 		this.primaryDataSheet = primaryDataSheet;
 		this.filterVars = filterVars;
@@ -27,8 +27,9 @@ export class BarChart {
 		this.labelValues = labelValues;
 		this.showYAxis = showYAxis;
 		this.margin = {top: 20, right: 20};
-		this.margin.left = this.showYAxis ? 70 : 20;
+		this.margin.left = this.showYAxis ? 85 : 20;
 		this.margin.bottom = this.filterVars.length == 1 ? 50 : 30;
+		this.dataNest = dataNest;
 
 		this.svg = d3.select(id).append("svg").attr("class", "bar-chart");
 
@@ -44,7 +45,7 @@ export class BarChart {
 		let colorVals = [];
 		let colorLabels = [];
 		
-		for (let filterVar of filterVars) {
+		for (let filterVar of this.filterVars) {
 			this.xVals.push(filterVar.variable);
 			colorVals.push(filterVar.color);
 			colorLabels.push(filterVar.displayName);
@@ -58,7 +59,7 @@ export class BarChart {
 		this.setDimensions();
 		this.setXYScaleDomains;
 
-		if (filterVars.length > 1) {
+		if (this.filterVars.length > 1) {
 			this.legendSettings.id = id;
 			this.legendSettings.markerSettings = { shape:"rect", size:10 };
 			this.legendSettings.customLabels = colorLabels;
@@ -66,8 +67,18 @@ export class BarChart {
 			this.legend = new Legend(this.legendSettings);
 		}
 
-		if (tooltipVars) {
-			let tooltipSettings = { "id":id, "tooltipVars":tooltipVars }
+		if (this.dataNest) {
+			let tooltipSettings = { 
+				"id":id, 
+				"tooltipVars": [
+					{ variable: "key", displayName: "Year", format: "year" },
+					{ variable: "count", displayName: "Total", format: "number" },
+					{ variable: "value", displayName: "Percent Radicalized Online", format: "percent" },
+				]
+			}
+			this.tooltip = new Tooltip(tooltipSettings);
+		} else if (this.tooltipVars) {
+			let tooltipSettings = { "id":id, "tooltipVars": this.tooltipVars }
 			this.tooltip = new Tooltip(tooltipSettings);
 		}
 
@@ -78,6 +89,9 @@ export class BarChart {
 
 	render(data) {
 		this.data = data[this.primaryDataSheet];
+		if (this.dataNest) {
+			this.setDataNest();
+		}
 	    
 		this.setXYScaleDomains();
 
@@ -124,13 +138,13 @@ export class BarChart {
 
 	setXYScaleDomains() {
 		let groupingVals = d3.nest()
-			.key((d) => { return d[this.groupingVar.variable]})
+			.key((d) => { return this.dataNest ? d.key : d[this.groupingVar.variable]})
 			.map(this.data);
 
 		this.groupingScale.domain(groupingVals.keys());
 
 		for (let filterVar of this.filterVars) {
-			this.yScales[filterVar.variable].domain([0, d3.max(this.data, (d) => { return Number(d[filterVar.variable]); })]);
+			this.yScales[filterVar.variable].domain([0, d3.max(this.data, (d) => { return this.dataNest ? Number(d.value.percent) : Number(d[filterVar.variable]); })]);
 		}
 
 		this.xScale.domain(this.xVals).range([0, this.groupingScale.bandwidth()]);;
@@ -138,7 +152,11 @@ export class BarChart {
 
 	renderBars() {
 		this.data.forEach((d, i) => {
-		    d.vals = this.filterVars.map((filterVar) => { return {variable: filterVar.variable, format: filterVar.format, label: this.groupingScale.domain()[i], value: +d[filterVar.variable]}; });
+			if (this.dataNest) {
+				d.vals = this.filterVars.map((filterVar) => { return {variable: filterVar.variable, format: filterVar.format, label: this.groupingScale.domain()[i], value: +d.value.percent, count: +d.value.length}; });
+			} else {
+		    	d.vals = this.filterVars.map((filterVar) => { return {variable: filterVar.variable, format: filterVar.format, label: this.groupingScale.domain()[i], value: +d[filterVar.variable]}; });
+		    }
 		});
 
 		console.log(this.data);
@@ -147,7 +165,7 @@ export class BarChart {
 	      	.data(this.data)
 	      .enter().append("g")
 	      	.attr("class", "group")
-	      	.attr("transform", (d) => { return "translate(" + this.groupingScale(d[this.groupingVar.variable]) + ",0)"; });
+	      	.attr("transform", (d) => { return this.dataNest ? "translate(" + this.groupingScale(d.key) + ",0)" : "translate(" + this.groupingScale(d[this.groupingVar.variable]) + ",0)" ; });
 
 	 	this.bars = this.groups.selectAll("rect")
 	      	.data((d) => { return d.vals; })
@@ -157,7 +175,6 @@ export class BarChart {
 			.attr("y", (d) => { return this.yScales[d.variable](d.value); })
 			.attr("height", (d) => { return this.h - this.yScales[d.variable](d.value); })
 			.style("fill", (d) => { return this.colorScale(d.variable); })
-			.style("cursor", "pointer")
 			.on("mouseover", (d, index, paths) => {  return this.eventSettings && this.eventSettings.mouseover ? this.mouseover(d, paths[index], d3.event) : null; })
 			.on("mouseout", (d, index, paths) => {  return this.eventSettings && this.eventSettings.mouseover ? this.mouseout(paths[index]) : null; });
 
@@ -193,12 +210,14 @@ export class BarChart {
 		if (this.showYAxis) {
 			this.yAxis = this.renderingArea.append("g")
 				.attr("class", "y axis")
-				.call(d3.axisLeft(this.yScales[this.filterVars[0].variable]));
+				.call(d3.axisLeft(this.yScales[this.filterVars[0].variable])
+						.tickFormat((d) => { return formatValue(d, this.filterVars[0].format); })
+				)
 		    
 		    this.yAxisLabel = this.yAxis.append("text")
 				.attr("transform", "rotate(-90)")
 				.attr("x", -this.h/2)
-				.attr("y", -40)
+				.attr("y", -50)
 				.attr("class", "axis__title")
 				.style("text-anchor", "middle")
 				.text(this.filterVars[0].displayName);
@@ -221,11 +240,28 @@ export class BarChart {
 		return this.groupingScale.domain().filter( (d, i) => { return !(i%currInterval);});
 	}
 
+	setDataNest() {
+		// const { groupingVar, filterVar, value } = this.dataNest;
+		// console.log(value)
+		let nestedData = d3.nest()
+			.key((d) => { return d[this.groupingVar.variable]})
+			.rollup((v) => {
+				let length = v.length;
+				let filteredLength = v.filter((d) => { return d[this.filterVars[0].variable] == this.dataNest.value }).length;
+				console.log(filteredLength, length)
+				return { percent: filteredLength/length, length: length }
+			})
+			.sortKeys(d3.ascending)
+			.entries(this.data);
+
+		this.data = nestedData;
+	}
+
 	resize() {
 		this.setDimensions();
 
 		this.groups
-			.attr("transform", (d) => { return "translate(" + this.groupingScale(d[this.groupingVar.variable]) + ",0)"; });
+			.attr("transform", (d) => { return this.dataNest ? "translate(" + this.groupingScale(d.key) + ",0)" : "translate(" + this.groupingScale(d[this.groupingVar.variable]) + ",0)" ; });
 
 		this.bars
 			.attr("width", this.xScale.bandwidth())
@@ -251,7 +287,9 @@ export class BarChart {
 
 		if (this.showYAxis) {
 			this.yAxis
-				.call(d3.axisLeft(this.yScales[this.filterVars[0].variable]));
+				.call(d3.axisLeft(this.yScales[this.filterVars[0].variable])
+						.tickFormat((d) => { return formatValue(d, this.filterVars[0].format); })
+				)
 
 			this.yAxisLabel
 				.attr("x", -this.h/2);
@@ -263,6 +301,7 @@ export class BarChart {
 	}
 
 	mouseover(datum, path, eventObject) {
+		console.log(datum);
 		d3.select(path)
 			.style("fill", this.eventSettings.mouseover.fill);
 		
@@ -271,8 +310,14 @@ export class BarChart {
 		mousePos[1] = eventObject.pageY;
 
 		let tooltipData = {};
-		tooltipData[this.tooltipVars[0].variable] = datum.label;
-		tooltipData[datum.variable] = datum.value;
+		if (this.dataNest) {
+			tooltipData.key = datum.label;
+			tooltipData.value = datum.value;
+			tooltipData.count = datum.count;
+		} else {
+			tooltipData[this.tooltipVars[0].variable] = datum.label;
+			tooltipData[datum.variable] = datum.value;
+		}
 		this.tooltip.show(tooltipData, mousePos);
 	}
 

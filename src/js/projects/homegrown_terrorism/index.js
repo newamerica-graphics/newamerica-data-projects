@@ -16,7 +16,7 @@ let variables = {
 	marital_status: {"variable":"marital_status", "displayName":"Marital Status", "scaleType":"categorical", "format":"string", "customDomain":["Married", "Widowed", "Divorced", "Split", "Unmarried", "Unknown"], "customRange":[colors.turquoise.medium, colors.turquoise.light, colors.blue.light, colors.purple.light, colors.red.light, colors.grey.medium_light]},
 	gender: {"variable":"gender", "displayName":"Gender", "format":"string", "scaleType":"categorical", "color":"red", "customDomain":["Female", "Male"], "customRange":[colors.red.light, colors.turquoise.light]},
 	field_year_indicted: {"variable":"field_year_indicted", "displayName":"Field Indicted", "format":"year", "scaleType":"categorical", "color":"blue"},
-	char_online_radicalization: {"variable":"char_online_radicalization", "format": "string"},
+	online_radicalization: {"variable":"char_online_radicalization", "displayName":"Online Radicalization", "format": "percent", "color":colors.blue.dark},
 	headshot: {"variable":"headshot", "format":"image"},
 	inv_informant: {"variable":"inv_informant", "format":"string"},
 	inv_community_or_family_tip: {"variable":"inv_community_or_family_tip", "format":"string"},
@@ -173,7 +173,7 @@ let vizSettingsList = [
 		primaryDataSheet: "people_protected",
 		factBoxType: "colored_boxes",
 		factBoxVals: [ 
-			{ variable: variables.char_online_radicalization, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Maintained a social media profile with jihadist material or utilized encryption for plotting"},
+			{ variable: variables.online_radicalization, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Maintained a social media profile with jihadist material or utilized encryption for plotting"},
 		],
 	},
 	{
@@ -198,6 +198,24 @@ let vizSettingsList = [
 			{ variable: variables.inv_community_or_family_tip, value: "Yes", type:"percent", color:colors.blue.light, text:"Percent of jihadists implicated by a tip from family members or the community"},
 			{ variable: variables.inv_public_tip, value: "Yes", type:"percent", color:colors.purple.light, text:"Percent of jihadists implicated by a tip from the general public"},
 		],
+	},
+	{
+		id: "#homegrown__online-radicalization", 
+		vizType: "bar_chart",
+		primaryDataSheet: "people_protected",
+		dataNest: { 
+			value: "Yes", 
+			type: "percent" 
+		},
+		groupingVar: variables.year_charged_or_deceased, 
+		filterVars: [variables.online_radicalization],
+		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
+		xAxisLabelInterval: {"small": 2, "medium": 2, "large": 1},
+		labelValues: false,
+		eventSettings: {
+			"mouseover":{ "tooltip": true, "fill": colors.blue.medium, "stroke": false }
+		},
+		showYAxis: true
 	},
 ]
 
