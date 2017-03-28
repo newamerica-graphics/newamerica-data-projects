@@ -165,8 +165,11 @@ export function setupProject(projectSettings) {
 	function setDataDownloadLinks(data) {
 		let publicDataJson = {};
 		for (let sheetName of dataSheetNames) {
+			
 			publicDataJson[sheetName] = data[sheetName];
 		}
+
+
 
 		setCSVZipLink(publicDataJson);
 		setJSONZipLink(publicDataJson);
@@ -178,7 +181,12 @@ export function setupProject(projectSettings) {
 		for (let sheetName of dataSheetNames) {
 			let fields = Object.keys(dataJson[sheetName][0]);
 
+			console.log("LENGTH IS")
+			console.log(dataJson[sheetName].length)
+
 			let csvString = json2csv({ data: dataJson[sheetName], fields: fields });
+
+			console.log(csvString.length);
 
 			zip.file(sheetName + ".csv", csvString);
 		}
