@@ -16,7 +16,7 @@ let variables = {
 	marital_status: {"variable":"marital_status", "displayName":"Marital Status", "scaleType":"categorical", "format":"string", "customDomain":["Married", "Widowed", "Divorced", "Split", "Unmarried", "Unknown"], "customRange":[colors.turquoise.medium, colors.turquoise.light, colors.blue.light, colors.purple.light, colors.red.light, colors.grey.medium_light]},
 	gender: {"variable":"gender", "displayName":"Gender", "format":"string", "scaleType":"categorical", "color":"red", "customDomain":["Female", "Male"], "customRange":[colors.red.light, colors.turquoise.light]},
 	field_year_indicted: {"variable":"field_year_indicted", "displayName":"Field Indicted", "format":"year", "scaleType":"categorical", "color":"blue"},
-	online_radicalization: {"variable":"char_online_radicalization", "displayName":"Online Radicalization", "format": "percent", "color":colors.blue.dark},
+	online_radicalization: {"variable":"char_online_radicalization", "displayName":"Yearly Cases Involving Online Radicalization", "format": "percent", "color":colors.blue.dark},
 	headshot: {"variable":"headshot", "format":"image"},
 	inv_informant: {"variable":"inv_informant", "format":"string"},
 	inv_community_or_family_tip: {"variable":"inv_community_or_family_tip", "format":"string"},
@@ -200,22 +200,31 @@ let vizSettingsList = [
 		],
 	},
 	{
-		id: "#homegrown__online-radicalization", 
-		vizType: "bar_chart",
+		id: "#homegrown__online-radicalization",
+		vizType: "chart_with_fact_box",
 		primaryDataSheet: "people_protected",
-		dataNest: { 
-			value: "Yes", 
-			type: "percent" 
+		chartSettings: {
+			vizType: "bar_chart",
+			dataNest: { 
+				value: "Yes", 
+				type: "percent" 
+			},
+			groupingVar: variables.year_charged_or_deceased, 
+			filterVars: [variables.online_radicalization],
+			legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
+			xAxisLabelInterval: {"small": 2, "medium": 2, "large": 1},
+			labelValues: false,
+			eventSettings: {
+				"mouseover":{ "tooltip": true, "fill": colors.blue.medium, "stroke": false }
+			},
+			showYAxis: true
 		},
-		groupingVar: variables.year_charged_or_deceased, 
-		filterVars: [variables.online_radicalization],
-		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
-		xAxisLabelInterval: {"small": 2, "medium": 2, "large": 1},
-		labelValues: false,
-		eventSettings: {
-			"mouseover":{ "tooltip": true, "fill": colors.blue.medium, "stroke": false }
+		factBoxSettings: {
+			alignment: "left-aligned overlap-chart",
+			factBoxVals: [ 
+				{ variable: variables.online_radicalization, value: "Yes", type:"percent", text: "Total Percent Radicalized Online"},
+			],
 		},
-		showYAxis: true
 	},
 ]
 

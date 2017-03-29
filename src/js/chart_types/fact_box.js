@@ -107,6 +107,7 @@ export class FactBox {
 	}
 
 	count(factBoxVal) {
+		console.log(this.data);
 		let counts = d3.nest()
 			.key((d) => { return d[factBoxVal.variable.variable]; })
 			.rollup(function(v) { return v.length; })

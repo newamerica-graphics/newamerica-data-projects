@@ -72,8 +72,8 @@ export class BarChart {
 				"id":id, 
 				"tooltipVars": [
 					{ variable: "key", displayName: "Year", format: "year" },
-					{ variable: "count", displayName: "Total", format: "number" },
 					{ variable: "value", displayName: "Percent Radicalized Online", format: "percent" },
+					{ variable: "count", displayName: "Number of Cases", format: "number" },
 				]
 			}
 			this.tooltip = new Tooltip(tooltipSettings);

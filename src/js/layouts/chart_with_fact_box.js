@@ -9,10 +9,12 @@ import { TopoJsonMap } from "../chart_types/topo_json_map.js";
 import { Table } from "../chart_types/table.js";
 import { FactBox } from "../chart_types/fact_box.js";
 import { LineChart } from "../chart_types/line_chart.js";
+import { BarChart } from "../chart_types/bar_chart.js";
 
 export class ChartWithFactBox {
 	constructor(vizSettings, imageFolderId) {
 		let { id, primaryDataSheet, chartSettings, factBoxSettings } = vizSettings;
+		console.log("here!");
 		this.id = id;
 		factBoxSettings.id = id;
 		factBoxSettings.factBoxType = "simple";
@@ -25,6 +27,10 @@ export class ChartWithFactBox {
 		chartSettings.primaryDataSheet = primaryDataSheet;
 
 		switch (chartSettings.vizType) {
+			case "bar_chart":
+				this.chart = new BarChart(chartSettings, imageFolderId);
+				break;
+
 			case "dot_matrix":
 				this.chart = new DotMatrix(chartSettings, imageFolderId);
 				break;

@@ -16,6 +16,12 @@
 		}
 	}
 
+	.overlap-chart & {
+		position: absolute;
+		left: 110px;
+		top: 20px;
+	}
+
 	&__left, &__right {
 		display: table-cell;
 	}
