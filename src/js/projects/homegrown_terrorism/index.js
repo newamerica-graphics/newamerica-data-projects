@@ -151,7 +151,8 @@ let vizSettingsList = [
 		},
 		factBoxSettings: {
 			alignment: "right-aligned",
-			factBoxVals: [ 
+			factBoxVals: [
+				{ variable: variables.age, type:"median", text: "Median Age"},
 				{ variable: variables.age, type:"average", text: "Average Age"},
 				{ variable: variables.marital_status, value: "Married", type:"percent", text:"Married"},
 			],

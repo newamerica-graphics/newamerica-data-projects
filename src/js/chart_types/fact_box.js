@@ -103,6 +103,9 @@ export class FactBox {
 		} else if (factBoxVal.type == "average") {
 			let mean = d3.mean(this.data, (d) => { return d[factBoxVal.variable.variable] ? d[factBoxVal.variable.variable] : null; });
 			return Math.round(mean);
+		} else if (factBoxVal.type == "median") {
+			let median = d3.median(this.data, (d) => { return d[factBoxVal.variable.variable] ? d[factBoxVal.variable.variable] : null; });
+			return Math.round(median);
 		}
 	}
 
