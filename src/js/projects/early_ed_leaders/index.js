@@ -6,6 +6,7 @@ import { colors } from "../../helper_functions/colors.js";
 let variables = {
 	state_id: {"variable":"state_id", "displayName":"State Id", "format": "number", "scaleType":"quantize", "customRange":[colors.white, colors.blue.light, colors.blue.dark], "numBins":5},
 	state: {"variable":"state", "displayName":"State", "format": "string"},
+	state_abbrev: {"variable":"state_abbrev", "displayName":"State", "format": "string"},
 	min_ed_requirement: {"variable":"min_ed_requirement", "displayName":"Minimum Educational Requirement", "format": "string", "category":"Pre-Service", "scaleType":"categorical", "customDomain":["Bachelor's Degree", "Post-Bachelor's Degree Coursework", "Post-BA degree or coursework", "Master's Degree", "Post-MA Degree or Coursework"], "customRange": [colors.turquoise.light, colors.turquoise.medium, colors.turquoise.medium, colors.turquoise.dark, colors.blue.dark]},
 	license_grade_span: {"variable":"license_grade_span", "displayName":"License Grade Span", "format": "string", "category":"Pre-Service", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["PreK-12 principal license", "K-12 principal license","Elementary school principal license", "Varies based on program"], "customRange":[colors.turquoise.medium, colors.blue.medium, colors.purple.medium, colors.grey.medium]},
 	higher_ed_coursework: {"variable":"higher_ed_coursework", "displayName":"Higher Ed Coursework", "format": "string", "category":"Pre-Service", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Must Offer Early Learning Coursework","Must Offer Child Development Coursework", "No", "No data"], "customRange":[colors.turquoise.light, colors.blue.medium, colors.red.medium, colors.grey.light]},
@@ -21,18 +22,27 @@ let variables = {
 }
 
 let vizSettingsList = [
+	// {
+	// 	id: "#early-ed-leaders__map", 
+	// 	vizType: "topo_json_map",
+	// 	primaryDataSheet: "principals",
+	// 	geometryType: "states",
+	// 	geometryVar: variables.state_id,
+	// 	stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
+	// 	filterVars: [ variables.min_ed_requirement, variables.license_grade_span, variables.higher_ed_coursework, variables.clinical_experience, variables.prior_teaching_experience, variables.professional_learning, variables.joint_professional_learning, variables.formal_evaluation, variables.track_principal_turnover, variables.avg_salary, variables.benefits, variables.diversity_incentives ],
+	// 	tooltipVars: [ variables.state, variables.min_ed_requirement, variables.license_grade_span, variables.higher_ed_coursework, variables.clinical_experience, variables.prior_teaching_experience, variables.professional_learning, variables.joint_professional_learning, variables.formal_evaluation, variables.track_principal_turnover, variables.avg_salary, variables.benefits, variables.diversity_incentives ],
+	// 	legendSettings: {"orientation": "vertical-right", "showTitle": true},
+	// 	filterGroupSettings: {"hidden": false},
+	// },
 	{
-		id: "#early-ed-leaders__map", 
-		vizType: "topo_json_map",
+		id: "#early-ed-leaders__category", 
+		vizType: "category_breakdown",
 		primaryDataSheet: "principals",
-		geometryType: "states",
-		geometryVar: variables.state_id,
-		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
-		filterVars: [ variables.min_ed_requirement, variables.license_grade_span, variables.higher_ed_coursework, variables.clinical_experience, variables.prior_teaching_experience, variables.professional_learning, variables.joint_professional_learning, variables.formal_evaluation, variables.track_principal_turnover, variables.avg_salary, variables.benefits, variables.diversity_incentives ],
-		tooltipVars: [ variables.state, variables.min_ed_requirement, variables.license_grade_span, variables.higher_ed_coursework, variables.clinical_experience, variables.prior_teaching_experience, variables.professional_learning, variables.joint_professional_learning, variables.formal_evaluation, variables.track_principal_turnover, variables.avg_salary, variables.benefits, variables.diversity_incentives ],
-		legendSettings: {"orientation": "vertical-right", "showTitle": true},
-		filterGroupSettings: {"hidden": false},
-	}	
+		dotSettings: { "width": 30, "offset": 5},
+		filterVars: [ variables.min_ed_requirement ],
+		labelVar: variables.state_abbrev,
+		tooltipVars: [ variables.state ],
+	},
 ]
 
 let projectSettings = {
