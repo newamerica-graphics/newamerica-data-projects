@@ -1,8 +1,11 @@
 
 
 export function defineFillPattern(values, id, colorScale, defContainer) {
-	let color1 = colorScale(values[0]),
-		color2 = colorScale(values[1]);
+	let color1 = colorScale(values[0].trim()),
+		color2 = colorScale(values[1].trim());
+
+	console.log(colorScale.domain());
+	console.log(color1, color2)
 
 	let pattern = defContainer
 		.append("pattern")

@@ -42,7 +42,9 @@
 	}
 
 	&.horizontal-left {
-
+		.legend__cell__color-swatch-container, .legend__cell__label {
+			float: left;
+		}
 	}
 
 	&.vertical-right {
@@ -53,7 +55,17 @@
 		padding: 15px 0px;
 
 		.legend__cell {
-			width: 100%;
+			display: table;
+			padding-bottom: 10px;
+		}
+
+		.legend__cell__color-swatch-container, .legend__cell__label {
+			display: table-cell;
+			float: none;
+		}
+
+		.legend__cell__label {
+			line-height: 1.2;
 		}
 	}
 

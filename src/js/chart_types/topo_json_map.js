@@ -227,13 +227,13 @@ export class TopoJsonMap {
 	}
 
 	setFill(d) {
-		console.log(d)
 		if (d.data && d.data[this.currFilterVar]) {
 	   		var value = d.data[this.currFilterVar];
 	   		if (this.filterVars[this.currFilterIndex].canSplitCategory) {
 	   			let splitVals = value.split(";");
-	   			console.log(splitVals);
+	   			// console.log(splitVals);
 	   			if (splitVals.length > 1) {
+	   				console.log(this.colorScale.domain())
 	   				let id = d.data[this.geometryVar.variable];
 	   				this.svgDefs = defineFillPattern(splitVals, id, this.colorScale, this.svgDefs);
 					

@@ -29,7 +29,7 @@ let ordinalRange = [
 ]
 
 export function getColorScale(data, filterVar) {
-	let { scaleType, numBins, customRange, customDomain, dontNice } = filterVar;
+	let { scaleType, numBins, customRange, customDomain, dontNice, canSplitCategory } = filterVar;
 	let scale, domain, range;
 
 	if (!scaleType) {
@@ -42,7 +42,7 @@ export function getColorScale(data, filterVar) {
 
 		// if both are not custom, get unique values
 		let uniqueVals = getUniqueVals(data, filterVar);
-		[customDomain, customRange] = customDomain ? filterUnusedVals(uniqueVals, customDomain, customRange) : [customDomain, customRange];
+		[customDomain, customRange] = customDomain ? filterUnusedVals(uniqueVals, customDomain, customRange, canSplitCategory) : [customDomain, customRange];
 
 		domain = setCategoricalDomain(uniqueVals, customDomain);
 		range = setCategoricalRange(uniqueVals, customRange);
@@ -74,7 +74,9 @@ export function getColorScale(data, filterVar) {
 	return scale;
 }
 
-function filterUnusedVals(uniqueVals, customDomain, customRange) {
+function filterUnusedVals(uniqueVals, customDomain, customRange, canSplitCategory) {
+	if (canSplitCategory) { return [customDomain, customRange] };
+
 	let retDomain = [];
 	let retRange = [];
 
