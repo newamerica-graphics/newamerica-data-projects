@@ -11,6 +11,7 @@ import { usGeom } from '../../geometry/us.js';
 import { worldGeom } from '../../geometry/world.js';
 
 import { formatValue, deformatValue } from "../helper_functions/format_value.js";
+import { defineFillPattern } from "../helper_functions/define_fill_pattern.js";
 
 import * as global from "./../utilities.js";
 
@@ -76,6 +77,8 @@ export class TopoJsonMap {
 			this.legend = new Legend(legendSettings);
 		}
 
+		this.svgDefs = this.svg.append("defs");
+
 		this.setDimensions();
 		this.centered = true;
 	}
@@ -106,7 +109,7 @@ export class TopoJsonMap {
 				this.legend.setOrientation("vertical-right");
 				this.smallStateInsetLabelXPos -= this.w > 900 ? this.w/6 : this.w/5;
 			} else {
-				this.legend.setOrientation("horizontal-left");
+				this.legend.setOrientation("horizontal-center");
 			}
 		}
 
@@ -182,7 +185,6 @@ export class TopoJsonMap {
 				}
 			}
 		}
-
 	}
 
 	buildGraph() {
@@ -224,21 +226,51 @@ export class TopoJsonMap {
 	}
 
 	setFill(d) {
-		if (d.data) {
+		if (d.data && d.data[this.currFilterVar]) {
 	   		var value = d.data[this.currFilterVar];
-	   		console.log(this.colorScale(value));
-	   		return value ? this.colorScale(value) : this.defaultFill;
+	   		if (this.filterVars[this.currFilterIndex].canSplitCategory) {
+	   			let splitVals = value.split(";");
+	   			// console.log(splitVals);
+	   			if (splitVals.length > 1) {
+	   				console.log(this.colorScale.domain())
+	   				let id = d.data[this.geometryVar.variable];
+	   				this.svgDefs = defineFillPattern(splitVals, id, this.colorScale, this.svgDefs);
+					
+	   				return "url(#pattern" + id + ")";
+	   			}
+	   		} 
+	   		return this.colorScale(value);
 	   	} else {
 	   		return this.defaultFill;
 	   	}
 	}
 
 	setLegend() {
+		console.log(this.data)
 		this.legendSettings.title = this.filterVars[this.currFilterIndex].displayName;
 		this.legendSettings.format = this.filterVars[this.currFilterIndex].format;
 		this.legendSettings.scaleType = this.filterVars[this.currFilterIndex].scaleType;
 		this.legendSettings.colorScale = this.colorScale;
 		this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
+
+		// let { valCountType, showValCounts } = this.legendSettings;
+		// let dataLength = this.data.length;
+		
+		// if ( showValCounts ) {
+		// 	this.legendSettings.valCounts = d3.nest()
+		// 		.key((d) => { return d[this.currFilterVar]; })
+		// 		.rollup(function(v) {
+		// 			if (valCountType == "percent") {
+		// 				return formatValue(v.length/dataLength, "percent"); 
+		// 			} else if (valCountType == "both") {
+		// 				return v.length + " (" + formatValue(v.length/dataLength, "percent") + ")";
+		// 			} else {
+		// 				return v.length;
+		// 			}
+					
+		// 		})
+		// 		.map(this.data);
+		// }
 
 		this.legend.render(this.legendSettings);
 	}
