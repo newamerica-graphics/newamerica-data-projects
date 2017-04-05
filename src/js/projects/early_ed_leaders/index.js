@@ -31,8 +31,7 @@ let vizSettingsList = [
 		tooltipVars: [ variables.state, variables.min_ed_requirement, variables.higher_ed_coursework, variables.clinical_experience, variables.prior_teaching_experience, variables.professional_learning, variables.joint_professional_learning, variables.formal_evaluation, variables.track_principal_turnover, variables.avg_salary, variables.benefits, variables.diversity_incentives ],
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
 		filterGroupSettings: {"hidden": false},
-	}
-	
+	}	
 ]
 
 let projectSettings = {
