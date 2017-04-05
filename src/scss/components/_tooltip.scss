@@ -4,7 +4,7 @@
 	
 	position:absolute;
 	background-color: white;
-	padding: 10px $desktop-padding;
+	padding: 0px 20px;
 	border: 1px solid palette-get(na-black-10);
 	@include standard-shadow;
 
@@ -44,7 +44,7 @@
 	}
 
 	&__content-container {
-		padding: 15px 0px;
+		padding: 20px 0px 15px;
 		.scrollable & {
 			max-height: 350px;
 			overflow-y: scroll;
@@ -67,10 +67,9 @@
 
 	&__title {
 		font-weight: bold;
-		font-size: 18px;
+		font-size: 22px;
 		display: table-cell;
 		vertical-align: middle;
-		
 
 		&.has-image {
 			padding-left: 15px;
@@ -78,34 +77,38 @@
 	}
 
 	&__category {
-		&__name, &__list {
-			padding-left: 10px;
-		}
 		&__name {
-			color: palette-get(na-black-40);
-			font-weight: normal;
-			font-size: 16px;
+			color: palette-get(na-black);
+			font-weight: bold;
+			font-size: 15px;
 		}
 
 		&__list {
+			padding-bottom: 10px;
 			&-item {
-				padding-left: 10px;
+				line-height: 1.4;
+				/*padding-left: 10px;*/
 			}
 		}
 
 		&__list-item {
 			display: block;
+			margin-bottom: 5px;
 			&__label, &__value {
 				display: inline-block;
+				font-size: 14px;
+				
+				margin-bottom: 0px;
 			}
 			&__label {
-				@include chart-primary-text;
-				padding-right: 5px;
-				
+				line-height: 1.5;
+				color: palette-get(na-black);
 			}
 
 			&__value {
-				@include chart-secondary-text;
+				padding-left: 5px;
+				color: palette-get(na-black-40);
+				line-height: 1.2;
 			}
 		}
 	}

@@ -109,7 +109,7 @@ export class TopoJsonMap {
 				this.legend.setOrientation("vertical-right");
 				this.smallStateInsetLabelXPos -= this.w > 900 ? this.w/6 : this.w/5;
 			} else {
-				this.legend.setOrientation("horizontal-left");
+				this.legend.setOrientation("horizontal-center");
 			}
 		}
 
@@ -185,7 +185,6 @@ export class TopoJsonMap {
 				}
 			}
 		}
-
 	}
 
 	buildGraph() {
