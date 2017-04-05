@@ -1,0 +1,50 @@
+.category-breakdown {
+	display: table;
+	width: 100%;
+
+	&__category-container {
+		display: table-row;
+		width: 100%;
+	}
+	&__data-container, &__text {
+		display: table-cell;
+	}
+
+	&__data-container {
+		width: calc(100% - 200px);
+	}
+
+	&__text {
+		width: 200px;
+		vertical-align: top;
+		padding: 0px 25px 20px 0px;
+
+		&__heading {
+			font-weight: bold;
+			font-size: 16px;
+			line-height: 1.2;
+			margin-bottom: 3px;
+		}
+
+		&__subheading {
+			font-weight: normal;
+			color: palette-get(na-black-40);
+			font-size: 12px;
+			margin-bottom: 0px;
+		}
+	}
+
+	&__data {
+		&__label {
+			text-anchor: middle;
+			alignment-baseline: middle;
+			font-size: 14px;
+			font-weight: bold;
+			cursor: pointer;
+		}
+
+		&__circle {
+			cursor: pointer;
+		}
+	}
+}
