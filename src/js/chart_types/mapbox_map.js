@@ -156,9 +156,10 @@ export class MapboxMap {
     addSlider() {
         this.sliderContainer = d3.select(this.id + '-map-container')
             .append("div")
-            .attr("id", "slider-container");
+            .attr("class", "slider-container")
+            .attr("id", this.id.replace("#", "") + "__slider-container");
 
-        this.sliderSettings.id = "#slider-container";
+        this.sliderSettings.id = this.id + "__slider-container";
         this.sliderSettings.primaryDataSheet = this.primaryDataSheet;
         this.sliderSettings.filterChangeFunction = this.changeValue.bind(this);
         this.sliderSettings.startStopFunction = this.sliderStartStop.bind(this);

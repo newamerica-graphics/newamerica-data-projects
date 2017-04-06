@@ -19,11 +19,11 @@ export class TabbedChartLayout {
 		// let filterGroup = new FilterGroup(vizSettings);
 		for (let chartSettingsObject of chartSettingsList) {
 			d3.select(id).append("div")
-				.attr("id", "chart" + i)
+				.attr("id", id.replace("#", "") + "__chart" + i)
 				.style("display", function() { return i == 0 ? "block" : "none"; });
 
 			// let chartSettingsObject = Object.assign({}, vizSettings);
-			chartSettingsObject.id = "#chart" + i;
+			chartSettingsObject.id = id + "__chart" + i;
 			chartSettingsObject.primaryDataSheet = primaryDataSheet;
 			
 			let viz;
