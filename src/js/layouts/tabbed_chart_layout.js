@@ -67,7 +67,7 @@ export class TabbedChartLayout {
 	toggleChangedFunction() {
 		console.log("changing toggles");
 		for (let i = 0; i < this.vizList.length; i++) {
-			$("#chart" + i).toggle();
+			$(this.id + "__chart" + i).toggle();
 		}
 		this.resize();
 	}
