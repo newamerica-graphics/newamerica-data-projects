@@ -107,19 +107,6 @@ export class Slider {
 
 		this.handle.attr("cx", this.scale(this.sliderVal));
 		this.currAnimationVal = this.scale(this.sliderVal);
-
-		d3.selectAll(".slider .tick > text")
-			.style("cursor", "pointer")
-			.on("click", (d) => {
-				let newXVal = this.scale(d);
-				this.showAll ? this.showAll.classed("selected", false) : null;
-				this.handle.classed("hidden", false);
-				this.sliderVal = d;
-				this.handle.attr("cx", newXVal);
-				this.currAnimationVal = newXVal;
-				this.filterChangeFunction(this.sliderVal, this);
-				this.animationState == "playing" ? this.toggleAnimation(newXVal, "pause") : null;
-			})
 	}
 
 	render(data) {
@@ -143,7 +130,7 @@ export class Slider {
 	        .on("start drag",() => { this.showAll ? this.showAll.classed("selected", false) : null; this.handle.classed("hidden", false); this.dragEvent(d3.event.x); }));
 	        // .on("end", () => { this.endEvent(d3.event.x); }));
 		
-		d3.selectAll(".slider .tick > text")
+		this.containerDiv.selectAll(".slider .tick > text")
 			.style("cursor", "pointer")
 			.on("click", (d) => {
 				let newXVal = this.scale(d);
