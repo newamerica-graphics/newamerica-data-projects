@@ -31,10 +31,11 @@ export class CategoryBreakdown {
 	}
 
 	render(data) {
+		this.setScale(data[this.primaryDataSheet]);
 		this.data = this.getDataNest(data[this.primaryDataSheet]);
 		console.log(this.data);
 		this.setDimensions();
-		this.setScale(data[this.primaryDataSheet]);
+		
 
 		this.buildGraph();
 		// this.sortData();
@@ -53,6 +54,7 @@ export class CategoryBreakdown {
 
 		return d3.nest()
 			.key((d) => { return d[this.currFilterVar]})
+			.sortKeys((a, b) => { console.log(a, b); return this.colorScale.domain().indexOf(a) - this.colorScale.domain().indexOf(b); })
 			.entries(data);
 	}
 
