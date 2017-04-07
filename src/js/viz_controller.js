@@ -25,6 +25,7 @@ import { FinancialOpportunityMap } from "./chart_types/financial_opportunity_map
 import { SummaryBox } from "./chart_types/summary_box.js";
 import { PieChart } from "./chart_types/pie_chart.js";
 import { Bipartite } from "./chart_types/bipartite.js";
+import { CategoryBreakdown } from "./chart_types/category_breakdown.js";
 
 import { formatValue } from "./helper_functions/format_value.js";
 
@@ -52,6 +53,10 @@ export function setupProject(projectSettings) {
 
 					case "bipartite":
 						viz = new Bipartite(vizSettingsObject, imageFolderId);
+						break;
+
+					case "category_breakdown":
+						viz = new CategoryBreakdown(vizSettingsObject, imageFolderId);
 						break;
 
 					case "chart_with_fact_box":
