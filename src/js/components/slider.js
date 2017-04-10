@@ -80,6 +80,14 @@ export class Slider {
 		    .attr("class", "slider__handle hidden")
 		    .attr("r", 9)
 		    .attr("cx", margin.left);
+
+		this.mobileSelector = this.containerDiv.append("select")
+			.attr("class", "slider__mobile-selector")
+			.on("change", (d, a, b) => { console.log("changed!"); console.log($(b[0]).val())});
+
+		this.mobileSelector.append("option")
+			.attr("value", "all")
+			.text("Show All");
 	}
 
 	setDimensions() {
@@ -142,6 +150,12 @@ export class Slider {
 				this.filterChangeFunction(this.sliderVal, this);
 				this.animationState == "playing" ? this.toggleAnimation(newXVal, "pause") : null;
 			})
+
+		for (let i = dataExtents[0]; i <= dataExtents[1]; i++) {
+			this.mobileSelector.append("option")
+				.attr("value", i)
+				.text(i);
+		}
 	}
 
 	dragEvent(newX) {
