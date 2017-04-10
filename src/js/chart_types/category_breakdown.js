@@ -31,10 +31,11 @@ export class CategoryBreakdown {
 	}
 
 	render(data) {
+		this.setScale(data[this.primaryDataSheet]);
 		this.data = this.getDataNest(data[this.primaryDataSheet]);
 		console.log(this.data);
 		this.setDimensions();
-		this.setScale(data[this.primaryDataSheet]);
+		
 
 		this.buildGraph();
 		// this.sortData();
@@ -51,9 +52,22 @@ export class CategoryBreakdown {
 	getDataNest(data) {
 		data = data.filter((d) => { return d[this.currFilterVar] != null });
 
-		return d3.nest()
-			.key((d) => { return d[this.currFilterVar]})
+		let nestedData = d3.nest()
+			.key((d) => {
+			
+				return d[this.currFilterVar];
+				
+			})
+			.sortKeys((a, b) => { return this.colorScale.domain().indexOf(a) - this.colorScale.domain().indexOf(b); })
 			.entries(data);
+
+		nestedData = nestedData.filter((d) => { 
+			console.log(d.key);
+			console.log(this.colorScale.domain().indexOf(d.key));
+			return this.colorScale.domain().indexOf(d.key) >= 0;
+		})
+
+		return nestedData;
 	}
 
 	setScale(data) {
@@ -226,8 +240,6 @@ export class CategoryBreakdown {
 
 	resize() {
 		this.setDimensions();
-
-		console.log(this.numPerRow);
 
 		this.dataContainers
 			.attr("height", (d) => {
