@@ -18,7 +18,7 @@ let variables = {
 	congressional_redistricting_more_info: {"variable":"congressional_redistricting_more_info", "displayName":"Congressional Redistricting Details", "format": "string"},
 	congressional_primary_type: {"variable":"congressional_primary_type", "displayName":"Congressional Primary Type", "format": "string", "category":"Primaries", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Closed", "Semi-closed", "Open", "Top two", "Blanket", "Two round system"], "customRange":[colors.turquoise.dark, colors.turquoise.medium, colors.turquoise.light, colors.blue.medium, colors.purple.medium, colors.red.dark]},
 	congressional_primary_rules: {"variable":"congressional_primary_rules", "displayName":"Congressional Primary Rules", "format": "string", "category":"Primaries"},
-	presidential_primary_type: {"variable":"presidential_primary_type_cleaned", "displayName":"Presidential Primary Type", "format": "price", "category":"Primaries", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Closed", "Semi-closed", "Open"], "customRange":[colors.turquoise.medium, colors.blue.medium, colors.purple.medium]},
+	presidential_primary_type: {"variable":"presidential_primary_type", "displayName":"Presidential Primary Type", "format": "price", "category":"Primaries", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Closed", "Semi-closed", "Open"], "customRange":[colors.turquoise.medium, colors.blue.medium, colors.purple.medium]},
 	presidential_primary_rules: {"variable":"presidential_primary_rules", "displayName":"Presidential Primary Rules", "format": "string", "category":"Primaries"},
 	who_discloses: {"variable":"who_discloses", "displayName":"Who Discloses?", "format": "string", "category":"Retention/Compensation", "scaleType":"categorical"},
 	what_is_disclosed: {"variable":"what_is_disclosed", "displayName":"What is Disclosed?", "format": "string", "category":"Retention/Compensation", "scaleType":"categorical"},
@@ -58,6 +58,24 @@ let vizSettingsList = [
 		tooltipVars: [ variables.state, variables.state_redistricting, variables.state_redistricting_more_info, variables.congressional_redistricting, variables.congressional_redistricting_more_info],
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
 		filterGroupSettings: {"hidden": false},
+	},
+	{
+		id: "#pol-reform-50-states__congressional-primaries", 
+		vizType: "category_breakdown",
+		primaryDataSheet: "states",
+		dotSettings: { "width": 30, "offset": 5},
+		filterVars: [ variables.congressional_primary_type ],
+		labelVar: variables.state_abbrev,
+		tooltipVars: [ variables.state ],
+	},
+	{
+		id: "#pol-reform-50-states__presidential-primaries", 
+		vizType: "category_breakdown",
+		primaryDataSheet: "states",
+		dotSettings: { "width": 30, "offset": 5},
+		filterVars: [ variables.presidential_primary_type ],
+		labelVar: variables.state_abbrev,
+		tooltipVars: [ variables.state ],
 	},
 	{
 		id: "#pol-reform-50-states__early-voting", 
@@ -104,6 +122,25 @@ let vizSettingsList = [
 		labelVar: variables.state_abbrev,
 		tooltipVars: [ variables.state ],
 	},
+	{
+		id: "#pol-reform-50-states__congressional-redistricting", 
+		vizType: "category_breakdown",
+		primaryDataSheet: "states",
+		dotSettings: { "width": 30, "offset": 5},
+		filterVars: [ variables.congressional_redistricting ],
+		labelVar: variables.state_abbrev,
+		tooltipVars: [ variables.state ],
+	},
+	{
+		id: "#pol-reform-50-states__no-excuse-absentee", 
+		vizType: "category_breakdown",
+		primaryDataSheet: "states",
+		dotSettings: { "width": 30, "offset": 5},
+		filterVars: [ variables.no_excuse_absentee ],
+		labelVar: variables.state_abbrev,
+		tooltipVars: [ variables.state ],
+	},
+
 ]
 
 let projectSettings = {
