@@ -22,27 +22,27 @@ let variables = {
 }
 
 let vizSettingsList = [
-	// {
-	// 	id: "#early-ed-leaders__map", 
-	// 	vizType: "topo_json_map",
-	// 	primaryDataSheet: "principals",
-	// 	geometryType: "states",
-	// 	geometryVar: variables.state_id,
-	// 	stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
-	// 	filterVars: [ variables.min_ed_requirement, variables.license_grade_span, variables.higher_ed_coursework, variables.clinical_experience, variables.prior_teaching_experience, variables.professional_learning, variables.joint_professional_learning, variables.formal_evaluation, variables.track_principal_turnover, variables.avg_salary, variables.benefits, variables.diversity_incentives ],
-	// 	tooltipVars: [ variables.state, variables.min_ed_requirement, variables.license_grade_span, variables.higher_ed_coursework, variables.clinical_experience, variables.prior_teaching_experience, variables.professional_learning, variables.joint_professional_learning, variables.formal_evaluation, variables.track_principal_turnover, variables.avg_salary, variables.benefits, variables.diversity_incentives ],
-	// 	legendSettings: {"orientation": "vertical-right", "showTitle": true},
-	// 	filterGroupSettings: {"hidden": false},
-	// },
 	{
-		id: "#early-ed-leaders__category", 
-		vizType: "category_breakdown",
+		id: "#early-ed-leaders__map", 
+		vizType: "topo_json_map",
 		primaryDataSheet: "principals",
-		dotSettings: { "width": 30, "offset": 5},
-		filterVars: [ variables.min_ed_requirement ],
-		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
+		geometryType: "us-hex",
+		geometryVar: variables.state_id,
+		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
+		filterVars: [ variables.min_ed_requirement, variables.license_grade_span, variables.higher_ed_coursework, variables.clinical_experience, variables.prior_teaching_experience, variables.professional_learning, variables.joint_professional_learning, variables.formal_evaluation, variables.track_principal_turnover, variables.avg_salary, variables.benefits, variables.diversity_incentives ],
+		tooltipVars: [ variables.state, variables.min_ed_requirement, variables.license_grade_span, variables.higher_ed_coursework, variables.clinical_experience, variables.prior_teaching_experience, variables.professional_learning, variables.joint_professional_learning, variables.formal_evaluation, variables.track_principal_turnover, variables.avg_salary, variables.benefits, variables.diversity_incentives ],
+		legendSettings: {"orientation": "vertical-right", "showTitle": true},
+		filterGroupSettings: {"hidden": false},
 	},
+	// {
+	// 	id: "#early-ed-leaders__category", 
+	// 	vizType: "category_breakdown",
+	// 	primaryDataSheet: "principals",
+	// 	dotSettings: { "width": 30, "offset": 5},
+	// 	filterVars: [ variables.min_ed_requirement ],
+	// 	labelVar: variables.state_abbrev,
+	// 	tooltipVars: [ variables.state ],
+	// },
 ]
 
 let projectSettings = {

@@ -8,6 +8,7 @@ import { colors } from "../helper_functions/colors.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 
 import { usGeom } from '../../geometry/us.js';
+import { usHexGeom } from '../../geometry/us-states-hex.js';
 import { worldGeom } from '../../geometry/world.js';
 
 import { formatValue, deformatValue } from "../helper_functions/format_value.js";
@@ -86,16 +87,26 @@ export class TopoJsonMap {
 	setGeometry(geometryType) {
 		if (geometryType == "world") {
 			this.geometry = topojson.feature(worldGeom, worldGeom.objects.countries).features;
+		} else if (geometryType == "us-hex") {
+			this.geometry = topojson.feature(usHexGeom, usHexGeom.objects.tiles).features;
 		} else {
 			this.geometry = topojson.feature(usGeom, usGeom.objects[geometryType]).features;
 		}
+
+		console.log(this.geometry);
 	}
 
 	setDimensions() {
 		let containerWidth = $(this.id).width();
 		this.w = containerWidth;
 
-		this.h = this.geometryType == "world" ? 2*this.w/5 : 3*this.w/5;
+		if (this.geometryType == "world") {
+			this.h = 2*this.w/5;
+		} else if (this.geometryType == "us-hex") {
+			this.h = (this.w*(564-21))/(1314-375);
+		} else {
+			this.h = 3*this.w/5;
+		}
 
 		let translateX = this.w/2;
 		let scalingFactor = 5*this.w/4;
@@ -127,15 +138,34 @@ export class TopoJsonMap {
 		//Define path generator
 		this.pathGenerator = d3.geoPath()
 						 .projection(projection);
+
+		// this.pathGenerator = d3.arc()
 	}
 
 	setProjection(scalingFactor, translateX) {
+		let xScale = d3.scaleLinear()
+			.domain([375, 1314])
+			.range([0,this.w]);
+
+		let yScale = d3.scaleLinear()
+			.domain([21, 564])
+			.range([this.h, 0]);
+
+		let ratio = this.w/(1314-375);
+		let height = this.h;
+
 		if (this.geometryType == "world") {
 			this.g.attr("transform", "translate(0, " + this.h/12 + ")");
 			return d3.geoEquirectangular()
 				.scale(this.w/6.5)
 				.rotate([-12,0])
 			    .translate([translateX, this.h/2]);
+		} else if (this.geometryType == "us-hex") {
+			return d3.geoTransform({
+	            point: function point(x, y) {
+	                return this.stream.point(xScale(x), yScale(y));
+	            }
+	        });
 		} else {
 			return d3.geoAlbersUsa()
 				.scale(scalingFactor)
