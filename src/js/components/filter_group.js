@@ -83,6 +83,8 @@ export class FilterGroup {
 
 			i++;
 		}
+
+		this.showList(this.currCategory);
 	}
 
 	showList(newCategory) {

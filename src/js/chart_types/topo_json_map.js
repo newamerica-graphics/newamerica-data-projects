@@ -20,7 +20,7 @@ let topojson = require("topojson");
 
 export class TopoJsonMap {
 	constructor(vizSettings) {
-		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, stroke, legendSettings, filterGroupSettings, zoomable, defaultFill, valChangedFunction, filterChangeFunction, interaction, mouseoverOnlyIfValue } = vizSettings;
+		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, stroke, legendSettings, filterGroupSettings, zoomable, defaultFill, valChangedFunction, filterChangeFunction, interaction, mouseoverOnlyIfValue, addSmallStateInsets } = vizSettings;
 
 		this.id = id;
 		this.filterVars = filterVars;
@@ -36,6 +36,7 @@ export class TopoJsonMap {
 		this.dashboardChangeFunc = filterChangeFunction;
 		this.interaction = interaction;
 		this.mouseoverOnlyIfValue = mouseoverOnlyIfValue;
+		this.addSmallStateInsets = addSmallStateInsets;
 
 		if (this.interaction == "click") { this.currClicked == null}; 
 
@@ -193,7 +194,7 @@ export class TopoJsonMap {
 		   .enter()
 		   .append("path");
 
-		this.paths.attr("d", (d) => {return this.geometryType == "states" && d.id == 11 ? this.smallStateCirclePathGenerator() : this.pathGenerator(d)})
+		this.paths.attr("d", (d) => {return this.addSmallStateInsets && d.id == 11 ? this.smallStateCirclePathGenerator() : this.pathGenerator(d)})
 		    .style("fill", (d) => { return this.setFill(d); })
 		    .style("opacity", ".9")
 		    .attr("value", function(d,i) { return i; })
@@ -211,7 +212,7 @@ export class TopoJsonMap {
 		    	}
 		    });
 
-		if (this.geometryType == "states") {
+		if (this.addSmallStateInsets) {
 			this.smallStateInsetLabel = this.g.append("text")
 				.attr("fill", "white")
 				.style("alignment-baseline", "middle")
@@ -282,7 +283,7 @@ export class TopoJsonMap {
 	
 	resize() {
 		this.setDimensions();
-		this.paths.attr("d", (d) => {return this.geometryType == "states" && d.id == 11 ? this.smallStateCirclePathGenerator() : this.pathGenerator(d)});
+		this.paths.attr("d", (d) => {return this.addSmallStateInsets && d.id == 11 ? this.smallStateCirclePathGenerator() : this.pathGenerator(d)});
 		this.legendSettings ? this.legend.resize() : null;
 	}
 
@@ -323,7 +324,7 @@ export class TopoJsonMap {
 	changeVariableValsShown(valsShown) {
 		this.paths
 			.style("fill", (d) => {
-		   		var value = d.data[this.currFilterVar];
+		   		var value = d.data ? d.data[this.currFilterVar] : null;
 		   		if (value) {
 		   			let binIndex = this.colorScale.range().indexOf(this.colorScale(value));
 		   			if (valsShown.indexOf(binIndex) > -1) {

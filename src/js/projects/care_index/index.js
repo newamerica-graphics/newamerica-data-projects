@@ -38,6 +38,7 @@ let vizSettingsList = [
 				legendSettings: {"orientation": "vertical-right", "showTitle": true},
 				stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
 				filterGroupSettings: {"hidden": false},
+				addSmallStateInsets: true
 			},
 			{
 				vizType: "table",

@@ -124,6 +124,8 @@ export class GroupedDotMatrix {
 			.sortKeys(d3.ascending)
 			.entries(this.data);
 
+		console.log(this.groupings);
+
 		// removes values associated with -1 key (null values)
 		this.groupings[0].key == "-1" ? this.groupings.shift() : null;
 

@@ -30,7 +30,7 @@ let vizSettingsList = [
 					filterGroupSettings: {"hidden": false},
 					isMessagePasser: true,
 					interaction: "click",
-					smallStateInsets: true,
+					addSmallStateInsets: true
 				}
 			],
 			[
