@@ -30,7 +30,8 @@ let vizSettingsList = [
 				tooltipVars: [ variables.state, variables.access_percent, variables.access_rank, variables.participation_percent, variables.participation_rank, variables.uncovered_workers, variables.state_medicaid_savings_millions],
 				legendSettings: {"orientation": "vertical-right", "showTitle": true},
 				filterGroupSettings: {"hidden": false},
-				addSmallStateInsets: false
+				defaultFill: colors.grey.medium_light,
+				addSmallStateInsets: false,
 			},
 			{
 				vizType: "table",

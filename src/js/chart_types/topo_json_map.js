@@ -239,7 +239,12 @@ export class TopoJsonMap {
 					
 	   				return "url(#pattern" + id + ")";
 	   			}
-	   		} 
+	   		}
+	   		if (this.filterVars[this.currFilterIndex].scaleType == "quantize" || this.filterVars[this.currFilterIndex].scaleType == "linear") {
+	   			if (isNaN(value)) {
+	   				return this.defaultFill;
+	   			}
+	   		}
 	   		return this.colorScale(value);
 	   	} else {
 	   		return this.defaultFill;
@@ -328,7 +333,7 @@ export class TopoJsonMap {
 		   		if (value) {
 		   			let binIndex = this.colorScale.range().indexOf(this.colorScale(value));
 		   			if (valsShown.indexOf(binIndex) > -1) {
-		   				return this.colorScale(value);
+		   				return this.setFill(d);
 		   			}
 		   		}
 		   		return "#ccc";
