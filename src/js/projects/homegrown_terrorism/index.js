@@ -25,7 +25,7 @@ let variables = {
 	deadly_attack_date: {"variable":"deadly_attack_date", "displayName":"Deadly Attack Date", "format":"date"},
 	victims_killed: {"variable":"victims_killed", "displayName":"Victims Killed", "format":"number"},
 	victims_wounded: {"variable": "victims_wounded", "displayName":"Victims Wounded", "format":"string"},
-	ideology: {"variable":"ideology", "displayName":"Ideology", "format":"string", "scaleType":"categorical", "customDomain": ["Jihadist", "Right Wing", "Left Wing"], "customRange": [colors.red.light, colors.turquoise.light, colors.blue.light]},
+	ideology: {"variable":"ideology", "displayName":"Ideology", "format":"string", "scaleType":"categorical", "customDomain": ["Jihadist", "Far Right Wing", "Black Separatist/Nationalist/Supremacist"], "customRange": [colors.red.light, colors.turquoise.light, colors.blue.light]},
 	attack_name: {"variable": "name", "displayName":"Attack Name", "format":"string"},
 	attack_description: {"variable": "description", "displayName":"Summary", "format":"string"},
 }
