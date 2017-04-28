@@ -86,14 +86,22 @@ export class PercentageStackedBar {
 		let groupingVals = new Set();
 
 		this.groupingSums = d3.nest()
-			.key((d) => { groupingVals.add(d[this.groupingVar.variable]); return d[this.groupingVar.variable]; })
+			.key((d) => { 
+				if (!d || d[this.groupingVar.variable] == null) {
+					return;
+				}
+				groupingVals.add(d[this.groupingVar.variable]); 
+				return d[this.groupingVar.variable]; 
+			})
 			.rollup((v) => {return v.length })
 			.map(this.data);
+		
+		delete this.groupingSums["$undefined"];
 
 		this.nestedVals = d3.nest()
 			.key((d) => { return d[this.groupingVar.variable]; })
 			.key((d) => { return d[this.filterVar.variable]; })
-			.sortKeys((a, b) => { console.log(a); return this.colorScale.domain().indexOf(a) - this.colorScale.domain().indexOf(b); })
+			.sortKeys((a, b) => { return this.colorScale.domain().indexOf(a) - this.colorScale.domain().indexOf(b); })
 			.rollup((v) => { let currGroupingVal = v[0][this.groupingVar.variable]; return {"count":v.length, "percent": v.length/this.groupingSums.get(currGroupingVal)}; })
 			.entries(this.data);
 
@@ -107,10 +115,10 @@ export class PercentageStackedBar {
 		  .enter().append("g");
 
 		this.bars = this.barGroups.selectAll("rect")
-			.data((d) => { console.log(d); return d.values; })
+			.data((d) => { return d.values; })
 		  .enter().append("rect")
 		  	.attr("y", 0)
-		  	.attr("fill", (d) => { console.log(d); return this.colorScale(d.key); })
+		  	.attr("fill", (d) => { return this.colorScale(d.key); })
 			.style("fill-opacity", .75)
 			.style("cursor", "pointer")
 			.on("mouseover", (d, index, paths) => {  return this.mouseover(d, paths[index], d3.event); })
@@ -147,10 +155,10 @@ export class PercentageStackedBar {
 
 	renderBarLabels() {
 		this.barLabels = this.barGroups.selectAll("text.percentage-stacked-bar__bar-label")
-			.data((d) => { console.log(d.values); return d.values; })
+			.data((d) => { return d.values; })
 		  .enter().append("text")
 		  	.attr("class", "percentage-stacked-bar__bar-label")
-			.text((d) => { console.log(d); return d.key; });
+			.text((d) => { return d.key; });
 
 		this.setBarLabelPositions();
 	}
