@@ -352,7 +352,7 @@ export class TopoJsonMap {
 		d3.select(path)
 			.style("stroke", this.stroke.hoverColor || "white")
 			.style("stroke-width", this.stroke.hoverWidth || "3")
-			.style("stroke-opacity", this.stroke.hoverOpacity || "1");
+			.style("fill-opacity", this.stroke.hoverOpacity || "1");
 		
 		let mousePos = [];
 		mousePos[0] = eventObject.pageX;
@@ -366,7 +366,7 @@ export class TopoJsonMap {
 		d3.select(path)
 			.style("stroke", this.stroke.color || "white")
 		    .style("stroke-width", this.stroke.width || "1")
-		    .style("stroke-opacity", this.stroke.opacity || "1")
+		    .style("fill-opacity", this.stroke.opacity || "1")
 	    this.tooltip ? this.tooltip.hide() : null;
 	}
 
