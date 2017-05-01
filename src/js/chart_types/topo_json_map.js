@@ -231,7 +231,6 @@ export class TopoJsonMap {
 	   		var value = d.data[this.currFilterVar];
 	   		if (this.filterVars[this.currFilterIndex].canSplitCategory) {
 	   			let splitVals = value.split(";");
-	   			// console.log(splitVals);
 	   			if (splitVals.length > 1) {
 	   				console.log(this.colorScale.domain())
 	   				let id = d.data[this.geometryVar.variable];
@@ -331,9 +330,27 @@ export class TopoJsonMap {
 			.style("fill", (d) => {
 		   		var value = d.data ? d.data[this.currFilterVar] : null;
 		   		if (value) {
-		   			let binIndex = this.colorScale.range().indexOf(this.colorScale(value));
-		   			if (valsShown.indexOf(binIndex) > -1) {
-		   				return this.setFill(d);
+		   			// to account for cases where values can be split across multiple categories
+		   			let splitVals = value.split(";");
+		   			if (splitVals.length > 1) {
+		   				let fillColor1 = this.colorScale(splitVals[0].trim()),
+		   					fillColor2 = this.colorScale(splitVals[1].trim()),
+		   					binIndex1 = this.colorScale.range().indexOf(fillColor1),
+		   					binIndex2 = this.colorScale.range().indexOf(fillColor2);
+		   				if (valsShown.indexOf(binIndex1) > -1 && valsShown.indexOf(binIndex2) > -1) {
+		   					// returns cross-hatch
+			   				return this.setFill(d);
+			   			} else if (valsShown.indexOf(binIndex1) > -1) {
+			   				return fillColor1;
+			   			} else if (valsShown.indexOf(binIndex2) > -1) {
+			   				return fillColor2;
+			   			}
+		   			} else {
+		   				let fillColor = this.colorScale(splitVals[0].trim())
+		   				let binIndex = this.colorScale.range().indexOf(fillColor);
+		   				if (valsShown.indexOf(binIndex) > -1) {
+			   				return fillColor;
+			   			}
 		   			}
 		   		}
 		   		return "#ccc";
