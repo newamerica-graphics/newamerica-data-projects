@@ -72,7 +72,7 @@ export class CategoryBreakdown {
 
 		let nestedData = d3.nest()
 			.key((d) => {
-				return d[this.currFilterVar];
+				return d[this.currFilterVar].trim();
 			})
 			.sortKeys((a, b) => { return this.colorScale.domain().indexOf(a) - this.colorScale.domain().indexOf(b); })
 			.entries(finalData);
