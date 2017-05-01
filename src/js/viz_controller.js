@@ -26,6 +26,7 @@ import { SummaryBox } from "./chart_types/summary_box.js";
 import { PieChart } from "./chart_types/pie_chart.js";
 import { Bipartite } from "./chart_types/bipartite.js";
 import { CategoryBreakdown } from "./chart_types/category_breakdown.js";
+import { ComparativeDotHistogram } from "./chart_types/comparative_dot_histogram.js";
 
 import { formatValue } from "./helper_functions/format_value.js";
 
@@ -61,6 +62,10 @@ export function setupProject(projectSettings) {
 
 					case "chart_with_fact_box":
 						viz = new ChartWithFactBox(vizSettingsObject, imageFolderId);
+						break;
+
+					case "comparative_dot_histogram":
+						viz = new ComparativeDotHistogram(vizSettingsObject, imageFolderId);
 						break;
 
 					case "dashboard":

@@ -21,7 +21,7 @@ let variables = {
 	diversity_incentives: {"variable":"diversity_incentives", "displayName":"Diversity Incentives", "format": "string", "category":"Principals", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Financial Incentives", "Supports in Place", "No", "No data"], "customRange":[colors.turquoise.light, colors.blue.medium, colors.red.medium, colors.grey.light]},
 
 	cd_min_ed_requirement: {"variable":"cd_min_ed_requirement", "displayName":"Minimum Educational Requirement", "format": "string", "category":"Center Directors"},
-	cd_ed_training_requirement: {"variable":"cd_ed_training_requirement", "displayName":"Education & Training Requirement", "format": "string", "category":"Center Directors", "scaleType":"categorical", "customDomain":["No higher ed/training", "Less than CDA", "CDA", "Some college coursework", "AA", "AA plus coursework", "BA"], "customRange": [colors.red.medium, colors.turquoise.light, colors.turquoise.dark, colors.blue.medium, colors.purple.light, colors.purple.dark, colors.blue.dark]},
+	cd_ed_training_requirement: {"variable":"cd_ed_training_requirement", "displayName":"Education & Training Requirement", "format": "string", "category":"Center Directors", "scaleType":"categorical", "customDomain":["No higher ed/training", "Less than CDA", "CDA", "Some college coursework", "AA", "AA plus coursework", "BA"], "customRange": ["#E5F7F6", "#CBEFEC", colors.turquoise.very_light, colors.turquoise.light, colors.turquoise.medium, colors.turquoise.dark, "#002C2A"]},
 	cd_ed_training_requirement_source: {"variable":"cd_ed_training_requirement_source", "displayName":"Education & Training Requirement Source", "format": "string", "category":"Center Directors"},
 	cd_prior_experience: {"variable":"cd_prior_experience", "displayName":"Prior Child Care Experience Requirement", "format": "string", "category":"Center Directors", "scaleType":"categorical", "customDomain":["Yes", "No"], "customRange": [colors.turquoise.medium, colors.red.medium]},
 	cd_prior_experience_years: {"variable":"cd_prior_experience_years", "displayName":"Prior Child Care Experience Years", "format": "string", "category":"Center Directors"},
@@ -35,23 +35,23 @@ let variables = {
 	cd_qris_different_tiers_notes: {"variable":"cd_qris_different_tiers_notes", "displayName":"QRIS Tiers Notes", "format": "string", "category":"Center Directors"},
 	cd_formal_evaluation: {"variable":"cd_formal_evaluation", "displayName":"Formal Evaluation", "format": "string", "category":"Center Directors", "scaleType":"categorical", "customDomain":["Yes", "No"], "customRange": [colors.turquoise.medium, colors.red.medium]},
 	cd_formal_evaluation_source: {"variable":"cd_formal_evaluation_source", "displayName":"Formal Evaluation Requirement Source", "format": "string"},
-	cd_avg_salary: {"variable":"cd_avg_salary", "displayName":"Average Salary", "format": "price", "category":"Center Directors", "scaleType":"quantize", "customRange":[colors.white, colors.blue.light, colors.blue.dark], "numBins":5},
+	cd_avg_salary: {"variable":"cd_avg_salary", "displayName":"Average Salary", "format": "price", "category":"Center Directors", "scaleType":"quantize", "customRange":[colors.white, colors.turquoise.light, colors.turquoise.dark], "numBins":5},
 	cd_avg_salary_source: {"variable":"cd_avg_salary_source", "displayName":"Average Salary Source", "format": "string", "category":"Center Directors"},
 }
 
 let vizSettingsList = [
-	{
-		id: "#early-ed-leaders__pre-service-map", 
-		vizType: "topo_json_map",
-		primaryDataSheet: "states",
-		geometryType: "states",
-		geometryVar: variables.state_id,
-		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
-		filterVars: [ variables.min_ed_requirement, variables.license_grade_span, variables.higher_ed_coursework, variables.clinical_experience, variables.prior_teaching_experience, variables.cd_ed_training_requirement, variables.cd_prior_experience, variables.cd_has_credential, variables.cd_credential_required_for_licensing],
-		tooltipVars: [ variables.state, variables.min_ed_requirement, variables.license_grade_span, variables.higher_ed_coursework, variables.clinical_experience, variables.prior_teaching_experience, variables.cd_min_ed_requirement, variables.cd_ed_training_requirement, variables.cd_prior_experience, variables.cd_prior_experience_years, variables.cd_licensing_standard_qual_notes, variables.cd_has_credential, variables.cd_credential_required_for_licensing],
-		legendSettings: {"orientation": "vertical-right", "showTitle": true},
-		filterGroupSettings: {"hidden": false},
-	},
+	// {
+	// 	id: "#early-ed-leaders__pre-service-map", 
+	// 	vizType: "topo_json_map",
+	// 	primaryDataSheet: "states",
+	// 	geometryType: "states",
+	// 	geometryVar: variables.state_id,
+	// 	stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
+	// 	filterVars: [ variables.min_ed_requirement, variables.license_grade_span, variables.higher_ed_coursework, variables.clinical_experience, variables.prior_teaching_experience, variables.cd_ed_training_requirement, variables.cd_prior_experience, variables.cd_has_credential, variables.cd_credential_required_for_licensing],
+	// 	tooltipVars: [ variables.state, variables.min_ed_requirement, variables.license_grade_span, variables.higher_ed_coursework, variables.clinical_experience, variables.prior_teaching_experience, variables.cd_min_ed_requirement, variables.cd_ed_training_requirement, variables.cd_prior_experience, variables.cd_prior_experience_years, variables.cd_licensing_standard_qual_notes, variables.cd_has_credential, variables.cd_credential_required_for_licensing],
+	// 	legendSettings: {"orientation": "vertical-right", "showTitle": true},
+	// 	filterGroupSettings: {"hidden": false},
+	// },
 	// {
 	// 	id: "#early-ed-leaders__in-service-map", 
 	// 	vizType: "topo_json_map",
@@ -59,7 +59,7 @@ let vizSettingsList = [
 	// 	geometryType: "states",
 	// 	geometryVar: variables.state_id,
 	// 	stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
-	// 	filterVars: [ variables.professional_learning, variables.joint_professional_learning, variables.formal_evaluation, variables.cd_qris_different_tiers, variables.cd_qris_different_tiers_notes, variables.cd_formal_evaluation],
+	// 	filterVars: [ variables.professional_learning, variables.joint_professional_learning, variables.formal_evaluation, variables.cd_qris_different_tiers, variables.cd_formal_evaluation],
 	// 	tooltipVars: [ variables.state, variables.professional_learning, variables.joint_professional_learning, variables.formal_evaluation, variables.cd_qris_different_tiers, variables.cd_qris_different_tiers_notes, variables.cd_formal_evaluation],
 	// 	legendSettings: {"orientation": "vertical-right", "showTitle": true},
 	// 	filterGroupSettings: {"hidden": false},
@@ -158,15 +158,32 @@ let vizSettingsList = [
 	// 	tooltipVars: [ variables.state ],
 	// },
 	// {
-	// 	id: "#early-ed-leaders__avg-salary", 
-	// 	vizType: "category_breakdown",
+	// 	id: "#early-ed-leaders__cd-ed-training-requirement", 
+	// 	vizType: "cd_ed_training_requirement",
 	// 	primaryDataSheet: "states",
 	// 	dotSettings: { "width": 30, "offset": 5},
-	// 	filterVars: [ variables.avg_salary ],
+	// 	filterVars: [ variables.cd_ed_training_requirement ],
 	// 	labelVar: variables.state_abbrev,
 	// 	tooltipVars: [ variables.state ],
 	// },
-
+	// {
+	// 	id: "#early-ed-leaders__cd-ed-training-requirement", 
+	// 	vizType: "cd_ed_training_requirement",
+	// 	primaryDataSheet: "states",
+	// 	dotSettings: { "width": 30, "offset": 5},
+	// 	filterVars: [ variables.cd_ed_training_requirement ],
+	// 	labelVar: variables.state_abbrev,
+	// 	tooltipVars: [ variables.state ],
+	// },
+	{
+		id: "#early-ed-leaders__avg-salary",
+		primaryDataSheet: "states",
+		vizType: "comparative_dot_histogram",
+		groupingVars: [ variables.avg_salary, variables.cd_avg_salary ],
+		labelVar: variables.state,
+		dotSettings: { "width": 10, "offset": 3 },
+		legendSettings: {"orientation": "horizontal-center"},
+	}
 ]
 
 let projectSettings = {
