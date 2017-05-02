@@ -238,6 +238,7 @@ export function setupProject(projectSettings) {
 					if (value && value.length > 0) {
 						$(item).text(value);
 					} else {
+						$(item).siblings().css("display", "none");
 						$(item).hide();
 					}
 					break;
@@ -251,7 +252,7 @@ export function setupProject(projectSettings) {
 			let value;
 			for (let d of data[dataSheet]) {
 				if (d[lookupField].toLowerCase() == lookupValue) {
-					value = d[displayField];
+					value = d[footnoteField];
 					if (value && value.length > 0) {
 						$(item).text(value);
 					} else {
