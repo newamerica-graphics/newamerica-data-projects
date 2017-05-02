@@ -52,28 +52,36 @@ export class CategoryBreakdown {
 	getDataNest(data) {
 		data = data.filter((d) => { return d[this.currFilterVar] != null });
 
+		let finalData = [];
+		if (this.currFilter.canSplitCategory) {
+			data.forEach((d) => {
+				let splitPieces = d[this.currFilterVar].split("; ");
+				if (splitPieces.length > 1) {
+					for (let key of splitPieces) {
+						let dupedDataPt = Object.assign({}, d);
+						dupedDataPt[this.currFilterVar] = key;
+						finalData.push(dupedDataPt);
+					}
+				} else {
+					finalData.push(d);
+				}
+			})
+		} else {
+			finalData = data;
+		}
+
 		let nestedData = d3.nest()
 			.key((d) => {
-			
-				return d[this.currFilterVar];
-				
+				return d[this.currFilterVar].trim();
 			})
 			.sortKeys((a, b) => { return this.colorScale.domain().indexOf(a) - this.colorScale.domain().indexOf(b); })
-			.entries(data);
-
-		nestedData = nestedData.filter((d) => { 
-			console.log(d.key);
-			console.log(this.colorScale.domain().indexOf(d.key));
-			return this.colorScale.domain().indexOf(d.key) >= 0;
-		})
+			.entries(finalData);
 
 		return nestedData;
 	}
 
 	setScale(data) {
 		this.colorScale = getColorScale(data, this.currFilter);
-		console.log(this.colorScale.domain())
-		console.log(this.colorScale.range())
 	}
 
 	setDimensions() {
@@ -82,7 +90,6 @@ export class CategoryBreakdown {
 
 		// this.h = this.setCategoryYTransforms();
 		
-		console.log(this.numPerRow);
 		// this.dotsPerCol = Math.ceil(this.dataLength/numCols);
 
 		// this.h = this.dotsPerCol * (this.dotSettings.width + this.dotSettings.offset);		
@@ -96,7 +103,6 @@ export class CategoryBreakdown {
 		let currY = this.dotSettings.width/2;
 		let numRows;
 		for (let category of this.data) {
-			console.log(currY);
 			this.categoryYTransforms.push(currY);
 			numRows = Math.floor(category.values.length/this.numPerRow);
 			currY += categoryYPadding + numRows*(this.dotSettings.width + this.dotSettings.offset);
@@ -139,11 +145,11 @@ export class CategoryBreakdown {
 			// .attr("transform", "translate(" + (textWidth + this.dotSettings.width/2) + ")")
 
 		this.dataG = this.dataContainers.selectAll("g")
-			.data((d) => { console.log(d); return d.values; })
+			.data((d) => { return d.values; })
 			.enter().append("g")
 			.attr("transform", (d, i) => { return "translate(" + this.calcX(i) + "," + this.calcY(i) + ")"; })
-			.on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event); })
-		    .on("mouseout", (d, index, paths) => { return this.mouseout(d, paths[index]); })
+			.on("mouseover", (d) => { return this.mouseover(d); })
+		    .on("mouseout", () => { return this.mouseout(); })
 		    .on("click", (d) => { return this.eventSettings.click && this.eventSettings.click.handlerFunc ? this.eventSettings.click.handlerFunc(d.id) : null; });
 
 		this.dataCircles = this.dataG.append("circle")
@@ -154,7 +160,6 @@ export class CategoryBreakdown {
 			.attr("r", this.dotSettings.width/2)
 			.attr("fill", "white")
 			.attr("stroke", (d) => { return this.colorScale(d[this.currFilterVar]); })
-			
 
 		this.dataCircleText = this.dataG.append("text")
 			.attr("class", "category-breakdown__data__label")
@@ -251,40 +256,32 @@ export class CategoryBreakdown {
 			.attr("transform", (d, i) => { return "translate(" + this.calcX(i) + "," + this.calcY(i) + ")"; })
 	}
 
-	mouseover(datum, path, eventObject) {
-		let mousePos = [];
-		mousePos[0] = eventObject.pageX;
-		mousePos[1] = eventObject.pageY;
-
-		let elem = d3.select(path);
-		elem.select("circle")
+	mouseover(hovered) {
+		this.dataCircles
 			.attr("fill", (d) => {
-		    	return this.colorScale(datum[this.currFilterVar]);
+				if (d.state_id == hovered.state_id) {
+					return this.colorScale(d[this.currFilterVar]);
+				} else {
+					return "white";
+				}
 		    });
 
-		elem.select("text")
-			.attr("fill", "white");
-
-			
-		this.tooltip ? this.tooltip.show(datum, mousePos) : null;
+		this.dataCircleText
+			.attr("fill", (d) => {
+				if (d.state_id == hovered.state_id) {
+					return "white";
+				} else {
+					return this.colorScale(d[this.currFilterVar]);
+				}
+		    });
 	}
 
-	mouseout(datum, path) {
-		let elem = d3.select(path);
-		elem.select("circle")
+	mouseout() {
+		this.dataCircles
 			.attr("fill", "white");
 
-		elem.select("text")
-			.attr("fill", (d) => {
-		    	return this.colorScale(datum[this.currFilterVar]);
-		    });
-
-			// .attr("width", this.dotSettings.width)
-		 //    .attr("height", this.dotSettings.width)
-		 //    .attr("x", prevX + this.dotSettings.width/2)
-		 //    .attr("y", prevY + this.dotSettings.width/2);
-
-		this.tooltip ? this.tooltip.hide() : null;
+		this.dataCircleText
+			.attr("fill", (d) => { return this.colorScale(d[this.currFilterVar]); });
 	}
 
 }
