@@ -17,7 +17,7 @@ let variables = {
 	formal_evaluation: {"variable":"formal_evaluation", "displayName":"Formal Evaluation", "format": "string", "category":"Principals", "scaleType":"categorical", "customDomain":["Yes", "No", "No data"], "customRange":[colors.turquoise.medium, colors.red.medium, colors.grey.light]},
 	track_principal_turnover: {"variable":"track_principal_turnover", "displayName":"Track Principal Turnover", "format": "string", "category":"Principals", "scaleType":"categorical", "customDomain":["Yes", "Yes (starting to)", "No", "No data"], "customRange":[colors.turquoise.medium, colors.turquoise.light, colors.red.medium, colors.grey.light]},
 	avg_salary: {"variable":"avg_salary", "displayName":"Average Salary", "format": "price", "category":"Principals", "scaleType":"quantize", "customRange":[colors.white, colors.blue.light, colors.blue.dark], "numBins":5},
-	avg_salary_continuous_scale: {"variable":"avg_salary", "displayName":"Average Salary", "format": "price", "category":"Principals", "scaleType":"linear", "customRange":[colors.blue.very_light, colors.blue.dark]},
+	avg_salary_continuous_scale: {"variable":"avg_salary", "displayName":"Principals", "format": "price", "color": colors.turquoise.light},
 	benefits: {"variable":"benefits", "displayName":"Benefits", "format": "string", "category":"Principals", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Health Insurance, Pension/Retirement, and Paid Sick Leave", "Health Insurance and Pension/Retirement - No Paid Sick Leave", "Unknown/Data Not Available"], "customRange":[colors.turquoise.medium, colors.blue.medium, colors.grey.light]},
 	diversity_incentives: {"variable":"diversity_incentives", "displayName":"Diversity Incentives", "format": "string", "category":"Principals", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Financial Incentives", "Supports in Place", "No", "No data"], "customRange":[colors.turquoise.light, colors.blue.medium, colors.red.medium, colors.grey.light]},
 
@@ -37,7 +37,7 @@ let variables = {
 	cd_formal_evaluation: {"variable":"cd_formal_evaluation", "displayName":"Formal Evaluation", "format": "string", "category":"Center Directors", "scaleType":"categorical", "customDomain":["Yes", "No"], "customRange": [colors.turquoise.medium, colors.red.medium]},
 	cd_formal_evaluation_source: {"variable":"cd_formal_evaluation_source", "displayName":"Formal Evaluation Requirement Source", "format": "string"},
 	cd_avg_salary: {"variable":"cd_avg_salary", "displayName":"Average Salary", "format": "price", "category":"Center Directors", "scaleType":"quantize", "customRange":[colors.white, colors.turquoise.light, colors.turquoise.dark], "numBins":5},
-	cd_avg_salary_continuous_scale: {"variable":"cd_avg_salary", "displayName":"Average Salary", "format": "price", "category":"Center Directors", "scaleType":"linear", "customRange":[colors.turquoise.very_light, colors.turquoise.dark]},
+	cd_avg_salary_continuous_scale: {"variable":"cd_avg_salary", "displayName":"Center Directors", "format": "price", "color": colors.blue.light},
 	cd_avg_salary_source: {"variable":"cd_avg_salary_source", "displayName":"Average Salary Source", "format": "string", "category":"Center Directors"},
 }
 
@@ -181,8 +181,9 @@ let vizSettingsList = [
 		id: "#early-ed-leaders__avg-salary",
 		primaryDataSheet: "states",
 		vizType: "comparative_dot_histogram",
-		groupingVars: [ variables.avg_salary_continuous_scale, variables.cd_avg_salary_continuous_scale ],
+		groupingVars: [ variables.cd_avg_salary_continuous_scale, variables.avg_salary_continuous_scale ],
 		labelVar: variables.state_abbrev,
+		titleVar: variables.state,
 		legendSettings: {"orientation": "horizontal-center"},
 	}
 ]
