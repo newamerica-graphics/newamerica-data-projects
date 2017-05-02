@@ -174,8 +174,6 @@ export function setupProject(projectSettings) {
 			publicDataJson[sheetName] = data[sheetName];
 		}
 
-
-
 		setCSVZipLink(publicDataJson);
 		setJSONZipLink(publicDataJson);
 	}
@@ -223,7 +221,7 @@ export function setupProject(projectSettings) {
 			$inDepthProfileBody.empty();
 		}
 
-		let displayField, fieldFormat;
+		let displayField, fieldFormat, footnoteField;
 
 		$(".data-reference__value").each(function(i, item) {
 			displayField = $(item).attr("data-field-name");
@@ -232,10 +230,32 @@ export function setupProject(projectSettings) {
 			for (let d of data[dataSheet]) {
 				if (d[lookupField].toLowerCase() == lookupValue) {
 					value = formatValue(d[displayField], fieldFormat);
-					$(item).text(value);
+					if (value && value.length > 0) {
+						$(item).text(value);
+					} else {
+						$(item).hide();
+					}
 					break;
 				}
 			}
+		})
+
+		$(".data-reference__table__footnote__inner-wrapper").each(function(i, item) {
+			footnoteField = $(item).attr("data-field-name");
+
+			let value;
+			for (let d of data[dataSheet]) {
+				if (d[lookupField].toLowerCase() == lookupValue) {
+					value = d[displayField];
+					if (value && value.length > 0) {
+						$(item).text(value);
+					} else {
+						$(item).hide();
+					}
+					break;
+				}
+			}
+
 		})
 
 		setOtherValueSelectorOptions(allLookupValues.keys())
