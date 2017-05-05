@@ -11,7 +11,7 @@ let continuousLegendHeight = 20,
 
 export class Legend {
 	constructor(legendSettings) {
-		let {id, markerSettings, showTitle, showValCounts, orientation, customTitleExpression, annotation, disableValueToggling, openEnded, customLabels} = legendSettings;
+		let {id, markerSettings, showTitle, showValCounts, orientation, customTitleExpression, annotation, disableValueToggling, openEnded, customLabels, valCountCustomFormattingFunc} = legendSettings;
 		this.id = id;
 		this.showTitle = showTitle;
 		this.customTitleExpression = customTitleExpression;
@@ -22,16 +22,17 @@ export class Legend {
 		this.customLabels = customLabels;
 		this.showValCounts = showValCounts;
 		this.annotation = annotation;
+		this.valCountCustomFormattingFunc = valCountCustomFormattingFunc;
+
+		
+		this.legend = d3.select(this.id)
+			.append("div")
+			.attr("class", "legend " + this.orientation);
 	}
 
 	render(legendSettings) {
 		this.legendSettings = legendSettings;
-		if (this.legend) {
-			this.legend.remove();
-		}
-		this.legend = d3.select(this.id)
-			.append("div")
-			.attr("class", "legend " + this.orientation);
+		
 
 		if (this.showTitle) {
 			let titleContainer = this.legend.append("div")
@@ -209,7 +210,7 @@ export class Legend {
 		cell.append("h5")
 			.attr("class", "legend__cell__val-count")
 			.style("color", this.colorScale.range()[i])
-			.text(valCounts.get(valKey));
+			.text(this.valCountCustomFormattingFunc ? this.valCountCustomFormattingFunc(valCounts.get(valKey)) : valCounts.get(valKey));
 	}
 
 	appendCellText(cell, i, scaleType, format) {

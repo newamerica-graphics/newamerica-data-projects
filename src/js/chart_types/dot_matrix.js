@@ -16,7 +16,7 @@ let splitDistance = 3; //number of dots between split components
 
 export class DotMatrix {
 	constructor(vizSettings, imageFolderId) {
-		let {id, orientation, tooltipVars, tooltipImageVar, filterVars, isSubComponent, tooltip, colorScale, split, primaryDataSheet, eventSettings, dotSettings, tooltipScrollable, legendSettings} = vizSettings;
+		let {id, orientation, tooltipVars, tooltipImageVar, filterVars, isSubComponent, tooltip, colorScale, split, primaryDataSheet, eventSettings, dotSettings, tooltipScrollable, legendSettings, simpleDataVals} = vizSettings;
 		
 		// super(id, isSubComponent);
 
@@ -28,6 +28,7 @@ export class DotMatrix {
 		this.eventSettings = eventSettings;
 		this.dotSettings = dotSettings;
 		this.legendSettings = legendSettings;
+		this.simpleDataVals = simpleDataVals;
 
 		this.split ? this.appendSplitLabels() : null;
 
@@ -48,32 +49,38 @@ export class DotMatrix {
 				.append("svg")
 				.attr("width", "100%");
 
-			let tooltipSettings = { "id":id, "tooltipVars":tooltipVars, tooltipImageVar:"tooltipImageVar", "imageFolderId":imageFolderId, "tooltipScrollable":tooltipScrollable };
+			if (this.tooltipVars) {
+				let tooltipSettings = { "id":id, "tooltipVars":tooltipVars, tooltipImageVar:"tooltipImageVar", "imageFolderId":imageFolderId, "tooltipScrollable":tooltipScrollable };
 
+				this.tooltip = new Tooltip(tooltipSettings);
+			}
 
-			this.tooltip = new Tooltip(tooltipSettings);
-
-			let legendSettings = {};
-			legendSettings.id = id;
-			legendSettings.showTitle = false;
-			legendSettings.markerSettings = { shape:"rect", size:this.dotSettings.width };
-			legendSettings.orientation = "horizontal-center";
-			this.legend = new Legend(legendSettings);
+			
+			this.legendSettings.id = id;
+			this.legendSettings.showTitle = false;
+			this.legendSettings.markerSettings = { shape:"rect", size:this.dotSettings.width };
+			this.legendSettings.orientation = "horizontal-center";
+			this.legend = new Legend(this.legendSettings);
 		}
 
 		this.currFilter = filterVars[0];
 		this.currFilterVar = filterVars[0].variable;
-
 	}
 
 	render(data) {
-		if (!this.isSubComponent) {
-			this.data = this.processData(data[this.primaryDataSheet]);
+		if (!this.isSubComponent ) {
+			if (this.simpleDataVals) {
+				this.data = this.createDataVals(data[this.primaryDataSheet]);
+			} else {
+				this.data = this.processData(data[this.primaryDataSheet]);
+			}
 		} else {
 			this.data = data;
 		}
+
+		this.dataLength = this.data.length;
 		this.setDimensions();
-		this.sortData();
+		if (!this.simpleDataVals) { this.sortData(); }
 		if (!this.isSubComponent) {
 			this.setScale();
 		}
@@ -103,9 +110,21 @@ export class DotMatrix {
 			}
 		}
 
-		this.dataLength = data.length;
-
 		return data;
+	}
+
+	createDataVals(simpleDataVals) {
+		let retData = [];
+
+		simpleDataVals.forEach((d) => {
+			for (let i = 0; i < d.percent; i++) {
+				let dataObject = {};
+				dataObject[this.currFilterVar] = d[this.currFilterVar];
+				retData.push(dataObject);
+			}
+		})
+
+		return retData;
 	}
 
 	sortData() {
@@ -170,7 +189,7 @@ export class DotMatrix {
 			.enter().append("rect")
 			.attr("width", this.dotSettings.width)
 		    .attr("height", this.dotSettings.width)
-		    .attr("x", (d, i) => { return this.calcX(d, i); })
+		    .attr("x", (d, i) => { console.log(d); return this.calcX(d, i); })
 		    .attr("y", (d, i) => { return this.calcY(i); })
 		    .attr("fill", (d) => {
 		    	return this.colorScale(d[this.currFilterVar]);
