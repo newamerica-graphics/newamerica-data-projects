@@ -15,7 +15,11 @@ let variables = {
 
 	school_type: {"variable":"school_type", "displayName":"", "format": "string", "scaleType":"categorical", "customDomain":["Public four-year","Private four-year","Public two-year","For-profit","Two or more"], "customRange": [colors.turquoise.light, colors.turquoise.medium, colors.blue.light, colors.blue.medium, colors.purple.light]},
 
+	ethnicity: {"variable":"ethnicity", "displayName":"Race/Ethnicity", "format": "string", "scaleType":"categorical", "customDomain":["White","Non-white","Black or African American","Hispanic or Latino","Asian","American Indian or Alaska Native","Native Hawaiian/other Pacific Islander","More than one race"], "customRange": [colors.turquoise.light, colors.blue.light, colors.turquoise.medium, colors.turquoise.dark, colors.blue.medium, colors.blue.dark, colors.purple.medium, colors.purple.dark]},
+	percent_of_aid: {"variable":"percent_of_aid", "displayName":"Percent of Aid", "format": "percent"},
+	category: {"variable":"category", "displayName":"", "format": "percent"},
 }
+
 let vizSettingsList = [
 	// {
 	// 	id: "#varying-degrees__students-funding", 
@@ -34,50 +38,59 @@ let vizSettingsList = [
 	// 	aggregateData: false,
 	// 	showLegend: true
 	// },
+	// {
+	// 	id: "#varying-degrees__avg-student-age", 
+	// 	vizType: "dot_matrix",
+	// 	primaryDataSheet: "avg_student_age",
+	// 	orientation: "horizontal",
+	// 	dotSettings: { "width": 9, "offset": 3},
+	// 	filterVars: [ variables.age_group ],
+	// 	legendSettings: {"orientation": "horizontal-center", "showValCounts": true, "valCountCustomFormattingFunc": (d) => { return d/10 + "%"; }  },
+	// 	simpleDataVals: true,
+	// 	eventSettings: {
+	// 		"mouseover":{ "tooltip": false, "fill": false, "stroke": "white", "strokeWidth": 3},
+	// 	}
+	// },
+	// {
+	// 	id: "#varying-degrees__avg-student-full-part-time", 
+	// 	vizType: "dot_matrix",
+	// 	primaryDataSheet: "avg_student_full_part_time",
+	// 	orientation: "horizontal",
+	// 	dotSettings: { "width": 9, "offset": 3},
+	// 	filterVars: [ variables.full_part_time ],
+	// 	legendSettings: {"orientation": "horizontal-center", "showValCounts": true, "valCountCustomFormattingFunc": (d) => { return d/10 + "%"; } },
+	// 	simpleDataVals: true,
+	// 	eventSettings: {
+	// 		"mouseover":{ "tooltip": false, "fill": false, "stroke": "white", "strokeWidth": 3},
+	// 	}
+	// },
+	// {
+	// 	id: "#varying-degrees__avg-student-school-type", 
+	// 	vizType: "dot_matrix",
+	// 	primaryDataSheet: "avg_student_school_type",
+	// 	orientation: "horizontal",
+	// 	dotSettings: { "width": 9, "offset": 3},
+	// 	filterVars: [ variables.school_type ],
+	// 	legendSettings: {"orientation": "horizontal-center", "showValCounts": true, "valCountCustomFormattingFunc": (d) => { return d/10 + "%"; }  },
+	// 	simpleDataVals: true,
+	// 	eventSettings: {
+	// 		"mouseover":{ "tooltip": false, "fill": false, "stroke": "white", "strokeWidth": 3},
+	// 	}
+	// },
 	{
-		id: "#varying-degrees__avg-student-age", 
-		vizType: "dot_matrix",
-		primaryDataSheet: "avg_student_age",
-		orientation: "horizontal",
-		dotSettings: { "width": 9, "offset": 3},
-		filterVars: [ variables.age_group ],
-		legendSettings: {"orientation": "horizontal-center", "showValCounts": true, "valCountCustomFormattingFunc": (d) => { return d/10 + "%"; }  },
-		simpleDataVals: true,
-		eventSettings: {
-			"mouseover":{ "tooltip": false, "fill": false, "stroke": "white", "strokeWidth": 3},
-		}
-	},
-	{
-		id: "#varying-degrees__avg-student-full-part-time", 
-		vizType: "dot_matrix",
-		primaryDataSheet: "avg_student_full_part_time",
-		orientation: "horizontal",
-		dotSettings: { "width": 9, "offset": 3},
-		filterVars: [ variables.full_part_time ],
-		legendSettings: {"orientation": "horizontal-center", "showValCounts": true, "valCountCustomFormattingFunc": (d) => { return d/10 + "%"; } },
-		simpleDataVals: true,
-		eventSettings: {
-			"mouseover":{ "tooltip": false, "fill": false, "stroke": "white", "strokeWidth": 3},
-		}
-	},
-	{
-		id: "#varying-degrees__avg-student-school-type", 
-		vizType: "dot_matrix",
-		primaryDataSheet: "avg_student_school_type",
-		orientation: "horizontal",
-		dotSettings: { "width": 9, "offset": 3},
-		filterVars: [ variables.school_type ],
-		legendSettings: {"orientation": "horizontal-center", "showValCounts": true, "valCountCustomFormattingFunc": (d) => { return d/10 + "%"; }  },
-		simpleDataVals: true,
-		eventSettings: {
-			"mouseover":{ "tooltip": false, "fill": false, "stroke": "white", "strokeWidth": 3},
-		}
-	},
+		id: "#varying-degrees__percent-fin-aid", 
+		vizType: "pie_chart",
+		primaryDataSheet: "percent_fin_aid",
+		labelVar: variables.ethnicity,
+		dataVar: variables.percent_of_aid,
+		categoryVar: variables.category,
+		legendShowVals: true,
+	}
 ]
 
 let projectSettings = {
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/edpolicy/varying_degrees.json",
-	dataSheetNames:["funding"],
+	dataSheetNames:["funding", "percent_fin_aid"],
 	vizSettingsList: vizSettingsList
 }
 

@@ -62,8 +62,6 @@ export class Legend {
 
 		this.colorScale = legendSettings.colorScale;
 
-		
-
 		if (legendSettings.scaleType == "linear" || legendSettings.scaleType == "logarithmic") {
 			this.renderContinuous(legendSettings);
 		} else {
@@ -139,7 +137,7 @@ export class Legend {
 	}
 
 	renderDiscrete(legendSettings) {
-		let {scaleType, format, colorScale, valChangedFunction, valCounts} = legendSettings;
+		let {scaleType, format, colorScale, valChangedFunction, valCounts, indentedIndices} = legendSettings;
 
 		this.cellList ? this.cellList.remove() : null;
 		this.cellList = this.cellContainer.append("ul")
@@ -158,7 +156,8 @@ export class Legend {
 		for (let i = 0; i < this.numBins; i++) {
 			this.valsShown.push(i);
 			let cell = this.cellList.append("li")
-				.classed("legend__cell", true);
+				.classed("legend__cell", true)
+				.classed("indented", indentedIndices && indentedIndices.indexOf(i) > -1);
 
 			if (this.disableValueToggling) {
 				cell.style("cursor", "initial");
