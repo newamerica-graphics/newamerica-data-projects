@@ -12,11 +12,11 @@ import { getColorScale } from "../helper_functions/get_color_scale.js";
 
 import { Tooltip } from "../components/tooltip.js";
 
-let splitDistance = 3; //number of dots between split components
+let splitDistance = 2; //number of dots between split components
 
 export class DotMatrix {
 	constructor(vizSettings, imageFolderId) {
-		let {id, orientation, tooltipVars, tooltipImageVar, filterVars, isSubComponent, tooltip, colorScale, split, primaryDataSheet, eventSettings, dotSettings, tooltipScrollable, legendSettings, simpleDataVals} = vizSettings;
+		let {id, orientation, tooltipVars, tooltipImageVar, filterVars, isSubComponent, tooltip, colorScale, split, primaryDataSheet, eventSettings, dotSettings, tooltipScrollable, legendSettings, simpleDataVals, splitEveryVal} = vizSettings;
 		
 		// super(id, isSubComponent);
 
@@ -29,6 +29,7 @@ export class DotMatrix {
 		this.dotSettings = dotSettings;
 		this.legendSettings = legendSettings;
 		this.simpleDataVals = simpleDataVals;
+		this.splitEveryVal = splitEveryVal;
 
 		this.split ? this.appendSplitLabels() : null;
 
@@ -117,7 +118,7 @@ export class DotMatrix {
 		let retData = [];
 
 		simpleDataVals.forEach((d) => {
-			for (let i = 0; i < d.percent; i++) {
+			for (let i = 0; i < d.value; i++) {
 				let dataObject = {};
 				dataObject[this.currFilterVar] = d[this.currFilterVar];
 				retData.push(dataObject);
@@ -189,7 +190,7 @@ export class DotMatrix {
 			.enter().append("rect")
 			.attr("width", this.dotSettings.width)
 		    .attr("height", this.dotSettings.width)
-		    .attr("x", (d, i) => { console.log(d); return this.calcX(d, i); })
+		    .attr("x", (d, i) => { return this.calcX(d, i); })
 		    .attr("y", (d, i) => { return this.calcY(i); })
 		    .attr("fill", (d) => {
 		    	return this.colorScale(d[this.currFilterVar]);
@@ -217,6 +218,7 @@ export class DotMatrix {
 			this.w = $(this.id).width();
 			let numCols = Math.floor(this.w/(this.dotSettings.width + this.dotSettings.offset));
 			this.split ? numCols -= splitDistance : null;
+			this.splitEveryVal ? numCols -= splitDistance * this.currFilter.customDomain.length - 1 : null
 			this.dotsPerCol = Math.ceil(this.dataLength/numCols);
 
 			this.h = this.dotsPerCol * (this.dotSettings.width + this.dotSettings.offset);		
@@ -267,6 +269,12 @@ export class DotMatrix {
 				if (variableValIndex > this.splitIndex) {
 					xCoord += splitDistance * (this.dotSettings.width + this.dotSettings.offset);
 				}
+			}
+
+			if (this.splitEveryVal) {
+				let variableVal = d[this.currFilterVar];
+				let variableValIndex = this.colorScale.domain().indexOf(variableVal);
+				xCoord += variableValIndex * (splitDistance * (this.dotSettings.width + this.dotSettings.offset));
 			}
 
 			return xCoord;
@@ -424,8 +432,11 @@ export class DotMatrix {
 			this.splitLabelLeftVal.text(Math.round(leftValCounts/valCountsTotal * 100) + "%");
 			this.splitLabelRightVal.text(Math.round(rightValCounts/valCountsTotal * 100) + "%");
 		}
+	}
 
-		
+	removeChart() {
+		this.svg.remove();
+		this.legend.removeComponent();
 	}
 
 }

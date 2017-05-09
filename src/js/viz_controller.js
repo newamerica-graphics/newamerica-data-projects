@@ -27,6 +27,7 @@ import { PieChart } from "./chart_types/pie_chart.js";
 import { Bipartite } from "./chart_types/bipartite.js";
 import { CategoryBreakdown } from "./chart_types/category_breakdown.js";
 import { ComparativeDotHistogram } from "./chart_types/comparative_dot_histogram.js";
+import { FilterableDotMatrix } from "./layouts/filterable_dot_matrix.js";
 
 import { formatValue } from "./helper_functions/format_value.js";
 
@@ -82,6 +83,10 @@ export function setupProject(projectSettings) {
 
 					case "fact_box":
 						viz = new FactBox(vizSettingsObject);
+						break;
+
+					case "filterable_dot_matrix":
+						viz = new FilterableDotMatrix(vizSettingsObject);
 						break;
 
 					case "financial_opportunity_map":
@@ -154,11 +159,12 @@ export function setupProject(projectSettings) {
 					hideLoadingGif(viz.id);
 				}
 
-				setDataDownloadLinks(d);
+				setDataDownloadLinks(d, projectSettings);
 				
 				setProfileValues(d);
 			});
 		}
+		console.log("finished rendering!")
 	}
 
 	function resize() {
@@ -168,19 +174,24 @@ export function setupProject(projectSettings) {
 	}
 
 	function hideLoadingGif(id) {
+		console.log("hiding loading gif");
+		console.log(id);
 		$(id).siblings(".dataviz__loading-gif").hide();
 		$(id).css("visibility", "visible").css("min-height","none");
 	}
 
-	function setDataDownloadLinks(data) {
-		let publicDataJson = {};
-		for (let sheetName of dataSheetNames) {
-			
-			publicDataJson[sheetName] = data[sheetName];
-		}
+	function setDataDownloadLinks(data, projectSettings) {
+		if (projectSettings.customDataDownloadSource) {
+			$("#in-depth__download__csv").attr("href", projectSettings.customDataDownloadSource);
+		} else {
+			let publicDataJson = {};
+			for (let sheetName of dataSheetNames) {	
+				publicDataJson[sheetName] = data[sheetName];
+			}
 
-		setCSVZipLink(publicDataJson);
-		setJSONZipLink(publicDataJson);
+			setCSVZipLink(publicDataJson);
+			setJSONZipLink(publicDataJson);
+		}
 	}
 
 	function setCSVZipLink(dataJson) {

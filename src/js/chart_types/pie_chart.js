@@ -135,15 +135,18 @@ export class PieChart {
 		this.paths.attr("d", this.arc);
 	}
 
-	mouseover(d) {
-		if (!d.parent) { return; }
+	mouseover(elem) {
+		if (!elem.parent) { return; }
 		this.hoverTextContainer = this.renderingArea.append("g")
-		console.log(d);
+
+		this.paths
+			.attr("fill-opacity", (d) => { return d.id == elem.id ? .7 : 1; });
+
 		this.hoverTextContainer.append("text")
-			.attr("fill", this.colorScale(d.id))
+			.attr("fill", this.colorScale(elem.id))
 			.attr("x", 0)
 			.attr("y", 0)
-			.text(d.id)
+			.text(elem.id)
 			.style("text-anchor", "middle")
 			.style("font-weight", "bold")
 			.style("font-size", "20px")
@@ -153,13 +156,14 @@ export class PieChart {
 			.attr("fill", colors.grey.dark)
 			.attr("x", 0)
 			.attr("y", 25)
-			.text(formatValue(d.value, "percent"))
+			.text(formatValue(elem.value, "percent"))
 			.style("text-anchor", "middle")
 			.style("alignment-baseline", "middle");
 	}
 
 	mouseout() {
 		if (this.hoverTextContainer) { this.hoverTextContainer.remove(); }
+		this.paths.attr("fill-opacity", 1);
 	}
 
 }

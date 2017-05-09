@@ -271,4 +271,8 @@ export class Legend {
 		this.render(this.legendSettings);
 	}
 
+	removeComponent() {
+		this.legend.remove();
+	}
+
 }
