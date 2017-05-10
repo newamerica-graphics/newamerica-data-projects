@@ -119,8 +119,7 @@ let vizSettingsList = [
 		xVar: variables.federal_spending_year,
 		barVar: variables.federal_spending_total,
 		lineVar: variables.federal_spending_per_student,
-		
-	}
+	},
 	{
 		id: "#varying-degrees__avg-student-aggregate", 
 		vizType: "filterable_dot_matrix",
