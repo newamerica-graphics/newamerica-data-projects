@@ -3,9 +3,9 @@ import { setupProject } from "../../viz_controller.js";
 import { colors } from "../../helper_functions/colors.js";
 import $ from 'jquery';
 
-// $.getScript('https://na-data-projects.s3.amazonaws.com/projects/varying_degrees-submodule.js', (d, err) => {
-// 	console.log(err);
-// })
+$.getScript('https://na-data-projects.s3.amazonaws.com/projects/varying_degrees-submodule.js', (d, err) => {
+	console.log(err);
+})
 
 let variables = {
 	sector: {"variable":"sector", "displayName":"Sector", "format": "string"},
@@ -15,13 +15,13 @@ let variables = {
 
 	avg_student_age: {"variable":"category", "displayName":"Age", "format": "string", "scaleType":"categorical", "customDomain":["18 or younger", "19-23", "24-29", "30-39", "40 or older"], "customRange": [colors.turquoise.light, colors.turquoise.medium, colors.blue.light, colors.blue.medium, colors.purple.light], "dataSheet":"avg_student_age"},
 	avg_student_full_part_time: {"variable":"category", "displayName":"Enrollment", "format": "string", "scaleType":"categorical", "customDomain":["Exclusively Full-Time", "Exclusively Part-Time", "Mixed Full-Time and Part-Time"], "customRange": [colors.turquoise.light, colors.blue.light, colors.purple.light], "dataSheet":"avg_student_full_part_time"},
-	avg_student_school_type: {"variable":"category", "displayName":"School Type", "format": "string", "scaleType":"categorical", "customDomain":["Public four-year","Private four-year","Public two-year","For-profit","Two or more"], "customRange": [colors.turquoise.light, colors.turquoise.medium, colors.blue.light, colors.blue.medium, colors.purple.light], "dataSheet":"avg_student_school_type"},
+	avg_student_school_type: {"variable":"category", "displayName":"School Type", "format": "string", "scaleType":"categorical", "customDomain":["Public four-year","Private four-year","Public two-year","For-profit","Two or more"], "customRange": [colors.turquoise.light, colors.turquoise.medium, colors.blue.light, colors.purple.light, colors.blue.medium], "dataSheet":"avg_student_school_type"},
 	avg_student_dependents: {"variable":"category", "displayName":"Dependents", "format": "string", "scaleType":"categorical", "customDomain":["Have Children", "Do Not Have Children"], "customRange": [colors.turquoise.light, colors.blue.light], "dataSheet":"avg_student_dependents"},
 	avg_student_learning_environment: {"variable":"category", "displayName":"Learning Environment", "format": "string", "scaleType":"categorical", "customDomain":["Classroom Only", "Online Only", "Blend of Classroom and Online"], "customRange": [colors.turquoise.light, colors.blue.light, colors.purple.light], "dataSheet":"avg_student_learning_environment"},
 	avg_student_gender: {"variable":"category", "displayName":"Gender", "format": "string", "scaleType":"categorical", "customDomain":["Female", "Male"], "customRange": [colors.turquoise.light, colors.blue.light], "dataSheet":"avg_student_gender"},
 	avg_student_employment: {"variable":"category", "displayName":"Employment", "format": "string", "scaleType":"categorical", "customDomain":["Full-time", "Part-time", "Not Employed"], "customRange": [colors.turquoise.dark, colors.turquoise.light, colors.red.light], "dataSheet":"avg_student_employment"},
 	avg_student_financial_aid: {"variable":"category", "displayName":"Financial Aid", "format": "string", "scaleType":"categorical", "customDomain":["Receive Pell Grants", "Do Not Receive Pell Grants"], "customRange": [colors.turquoise.light, colors.red.light], "dataSheet":"avg_student_financial_aid"},
-	avg_student_housing: {"variable":"category", "displayName":"Housing", "format": "string", "scaleType":"categorical", "customDomain":["Live on Campus", "Live with Parent/Guardian", "Live in Other Housing"], "customRange": [colors.turquoise.light, colors.blue.light, colors.grey.medium], "dataSheet":"avg_student_housing"},
+	avg_student_housing: {"variable":"category", "displayName":"Housing", "format": "string", "scaleType":"categorical", "customDomain":["Campus Residence Hall","Fraternity or Sorority House","Other University Housing","Parent/Guardian Home","Other Off-campus Housing","Other"], "customRange": [colors.turquoise.light, colors.turquoise.medium, colors.turquoise.dark, colors.blue.light, colors.blue.dark, colors.purple.light], "dataSheet":"avg_student_housing"},
 
 	ethnicity: {"variable":"ethnicity", "displayName":"Race/Ethnicity", "format": "string", "scaleType":"categorical", "customDomain":["White","Non-white","Black or African American","Hispanic or Latino","Asian","American Indian or Alaska Native","Native Hawaiian/other Pacific Islander","More than one race"], "customRange": [colors.turquoise.light, colors.blue.light, colors.turquoise.medium, colors.turquoise.dark, colors.blue.medium, colors.blue.dark, colors.purple.medium, colors.purple.dark]},
 	percent_of_aid: {"variable":"percent_of_aid", "displayName":"Percent of Aid", "format": "percent"},
@@ -60,7 +60,6 @@ let vizSettingsList = [
 		filterVars: [ variables.avg_student_age ],
 		legendSettings: {"orientation": "horizontal-center", "showValCounts": true },
 		simpleDataVals: true,
-		splitEveryVal: true,
 		eventSettings: {
 			"mouseover":{ "tooltip": false, "fill": false, "stroke": "white", "strokeWidth": 3},
 		}
@@ -74,7 +73,6 @@ let vizSettingsList = [
 		filterVars: [ variables.avg_student_full_part_time ],
 		legendSettings: {"orientation": "horizontal-center", "showValCounts": true },
 		simpleDataVals: true,
-		splitEveryVal: true,
 		eventSettings: {
 			"mouseover":{ "tooltip": false, "fill": false, "stroke": "white", "strokeWidth": 3},
 		}
@@ -88,7 +86,6 @@ let vizSettingsList = [
 		filterVars: [ variables.avg_student_school_type ],
 		legendSettings: {"orientation": "horizontal-center", "showValCounts": true },
 		simpleDataVals: true,
-		splitEveryVal: true,
 		eventSettings: {
 			"mouseover":{ "tooltip": false, "fill": false, "stroke": "white", "strokeWidth": 3},
 		}
@@ -143,7 +140,6 @@ let vizSettingsList = [
 		dotSettings: { "width": 9, "offset": 3},
 		legendSettings: {"orientation": "horizontal-center", "showValCounts": true },
 		simpleDataVals: true,
-		splitEveryVal: true,
 		eventSettings: {
 			"mouseover":{ "tooltip": false, "fill": false, "stroke": "white", "strokeWidth": 3},
 		}

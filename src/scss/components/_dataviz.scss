@@ -1,5 +1,9 @@
 .dataviz {
 	position: relative;
+
+	&__chart-area {
+		min-height: 200px !important;
+	}
 }
 /*
 .chart-wrapper {

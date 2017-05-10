@@ -48,7 +48,8 @@ export class DotMatrix {
 
 			this.svg = d3.select(id)
 				.append("svg")
-				.attr("width", "100%");
+				.attr("width", "100%")
+				.style("margin-top", "20px");
 
 			if (this.tooltipVars) {
 				let tooltipSettings = { "id":id, "tooltipVars":tooltipVars, tooltipImageVar:"tooltipImageVar", "imageFolderId":imageFolderId, "tooltipScrollable":tooltipScrollable };
