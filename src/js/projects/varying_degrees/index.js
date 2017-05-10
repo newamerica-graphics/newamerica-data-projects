@@ -28,8 +28,12 @@ let variables = {
 	category: {"variable":"category", "displayName":"", "format": "percent"},
 
 	state_spending_year: {"variable":"year", "displayName":"Year", "format":"year", "scaleType":"categorical"},
-	state_spending_total: {"variable":"total", "displayName":"Total Spending", "format":"price", "color": colors.turquoise.light, "scaleType": "linear", "customDomain": [80000000000, 100000000000]},
-	state_spending_per_student: {"variable":"per_fte", "displayName":"Per Student", "format":"price", "color": colors.turquoise.light},
+	state_spending_total: {"variable":"total", "displayName":"Total Spending (Billions)", "format":"price_billions_round", "color": colors.turquoise.light, "scaleType": "linear", "customDomain": [80000000000, 100000000000]},
+	state_spending_per_student: {"variable":"per_fte", "displayName":"Per Student", "format":"price", "color": colors.turquoise.dark ,"customDomain": [7000, 10000]},
+
+	federal_spending_year: {"variable":"year", "displayName":"Year", "format":"year", "scaleType":"categorical"},
+	federal_spending_total: {"variable":"total", "displayName":"Total Spending (Billions)", "format":"price_billions_round", "color": colors.turquoise.light, "scaleType": "linear", "customDomain": [100000000000, 200000000000]},
+	federal_spending_per_student: {"variable":"per_student", "displayName":"Per Student", "format":"price", "color": colors.turquoise.dark ,"customDomain": [5000, 10000]},
 
 }
 
@@ -99,39 +103,24 @@ let vizSettingsList = [
 		categoryVar: variables.category,
 		legendShowVals: true,
 	},
-	// {
-	// 	id: "#varying-degrees__state-spending", 
-	// 	vizType: "chart_overlay",
-	// 	primaryDataSheet: "state_spending",
-	// 	xVar: variables.state_spending_year,
-	// 	chart1Settings: {
-	// 		vizType: "bar_chart",
-	// 		filterVars: [ variables.state_spending_total ],
-	// 		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
-	// 		xAxisLabelInterval: {"small": 2, "medium": 1, "large": 1},
-	// 		labelValues: false,
-	// 		showYAxis: true,
-	// 		hasTrendline: false,
-	// 		tooltipVars: [ variables.state_spending_year, variables.state_spending_total ],
-	// 		eventSettings: {
-	// 			"mouseover":{ "tooltip": true, "fill": colors.turquoise.medium, "stroke": false }
-	// 		}
-	// 	},
-	// 	chart2Settings: {
-	// 		vizType: "bar_chart",
-	// 		filterVars: [ variables.state_spending_total ],
-	// 		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
-	// 		xAxisLabelInterval: {"small": 3, "medium": 2, "large": 1},
-	// 		labelValues: false,
-	// 		showYAxis: true,
-	// 		hasTrendline: false,
-	// 		tooltipVars: [ variables.state_spending_year, variables.state_spending_total ],
-	// 		eventSettings: {
-	// 			"mouseover":{ "tooltip": true, "fill": colors.turquoise.medium, "stroke": false }
-	// 		}
-			
-	// 	},
-	// }
+	{
+		id: "#varying-degrees__state-spending", 
+		vizType: "bar_line_combo",
+		primaryDataSheet: "state_spending",
+		xVar: variables.state_spending_year,
+		barVar: variables.state_spending_total,
+		lineVar: variables.state_spending_per_student,
+		
+	},
+	{
+		id: "#varying-degrees__federal-spending", 
+		vizType: "bar_line_combo",
+		primaryDataSheet: "fed_spending",
+		xVar: variables.federal_spending_year,
+		barVar: variables.federal_spending_total,
+		lineVar: variables.federal_spending_per_student,
+		
+	}
 	{
 		id: "#varying-degrees__avg-student-aggregate", 
 		vizType: "filterable_dot_matrix",

@@ -28,6 +28,7 @@ import { Bipartite } from "./chart_types/bipartite.js";
 import { CategoryBreakdown } from "./chart_types/category_breakdown.js";
 import { ComparativeDotHistogram } from "./chart_types/comparative_dot_histogram.js";
 import { FilterableDotMatrix } from "./layouts/filterable_dot_matrix.js";
+import { BarLineCombo } from "./chart_types/bar_line_combo.js";
 
 import { formatValue } from "./helper_functions/format_value.js";
 
@@ -51,6 +52,10 @@ export function setupProject(projectSettings) {
 				switch (vizSettingsObject.vizType) {
 					case "bar_chart":
 						viz = new BarChart(vizSettingsObject, imageFolderId);
+						break;
+
+					case "bar_line_combo":
+						viz = new BarLineCombo(vizSettingsObject);
 						break;
 
 					case "bipartite":

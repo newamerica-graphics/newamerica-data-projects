@@ -22,6 +22,8 @@ export function formatValue(value, format) {
 			return value;
 		case "price":
 			return isNaN(value) ? value : d3.format("$,.0f")(value);
+		case "price_billions_round":
+			return isNaN(value) ? value : d3.format("$,.0f")(value/1000000000);
 		case "price_with_decimal_1":
 			return isNaN(value) ? value : d3.format("$,.1f")(value);
 		case "percent_no_multiply":
