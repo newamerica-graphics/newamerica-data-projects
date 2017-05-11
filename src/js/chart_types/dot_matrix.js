@@ -16,57 +16,40 @@ let splitDistance = 2; //number of dots between split components
 
 export class DotMatrix {
 	constructor(vizSettings, imageFolderId) {
-		let {id, orientation, tooltipVars, tooltipImageVar, filterVars, isSubComponent, tooltip, colorScale, split, primaryDataSheet, eventSettings, dotSettings, tooltipScrollable, legendSettings, simpleDataVals, splitEveryVal} = vizSettings;
-		
-		// super(id, isSubComponent);
-
-		this.id = id;
-		this.orientation = orientation;
-		this.isSubComponent = isSubComponent;
-		this.split = split;
-		this.primaryDataSheet = primaryDataSheet;
-		this.eventSettings = eventSettings;
-		this.dotSettings = dotSettings;
-		this.legendSettings = legendSettings;
-		this.simpleDataVals = simpleDataVals;
-		this.splitEveryVal = splitEveryVal;
+		Object.assign(this, vizSettings);
 
 		this.split ? this.appendSplitLabels() : null;
 
-		if (isSubComponent) {
-			this.svg = d3.select(id)
+		if (this.isSubComponent) {
+			this.svg = d3.select(this.id)
 				.append("svg")
 				.attr("width", "100%");
-
-			this.tooltip = tooltip;
-			this.colorScale = colorScale;
-
 		} else {
 			// let chartContainer = d3.select(id)
 			// 	.append("div")
 			// 	.attr("class", "chart-wrapper");
 
-			this.svg = d3.select(id)
+			this.svg = d3.select(this.id)
 				.append("svg")
 				.attr("width", "100%")
 				.style("margin-top", "20px");
 
 			if (this.tooltipVars) {
-				let tooltipSettings = { "id":id, "tooltipVars":tooltipVars, tooltipImageVar:"tooltipImageVar", "imageFolderId":imageFolderId, "tooltipScrollable":tooltipScrollable };
+				let tooltipSettings = { "id":this.id, "tooltipVars":this.tooltipVars, "tooltipImageVar":this.tooltipImageVar, "imageFolderId":this.imageFolderId, "tooltipScrollable":this.tooltipScrollable };
 
 				this.tooltip = new Tooltip(tooltipSettings);
 			}
 
 			
-			this.legendSettings.id = id;
+			this.legendSettings.id = this.id;
 			this.legendSettings.showTitle = false;
 			this.legendSettings.markerSettings = { shape:"rect", size:this.dotSettings.width };
 			this.legendSettings.orientation = "horizontal-center";
 			this.legend = new Legend(this.legendSettings);
 		}
 
-		this.currFilter = filterVars[0];
-		this.currFilterVar = filterVars[0].variable;
+		this.currFilter = this.filterVars[0];
+		this.currFilterVar = this.filterVars[0].variable;
 	}
 
 	render(data) {
@@ -92,6 +75,13 @@ export class DotMatrix {
 		
 		if (!this.isSubComponent) {
 			this.setLegend();
+		}
+
+		if (this.showSource && this.currFilter.source) {
+			this.source = d3.select(this.id).append("p")
+				.style("font-size", "12px")
+				.style("color", "rgba(44,47,53,.7)")
+				.text(this.currFilter.source);
 		}
 		
 	}
@@ -438,6 +428,8 @@ export class DotMatrix {
 	removeChart() {
 		this.svg.remove();
 		this.legend.removeComponent();
+
+		this.source ? this.source.remove() : null;
 	}
 
 }
