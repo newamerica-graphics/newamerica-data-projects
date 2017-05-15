@@ -22,7 +22,7 @@ let variables = {
 	diversity_incentives: {"variable":"diversity_incentives", "displayName":"Diversity Incentives", "format": "string", "category":"Principals", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Financial Incentives", "Supports in Place", "No", "No data"], "customRange":[colors.turquoise.light, colors.blue.light, colors.red.light, colors.grey.medium]},
 
 	cd_min_ed_requirement: {"variable":"cd_min_ed_requirement", "displayName":"Minimum Educational Requirement", "format": "string", "category":"Center Directors"},
-	cd_ed_training_requirement: {"variable":"cd_ed_training_requirement", "displayName":"Education & Training Requirement", "format": "string", "category":"Center Directors", "scaleType":"categorical", "customDomain":["No higher ed/training", "Less than CDA", "CDA", "Some college coursework", "AA", "AA plus coursework", "BA"], "customRange": ["#E5F7F6", "#CBEFEC", colors.turquoise.very_light, colors.turquoise.light, colors.turquoise.medium, colors.turquoise.dark, "#002C2A"]},
+	cd_ed_training_requirement: {"variable":"cd_ed_training_requirement", "displayName":"Education & Training Requirement", "format": "string", "category":"Center Directors", "scaleType":"categorical", "customDomain":["No Higher Ed/Training", "CDA or Less", "Some College Coursework", "At Least an Associate's", "Bachelor's Degree"], "customRange": [colors.turquoise.very_light, colors.turquoise.light, colors.turquoise.medium, colors.turquoise.dark, "#002C2A"]},
 	cd_ed_training_requirement_source: {"variable":"cd_ed_training_requirement_source", "displayName":"Education & Training Requirement Source", "format": "string", "category":"Center Directors"},
 	cd_prior_experience: {"variable":"cd_prior_experience", "displayName":"Prior Child Care Experience Requirement", "format": "string", "category":"Center Directors", "scaleType":"categorical", "customDomain":["Yes", "No"], "customRange": [colors.turquoise.light, colors.red.light]},
 	cd_prior_experience_years: {"variable":"cd_prior_experience_years", "displayName":"Prior Child Care Experience Years", "format": "string", "category":"Center Directors"},
@@ -138,6 +138,39 @@ let vizSettingsList = [
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 	},
 	{
+		id: "#early-ed-leaders__cd-ed-training-requirement", 
+		vizType: "category_breakdown",
+		primaryDataSheet: "states",
+		dotSettings: { "width": 30, "offset": 5},
+		filterVars: [ variables.cd_ed_training_requirement ],
+		labelVar: variables.state_abbrev,
+		tooltipVars: [ variables.state ],
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+
+	},
+	{
+		id: "#early-ed-leaders__cd-prior-experience", 
+		vizType: "category_breakdown",
+		primaryDataSheet: "states",
+		dotSettings: { "width": 30, "offset": 5},
+		filterVars: [ variables.cd_prior_experience ],
+		labelVar: variables.state_abbrev,
+		tooltipVars: [ variables.state ],
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+
+	},
+	{
+		id: "#early-ed-leaders__cd-has-credential", 
+		vizType: "category_breakdown",
+		primaryDataSheet: "states",
+		dotSettings: { "width": 30, "offset": 5},
+		filterVars: [ variables.cd_has_credential ],
+		labelVar: variables.state_abbrev,
+		tooltipVars: [ variables.state ],
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+
+	},
+	{
 		id: "#early-ed-leaders__professional-learning", 
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
@@ -153,6 +186,16 @@ let vizSettingsList = [
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.joint_professional_learning ],
+		labelVar: variables.state_abbrev,
+		tooltipVars: [ variables.state ],
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+	},
+	{
+		id: "#early-ed-leaders__cd-qris-different-tiers", 
+		vizType: "category_breakdown",
+		primaryDataSheet: "states",
+		dotSettings: { "width": 30, "offset": 5},
+		filterVars: [ variables.cd_qris_different_tiers ],
 		labelVar: variables.state_abbrev,
 		tooltipVars: [ variables.state ],
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
@@ -178,35 +221,25 @@ let vizSettingsList = [
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 	},
 	{
-		id: "#early-ed-leaders__cd-ed-training-requirement", 
-		vizType: "cd_ed_training_requirement",
-		primaryDataSheet: "states",
-		dotSettings: { "width": 30, "offset": 5},
-		filterVars: [ variables.cd_ed_training_requirement ],
-		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
-	},
-	{
-		id: "#early-ed-leaders__cd-ed-training-requirement", 
-		vizType: "cd_ed_training_requirement",
-		primaryDataSheet: "states",
-		dotSettings: { "width": 30, "offset": 5},
-		filterVars: [ variables.cd_ed_training_requirement ],
-		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
-	},
-	{
 		// add click to profile functionality and split charts
 		id: "#early-ed-leaders__avg-salary",
 		primaryDataSheet: "states",
 		vizType: "comparative_dot_histogram",
-		groupingVars: [ variables.cd_avg_salary_continuous_scale, variables.avg_salary_continuous_scale ],
+		groupingVars: [ variables.avg_salary_continuous_scale ],
 		labelVar: variables.state_abbrev,
 		titleVar: variables.state,
 		legendSettings: {"orientation": "horizontal-center"},
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+	},
+	{
+		// add click to profile functionality and split charts
+		id: "#early-ed-leaders__cd-avg-salary",
+		primaryDataSheet: "states",
+		vizType: "comparative_dot_histogram",
+		groupingVars: [ variables.cd_avg_salary_continuous_scale ],
+		labelVar: variables.state_abbrev,
+		titleVar: variables.state,
+		legendSettings: {"orientation": "horizontal-center"},
 	}
 ]
 

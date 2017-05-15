@@ -116,7 +116,7 @@ export class ComparativeDotHistogram {
 			.attr("transform", (d, i) => { return "translate(0, " + this.yScale(i) + ")"; })
 			.attr("stroke", (d) => { return this.groupingVars[d.group].color; })
 			.attr("fill", "white")
-			.attr("stroke-width", 2)
+			.attr("stroke-width", 1)
 			.attr("cx", this.circleDiam/2)
 			.attr("cy", -this.circleDiam/2)
 			.attr("r", this.circleDiam/2)

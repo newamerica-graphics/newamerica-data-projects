@@ -23,11 +23,6 @@ export class CategoryBreakdown {
 
 		this.currFilter = this.filterVars[0];
 		this.currFilterVar = this.filterVars[0].variable;
-
-		
-
-		// let tooltipSettings = { "id":id, "tooltipVars":tooltipVars, tooltipImageVar:"tooltipImageVar", "imageFolderId":imageFolderId, "tooltipScrollable":tooltipScrollable };
-		// this.tooltip = new Tooltip(tooltipSettings);
 	}
 
 	render(data) {
@@ -36,17 +31,7 @@ export class CategoryBreakdown {
 		console.log(this.data);
 		this.setDimensions();
 		
-
 		this.buildGraph();
-		// this.sortData();
-		
-
-		// this.buildGraph();
-		
-		// if (!this.isSubComponent) {
-		// 	this.setLegend();
-		// }
-		
 	}
 
 	getDataNest(data) {
@@ -112,7 +97,6 @@ export class CategoryBreakdown {
 	}
 
 	buildGraph() {
-
 		this.categoryContainers = this.chartContainer.selectAll("div")
 			.data(this.data)
 			.enter().append("div")
@@ -172,22 +156,6 @@ export class CategoryBreakdown {
 			.attr("y", this.dotSettings.width/2)
 			.attr("fill", (d) => { return this.colorScale(d[this.currFilterVar]); })
 			.text((d) => { return d[this.labelVar.variable]; });
-
-		// this.cells = this.svg.selectAll("rect")
-		// 	.data(data)
-		// 	.enter().append("rect")
-		// 	.attr("width", this.dotSettings.width)
-		//     .attr("height", this.dotSettings.width)
-		//     .attr("x", (d, i) => { return this.calcX(d, i); })
-		//     .attr("y", (d, i) => { return this.calcY(i); })
-		//     .attr("fill", (d) => {
-		//     	return this.colorScale(d[this.currFilterVar]);
-		//     })
-		//     .style("cursor", this.eventSettings.click ? "pointer" : "auto")
-		//     .attr("class", (d) => { return d[this.currFilterVar]; })
-		//     .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event); })
-		//     .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); })
-		//     .on("click", (d) => { return this.eventSettings.click && this.eventSettings.click.handlerFunc ? this.eventSettings.click.handlerFunc(d.id) : null; });
 	}
 
 	calcX(i) {
