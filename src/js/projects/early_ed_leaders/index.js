@@ -68,6 +68,8 @@ let vizSettingsList = [
 		tooltipVars: [ variables.state, variables.professional_learning, variables.joint_professional_learning, variables.formal_evaluation, variables.cd_qris_different_tiers, variables.cd_qris_different_tiers_notes, variables.cd_formal_evaluation],
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
 		filterGroupSettings: {"hidden": false},
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+
 	},
 	{
 		id: "#early-ed-leaders__retention-map", 
@@ -80,6 +82,7 @@ let vizSettingsList = [
 		tooltipVars: [ variables.state, variables.track_principal_turnover, variables.avg_salary, variables.benefits, variables.diversity_incentives, variables.cd_avg_salary ],
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
 		filterGroupSettings: {"hidden": false},
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }		
 	},
 	{
 		id: "#early-ed-leaders__min-ed-requirement", 
@@ -89,6 +92,8 @@ let vizSettingsList = [
 		filterVars: [ variables.min_ed_requirement ],
 		labelVar: variables.state_abbrev,
 		tooltipVars: [ variables.state ],
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+
 	},
 	{
 		id: "#early-ed-leaders__license-grade-span", 
@@ -109,6 +114,7 @@ let vizSettingsList = [
 		filterVars: [ variables.higher_ed_coursework ],
 		labelVar: variables.state_abbrev,
 		tooltipVars: [ variables.state ],
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 	},
 	{
 		id: "#early-ed-leaders__clinical-experience", 
@@ -118,6 +124,8 @@ let vizSettingsList = [
 		filterVars: [ variables.clinical_experience ],
 		labelVar: variables.state_abbrev,
 		tooltipVars: [ variables.state ],
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+
 	},
 	{
 		id: "#early-ed-leaders__prior-teaching-experience", 
@@ -127,6 +135,7 @@ let vizSettingsList = [
 		filterVars: [ variables.prior_teaching_experience ],
 		labelVar: variables.state_abbrev,
 		tooltipVars: [ variables.state ],
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 	},
 	{
 		id: "#early-ed-leaders__professional-learning", 
@@ -136,6 +145,7 @@ let vizSettingsList = [
 		filterVars: [ variables.professional_learning ],
 		labelVar: variables.state_abbrev,
 		tooltipVars: [ variables.state ],
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 	},
 	{
 		id: "#early-ed-leaders__joint-professional-learning", 
@@ -145,6 +155,7 @@ let vizSettingsList = [
 		filterVars: [ variables.joint_professional_learning ],
 		labelVar: variables.state_abbrev,
 		tooltipVars: [ variables.state ],
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 	},
 	{
 		id: "#early-ed-leaders__track-principal-turnover", 
@@ -154,6 +165,7 @@ let vizSettingsList = [
 		filterVars: [ variables.track_principal_turnover ],
 		labelVar: variables.state_abbrev,
 		tooltipVars: [ variables.state ],
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 	},
 	{
 		id: "#early-ed-leaders__benefits", 
@@ -163,6 +175,7 @@ let vizSettingsList = [
 		filterVars: [ variables.benefits ],
 		labelVar: variables.state_abbrev,
 		tooltipVars: [ variables.state ],
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 	},
 	{
 		id: "#early-ed-leaders__cd-ed-training-requirement", 
@@ -172,6 +185,7 @@ let vizSettingsList = [
 		filterVars: [ variables.cd_ed_training_requirement ],
 		labelVar: variables.state_abbrev,
 		tooltipVars: [ variables.state ],
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 	},
 	{
 		id: "#early-ed-leaders__cd-ed-training-requirement", 
@@ -181,8 +195,10 @@ let vizSettingsList = [
 		filterVars: [ variables.cd_ed_training_requirement ],
 		labelVar: variables.state_abbrev,
 		tooltipVars: [ variables.state ],
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 	},
 	{
+		// add click to profile functionality and split charts
 		id: "#early-ed-leaders__avg-salary",
 		primaryDataSheet: "states",
 		vizType: "comparative_dot_histogram",
@@ -190,6 +206,7 @@ let vizSettingsList = [
 		labelVar: variables.state_abbrev,
 		titleVar: variables.state,
 		legendSettings: {"orientation": "horizontal-center"},
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 	}
 ]
 
