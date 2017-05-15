@@ -1,7 +1,12 @@
 .comparative-dot-histogram {
 	.tick > text {
 		font-weight: normal;
-		fill: palette-get(na-black-30);
+		fill: palette-get(na-black-70);
 		font-size: 12px;
+	}
+
+	.axis path {
+		stroke: palette-get(na-black-40);
+		stroke-opacity: .7;
 	}
 }

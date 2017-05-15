@@ -4,6 +4,10 @@ import * as global from "./../utilities.js";
 
 import { formatValue } from "../helper_functions/format_value.js";
 
+import { colors } from "../helper_functions/colors.js";
+
+import { questionSVGPath } from "../utilities/icons.js";
+
 let d3 = require("d3");
 
 let continuousLegendHeight = 20,
@@ -11,21 +15,11 @@ let continuousLegendHeight = 20,
 
 export class Legend {
 	constructor(legendSettings) {
-		let {id, markerSettings, showTitle, showValCounts, orientation, customTitleExpression, annotation, disableValueToggling, openEnded, customLabels} = legendSettings;
-		this.id = id;
-		this.showTitle = showTitle;
-		this.customTitleExpression = customTitleExpression;
-		this.markerSettings = markerSettings;
-		this.orientation = orientation;
-		this.disableValueToggling = disableValueToggling;
-		this.openEnded = openEnded;
-		this.customLabels = customLabels;
-		this.showValCounts = showValCounts;
-		this.annotation = annotation;
+		Object.assign(this, legendSettings);
 	}
 
 	render(legendSettings) {
-		this.legendSettings = legendSettings;
+		Object.assign(this, legendSettings);
 		if (this.legend) {
 			this.legend.remove();
 		}
@@ -39,9 +33,9 @@ export class Legend {
 
 			let title;
 			if (this.customTitleExpression) {
-				title = this.customTitleExpression.replace("<<>>",legendSettings.title);
+				title = this.customTitleExpression.replace("<<>>",this.title);
 			} else {
-				title = legendSettings.title;
+				title = this.title;
 			}
 
 			this.titleDiv = titleContainer.append("h3")
@@ -53,6 +47,15 @@ export class Legend {
 					.attr("class", "legend__annotation")
 					.text(this.annotation);
 			}
+			
+			if (this.varDescriptionData) {
+				let varDescriptionText = this.getVarDescriptionText();
+				console.log(varDescriptionText)
+				if (varDescriptionText) {
+					console.log("showing description!");
+					this.appendVarDescription(varDescriptionText);
+				}
+			}
 
 		}
 
@@ -60,8 +63,6 @@ export class Legend {
 			.attr("class", "legend__cell-container");
 
 		this.colorScale = legendSettings.colorScale;
-
-		
 
 		if (legendSettings.scaleType == "linear" || legendSettings.scaleType == "logarithmic") {
 			this.renderContinuous(legendSettings);
@@ -233,6 +234,46 @@ export class Legend {
 				cellText.text(this.colorScale.domain()[i] ? this.colorScale.domain()[i] : "null" );
 			}
 		}
+	}
+
+	appendVarDescription(varDescriptionText) {
+		console.log("appending again!");
+		this.titleDiv.append("div")
+			.classed("legend__description-icon", true)
+			.append("svg")
+			.attr("viewBox", "0 0 16 16")
+			.attr("width", "16px")
+			.attr("height", "16px")
+			.on("mouseover", () => { this.showVarDescription(d3.event); })
+			.on("mouseout", () => { this.varDescriptionPopup.classed("hidden", true); })
+			.append("g")
+			.attr("fill", colors.grey.medium)
+			.attr("transform", "translate(-48, -432)")
+			.append("path")
+			.attr("d", questionSVGPath);
+
+		this.varDescriptionPopup = d3.select("body").append("div")
+			.attr("class", "legend__description-popup")
+			.classed("hidden", true)
+			.text(varDescriptionText)
+	}
+
+	showVarDescription(eventObject) {
+		this.varDescriptionPopup
+			.classed("hidden", false)
+			.attr('style', 'left:' + (eventObject.pageX - 70) + 'px; top:' + (eventObject.pageY + 10) + 'px');
+	}
+
+	getVarDescriptionText() {
+		let retVal;
+
+		this.varDescriptionData.forEach((d) => {
+			if (d.variable === this.varDescriptionVariable) {
+				retVal = d.description;
+			}
+		})
+
+		return retVal;
 	}
 
 	toggleValsShown(valToggled) {
