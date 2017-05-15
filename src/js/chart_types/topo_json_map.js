@@ -53,7 +53,7 @@ export class TopoJsonMap {
 		this.g = this.svg.append("g");
 
 		if (this.tooltipVars) {
-			let tooltipSettings = { "id":this.id, "tooltipVars":this.tooltipVars }
+			let tooltipSettings = { "id":this.id, "tooltipVars":this.tooltipVars, "showOnlyVars":this.tooltipShowOnly }
 
 			this.tooltip = new Tooltip(tooltipSettings);
 		}
@@ -188,7 +188,7 @@ export class TopoJsonMap {
 		    .style("stroke", this.stroke.color || "white")
 		    .style("stroke-width", this.stroke.width || "1")
 		    .style("stroke-opacity", this.stroke.opacity || "1")
-		    .style("cursor", this.zoomable || this.interaction == "click" ? "pointer" : "auto")
+		    .style("cursor", this.zoomable || this.interaction == "click" || this.clickToProfile ? "pointer" : "auto")
 		    .on("mouseover", (d, index, paths) => { return this.interaction != "click" ? this.mouseover(d, paths[index], d3.event) : null })
 		    .on("mouseout", (d, index, paths) => { return this.interaction != "click" ? this.mouseout(paths[index]) : null })
 		    .on("click", (d, index, paths) => {
@@ -196,6 +196,8 @@ export class TopoJsonMap {
 		    		return this.zoom(d, paths[index], d3.event);
 		    	} else if (this.interaction == "click") {
 		    		return this.clicked(d, paths[index], d3.event);
+		    	} else if (this.clickToProfile) {
+		    		window.location.href = this.clickToProfile.url + d.data[this.clickToProfile.variable].replace(" ", "_");
 		    	}
 		    });
 
@@ -342,13 +344,13 @@ export class TopoJsonMap {
 			.style("stroke", this.stroke.hoverColor || "white")
 			.style("stroke-width", this.stroke.hoverWidth || "3")
 			.style("fill-opacity", this.stroke.hoverOpacity || "1");
-		
+
 		let mousePos = [];
 		mousePos[0] = eventObject.pageX;
 		mousePos[1] = eventObject.pageY;
 		this.dashboardChangeFunc ? this.dashboardChangeFunc(datum.id, this) : null;
 		
-		this.tooltip ? this.tooltip.show(datum.data, mousePos) : null;
+		this.tooltip ? this.tooltip.show(datum.data, mousePos, this.filterVars[this.currFilterIndex], d3.select(path).style("fill")) : null;
 	}
 
 	mouseout(path) {

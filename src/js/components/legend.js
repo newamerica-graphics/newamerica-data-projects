@@ -20,6 +20,7 @@ export class Legend {
 
 	render(legendSettings) {
 		Object.assign(this, legendSettings);
+		console.log(this);
 		if (this.legend) {
 			this.legend.remove();
 		}
@@ -62,16 +63,14 @@ export class Legend {
 		this.cellContainer = this.legend.append("div")
 			.attr("class", "legend__cell-container");
 
-		this.colorScale = legendSettings.colorScale;
-
-		if (legendSettings.scaleType == "linear" || legendSettings.scaleType == "logarithmic") {
-			this.renderContinuous(legendSettings);
+		if (this.scaleType == "linear" || this.scaleType == "logarithmic") {
+			this.renderContinuous();
 		} else {
-			this.renderDiscrete(legendSettings);
+			this.renderDiscrete();
 		}
 	}
 
-	renderContinuous(legendSettings) {
+	renderContinuous() {
 		this.legendWidth = $(this.id).width();
 		if (this.legendWidth > 500) {
 			this.legendWidth = 500;
@@ -88,7 +87,7 @@ export class Legend {
 			.attr("y", 0)
 			.style("fill", "url(#linear-gradient)");
 
-		this.addLabels(legendSettings.scaleType);
+		this.addLabels();
 	}
 
 	defineGradient() {
@@ -113,10 +112,10 @@ export class Legend {
 		    .attr("stop-color", this.colorScale.range()[1]);
 	}
 
-	addLabels(scaleType) {
+	addLabels() {
 		let legendXScale;
 		//Set scale for x-axis
-		if (scaleType == "logarithmic") {
+		if (this.scaleType == "logarithmic") {
 			legendXScale = d3.scaleLog();
 		} else {
 			legendXScale = d3.scaleLinear();
@@ -138,8 +137,8 @@ export class Legend {
 			.call(legendXAxis);
 	}
 
-	renderDiscrete(legendSettings) {
-		let {scaleType, format, colorScale, valChangedFunction, valCounts} = legendSettings;
+	renderDiscrete() {
+		let {scaleType, format, colorScale, valChangedFunction, valCounts} = this;
 
 		this.cellList ? this.cellList.remove() : null;
 		this.cellList = this.cellContainer.append("ul")
@@ -167,7 +166,7 @@ export class Legend {
 			}
 			this.appendCellMarker(cell, i);
 			valCounts ? this.appendValCount(cell, i, valCounts) : null;
-			this.appendCellText(cell, i, scaleType, format);
+			this.appendCellText(cell, i);
 			
 			this.legendCellDivs[i] = cell;
 		}
@@ -213,21 +212,21 @@ export class Legend {
 			.text(valCounts.get(valKey));
 	}
 
-	appendCellText(cell, i, scaleType, format) {
+	appendCellText(cell, i) {
 		let cellText = cell.append("h5")
 			.classed("legend__cell__label", true);
 
-		if (scaleType == "quantize") {
+		if (this.scaleType == "quantize") {
 			if (this.openEnded && i == this.colorScale.range().length - 1) {
-				cellText.text(formatValue(Math.ceil(this.calcBinVal(i, this.dataMin, this.binInterval)), format) + "+");
+				cellText.text(formatValue(Math.ceil(this.calcBinVal(i, this.dataMin, this.binInterval)), this.format) + "+");
 				return;
 			}
-			if (format == "percent") {
-				cellText.text(formatValue(Math.ceil(100*this.calcBinVal(i, this.dataMin, this.binInterval))/100, format) + " to " + formatValue(Math.floor(100*this.calcBinVal(i+1, this.dataMin, this.binInterval))/100, format));
+			if (this.format == "percent") {
+				cellText.text(formatValue(Math.ceil(100*this.calcBinVal(i, this.dataMin, this.binInterval))/100, this.format) + " to " + formatValue(Math.floor(100*this.calcBinVal(i+1, this.dataMin, this.binInterval))/100, this.format));
 			} else {
-				cellText.text(formatValue(Math.ceil(this.calcBinVal(i, this.dataMin, this.binInterval)), format) + " to " + formatValue(Math.floor(this.calcBinVal(i+1, this.dataMin, this.binInterval)), format));
+				cellText.text(formatValue(Math.ceil(this.calcBinVal(i, this.dataMin, this.binInterval)), this.format) + " to " + formatValue(Math.floor(this.calcBinVal(i+1, this.dataMin, this.binInterval)), this.format));
 			}
-		} else if (scaleType == "categorical") {
+		} else if (this.scaleType == "categorical") {
 			if (this.customLabels) {
 				cellText.text(this.customLabels[i]);
 			} else {
@@ -309,7 +308,7 @@ export class Legend {
 	}
 
 	resize() {
-		this.render(this.legendSettings);
+		this.render();
 	}
 
 }
