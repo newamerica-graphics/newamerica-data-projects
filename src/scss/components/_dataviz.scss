@@ -1,7 +1,7 @@
 .dataviz {
 	position: relative;
+
+	&__chart-area {
+		min-height: 200px;
+	}
 }
-/*
-.chart-wrapper {
-	overflow-x: scroll;
-}*/

@@ -9,13 +9,15 @@ import { formatValue } from "../helper_functions/format_value.js";
 
 export class Tooltip {
 	constructor(vizSettings) {
-		let {id, tooltipVars, tooltipImageVar, imageFolderId, tooltipScrollable} = vizSettings;
+		let {id, tooltipVars, tooltipImageVar, imageFolderId, tooltipScrollable, showOnlyVars} = vizSettings;
 		//removes first variable to be used as title
 		this.titleVar = tooltipVars[0].variable;
 		this.tooltipVars = tooltipVars.slice(1);
 		this.tooltipImageVar = tooltipImageVar;
 		this.imageFolderId = imageFolderId;
 		this.tooltipScrollable = tooltipScrollable;
+		this.showOnlyVars = showOnlyVars;
+		this.tooltipCategoryTitles = {};
 
 		this.isHovered = false;
 
@@ -71,7 +73,7 @@ export class Tooltip {
 		for (let category of categoryNest) {
 			whichContainer = contentContainer;
 			if (category.key != "undefined" && showCategories) {
-				contentContainer.append("h5")
+				this.tooltipCategoryTitles[category.key] = contentContainer.append("h5")
 					.classed("tooltip__category__name", true)
 					.text(category.key);
 
@@ -96,7 +98,7 @@ export class Tooltip {
 		}
 	}
 
-	show(d, mouse) {
+	show(d, mouse, currFilterVar, filterColor) {
 		if ($(window).width() < 450) {
 			return;
 		}
@@ -121,12 +123,15 @@ export class Tooltip {
 			let varFormat = variable.format;
 			let value = d[varName] ? formatValue(d[varName], varFormat) : null;
 
-			if (value) {
+			if (value && (this.showOnlyVars == null || (this.showOnlyVars == "same category" && variable.category == currFilterVar.category))) {
 				this.valueFields[varName].label
-					.style("display", "inline-block");
+					.style("display", "inline-block")
+					.classed("active", variable.variable == currFilterVar.variable)
+					.style("border-color", filterColor);
 
 				this.valueFields[varName].value
 					.style("display", "inline-block")
+					.classed("active", variable.variable == currFilterVar.variable)
 					.text(value);
 			} else  {
 				this.valueFields[varName].label
@@ -135,6 +140,16 @@ export class Tooltip {
 				this.valueFields[varName].value
 					.style("display", "none");
 
+			}
+		}
+		
+		if (this.showOnlyVars == "same category") {
+			for (let categoryTitle of Object.keys(this.tooltipCategoryTitles)) {
+				if (categoryTitle == currFilterVar.category) {
+					this.tooltipCategoryTitles[categoryTitle].style("display", "block");
+				} else {
+					this.tooltipCategoryTitles[categoryTitle].style("display", "none");
+				}
 			}
 		}
 

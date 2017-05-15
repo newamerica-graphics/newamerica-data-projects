@@ -20,38 +20,25 @@ let topojson = require("topojson");
 
 export class TopoJsonMap {
 	constructor(vizSettings) {
-		let {id, tooltipVars, filterVars, primaryDataSheet, geometryVar, geometryType, stroke, legendSettings, filterGroupSettings, zoomable, defaultFill, valChangedFunction, filterChangeFunction, interaction, mouseoverOnlyIfValue, addSmallStateInsets } = vizSettings;
-
-		this.id = id;
-		this.filterVars = filterVars;
-		this.primaryDataSheet = primaryDataSheet;
-		this.geometryType = geometryType;
-		this.geometryVar = geometryVar;
-		this.stroke = stroke;
-		this.legendSettings = legendSettings;
-		this.filterGroupSettings = filterGroupSettings;
+		Object.assign(this, vizSettings);
+		
 		this.currFilterIndex = 0;
 		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
-		this.zoomable = zoomable;
-		this.dashboardChangeFunc = filterChangeFunction;
-		this.interaction = interaction;
-		this.mouseoverOnlyIfValue = mouseoverOnlyIfValue;
-		this.addSmallStateInsets = addSmallStateInsets;
-
+		
 		if (this.interaction == "click") { this.currClicked == null}; 
 
-		this.defaultFill = defaultFill ? defaultFill : "#fff";
+		this.defaultFill = this.defaultFill ? this.defaultFill : "#fff";
 
-		this.setGeometry(geometryType);
+		this.setGeometry(this.geometryType);
 
-		if (filterGroupSettings && !filterGroupSettings.hidden) {
-			this.filterGroup = filterVars.length > 1 ? new FilterGroup(vizSettings) : null;
+		if (this.filterGroupSettings && !this.filterGroupSettings.hidden) {
+			this.filterGroup = this.filterVars.length > 1 ? new FilterGroup(vizSettings) : null;
 		}
 
-		let mapContainer = d3.select(id)
+		let mapContainer = d3.select(this.id)
 			.append("div");
 
-		if (zoomable) {
+		if (this.zoomable) {
 			this.zoomOutPrompt = mapContainer
 				.append("div")
 				.attr("class", "zoom-out-prompt")
@@ -65,17 +52,17 @@ export class TopoJsonMap {
 
 		this.g = this.svg.append("g");
 
-		if (tooltipVars) {
-			let tooltipSettings = { "id":id, "tooltipVars":tooltipVars }
+		if (this.tooltipVars) {
+			let tooltipSettings = { "id":this.id, "tooltipVars":this.tooltipVars, "showOnlyVars":this.tooltipShowOnly }
 
 			this.tooltip = new Tooltip(tooltipSettings);
 		}
 
-		if (legendSettings) {
-			this.legendSettings.id = id;
+		if (this.legendSettings) {
+			this.legendSettings.id = this.id;
 			this.legendSettings.markerSettings = { shape:"circle", size:10 };
 
-			this.legend = new Legend(legendSettings);
+			this.legend = new Legend(this.legendSettings);
 		}
 
 		this.svgDefs = this.svg.append("defs");
@@ -147,7 +134,7 @@ export class TopoJsonMap {
 
 	render(data) {
 		this.data = data[this.primaryDataSheet];
-		console.log(data);
+		this.varDescriptionData = this.varDescriptionSheet ? data[this.varDescriptionSheet] : null;
 
 		// this.processData();
 		this.setScale();
@@ -201,7 +188,7 @@ export class TopoJsonMap {
 		    .style("stroke", this.stroke.color || "white")
 		    .style("stroke-width", this.stroke.width || "1")
 		    .style("stroke-opacity", this.stroke.opacity || "1")
-		    .style("cursor", this.zoomable || this.interaction == "click" ? "pointer" : "auto")
+		    .style("cursor", this.zoomable || this.interaction == "click" || this.clickToProfile ? "pointer" : "auto")
 		    .on("mouseover", (d, index, paths) => { return this.interaction != "click" ? this.mouseover(d, paths[index], d3.event) : null })
 		    .on("mouseout", (d, index, paths) => { return this.interaction != "click" ? this.mouseout(paths[index]) : null })
 		    .on("click", (d, index, paths) => {
@@ -209,6 +196,8 @@ export class TopoJsonMap {
 		    		return this.zoom(d, paths[index], d3.event);
 		    	} else if (this.interaction == "click") {
 		    		return this.clicked(d, paths[index], d3.event);
+		    	} else if (this.clickToProfile) {
+		    		window.location.href = this.clickToProfile.url + d.data[this.clickToProfile.variable].replace(" ", "_");
 		    	}
 		    });
 
@@ -257,25 +246,10 @@ export class TopoJsonMap {
 		this.legendSettings.scaleType = this.filterVars[this.currFilterIndex].scaleType;
 		this.legendSettings.colorScale = this.colorScale;
 		this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
+		this.legendSettings.varDescriptionData = this.varDescriptionData;
+		this.legendSettings.varDescriptionVariable = this.filterVars[this.currFilterIndex].variable;
 
-		// let { valCountType, showValCounts } = this.legendSettings;
-		// let dataLength = this.data.length;
-		
-		// if ( showValCounts ) {
-		// 	this.legendSettings.valCounts = d3.nest()
-		// 		.key((d) => { return d[this.currFilterVar]; })
-		// 		.rollup(function(v) {
-		// 			if (valCountType == "percent") {
-		// 				return formatValue(v.length/dataLength, "percent"); 
-		// 			} else if (valCountType == "both") {
-		// 				return v.length + " (" + formatValue(v.length/dataLength, "percent") + ")";
-		// 			} else {
-		// 				return v.length;
-		// 			}
-					
-		// 		})
-		// 		.map(this.data);
-		// }
+		console.log(this.varDescriptionData);
 
 		this.legend.render(this.legendSettings);
 	}
@@ -370,13 +344,13 @@ export class TopoJsonMap {
 			.style("stroke", this.stroke.hoverColor || "white")
 			.style("stroke-width", this.stroke.hoverWidth || "3")
 			.style("fill-opacity", this.stroke.hoverOpacity || "1");
-		
+
 		let mousePos = [];
 		mousePos[0] = eventObject.pageX;
 		mousePos[1] = eventObject.pageY;
 		this.dashboardChangeFunc ? this.dashboardChangeFunc(datum.id, this) : null;
 		
-		this.tooltip ? this.tooltip.show(datum.data, mousePos) : null;
+		this.tooltip ? this.tooltip.show(datum.data, mousePos, this.filterVars[this.currFilterIndex], d3.select(path).style("fill")) : null;
 	}
 
 	mouseout(path) {

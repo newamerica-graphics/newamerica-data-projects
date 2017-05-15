@@ -150,7 +150,11 @@ export class CategoryBreakdown {
 			.attr("transform", (d, i) => { return "translate(" + this.calcX(i) + "," + this.calcY(i) + ")"; })
 			.on("mouseover", (d) => { return this.mouseover(d); })
 		    .on("mouseout", () => { return this.mouseout(); })
-		    .on("click", (d) => { return this.eventSettings.click && this.eventSettings.click.handlerFunc ? this.eventSettings.click.handlerFunc(d.id) : null; });
+		    .on("click", (d) => {
+		    	if (this.clickToProfile) {
+		    		window.location.href = this.clickToProfile.url + d[this.clickToProfile.variable].replace(" ", "_");
+		    	}
+		    })
 
 		this.dataCircles = this.dataG.append("circle")
 			.attr("class", "category-breakdown__data__circle")

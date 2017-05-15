@@ -84,7 +84,7 @@
 		}
 
 		&__list {
-			padding-bottom: 10px;
+			/*padding-bottom: 10px;*/
 			&-item {
 				line-height: 1.4;
 				/*padding-left: 10px;*/
@@ -99,16 +99,26 @@
 				font-size: 14px;
 				
 				margin-bottom: 0px;
+
+
 			}
 			&__label {
 				line-height: 1.5;
 				color: palette-get(na-black);
+
+				&.active {
+					border-bottom: 2px solid;
+				}
 			}
 
 			&__value {
 				padding-left: 5px;
 				color: palette-get(na-black-40);
 				line-height: 1.2;
+
+				&.active {
+					font-weight: bold;
+				}
 			}
 		}
 	}
