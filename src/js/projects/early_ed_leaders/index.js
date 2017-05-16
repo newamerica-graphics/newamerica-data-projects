@@ -57,190 +57,190 @@ let vizSettingsList = [
 		filterGroupSettings: {"hidden": false},
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 	},
-	{
-		id: "#early-ed-leaders__in-service-map", 
-		vizType: "topo_json_map",
-		primaryDataSheet: "states",
-		geometryType: "states",
-		geometryVar: variables.state_id,
-		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
-		filterVars: [ variables.professional_learning, variables.joint_professional_learning, variables.cd_qris_different_tiers],
-		tooltipVars: [ variables.state, variables.professional_learning, variables.joint_professional_learning, variables.formal_evaluation, variables.cd_qris_different_tiers, variables.cd_qris_different_tiers_notes, variables.cd_formal_evaluation],
-		legendSettings: {"orientation": "vertical-right", "showTitle": true},
-		filterGroupSettings: {"hidden": false},
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+	// {
+	// 	id: "#early-ed-leaders__in-service-map", 
+	// 	vizType: "topo_json_map",
+	// 	primaryDataSheet: "states",
+	// 	geometryType: "states",
+	// 	geometryVar: variables.state_id,
+	// 	stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
+	// 	filterVars: [ variables.professional_learning, variables.joint_professional_learning, variables.cd_qris_different_tiers],
+	// 	tooltipVars: [ variables.state, variables.professional_learning, variables.joint_professional_learning, variables.formal_evaluation, variables.cd_qris_different_tiers, variables.cd_qris_different_tiers_notes, variables.cd_formal_evaluation],
+	// 	legendSettings: {"orientation": "vertical-right", "showTitle": true},
+	// 	filterGroupSettings: {"hidden": false},
+	// 	clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 
-	},
-	{
-		id: "#early-ed-leaders__retention-map", 
-		vizType: "topo_json_map",
-		primaryDataSheet: "states",
-		geometryType: "states",
-		geometryVar: variables.state_id,
-		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
-		filterVars: [ variables.track_principal_turnover, variables.avg_salary, variables.benefits, variables.cd_avg_salary],
-		tooltipVars: [ variables.state, variables.track_principal_turnover, variables.avg_salary, variables.benefits, variables.diversity_incentives, variables.cd_avg_salary ],
-		legendSettings: {"orientation": "vertical-right", "showTitle": true},
-		filterGroupSettings: {"hidden": false},
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }		
-	},
-	{
-		id: "#early-ed-leaders__min-ed-requirement", 
-		vizType: "category_breakdown",
-		primaryDataSheet: "states",
-		dotSettings: { "width": 30, "offset": 5},
-		filterVars: [ variables.min_ed_requirement ],
-		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+	// },
+	// {
+	// 	id: "#early-ed-leaders__retention-map", 
+	// 	vizType: "topo_json_map",
+	// 	primaryDataSheet: "states",
+	// 	geometryType: "states",
+	// 	geometryVar: variables.state_id,
+	// 	stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
+	// 	filterVars: [ variables.track_principal_turnover, variables.avg_salary, variables.benefits, variables.cd_avg_salary],
+	// 	tooltipVars: [ variables.state, variables.track_principal_turnover, variables.avg_salary, variables.benefits, variables.diversity_incentives, variables.cd_avg_salary ],
+	// 	legendSettings: {"orientation": "vertical-right", "showTitle": true},
+	// 	filterGroupSettings: {"hidden": false},
+	// 	clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }		
+	// },
+	// {
+	// 	id: "#early-ed-leaders__min-ed-requirement", 
+	// 	vizType: "category_breakdown",
+	// 	primaryDataSheet: "states",
+	// 	dotSettings: { "width": 30, "offset": 5},
+	// 	filterVars: [ variables.min_ed_requirement ],
+	// 	labelVar: variables.state_abbrev,
+	// 	tooltipVars: [ variables.state ],
+	// 	clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 
-	},
-	{
-		id: "#early-ed-leaders__license-grade-span", 
-		vizType: "category_breakdown",
-		primaryDataSheet: "states",
-		dotSettings: { "width": 30, "offset": 5},
-		filterVars: [ variables.license_grade_span ],
-		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+	// },
+	// {
+	// 	id: "#early-ed-leaders__license-grade-span", 
+	// 	vizType: "category_breakdown",
+	// 	primaryDataSheet: "states",
+	// 	dotSettings: { "width": 30, "offset": 5},
+	// 	filterVars: [ variables.license_grade_span ],
+	// 	labelVar: variables.state_abbrev,
+	// 	tooltipVars: [ variables.state ],
+	// 	clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 
-	},
-	{
-		id: "#early-ed-leaders__higher-ed-coursework", 
-		vizType: "category_breakdown",
-		primaryDataSheet: "states",
-		dotSettings: { "width": 30, "offset": 5},
-		filterVars: [ variables.higher_ed_coursework ],
-		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
-	},
-	{
-		id: "#early-ed-leaders__clinical-experience", 
-		vizType: "category_breakdown",
-		primaryDataSheet: "states",
-		dotSettings: { "width": 30, "offset": 5},
-		filterVars: [ variables.clinical_experience ],
-		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+	// },
+	// {
+	// 	id: "#early-ed-leaders__higher-ed-coursework", 
+	// 	vizType: "category_breakdown",
+	// 	primaryDataSheet: "states",
+	// 	dotSettings: { "width": 30, "offset": 5},
+	// 	filterVars: [ variables.higher_ed_coursework ],
+	// 	labelVar: variables.state_abbrev,
+	// 	tooltipVars: [ variables.state ],
+	// 	clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+	// },
+	// {
+	// 	id: "#early-ed-leaders__clinical-experience", 
+	// 	vizType: "category_breakdown",
+	// 	primaryDataSheet: "states",
+	// 	dotSettings: { "width": 30, "offset": 5},
+	// 	filterVars: [ variables.clinical_experience ],
+	// 	labelVar: variables.state_abbrev,
+	// 	tooltipVars: [ variables.state ],
+	// 	clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 
-	},
-	{
-		id: "#early-ed-leaders__prior-teaching-experience", 
-		vizType: "category_breakdown",
-		primaryDataSheet: "states",
-		dotSettings: { "width": 30, "offset": 5},
-		filterVars: [ variables.prior_teaching_experience ],
-		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
-	},
-	{
-		id: "#early-ed-leaders__cd-ed-training-requirement", 
-		vizType: "category_breakdown",
-		primaryDataSheet: "states",
-		dotSettings: { "width": 30, "offset": 5},
-		filterVars: [ variables.cd_ed_training_requirement ],
-		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+	// },
+	// {
+	// 	id: "#early-ed-leaders__prior-teaching-experience", 
+	// 	vizType: "category_breakdown",
+	// 	primaryDataSheet: "states",
+	// 	dotSettings: { "width": 30, "offset": 5},
+	// 	filterVars: [ variables.prior_teaching_experience ],
+	// 	labelVar: variables.state_abbrev,
+	// 	tooltipVars: [ variables.state ],
+	// 	clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+	// },
+	// {
+	// 	id: "#early-ed-leaders__cd-ed-training-requirement", 
+	// 	vizType: "category_breakdown",
+	// 	primaryDataSheet: "states",
+	// 	dotSettings: { "width": 30, "offset": 5},
+	// 	filterVars: [ variables.cd_ed_training_requirement ],
+	// 	labelVar: variables.state_abbrev,
+	// 	tooltipVars: [ variables.state ],
+	// 	clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 
-	},
-	{
-		id: "#early-ed-leaders__cd-prior-experience", 
-		vizType: "category_breakdown",
-		primaryDataSheet: "states",
-		dotSettings: { "width": 30, "offset": 5},
-		filterVars: [ variables.cd_prior_experience ],
-		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+	// },
+	// {
+	// 	id: "#early-ed-leaders__cd-prior-experience", 
+	// 	vizType: "category_breakdown",
+	// 	primaryDataSheet: "states",
+	// 	dotSettings: { "width": 30, "offset": 5},
+	// 	filterVars: [ variables.cd_prior_experience ],
+	// 	labelVar: variables.state_abbrev,
+	// 	tooltipVars: [ variables.state ],
+	// 	clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 
-	},
-	{
-		id: "#early-ed-leaders__cd-has-credential", 
-		vizType: "category_breakdown",
-		primaryDataSheet: "states",
-		dotSettings: { "width": 30, "offset": 5},
-		filterVars: [ variables.cd_has_credential ],
-		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+	// },
+	// {
+	// 	id: "#early-ed-leaders__cd-has-credential", 
+	// 	vizType: "category_breakdown",
+	// 	primaryDataSheet: "states",
+	// 	dotSettings: { "width": 30, "offset": 5},
+	// 	filterVars: [ variables.cd_has_credential ],
+	// 	labelVar: variables.state_abbrev,
+	// 	tooltipVars: [ variables.state ],
+	// 	clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 
-	},
-	{
-		id: "#early-ed-leaders__professional-learning", 
-		vizType: "category_breakdown",
-		primaryDataSheet: "states",
-		dotSettings: { "width": 30, "offset": 5},
-		filterVars: [ variables.professional_learning ],
-		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
-	},
-	{
-		id: "#early-ed-leaders__joint-professional-learning", 
-		vizType: "category_breakdown",
-		primaryDataSheet: "states",
-		dotSettings: { "width": 30, "offset": 5},
-		filterVars: [ variables.joint_professional_learning ],
-		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
-	},
-	{
-		id: "#early-ed-leaders__cd-qris-different-tiers", 
-		vizType: "category_breakdown",
-		primaryDataSheet: "states",
-		dotSettings: { "width": 30, "offset": 5},
-		filterVars: [ variables.cd_qris_different_tiers ],
-		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
-	},
-	{
-		id: "#early-ed-leaders__track-principal-turnover", 
-		vizType: "category_breakdown",
-		primaryDataSheet: "states",
-		dotSettings: { "width": 30, "offset": 5},
-		filterVars: [ variables.track_principal_turnover ],
-		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
-	},
-	{
-		id: "#early-ed-leaders__benefits", 
-		vizType: "category_breakdown",
-		primaryDataSheet: "states",
-		dotSettings: { "width": 30, "offset": 5},
-		filterVars: [ variables.benefits ],
-		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
-	},
-	{
-		// add click to profile functionality and split charts
-		id: "#early-ed-leaders__avg-salary",
-		primaryDataSheet: "states",
-		vizType: "comparative_dot_histogram",
-		groupingVars: [ variables.avg_salary_continuous_scale ],
-		labelVar: variables.state_abbrev,
-		titleVar: variables.state,
-		legendSettings: {"orientation": "horizontal-center"},
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
-	},
-	{
-		// add click to profile functionality and split charts
-		id: "#early-ed-leaders__cd-avg-salary",
-		primaryDataSheet: "states",
-		vizType: "comparative_dot_histogram",
-		groupingVars: [ variables.cd_avg_salary_continuous_scale ],
-		labelVar: variables.state_abbrev,
-		titleVar: variables.state,
-		legendSettings: {"orientation": "horizontal-center"},
-	}
+	// },
+	// {
+	// 	id: "#early-ed-leaders__professional-learning", 
+	// 	vizType: "category_breakdown",
+	// 	primaryDataSheet: "states",
+	// 	dotSettings: { "width": 30, "offset": 5},
+	// 	filterVars: [ variables.professional_learning ],
+	// 	labelVar: variables.state_abbrev,
+	// 	tooltipVars: [ variables.state ],
+	// 	clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+	// },
+	// {
+	// 	id: "#early-ed-leaders__joint-professional-learning", 
+	// 	vizType: "category_breakdown",
+	// 	primaryDataSheet: "states",
+	// 	dotSettings: { "width": 30, "offset": 5},
+	// 	filterVars: [ variables.joint_professional_learning ],
+	// 	labelVar: variables.state_abbrev,
+	// 	tooltipVars: [ variables.state ],
+	// 	clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+	// },
+	// {
+	// 	id: "#early-ed-leaders__cd-qris-different-tiers", 
+	// 	vizType: "category_breakdown",
+	// 	primaryDataSheet: "states",
+	// 	dotSettings: { "width": 30, "offset": 5},
+	// 	filterVars: [ variables.cd_qris_different_tiers ],
+	// 	labelVar: variables.state_abbrev,
+	// 	tooltipVars: [ variables.state ],
+	// 	clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+	// },
+	// {
+	// 	id: "#early-ed-leaders__track-principal-turnover", 
+	// 	vizType: "category_breakdown",
+	// 	primaryDataSheet: "states",
+	// 	dotSettings: { "width": 30, "offset": 5},
+	// 	filterVars: [ variables.track_principal_turnover ],
+	// 	labelVar: variables.state_abbrev,
+	// 	tooltipVars: [ variables.state ],
+	// 	clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+	// },
+	// {
+	// 	id: "#early-ed-leaders__benefits", 
+	// 	vizType: "category_breakdown",
+	// 	primaryDataSheet: "states",
+	// 	dotSettings: { "width": 30, "offset": 5},
+	// 	filterVars: [ variables.benefits ],
+	// 	labelVar: variables.state_abbrev,
+	// 	tooltipVars: [ variables.state ],
+	// 	clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+	// },
+	// {
+	// 	// add click to profile functionality and split charts
+	// 	id: "#early-ed-leaders__avg-salary",
+	// 	primaryDataSheet: "states",
+	// 	vizType: "comparative_dot_histogram",
+	// 	groupingVars: [ variables.avg_salary_continuous_scale ],
+	// 	labelVar: variables.state_abbrev,
+	// 	titleVar: variables.state,
+	// 	legendSettings: {"orientation": "horizontal-center"},
+	// 	clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+	// },
+	// {
+	// 	// add click to profile functionality and split charts
+	// 	id: "#early-ed-leaders__cd-avg-salary",
+	// 	primaryDataSheet: "states",
+	// 	vizType: "comparative_dot_histogram",
+	// 	groupingVars: [ variables.cd_avg_salary_continuous_scale ],
+	// 	labelVar: variables.state_abbrev,
+	// 	titleVar: variables.state,
+	// 	legendSettings: {"orientation": "horizontal-center"},
+	// }
 ]
 
 let projectSettings = {
