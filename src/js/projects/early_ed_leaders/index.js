@@ -230,7 +230,6 @@ let vizSettingsList = [
 		groupingVars: [ variables.avg_salary_continuous_scale ],
 		labelVar: variables.state_abbrev,
 		titleVar: variables.state,
-		legendSettings: {"orientation": "horizontal-center"},
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 	},
 	{
@@ -240,16 +239,17 @@ let vizSettingsList = [
 		groupingVars: [ variables.cd_avg_salary_continuous_scale ],
 		labelVar: variables.state_abbrev,
 		titleVar: variables.state,
-		legendSettings: {"orientation": "horizontal-center"},
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+
 	},
 	{
 		id: "#early-ed-leaders__avg-salary-combined",
 		primaryDataSheet: "states",
 		vizType: "comparative_dot_histogram",
-		groupingVars: [ variables.avg_salary_continuous_scale, variables.cd_avg_salary_continuous_scale ],
+		groupingVars: [ variables.cd_avg_salary_continuous_scale, variables.avg_salary_continuous_scale ],
 		labelVar: variables.state_abbrev,
 		titleVar: variables.state,
-		legendSettings: {"orientation": "horizontal-center"},
+		legendSettings: {"orientation": "horizontal-center", "showTitle": false},
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 	},
 ]

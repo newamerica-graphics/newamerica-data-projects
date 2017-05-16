@@ -5,10 +5,11 @@ import { colors } from "../helper_functions/colors.js";
 import { formatValue } from "../helper_functions/format_value.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { Tooltip } from "../components/tooltip.js";
+import { Legend } from "../components/legend.js";
 
 const numBins = 25,
 	binList = Array.apply(null, {length: numBins}).map(Number.call, Number),
-	margin = {bottom: 50};
+	margin = {bottom: 20};
 
 export class ComparativeDotHistogram {
 	constructor(vizSettings, imageFolderId) {
@@ -31,6 +32,14 @@ export class ComparativeDotHistogram {
 
 		let tooltipSettings = { "id":this.id, "tooltipVars":[this.titleVar, ...this.groupingVars], "highlightActive":false };
 		this.tooltip = new Tooltip(tooltipSettings);
+
+		if (this.groupingVars.length > 1) {
+			this.legendSettings.id = this.id;
+			this.legendSettings.markerSettings = { shape:"circle", size:10 };
+			this.legendSettings.disableValueToggling = true;
+
+			this.legend = new Legend(this.legendSettings);
+		}
 	}
 
 	render(data) {
@@ -43,6 +52,8 @@ export class ComparativeDotHistogram {
 
 		this.buildGraph();
 		this.setXAxis();
+
+		this.legend ? this.setLegend() : null;
 	}
 
 	processData(data) {
@@ -120,6 +131,11 @@ export class ComparativeDotHistogram {
 			.attr("r", this.circleDiam/2)
 			.on("mouseover", (d) => { return this.mouseover(d, d3.event); })
 			.on("mouseout", () => { return this.mouseout(); })
+			.on("click", (d) => { 
+				if (this.clickToProfile) {
+		    		window.location.href = this.clickToProfile.url + d.title.replace(" ", "_");
+		    	}
+		    });
 
 		this.circleText = this.circleCols.selectAll("text")
 			.data((d) => { return d.values;})
@@ -151,6 +167,21 @@ export class ComparativeDotHistogram {
 					.tickSizeInner(0)
 					.tickFormat((d) => { return formatValue(d, "price"); })
 			);
+	}
+
+	setLegend() {
+		let colorScale = d3.scaleOrdinal()
+			.domain(this.groupingVars.map((d) => {return d.displayName;}))
+			.range(this.groupingVars.map((d) => {return d.color;}));
+
+		console.log(colorScale.range());
+		console.log(colorScale.domain());
+
+		this.legendSettings.format = this.groupingVars[0].format;
+		this.legendSettings.scaleType = "categorical";
+		this.legendSettings.colorScale = colorScale;
+
+		this.legend.render(this.legendSettings);
 	}
 
 	resize() {
