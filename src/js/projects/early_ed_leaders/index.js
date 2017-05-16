@@ -11,14 +11,14 @@ let variables = {
 	license_grade_span: {"variable":"license_grade_span", "displayName":"License Grade Span", "format": "string", "category":"Principals", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Elementary school principal license", "K-12 principal license", "PreK-12 principal license", "Varies based on program"], "customRange":[colors.turquoise.light, colors.blue.light, colors.purple.light, colors.grey.medium]},
 	higher_ed_coursework: {"variable":"higher_ed_coursework", "displayName":"ECE Coursework", "format": "string", "category":"Principals", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Must Offer Early Learning Coursework","Must Offer Child Development Coursework", "No", "No data"], "customRange":[colors.turquoise.light, colors.blue.light, colors.red.light, colors.grey.medium]},
 	clinical_experience: {"variable":"clinical_experience", "displayName":"Clinical Experience Requirement", "format": "string", "category":"Principals", "scaleType":"categorical", "customDomain":["Yes", "No"], "customRange":[colors.turquoise.light, colors.red.light]},
-	prior_teaching_experience: {"variable":"prior_teaching_experience", "displayName":"Teaching Experience Requirement", "format": "string", "category":"Principals", "scaleType":"categorical", "customDomain":["Yes", "Yes, in Elementary Grades", "No"], "customRange":[colors.turquoise.light, colors.turquoise.medium, colors.red.light]},
+	prior_teaching_experience: {"variable":"prior_teaching_experience", "displayName":"Teaching Experience Requirement", "format": "string", "category":"Principals", "scaleType":"categorical", "customDomain":["Yes", "Yes - in Elementary Grades", "No"], "customRange":[colors.turquoise.light, colors.blue.light, colors.red.light]},
 	professional_learning: {"variable":"professional_learning", "displayName":"ECE Professional Learning", "format": "string", "category":"Principals", "scaleType":"categorical", "customDomain":["Yes", "No", "No data"], "customRange":[colors.turquoise.light, colors.red.light, colors.grey.medium]},
 	joint_professional_learning: {"variable":"joint_professional_learning", "displayName":"Joint Professional Learning", "format": "string", "category":"Principals", "scaleType":"categorical", "customDomain":["Yes", "No", "No data"], "customRange":[colors.turquoise.light, colors.red.light, colors.grey.medium]},
 	formal_evaluation: {"variable":"formal_evaluation", "displayName":"Formal Evaluation", "format": "string", "category":"Principals", "scaleType":"categorical", "customDomain":["Yes", "No", "No data"], "customRange":[colors.turquoise.light, colors.red.light, colors.grey.medium]},
 	track_principal_turnover: {"variable":"track_principal_turnover", "displayName":"Track Principal Turnover", "format": "string", "category":"Principals", "scaleType":"categorical", "customDomain":["Yes", "No", "No data"], "customRange":[colors.turquoise.light, colors.red.light, colors.grey.medium]},
 	avg_salary: {"variable":"avg_salary", "displayName":"Average Salary", "format": "price", "category":"Principals", "scaleType":"quantize", "customRange":[colors.white, colors.turquoise.light, colors.turquoise.dark], "numBins":5},
 	avg_salary_continuous_scale: {"variable":"avg_salary", "displayName":"Principals", "format": "price", "color": colors.turquoise.light},
-	benefits: {"variable":"benefits", "displayName":"Benefits", "format": "string", "category":"Principals", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Offers All 3", "Offers 2 (Health Insurance and Pension/Retirement)", "State Did Not Report", "No Data"], "customRange":[colors.turquoise.light, colors.blue.light, colors.grey.medium, colors.grey.medium_light]},
+	benefits: {"variable":"benefits", "displayName":"Benefits", "format": "string", "category":"Principals", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Health Insurance, Pension/Retirement, and Paid Sick Leave", "Health Insurance and Pension/Retirement Only", "State Did Not Report", "No Data"], "customRange":[colors.turquoise.light, colors.blue.light, colors.grey.medium, colors.grey.medium_light]},
 	diversity_incentives: {"variable":"diversity_incentives", "displayName":"Diversity Incentives", "format": "string", "category":"Principals", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Financial Incentives", "Supports in Place", "No", "No data"], "customRange":[colors.turquoise.light, colors.blue.light, colors.red.light, colors.grey.medium]},
 
 	cd_min_ed_requirement: {"variable":"cd_min_ed_requirement", "displayName":"Minimum Educational Requirement", "format": "string", "category":"Center Directors"},
@@ -28,10 +28,10 @@ let variables = {
 	cd_prior_experience_years: {"variable":"cd_prior_experience_years", "displayName":"Prior Child Care Experience Years", "format": "string", "category":"Center Directors"},
 	cd_licensing_standard_qual_notes: {"variable":"cd_licensing_standard_qual_notes", "displayName":"Licensing Standard Qualifications", "format": "string", "category":"Center Directors"},
 	cd_prior_experience_source: {"variable":"cd_prior_experience_source", "displayName":"Prior Experience Source", "format": "string", "category":"Center Directors"},
-	cd_has_credential: {"variable":"cd_has_credential", "displayName":"Center Director Credential", "format": "string", "category":"Center Directors", "scaleType":"categorical", "customDomain":["Yes", "Yes - Required for Licensing", "No"], "customRange": [colors.turquoise.light, colors.turquoise.medium, colors.red.light]},
+	cd_has_credential: {"variable":"cd_has_credential", "displayName":"Center Director Credential", "format": "string", "category":"Center Directors", "scaleType":"categorical", "customDomain":["Yes", "Yes - Required for Licensing", "No"], "customRange": [colors.turquoise.light, colors.blue.light, colors.red.light]},
 	cd_credential_required_for_licensing: {"variable":"cd_credential_required_for_licensing", "displayName":"Credential Required for Licensing", "format": "string", "category":"Center Directors", "scaleType":"categorical", "customDomain":["Yes", "No", "N/A"], "customRange": [colors.turquoise.light, colors.red.light, colors.grey.medium]},
 	cd_credential_source: {"variable":"cd_credential_source", "displayName":"Credential Source", "format": "string", "category":"Center Directors"},
-	cd_qris_different_tiers: {"variable":"cd_qris_different_tiers", "displayName":"QRIS Ties to Different Tiers", "format": "string", "category":"Center Directors", "scaleType":"categorical", "customDomain":["Yes", "No", "N/A"], "customRange": [colors.turquoise.light, colors.red.light, colors.grey.medium]},
+	cd_qris_different_tiers: {"variable":"cd_qris_different_tiers", "displayName":"QRIS Tied to Different Tiers", "format": "string", "category":"Center Directors", "scaleType":"categorical", "customDomain":["Yes", "No", "N/A"], "customRange": [colors.turquoise.light, colors.red.light, colors.grey.medium]},
 	cd_qris_different_tiers_source: {"variable":"cd_qris_different_tiers_source", "displayName":"QRIS Tiers Source", "format": "string", "category":"Center Directors"},
 	cd_qris_different_tiers_notes: {"variable":"cd_qris_different_tiers_notes", "displayName":"QRIS Tiers Notes", "format": "string", "category":"Center Directors"},
 	cd_formal_evaluation: {"variable":"cd_formal_evaluation", "displayName":"Formal Evaluation", "format": "string", "category":"Center Directors", "scaleType":"categorical", "customDomain":["Yes", "No"], "customRange": [colors.turquoise.light, colors.red.light]},
@@ -55,6 +55,7 @@ let vizSettingsList = [
 		tooltipShowOnly: "same category",
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
 		filterGroupSettings: {"hidden": false},
+		addSmallStateInsets: true,
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 	},
 	{
@@ -68,6 +69,7 @@ let vizSettingsList = [
 		tooltipVars: [ variables.state, variables.professional_learning, variables.joint_professional_learning, variables.formal_evaluation, variables.cd_qris_different_tiers, variables.cd_qris_different_tiers_notes, variables.cd_formal_evaluation],
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
 		filterGroupSettings: {"hidden": false},
+		addSmallStateInsets: true,
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 
 	},
@@ -82,6 +84,7 @@ let vizSettingsList = [
 		tooltipVars: [ variables.state, variables.track_principal_turnover, variables.avg_salary, variables.benefits, variables.diversity_incentives, variables.cd_avg_salary ],
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
 		filterGroupSettings: {"hidden": false},
+		addSmallStateInsets: true,
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }		
 	},
 	{
@@ -238,7 +241,17 @@ let vizSettingsList = [
 		labelVar: variables.state_abbrev,
 		titleVar: variables.state,
 		legendSettings: {"orientation": "horizontal-center"},
-	}
+	},
+	{
+		id: "#early-ed-leaders__avg-salary-combined",
+		primaryDataSheet: "states",
+		vizType: "comparative_dot_histogram",
+		groupingVars: [ variables.avg_salary_continuous_scale, variables.cd_avg_salary_continuous_scale ],
+		labelVar: variables.state_abbrev,
+		titleVar: variables.state,
+		legendSettings: {"orientation": "horizontal-center"},
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+	},
 ]
 
 let projectSettings = {
