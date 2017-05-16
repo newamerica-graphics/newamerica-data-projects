@@ -53,7 +53,7 @@ export class TopoJsonMap {
 		this.g = this.svg.append("g");
 
 		if (this.tooltipVars) {
-			let tooltipSettings = { "id":this.id, "tooltipVars":this.tooltipVars, "showOnlyVars":this.tooltipShowOnly }
+			let tooltipSettings = { "id":this.id, "tooltipVars":this.tooltipVars, "showOnlyVars":this.tooltipShowOnly, "highlightActive": true }
 
 			this.tooltip = new Tooltip(tooltipSettings);
 		}

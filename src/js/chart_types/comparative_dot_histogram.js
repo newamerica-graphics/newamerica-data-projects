@@ -29,7 +29,7 @@ export class ComparativeDotHistogram {
 
 		this.yScale = d3.scaleLinear();
 
-		let tooltipSettings = { "id":this.id, "tooltipVars":[this.titleVar, ...this.groupingVars] };
+		let tooltipSettings = { "id":this.id, "tooltipVars":[this.titleVar, ...this.groupingVars], "highlightActive":false };
 		this.tooltip = new Tooltip(tooltipSettings);
 	}
 
@@ -61,8 +61,6 @@ export class ComparativeDotHistogram {
 			})
 		})
 
-		console.log(retArray);
-
 		return retArray;
 	}
 
@@ -93,7 +91,7 @@ export class ComparativeDotHistogram {
 
 		this.maxColHeight = d3.max(this.dataNest, (d) => { return d.values.length; })
 
-		this.h = this.maxColHeight * widthBinRatio;
+		this.h = this.maxColHeight * (widthBinRatio + this.circleOffset);
 
 		this.yScale.domain([0, this.maxColHeight])
 			.range([this.h - widthBinRatio/2, widthBinRatio/2]);
@@ -147,6 +145,7 @@ export class ComparativeDotHistogram {
 			.attr("transform", "translate(-" + 0 + "," + (this.h - 10) + ")")
 			.call(
 				d3.axisBottom(this.xAxisScale)
+					.ticks(5)
 					.tickPadding(10)
 					.tickSizeOuter(0)
 					.tickSizeInner(0)
@@ -202,7 +201,7 @@ export class ComparativeDotHistogram {
 		const labelVarName = this.labelVar.variable;
 		this.rawData.forEach((d) => {
 			if (d[labelVarName] == hovered.label) {
-				this.tooltip.show(d, mousePos);
+				this.tooltip.show(d, mousePos, );
 				return;
 			}
 		})

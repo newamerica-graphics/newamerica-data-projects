@@ -20,39 +20,6 @@ export class Tooltip {
 		this.setCategoryNest();
 		
 		this.tooltipCategoryTitles = {};
-
-		// this.valueFields = {};
-
-		
-		// let showCategories = categoryNest.length > 1;
-		// let whichContainer;
-
-		// for (let category of categoryNest) {
-		// 	whichContainer = contentContainer;
-		// 	if (category.key != "undefined" && showCategories) {
-		// 		this.tooltipCategoryTitles[category.key] = contentContainer.append("h5")
-		// 			.classed("tooltip__category__name", true)
-		// 			.text(category.key);
-
-		// 		whichContainer = contentContainer.append("ul")
-		// 			.classed("tooltip__category__list", true);
-		// 	}
-
-		// 	for (let variable of category.values) {
-		// 		var listElem = whichContainer.append("li")
-		// 			.classed("tooltip__category__list-item", true);
-
-		// 		let valueField = {};
-		// 		valueField.label = listElem.append("h3")
-		// 			.classed("tooltip__category__list-item__label", true)
-		// 			.text(variable.displayName + ":");
-
-		// 		valueField.value = listElem.append("h3")
-		// 			.classed("tooltip__category__list-item__value", true)
-					
-		// 		this.valueFields[variable.variable] = valueField;
-		// 	}
-		// }
 	}
 
 	appendTooltip() {
@@ -112,6 +79,7 @@ export class Tooltip {
 
 		this.categoryContainers.append("h5")
 			.attr("class", "tooltip__category__name")
+			.style("display", (d) => { return d.key == "undefined" ? "none" : "block"; })
 			.text((d) => { return d.key; });
 
 		let categoryValList = this.categoryContainers.append("ul")
@@ -149,7 +117,6 @@ export class Tooltip {
         // 	}
         // }
 
-        console.log(datum);
 		this.titleDiv.text(datum[this.titleVar]);
 
 		if (this.showOnlyVars == "same category") {
@@ -159,7 +126,7 @@ export class Tooltip {
 
 		this.listItems
 			.style("display", (d) => { return datum[d.variable] ? "block" : "none"; })
-			.classed("active", (d) => { console.log(d.variable); return d.variable == currFilterVar.variable; })
+			.classed("active", (d) => { console.log(d.variable); return this.highlightActive && d.variable == currFilterVar.variable; })
 			.style("border-color", filterColor);
 
 		this.listItems.selectAll("h3.tooltip__category__list-item__value")
