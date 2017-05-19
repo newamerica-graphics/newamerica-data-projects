@@ -17,6 +17,7 @@ export class ComparativeDotHistogram {
 	
 		this.svg = d3.select(this.id)
 			.append("svg")
+			.attr("width", "100%")
 			.attr("class", "comparative-dot-histogram")
 
 		this.xAxis = this.svg.append("g")
@@ -88,12 +89,12 @@ export class ComparativeDotHistogram {
 			.sortKeys((a, b) => { return d3.ascending(+a, +b); })
 			.sortValues((a, b) => { return d3.ascending(+a.value, +b.value);})
 			.entries(this.data);
-
-			console.log(this.dataNest);
 	}
 
 	setDimensions() {
+		console.log("setting dimensions");
 		this.w = $(this.id).width();
+		console.log(this.w);
 		let widthBinRatio = this.w/numBins;
 		this.circleOffset = widthBinRatio/10;
 		this.circleDiam = widthBinRatio - 2*this.circleOffset;
@@ -108,7 +109,6 @@ export class ComparativeDotHistogram {
 			.range([this.h - widthBinRatio/2, widthBinRatio/2]);
 
 		this.svg
-			.attr("width", this.w)
 			.attr("height", this.h + margin.bottom);
 	}
 
@@ -117,7 +117,7 @@ export class ComparativeDotHistogram {
 			.data(this.dataNest)
 			.enter().append("g")
 			.attr("class", "column")
-			.attr("transform", (d) => { console.log(d.key); return "translate(" + this.xScale(+d.key) + ")"; })
+			.attr("transform", (d) => { return "translate(" + this.xScale(+d.key) + ")"; })
 
 		this.circles = this.circleCols.selectAll("circle")
 			.data((d) => { return d.values;})
@@ -173,9 +173,6 @@ export class ComparativeDotHistogram {
 		let colorScale = d3.scaleOrdinal()
 			.domain(this.groupingVars.map((d) => {return d.displayName;}))
 			.range(this.groupingVars.map((d) => {return d.color;}));
-
-		console.log(colorScale.range());
-		console.log(colorScale.domain());
 
 		this.legendSettings.format = this.groupingVars[0].format;
 		this.legendSettings.scaleType = "categorical";
