@@ -102,6 +102,8 @@ export class Tooltip {
 		if ($(window).width() < 450) {
 			return;
 		}
+
+		console.log(filterColor);
         // if (this.tooltipImageVar) {
         // 	if (d[this.tooltipImageVar.variable]) {
         // 		this.titleDiv
@@ -126,11 +128,12 @@ export class Tooltip {
 
 		this.listItems
 			.style("display", (d) => { return datum[d.variable] ? "block" : "none"; })
-			.classed("active", (d) => { console.log(d.variable); return this.highlightActive && d.variable == currFilterVar.variable; })
-			.style("border-color", filterColor);
+			.classed("active", (d) => { return this.highlightActive && d.variable == currFilterVar.variable; })
+			.style("border-color", filterColor)
+			.style("border-image", filterColor && filterColor.includes("url") ? this.setMultiColorBorder(filterColor) : "none");
 
 		this.listItems.selectAll("h3.tooltip__category__list-item__value")
-			.text((d) => { console.log(d); return formatValue(datum[d.variable], d.format); })
+			.text((d) => { return formatValue(datum[d.variable], d.format); })
 
 
 		let tooltipCoords = this.getTooltipCoords(mouse);
@@ -162,6 +165,23 @@ export class Tooltip {
 		retCoords[1] -= (tooltipHeight/2 + 15);
 
 		return retCoords;
+	}
+
+	setMultiColorBorder(inputColor) { 
+		let patternId = inputColor.replace('url("', '').replace('")', '');
+
+		let retVal = "linear-gradient(to right, "
+		let colors = $(patternId).children("stop");
+
+		retVal += d3.select(colors[2]).style("stop-color") + " 30%, ";
+		retVal += d3.select(colors[0]).style("stop-color") + " 100%";
+		
+		retVal += ") 5";
+
+		console.log(retVal);
+
+		return retVal;
+	
 	}
 
 	mouseleave() {
