@@ -27,6 +27,7 @@ import { PieChart } from "./chart_types/pie_chart.js";
 import { Bipartite } from "./chart_types/bipartite.js";
 import { CategoryBreakdown } from "./chart_types/category_breakdown.js";
 import { ComparativeDotHistogram } from "./chart_types/comparative_dot_histogram.js";
+import { PinDropMap } from "./chart_types/pindrop_map.js";
 
 import { formatValue } from "./helper_functions/format_value.js";
 
@@ -106,6 +107,10 @@ export function setupProject(projectSettings) {
 
 					case "pie_chart":
 						viz = new PieChart(vizSettingsObject);
+						break;
+
+					case "pindrop_map":
+						viz = new PinDropMap(vizSettingsObject);
 						break;
 
 					case "stacked_bar":

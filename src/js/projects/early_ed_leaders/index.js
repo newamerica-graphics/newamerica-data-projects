@@ -96,9 +96,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.min_ed_requirement ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
-
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#early-ed-leaders__license-grade-span", 
@@ -107,9 +107,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.license_grade_span ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
-
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#early-ed-leaders__higher-ed-coursework", 
@@ -118,8 +118,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.higher_ed_coursework ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#early-ed-leaders__clinical-experience", 
@@ -128,9 +129,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.clinical_experience ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
-
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#early-ed-leaders__prior-teaching-experience", 
@@ -139,8 +140,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.prior_teaching_experience ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#early-ed-leaders__cd-ed-training-requirement", 
@@ -149,9 +151,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.cd_ed_training_requirement ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
-
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#early-ed-leaders__cd-prior-experience", 
@@ -160,9 +162,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.cd_prior_experience ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
-
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#early-ed-leaders__cd-has-credential", 
@@ -171,9 +173,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.cd_has_credential ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
-
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#early-ed-leaders__professional-learning", 
@@ -182,8 +184,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.professional_learning ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#early-ed-leaders__joint-professional-learning", 
@@ -192,8 +195,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.joint_professional_learning ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#early-ed-leaders__cd-qris-different-tiers", 
@@ -202,8 +206,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.cd_qris_different_tiers ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#early-ed-leaders__track-principal-turnover", 
@@ -212,8 +217,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.track_principal_turnover ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#early-ed-leaders__benefits", 
@@ -222,8 +228,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.benefits ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#early-ed-leaders__avg-salary",
@@ -232,7 +239,8 @@ let vizSettingsList = [
 		groupingVars: [ variables.avg_salary_continuous_scale ],
 		labelVar: variables.state_abbrev,
 		titleVar: variables.state,
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" },
+		customNumBins: 25
 	},
 	{
 		id: "#early-ed-leaders__cd-avg-salary",
@@ -241,8 +249,8 @@ let vizSettingsList = [
 		groupingVars: [ variables.cd_avg_salary_continuous_scale ],
 		labelVar: variables.state_abbrev,
 		titleVar: variables.state,
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
-
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" },
+		customNumBins: 25
 	},
 	{
 		id: "#early-ed-leaders__avg-salary-combined",
@@ -252,7 +260,8 @@ let vizSettingsList = [
 		labelVar: variables.state_abbrev,
 		titleVar: variables.state,
 		legendSettings: {"orientation": "horizontal-center", "showTitle": false},
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" },
+		customNumBins: 25
 	},
 ]
 

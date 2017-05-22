@@ -83,8 +83,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.congressional_primary_type ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#pol-reform-50-states__presidential-primaries", 
@@ -93,8 +94,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.presidential_primary_type ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#pol-reform-50-states__early-voting", 
@@ -103,8 +105,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.early_voting ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#pol-reform-50-states__same-day-registration", 
@@ -113,8 +116,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.same_day_registration ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#pol-reform-50-states__automatic-voter-registration", 
@@ -123,8 +127,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.automatic_voter_registration ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#pol-reform-50-states__online-registration", 
@@ -133,8 +138,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.online_registration ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#pol-reform-50-states__state-redistricting", 
@@ -143,8 +149,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.state_redistricting ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#pol-reform-50-states__congressional-redistricting", 
@@ -153,8 +160,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.congressional_redistricting ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#pol-reform-50-states__no-excuse-absentee", 
@@ -163,8 +171,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.no_excuse_absentee ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" },	
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#pol-reform-50-states__electronic-filing", 
@@ -173,8 +182,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.electronic_filing ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 	{
 		id: "#pol-reform-50-states__public-financing", 
@@ -183,8 +193,9 @@ let vizSettingsList = [
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.public_financing_funding_level ],
 		labelVar: variables.state_abbrev,
-		tooltipVars: [ variables.state ],
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" },	
+		idVar: variables.state_id,
+		quantityLabel: "states",
 	},
 
 ]

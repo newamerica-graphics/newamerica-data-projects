@@ -7,9 +7,7 @@ import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { Tooltip } from "../components/tooltip.js";
 import { Legend } from "../components/legend.js";
 
-const numBins = 25,
-	binList = Array.apply(null, {length: numBins}).map(Number.call, Number),
-	margin = {bottom: 20};
+const margin = {bottom: 20};
 
 export class ComparativeDotHistogram {
 	constructor(vizSettings, imageFolderId) {
@@ -26,8 +24,7 @@ export class ComparativeDotHistogram {
 		this.binScale = d3.scaleQuantize();
 		this.xAxisScale = d3.scaleLinear();
 
-		this.xScale = d3.scaleBand()
-			.domain(binList);
+		this.xScale = d3.scaleBand();
 
 		this.yScale = d3.scaleLinear();
 
@@ -52,13 +49,14 @@ export class ComparativeDotHistogram {
 		this.setDimensions();
 
 		this.buildGraph();
+		this.annotationSplits ? this.buildAnnotationSplits() : null;
 		this.setXAxis();
 
 		this.legend ? this.setLegend() : null;
 	}
 
 	processData(data) {
-		const labelVarName = this.labelVar.variable,
+		const labelVarName = this.labelVar ? this.labelVar.variable : null,
 			titleVarName = this.titleVar.variable;
 		let retArray = [];
 		this.groupingVars.forEach((groupingVar, i) => {
@@ -79,31 +77,40 @@ export class ComparativeDotHistogram {
 	setBinScale() {
 		let extents = d3.extent(this.data, (d) => { return d.value; });
 
+		this.numBins = this.customNumBins || extents[1] - extents[0] + 1;
+		let binList = Array.apply(null, {length: this.numBins}).map(Number.call, Number);
+		
+		this.xScale.domain(binList);
+		
 		this.binScale.domain(extents)
 			.range(binList);
 	}
 
 	setDataNest() {
+		console.log(this.binScale.domain(), this.binScale.range());
 		this.dataNest = d3.nest()
 			.key((d) => { return this.binScale(d.value); })
 			.sortKeys((a, b) => { return d3.ascending(+a, +b); })
 			.sortValues((a, b) => { return d3.ascending(+a.value, +b.value);})
 			.entries(this.data);
+
+		console.log(this.dataNest);
 	}
 
 	setDimensions() {
 		console.log("setting dimensions");
 		this.w = $(this.id).width();
 		console.log(this.w);
-		let widthBinRatio = this.w/numBins;
-		this.circleOffset = widthBinRatio/10;
-		this.circleDiam = widthBinRatio - 2*this.circleOffset;
+		let widthBinRatio = this.w/this.numBins;
+		this.circleXOffset = widthBinRatio/8;
+		this.circleYOffset = widthBinRatio/30;
+		this.circleDiam = widthBinRatio - 2*this.circleXOffset;
 		
 		this.xScale.range([widthBinRatio/2, this.w - widthBinRatio/2]);
 
 		this.maxColHeight = d3.max(this.dataNest, (d) => { return d.values.length; })
 
-		this.h = this.maxColHeight * (widthBinRatio + this.circleOffset);
+		this.h = this.maxColHeight * (widthBinRatio + this.circleYOffset);
 
 		this.yScale.domain([0, this.maxColHeight])
 			.range([this.h - widthBinRatio/2, widthBinRatio/2]);
@@ -149,7 +156,27 @@ export class ComparativeDotHistogram {
     		.style("font-size", this.circleDiam/2)
     		.style("font-weight", "bold")
     		.style("pointer-events", "none")
-			.text((d) => { return d.label; });
+			.text((d) => { return d.label ? d.label : null; });
+	}
+
+	buildAnnotationSplits() {
+		this.annotations = this.svg.selectAll("g.annotation")
+			.data(this.annotationSplits)
+			.enter().append("g")
+			.attr("class", "annotation")
+			.attr("transform", (d) => { return "translate(" + (this.xScale(this.binScale(+d.value)) - this.circleXOffset) + ")"; })
+
+		this.annotations.append("line")
+			.attr("x1", 0)
+			.attr("y1", this.h - margin.bottom)
+			.attr("x2", 0)
+			.attr("y2", 0)
+			.attr("stroke", colors.grey.medium);
+
+		this.annotations.append("text")
+			.attr("x", 0)
+			.attr("y", 0)
+			.text((d) => { return d.text; })
 	}
 
 	setXAxis() {
@@ -165,7 +192,7 @@ export class ComparativeDotHistogram {
 					.tickPadding(10)
 					.tickSizeOuter(0)
 					.tickSizeInner(0)
-					.tickFormat((d) => { return formatValue(d, "price"); })
+					.tickFormat((d) => { return formatValue(d, this.groupingVars[0].format); })
 			);
 	}
 
@@ -209,7 +236,7 @@ export class ComparativeDotHistogram {
 		let hoveredVals = {};
 		this.circles
 			.attr("fill", (d) => {
-				if (d.label == hovered.label) {
+				if (d.title == hovered.title) {
 					hoveredVals[d.group] = d;
 					return this.groupingVars[d.group].color;
 				} else {
@@ -219,17 +246,16 @@ export class ComparativeDotHistogram {
 
 		this.circleText
 			.attr("fill", (d) => {
-				if (d.label == hovered.label) {
+				if (d.title == hovered.title) {
 					return "white";
 				} else {
 					return this.groupingVars[d.group].color;
 				}
 		    });
 
-		const labelVarName = this.labelVar.variable;
 		this.rawData.forEach((d) => {
-			if (d[labelVarName] == hovered.label) {
-				this.tooltip.show(d, mousePos, );
+			if (d[this.titleVar.variable] == hovered.title) {
+				this.tooltip.show(d, mousePos);
 				return;
 			}
 		})
