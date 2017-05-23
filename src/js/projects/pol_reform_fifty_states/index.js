@@ -43,7 +43,8 @@ let vizSettingsList = [
 		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
 		filterVars: [ variables.online_registration, variables.same_day_registration, variables.automatic_voter_registration, variables.early_voting, variables.no_excuse_absentee],
 		tooltipVars: [ variables.state, variables.online_registration, variables.same_day_registration, variables.automatic_voter_registration, variables.early_voting, variables.no_excuse_absentee, variables.ranked_choice_voting],
-		legendSettings: {"orientation": "vertical-right", "showTitle": true},
+		varDescriptionSheet: "states_variables",
+		legendSettings: {"orientation": "vertical-right", "showTitle": true, "showValueDescriptions": true},
 		tooltipShowOnly: "same category",
 		filterGroupSettings: {"hidden": false},
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
@@ -58,6 +59,7 @@ let vizSettingsList = [
 		filterVars: [ variables.congressional_primary_type, variables.presidential_primary_type, variables.state_redistricting, variables.congressional_redistricting],
 		tooltipVars: [ variables.state, variables.congressional_primary_type, variables.congressional_primary_rules, variables.presidential_primary_type, variables.presidential_primary_rules, variables.state_redistricting, variables.state_redistricting_more_info, variables.congressional_redistricting, variables.congressional_redistricting_more_info],
 		tooltipShowOnly: "same category",
+		varDescriptionSheet: "states_variables",
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
 		filterGroupSettings: {"hidden": false},
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
@@ -70,6 +72,7 @@ let vizSettingsList = [
 		geometryVar: variables.state_id,
 		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
 		filterVars: [ variables.electronic_filing, variables.public_financing],
+		varDescriptionSheet: "states_variables",
 		tooltipVars: [ variables.state, variables.who_discloses, variables.what_is_disclosed, variables.when_it_is_disclosed, variables.electronic_filing, variables.public_financing, variables.public_financing_qualified, variables.public_financing_amount, variables.public_financing_contributors, variables.public_financing_promise, variables.public_financing_funding_level],
 		tooltipShowOnly: "same category",
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
