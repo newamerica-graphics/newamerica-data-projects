@@ -168,14 +168,21 @@ export class Tooltip {
 	}
 
 	setMultiColorBorder(inputColor) { 
+		let retVal = "linear-gradient(to right, ";
 		let patternId = inputColor.replace('url("', '').replace('")', '');
 
-		let retVal = "linear-gradient(to right, "
-		let colors = $(patternId).children("stop");
+		if ($(patternId).is("linearGradient")) {
+			let colors = $(patternId).children("stop");
 
-		retVal += d3.select(colors[2]).style("stop-color") + " 30%, ";
-		retVal += d3.select(colors[0]).style("stop-color") + " 100%";
-		
+			retVal += d3.select(colors[2]).style("stop-color") + " 20%, ";
+			retVal += d3.select(colors[0]).style("stop-color") + " 100%";
+		} else {
+			let colors = $(patternId).children("rect");
+
+			retVal += d3.select(colors[1]).style("fill") + " 20%, ";
+			retVal += d3.select(colors[0]).style("fill") + " 100%";
+		}
+
 		retVal += ") 5";
 
 		console.log(retVal);
