@@ -28,6 +28,7 @@ import { Bipartite } from "./chart_types/bipartite.js";
 import { CategoryBreakdown } from "./chart_types/category_breakdown.js";
 import { ComparativeDotHistogram } from "./chart_types/comparative_dot_histogram.js";
 import { PinDropMap } from "./chart_types/pindrop_map.js";
+import { PolReformContributionLimits } from "./custom_charts/pol-reform__contribution-limits.js";
 
 import { formatValue } from "./helper_functions/format_value.js";
 
@@ -43,7 +44,6 @@ export function setupProject(projectSettings) {
 	render();
 
 	function initialize() {
-
 
 		for (let vizSettingsObject of vizSettingsList) {
 			if($(vizSettingsObject.id).length != 0) {
@@ -111,6 +111,10 @@ export function setupProject(projectSettings) {
 
 					case "pindrop_map":
 						viz = new PinDropMap(vizSettingsObject);
+						break;
+
+					case "political-reform__contribution-limits":
+						viz = new PolReformContributionLimits(vizSettingsObject);
 						break;
 
 					case "stacked_bar":
