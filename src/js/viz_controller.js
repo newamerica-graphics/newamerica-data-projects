@@ -28,6 +28,7 @@ import { Bipartite } from "./chart_types/bipartite.js";
 import { CategoryBreakdown } from "./chart_types/category_breakdown.js";
 import { ComparativeDotHistogram } from "./chart_types/comparative_dot_histogram.js";
 import { PinDropMap } from "./chart_types/pindrop_map.js";
+import { ResourceToolkit } from "./chart_types/resource_toolkit.js";
 
 import { formatValue } from "./helper_functions/format_value.js";
 
@@ -117,6 +118,10 @@ export function setupProject(projectSettings) {
 						viz = new StackedBar(vizSettingsObject);
 						break;
 
+					case "resource_toolkit":
+						viz = new ResourceToolkit(vizSettingsObject);
+						break;
+
 					case "summary_box":
 						viz = new SummaryBox(vizSettingsObject);
 						break;
@@ -144,6 +149,7 @@ export function setupProject(projectSettings) {
 
 
 	function render() {
+		console.log(vizList);
 		if (!projectSettings.dataUrl) {
 			for (let viz of vizList) {
 				viz.render();

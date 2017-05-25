@@ -27,16 +27,16 @@ let vizSettingsList = [
 	// 	idVar: variables.name
 	// 	// clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
 	// },
-	{
-		id: "#intel__start-year",
-		primaryDataSheet: "programs",
-		vizType: "comparative_dot_histogram",
-		groupingVars: [ variables.start_year ],
-		titleVar: variables.name,
-		legendSettings: {"orientation": "horizontal-center", "showTitle": false},
-		annotationSplits: [ {"value": "2011", "textSpans": ["Tablet invented and", "first introduced to schools"] }],
-		// clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
-	},
+	// {
+	// 	id: "#intel__start-year",
+	// 	primaryDataSheet: "programs",
+	// 	vizType: "comparative_dot_histogram",
+	// 	groupingVars: [ variables.start_year ],
+	// 	titleVar: variables.name,
+	// 	legendSettings: {"orientation": "horizontal-center", "showTitle": false},
+	// 	annotationSplits: [ {"value": "2011", "textSpans": ["Tablet invented and", "first introduced to schools"] }],
+	// 	// clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+	// },
 	// {
 	// 	id: "#intel__start-year1",
 	// 	primaryDataSheet: "programs",
@@ -62,6 +62,11 @@ let vizSettingsList = [
 	// 	filterGroupSettings: {"hidden": false},
 	// 	legendSettings: {"orientation": "vertical-right", "showTitle": true},
 	// },
+	{
+		id: "#intel__resource-toolkit", 
+		vizType: "resource_toolkit",
+		primaryDataSheet: "toolkit_resources",
+	},
 ]
 
 let projectSettings = {
