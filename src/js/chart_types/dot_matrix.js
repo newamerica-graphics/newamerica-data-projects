@@ -12,68 +12,60 @@ import { getColorScale } from "../helper_functions/get_color_scale.js";
 
 import { Tooltip } from "../components/tooltip.js";
 
-let splitDistance = 3; //number of dots between split components
+let splitDistance = 2; //number of dots between split components
 
 export class DotMatrix {
 	constructor(vizSettings, imageFolderId) {
-		let {id, orientation, tooltipVars, tooltipImageVar, filterVars, isSubComponent, tooltip, colorScale, split, primaryDataSheet, eventSettings, dotSettings, tooltipScrollable, legendSettings} = vizSettings;
-		
-		// super(id, isSubComponent);
-
-		this.id = id;
-		this.orientation = orientation;
-		this.isSubComponent = isSubComponent;
-		this.split = split;
-		this.primaryDataSheet = primaryDataSheet;
-		this.eventSettings = eventSettings;
-		this.dotSettings = dotSettings;
-		this.legendSettings = legendSettings;
+		Object.assign(this, vizSettings);
 
 		this.split ? this.appendSplitLabels() : null;
 
-		if (isSubComponent) {
-			this.svg = d3.select(id)
+		if (this.isSubComponent) {
+			this.svg = d3.select(this.id)
 				.append("svg")
 				.attr("width", "100%");
-
-			this.tooltip = tooltip;
-			this.colorScale = colorScale;
-
 		} else {
 			// let chartContainer = d3.select(id)
 			// 	.append("div")
 			// 	.attr("class", "chart-wrapper");
 
-			this.svg = d3.select(id)
+			this.svg = d3.select(this.id)
 				.append("svg")
-				.attr("width", "100%");
+				.attr("width", "100%")
+				.style("margin-top", "20px");
 
-			let tooltipSettings = { "id":id, "tooltipVars":tooltipVars, tooltipImageVar:"tooltipImageVar", "imageFolderId":imageFolderId, "tooltipScrollable":tooltipScrollable };
+			if (this.tooltipVars) {
+				let tooltipSettings = { "id":this.id, "tooltipVars":this.tooltipVars, "tooltipImageVar":this.tooltipImageVar, "imageFolderId":this.imageFolderId, "tooltipScrollable":this.tooltipScrollable };
 
+				this.tooltip = new Tooltip(tooltipSettings);
+			}
 
-			this.tooltip = new Tooltip(tooltipSettings);
-
-			let legendSettings = {};
-			legendSettings.id = id;
-			legendSettings.showTitle = false;
-			legendSettings.markerSettings = { shape:"rect", size:this.dotSettings.width };
-			legendSettings.orientation = "horizontal-center";
-			this.legend = new Legend(legendSettings);
+			
+			this.legendSettings.id = this.id;
+			this.legendSettings.showTitle = false;
+			this.legendSettings.markerSettings = { shape:"rect", size:this.dotSettings.width };
+			this.legendSettings.orientation = "horizontal-center";
+			this.legend = new Legend(this.legendSettings);
 		}
 
-		this.currFilter = filterVars[0];
-		this.currFilterVar = filterVars[0].variable;
-
+		this.currFilter = this.filterVars[0];
+		this.currFilterVar = this.filterVars[0].variable;
 	}
 
 	render(data) {
-		if (!this.isSubComponent) {
-			this.data = this.processData(data[this.primaryDataSheet]);
+		if (!this.isSubComponent ) {
+			if (this.simpleDataVals) {
+				this.data = this.createDataVals(data[this.primaryDataSheet]);
+			} else {
+				this.data = this.processData(data[this.primaryDataSheet]);
+			}
 		} else {
 			this.data = data;
 		}
+
+		this.dataLength = this.data.length;
 		this.setDimensions();
-		this.sortData();
+		if (!this.simpleDataVals) { this.sortData(); }
 		if (!this.isSubComponent) {
 			this.setScale();
 		}
@@ -83,6 +75,13 @@ export class DotMatrix {
 		
 		if (!this.isSubComponent) {
 			this.setLegend();
+		}
+
+		if (this.showSource && this.currFilter.source) {
+			this.source = d3.select(this.id).append("p")
+				.style("font-size", "12px")
+				.style("color", "rgba(44,47,53,.7)")
+				.text(this.currFilter.source);
 		}
 		
 	}
@@ -103,9 +102,21 @@ export class DotMatrix {
 			}
 		}
 
-		this.dataLength = data.length;
-
 		return data;
+	}
+
+	createDataVals(simpleDataVals) {
+		let retData = [];
+
+		simpleDataVals.forEach((d) => {
+			for (let i = 0; i < d.value; i++) {
+				let dataObject = {};
+				dataObject[this.currFilterVar] = d[this.currFilterVar];
+				retData.push(dataObject);
+			}
+		})
+
+		return retData;
 	}
 
 	sortData() {
@@ -198,6 +209,7 @@ export class DotMatrix {
 			this.w = $(this.id).width();
 			let numCols = Math.floor(this.w/(this.dotSettings.width + this.dotSettings.offset));
 			this.split ? numCols -= splitDistance : null;
+			this.splitEveryVal ? numCols -= splitDistance * this.currFilter.customDomain.length - 1 : null
 			this.dotsPerCol = Math.ceil(this.dataLength/numCols);
 
 			this.h = this.dotsPerCol * (this.dotSettings.width + this.dotSettings.offset);		
@@ -248,6 +260,12 @@ export class DotMatrix {
 				if (variableValIndex > this.splitIndex) {
 					xCoord += splitDistance * (this.dotSettings.width + this.dotSettings.offset);
 				}
+			}
+
+			if (this.splitEveryVal) {
+				let variableVal = d[this.currFilterVar];
+				let variableValIndex = this.colorScale.domain().indexOf(variableVal);
+				xCoord += variableValIndex * (splitDistance * (this.dotSettings.width + this.dotSettings.offset));
 			}
 
 			return xCoord;
@@ -405,8 +423,13 @@ export class DotMatrix {
 			this.splitLabelLeftVal.text(Math.round(leftValCounts/valCountsTotal * 100) + "%");
 			this.splitLabelRightVal.text(Math.round(rightValCounts/valCountsTotal * 100) + "%");
 		}
+	}
 
-		
+	removeChart() {
+		this.svg.remove();
+		this.legend.removeComponent();
+
+		this.source ? this.source.remove() : null;
 	}
 
 }
