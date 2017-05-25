@@ -218,40 +218,51 @@ export function setupProject(projectSettings) {
 		let $inDepthProfileBody = $(".in-depth__profile__body");
 		let dataSheet = $inDepthProfileBody.attr("data-sheet-name");
 		let lookupField = $inDepthProfileBody.attr("data-lookup-field");
-		let lookupValue = window.location.search.replace("?", "").replace("/", "").replace(/_/g, " ").toLowerCase();
+		let lookupValue = decodeURI(window.location.search).replace("?", "");
 
 		if (!lookupField) {
 			return;
 		}
+
+		console.log("lookup value is: ", lookupValue);
+
 		let allLookupValues = d3.nest()
 			.key((d) => { return d[lookupField].toLowerCase(); })
 			.map(data[dataSheet]);
 
-		if (!allLookupValues.get(lookupValue)) {
+		let currElement = allLookupValues.get(lookupValue);
+		currElement = currElement ? currElement[0] : null;
+
+		console.log(currElement);
+
+
+		if (currElement) {
+			setOtherValueSelectorOptions(allLookupValues.keys(), true);
+		} else {
+			setOtherValueSelectorOptions(allLookupValues.keys(), false);
 			$inDepthProfileBody.empty();
+			$(".in-depth__profile__title-block").hide();
+			return;
 		}
 
 		let displayField, fieldFormat, footnoteField;
+		
+		$(".in-depth__profile__title-block__title").text(currElement[lookupField])
 
 		$(".data-reference__value").each(function(i, item) {
 			displayField = $(item).attr("data-field-name");
 			fieldFormat = $(item).attr("data-field-format");
-			let value;
-			for (let d of data[dataSheet]) {
-				if (d[lookupField].toLowerCase() == lookupValue) {
-					value = formatValue(d[displayField], fieldFormat);
-					if (value && value.length > 0) {
-						$(item).text(value);
-					} else {
-						$(item).siblings().css("display", "none");
-						$(item).hide();
-					}
-					break;
-				}
+			let value = formatValue(currElement[displayField], fieldFormat);
+			if (value && value.length > 0) {
+				$(item).text(value);
+			} else {
+				$(item).siblings().css("display", "none");
+				$(item).hide();
 			}
+			
 		})
 
-		$(".data-reference__table__footnote__inner-wrapper").each(function(i, item) {
+		$(".data-reference__footnote__value").each(function(i, item) {
 			footnoteField = $(item).attr("data-field-name");
 
 			let value;
@@ -269,16 +280,35 @@ export function setupProject(projectSettings) {
 
 		})
 
-		setOtherValueSelectorOptions(allLookupValues.keys())
+		$(".video-data-reference").each(function(i, item) {
+			displayField = $(item).attr("data-field-name");
+			let hostSite = $(item).attr("data-host");
+			
+			let value = currElement[displayField];
+			console.log(currElement);
+			console.log(displayField);
+			console.log(hostSite);
+			console.log(value);
+			console.log($(item));
+			if (value && value.length > 0) {
+				if (hostSite == "vimeo") {
+					$(item).append('<iframe width="640" height="360" frameborder="0" src="https://player.vimeo.com/video/' + value + '"></iframe>');
+				} else {
+					$(item).append('<iframe width="640" height="360" frameborder="0" src="https://www.youtube.com/embed/' + value + '"></iframe>');				}
+			} else {
+				$(item).hide();
+			}
+			
+		})
 	}
 
-	function setOtherValueSelectorOptions(otherValuesList) { 
+	function setOtherValueSelectorOptions(otherValuesList, pageHasValue) { 
 		let $valueSelector = $(".in-depth__profile__other-value-selector");
 		for (let item of otherValuesList) {
 			let option = $('<option/>')
 		        .addClass('in-depth__profile__other-value-selector__option')
 		        .text(item)
-		        .attr("value", item.toLowerCase().replace(/ /g, "_"))
+		        .attr("value", encodeURI(item))
 		        .appendTo($valueSelector);
 		}
 	}
