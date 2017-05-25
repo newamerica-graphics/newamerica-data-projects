@@ -65,7 +65,7 @@ let vizSettingsList = [
 ]
 
 let projectSettings = {
-	dataUrl: "http://na-data-projects.s3.amazonaws.com/data/edpolicy/intel.json",
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/edpolicy/intel.json",
 	downloadDataLink: "https://docs.google.com/spreadsheets/d/1eUKKUR-tAv_BbjD243xRyG2348I125QUgHDJUxVoO78",
 	dataSheetNames:["programs"],
 	vizSettingsList: vizSettingsList

@@ -19,8 +19,10 @@ export class Legend {
 	}
 
 	render(legendSettings) {
+		let prevOrientation = this.orientation;
 		Object.assign(this, legendSettings);
-		console.log(this);
+
+		this.orientation = prevOrientation ? prevOrientation : this.orientation;
 		if (this.legend) {
 			this.legend.remove();
 		}

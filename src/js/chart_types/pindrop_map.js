@@ -68,6 +68,8 @@ export class PinDropMap {
 
 	setDimensions() {
 		let containerWidth = $(this.id).width();
+		console.log(containerWidth);
+		console.log(global.showLegendBreakpoint);
 		this.w = containerWidth;
 
 		this.h = this.geometryType == "world" ? 2*this.w/5 : 3*this.w/5;
@@ -81,7 +83,6 @@ export class PinDropMap {
 				this.h = this.w/2;
 				scalingFactor = this.w;
 				this.legend.setOrientation("vertical-right");
-				this.smallStateInsetLabelXPos -= this.w > 900 ? this.w/6 : this.w/5;
 			} else {
 				this.legend.setOrientation("horizontal-center");
 			}
@@ -158,8 +159,6 @@ export class PinDropMap {
 			.attr("stroke-width", "1px")
 			.on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event)})
 		    .on("mouseout", () => { return this.mouseout(); })
-		    
-
 	}
 
 	setLegend() {
@@ -170,7 +169,6 @@ export class PinDropMap {
 		this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
 		this.legendSettings.varDescriptionData = this.varDescriptionData;
 		this.legendSettings.varDescriptionVariable = this.filterVars[this.currFilterIndex].variable;
-
 
 		this.legend.render(this.legendSettings);
 	}
@@ -217,7 +215,6 @@ export class PinDropMap {
 	}
 
 	changeVariableValsShown(valsShown) {
-		console.log(valsShown);
 		this.points
 			.style("display", (d) => {
 		   		let value = d ? d[this.currFilterVar] : null;
@@ -225,7 +222,6 @@ export class PinDropMap {
 		   			// to account for cases where values can be split across multiple categories
 		   			let splitVals = value.split(";");
 		   			if (splitVals.length > 1) {
-		   				console.log("split vals greater than 1");
 		   				let fillColor1 = this.colorScale(splitVals[0].trim()),
 		   					fillColor2 = this.colorScale(splitVals[1].trim()),
 		   					binIndex1 = this.colorScale.range().indexOf(fillColor1),
@@ -236,7 +232,6 @@ export class PinDropMap {
 		   			} else {
 		   				let fillColor = this.colorScale(splitVals[0].trim())
 		   				let binIndex = this.colorScale.range().indexOf(fillColor);
-		   				console.log(binIndex);
 		   				if (valsShown.indexOf(binIndex) > -1) {
 			   				return "block";
 			   			}
@@ -250,13 +245,10 @@ export class PinDropMap {
 		if (d && d[this.currFilterVar]) {
 	   		let value = d[this.currFilterVar];
 	   		if (this.filterVars[this.currFilterIndex].canSplitCategory) {
-	   			console.log("can split!");
 	   			let splitVals = value.split(";");
-	   			console.log(splitVals);
 	   			if (splitVals.length > 1) {
 	   				let id = Math.round(Math.random() * 10000);
 	   				this.svgDefs = defineFillPattern(splitVals, id, this.colorScale, this.svgDefs, "point");
-					console.log(this.svgDefs);
 	   				return "url(#pattern" + id + ")";
 	   			}
 	   		}
