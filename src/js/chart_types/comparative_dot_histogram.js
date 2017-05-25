@@ -107,6 +107,8 @@ export class ComparativeDotHistogram {
 		this.circleDiam = widthBinRatio - 2*this.circleXOffset;
 		
 		this.xScale.range([widthBinRatio/2, this.w - widthBinRatio/2]);
+		this.xAxisScale.range([widthBinRatio/2 + this.circleDiam/2, this.w - widthBinRatio/2 - this.circleDiam/2 - this.circleXOffset]);
+
 
 		this.maxColHeight = d3.max(this.dataNest, (d) => { return d.values.length; })
 
@@ -164,34 +166,41 @@ export class ComparativeDotHistogram {
 			.data(this.annotationSplits)
 			.enter().append("g")
 			.attr("class", "annotation")
-			.attr("transform", (d) => { return "translate(" + (this.xScale(this.binScale(+d.value)) - this.circleXOffset) + ")"; })
+			.attr("transform", (d) => { return "translate(" + (this.xScale(this.binScale(+d.value)) - this.circleXOffset/2) + "," + 10 + ")"; })
 
-		this.annotations.append("line")
+		this.annotationLines = this.annotations.append("line")
 			.attr("x1", 0)
 			.attr("y1", this.h - margin.bottom)
 			.attr("x2", 0)
 			.attr("y2", 0)
-			.attr("stroke", colors.grey.medium);
+			.attr("class", "comparative-dot-histogram__annotation");
 
 		this.annotations.append("text")
 			.attr("x", 0)
 			.attr("y", 0)
-			.text((d) => { return d.text; })
+			.attr("class", "comparative-dot-histogram__annotation-text")
+			.attr("text-anchor", "end")
+			.attr("alignment-baseline", "hanging")
+			.selectAll("tspan")
+			.data((d) => { return d.textSpans; })
+			.enter().append("tspan")
+			.attr("x", -7)
+			.attr("y", (d, i) => { return i*15 + 10; })
+			.text((d) => { return d; })
 	}
 
 	setXAxis() {
 		this.xAxisScale
-			.domain(this.binScale.domain())
-			.range(this.xScale.range());
+			.domain(this.binScale.domain());
 
 		this.xAxis
-			.attr("transform", "translate(-" + 0 + "," + (this.h - 10) + ")")
+			.attr("transform", "translate(" + 0 + "," + (this.h - 10) + ")")
 			.call(
 				d3.axisBottom(this.xAxisScale)
 					.ticks(5)
 					.tickPadding(10)
 					.tickSizeOuter(0)
-					.tickSizeInner(0)
+					.tickSizeInner(7)
 					.tickFormat((d) => { return formatValue(d, this.groupingVars[0].format); })
 			);
 	}
@@ -226,6 +235,12 @@ export class ComparativeDotHistogram {
 		let binSpread = (sampleExtent[1] - sampleExtent[0])/2;
 
 		this.setXAxis();
+
+		this.annotations			
+			.attr("transform", (d) => { return "translate(" + (this.xScale(this.binScale(+d.value))) + "," + 10 + ")"; });
+
+		this.annotationLines
+			.attr("y1", this.h - margin.bottom);
 	}
 
 	mouseover(hovered, eventObject) {

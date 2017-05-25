@@ -5,8 +5,25 @@
 		font-size: 12px;
 	}
 
+	.tick > line {
+		stroke: palette-get(na-black-40);
+		stroke-opacity: .7;
+	}
+
 	.axis path {
 		stroke: palette-get(na-black-40);
 		stroke-opacity: .7;
+	}
+
+	&__annotation {
+		stroke: palette-get(na-black-40);
+		stroke-opacity: .7;
+		stroke-width: 1.5;
+
+		&-text {
+			fill: palette-get(na-black-40);
+			fill-opacity: .7;
+			font-size: 14px;
+		}
 	}
 }

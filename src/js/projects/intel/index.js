@@ -16,17 +16,17 @@ let variables = {
 }
 
 let vizSettingsList = [
-	{
-		id: "#intel__primary-tech-tool", 
-		vizType: "category_breakdown",
-		primaryDataSheet: "programs",
-		dotSettings: { "width": 20, "offset": 5},
-		filterVars: [ variables.primary_technological_tool ],
-		tooltipVars: [ variables.name, variables.primary_technological_tool, variables.tech_tool],
-		quantityLabel: "programs",
-		idVar: variables.name
-		// clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
-	},
+	// {
+	// 	id: "#intel__primary-tech-tool", 
+	// 	vizType: "category_breakdown",
+	// 	primaryDataSheet: "programs",
+	// 	dotSettings: { "width": 20, "offset": 5},
+	// 	filterVars: [ variables.primary_technological_tool ],
+	// 	tooltipVars: [ variables.name, variables.primary_technological_tool, variables.tech_tool],
+	// 	quantityLabel: "programs",
+	// 	idVar: variables.name
+	// 	// clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
+	// },
 	{
 		id: "#intel__start-year",
 		primaryDataSheet: "programs",
@@ -34,7 +34,7 @@ let vizSettingsList = [
 		groupingVars: [ variables.start_year ],
 		titleVar: variables.name,
 		legendSettings: {"orientation": "horizontal-center", "showTitle": false},
-		annotationSplits: [ {"value": "2011", "text": "Tablet invented and first introduced to schools"}],
+		annotationSplits: [ {"value": "2011", "textSpans": ["Tablet invented and", "first introduced to schools"] }],
 		// clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 	},
 	// {
@@ -51,17 +51,17 @@ let vizSettingsList = [
 	// 		"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
 	// 	}
 	// },
-	{
-		id: "#intel__national-initiatives", 
-		vizType: "pindrop_map",
-		primaryDataSheet: "programs",
-		geometryType: "states",
-		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
-		filterVars: [ variables.program_affiliation, variables.program_type, variables.languages_summarized, variables.number_served, variables.age_served ],
-		tooltipVars: [ variables.name, variables.program_affiliation, variables.program_type, variables.languages_summarized, variables.number_served, variables.age_served ],
-		filterGroupSettings: {"hidden": false},
-		legendSettings: {"orientation": "vertical-right", "showTitle": true},
-	},
+	// {
+	// 	id: "#intel__national-initiatives", 
+	// 	vizType: "pindrop_map",
+	// 	primaryDataSheet: "programs",
+	// 	geometryType: "states",
+	// 	stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
+	// 	filterVars: [ variables.program_affiliation, variables.program_type, variables.languages_summarized, variables.number_served, variables.age_served ],
+	// 	tooltipVars: [ variables.name, variables.program_affiliation, variables.program_type, variables.languages_summarized, variables.number_served, variables.age_served ],
+	// 	filterGroupSettings: {"hidden": false},
+	// 	legendSettings: {"orientation": "vertical-right", "showTitle": true},
+	// },
 ]
 
 let projectSettings = {
