@@ -83,21 +83,19 @@
 			font-size: 15px;
 		}
 
-		&__list {
-			padding-bottom: 10px;
-			&-item {
-				line-height: 1.4;
-				/*padding-left: 10px;*/
-			}
-		}
 
 		&__list-item {
 			display: block;
 			margin-bottom: 5px;
+			line-height: 1.4;
+			&.active {
+				border: 2px solid;
+				padding: 5px 6px;
+			}
+
 			&__label, &__value {
 				display: inline-block;
 				font-size: 14px;
-				
 				margin-bottom: 0px;
 			}
 			&__label {
@@ -109,6 +107,8 @@
 				padding-left: 5px;
 				color: palette-get(na-black-40);
 				line-height: 1.2;
+
+				
 			}
 		}
 	}

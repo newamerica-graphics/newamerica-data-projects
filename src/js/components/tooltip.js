@@ -2,33 +2,37 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
-let nonScrollXPadding = 15;
-let scrollXPadding = 2;
+const nonScrollXPadding = 15;
+const scrollXPadding = 2;
 
 import { formatValue } from "../helper_functions/format_value.js";
 
 export class Tooltip {
 	constructor(vizSettings) {
-		let {id, tooltipVars, tooltipImageVar, imageFolderId, tooltipScrollable} = vizSettings;
+		Object.assign(this, vizSettings);
 		//removes first variable to be used as title
-		this.titleVar = tooltipVars[0].variable;
-		this.tooltipVars = tooltipVars.slice(1);
-		this.tooltipImageVar = tooltipImageVar;
-		this.imageFolderId = imageFolderId;
-		this.tooltipScrollable = tooltipScrollable;
-
+		this.titleVar = this.tooltipVars[0].variable;
+		this.tooltipVars = this.tooltipVars.slice(1);
 		this.isHovered = false;
 
+		this.appendTooltip();
+
+		this.setCategoryNest();
+		
+		this.tooltipCategoryTitles = {};
+	}
+
+	appendTooltip() {
 		let tooltipClass = "tooltip hidden";
-		tooltipClass += tooltipScrollable ? " scrollable" : "";
-		this.xPadding = tooltipScrollable ? scrollXPadding : nonScrollXPadding;
+		tooltipClass += this.tooltipScrollable ? " scrollable" : "";
+		this.xPadding = this.tooltipScrollable ? scrollXPadding : nonScrollXPadding;
 
 		this.tooltip = d3.select("body")
 			.append("div")
 			.attr("class", tooltipClass)
 			.on("mouseleave", this.mouseleave.bind(this));
 
-		if (tooltipScrollable) {
+		if (this.tooltipScrollable) {
 			this.tooltip
 				.append("div")
 				.attr("class", "tooltip__fadeout__top");
@@ -37,16 +41,16 @@ export class Tooltip {
 				.attr("class", "tooltip__fadeout__bottom");
 		}
 
-		let contentContainer = this.tooltip
+		this.contentContainer = this.tooltip
 			.append("div")
 			.attr("class", "tooltip__content-container");
 
-		let titleContainer = contentContainer
+		let titleContainer = this.contentContainer
 			.append("div")
 			.attr("class", "tooltip__title-container")
-			.classed("no-content", tooltipVars.length < 1);
+			.classed("no-content", this.tooltipVars.length < 1);
 			
-		if (tooltipImageVar) {
+		if (this.tooltipImageVar) {
 			this.imageContainer = titleContainer
 				.append("div")
 				.attr("class", "person__icon");
@@ -56,87 +60,81 @@ export class Tooltip {
 				.attr("class", "person__icon__photo");
 		}
 
-		this.title = titleContainer
+		this.titleDiv = titleContainer
 			.append("h1")
 			.classed("tooltip__title", true);
-
-		this.valueFields = {};
-
-		let categoryNest = d3.nest()
-				.key((d) => { return d.category; })
-				.entries(this.tooltipVars);
-		let showCategories = categoryNest.length > 1;
-		let whichContainer;
-
-		for (let category of categoryNest) {
-			whichContainer = contentContainer;
-			if (category.key != "undefined" && showCategories) {
-				contentContainer.append("h5")
-					.classed("tooltip__category__name", true)
-					.text(category.key);
-
-				whichContainer = contentContainer.append("ul")
-					.classed("tooltip__category__list", true);
-			}
-
-			for (let variable of category.values) {
-				var listElem = whichContainer.append("li")
-					.classed("tooltip__category__list-item", true);
-
-				let valueField = {};
-				valueField.label = listElem.append("h3")
-					.classed("tooltip__category__list-item__label", true)
-					.text(variable.displayName + ":");
-
-				valueField.value = listElem.append("h3")
-					.classed("tooltip__category__list-item__value", true)
-					
-				this.valueFields[variable.variable] = valueField;
-			}
-		}
 	}
 
-	show(d, mouse) {
+	setCategoryNest() {
+		let categoryNest = d3.nest()
+			.key((d) => { return d.category; })
+			.entries(this.tooltipVars);
+
+		console.log(categoryNest);
+
+		this.categoryContainers = this.contentContainer.selectAll("g.tooltip__category")
+			.data(categoryNest)
+			.enter().append("g")
+			.attr("class", "tooltip__category");
+
+		this.categoryContainers.append("h5")
+			.attr("class", "tooltip__category__name")
+			.style("display", (d) => { return d.key == "undefined" ? "none" : "block"; })
+			.text((d) => { return d.key; });
+
+		let categoryValList = this.categoryContainers.append("ul")
+			.attr("class", "tooltip__category__val-list");
+
+		this.listItems = categoryValList.selectAll("li")
+			.data((d) => { return d.values; })
+			.enter().append("li")
+			.attr("class", "tooltip__category__list-item");
+
+		this.listItems.append("h3")
+			.attr("class", "tooltip__category__list-item__label")
+			.text((d) => { return d.displayName + ":" })
+
+		this.listItems.append("h3")
+			.attr("class", "tooltip__category__list-item__value")
+	}
+
+	show(datum, mouse, currFilterVar, filterColor) {
 		if ($(window).width() < 450) {
 			return;
 		}
-        if (this.tooltipImageVar) {
-        	if (d[this.tooltipImageVar.variable]) {
-        		this.title
-        			.classed("has-image", true)
-        		this.imageContainer
-        			.style("display", "table-cell");
-        		this.image
-        			.style("background", "no-repeat center/100% url(https://googledrive.com/host/" + this.imageFolderId + "/" + d[this.tooltipImageVar.variable] + ")");
-        	} else {
-        		this.imageContainer.style("display", "none");
-        		this.title
-        			.classed("has-image", false)
-        	}
-        }
-		this.title.text(d[this.titleVar]);
 
-		for (let variable of this.tooltipVars) {
-			let varName = variable.variable;
-			let varFormat = variable.format;
-			let value = d[varName] ? formatValue(d[varName], varFormat) : null;
+		console.log(filterColor);
+        // if (this.tooltipImageVar) {
+        // 	if (d[this.tooltipImageVar.variable]) {
+        // 		this.titleDiv
+        // 			.classed("has-image", true)
+        // 		this.imageContainer
+        // 			.style("display", "table-cell");
+        // 		this.image
+        // 			.style("background", "no-repeat center/100% url(https://googledrive.com/host/" + this.imageFolderId + "/" + d[this.tooltipImageVar.variable] + ")");
+        // 	} else {
+        // 		this.imageContainer.style("display", "none");
+        // 		this.titleDiv
+        // 			.classed("has-image", false)
+        // 	}
+        // }
 
-			if (value) {
-				this.valueFields[varName].label
-					.style("display", "inline-block");
+		this.titleDiv.text(datum[this.titleVar]);
 
-				this.valueFields[varName].value
-					.style("display", "inline-block")
-					.text(value);
-			} else  {
-				this.valueFields[varName].label
-					.style("display", "none");
-
-				this.valueFields[varName].value
-					.style("display", "none");
-
-			}
+		if (this.showOnlyVars == "same category") {
+			this.categoryContainers
+				.style("display", (d) => { console.log(d); return currFilterVar.category == d.key ? "block" : "none"; })
 		}
+
+		this.listItems
+			.style("display", (d) => { return datum[d.variable] ? "block" : "none"; })
+			.classed("active", (d) => { return this.highlightActive && d.variable == currFilterVar.variable; })
+			.style("border-color", filterColor)
+			.style("border-image", filterColor && filterColor.includes("url") ? this.setMultiColorBorder(filterColor) : "none");
+
+		this.listItems.selectAll("h3.tooltip__category__list-item__value")
+			.text((d) => { return formatValue(datum[d.variable], d.format); })
+
 
 		let tooltipCoords = this.getTooltipCoords(mouse);
 		this.tooltip
@@ -167,6 +165,30 @@ export class Tooltip {
 		retCoords[1] -= (tooltipHeight/2 + 15);
 
 		return retCoords;
+	}
+
+	setMultiColorBorder(inputColor) { 
+		let retVal = "linear-gradient(to right, ";
+		let patternId = inputColor.replace('url("', '').replace('")', '');
+
+		if ($(patternId).is("linearGradient")) {
+			let colors = $(patternId).children("stop");
+
+			retVal += d3.select(colors[2]).style("stop-color") + " 20%, ";
+			retVal += d3.select(colors[0]).style("stop-color") + " 100%";
+		} else {
+			let colors = $(patternId).children("rect");
+
+			retVal += d3.select(colors[1]).style("fill") + " 20%, ";
+			retVal += d3.select(colors[0]).style("fill") + " 100%";
+		}
+
+		retVal += ") 5";
+
+		console.log(retVal);
+
+		return retVal;
+	
 	}
 
 	mouseleave() {

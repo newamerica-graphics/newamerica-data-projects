@@ -5,10 +5,9 @@ import { colors } from "../helper_functions/colors.js";
 import { formatValue } from "../helper_functions/format_value.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { Tooltip } from "../components/tooltip.js";
+import { Legend } from "../components/legend.js";
 
-const numBins = 25,
-	binList = Array.apply(null, {length: numBins}).map(Number.call, Number),
-	margin = {bottom: 50};
+const margin = {bottom: 20};
 
 export class ComparativeDotHistogram {
 	constructor(vizSettings, imageFolderId) {
@@ -16,6 +15,7 @@ export class ComparativeDotHistogram {
 	
 		this.svg = d3.select(this.id)
 			.append("svg")
+			.attr("width", "100%")
 			.attr("class", "comparative-dot-histogram")
 
 		this.xAxis = this.svg.append("g")
@@ -24,13 +24,20 @@ export class ComparativeDotHistogram {
 		this.binScale = d3.scaleQuantize();
 		this.xAxisScale = d3.scaleLinear();
 
-		this.xScale = d3.scaleBand()
-			.domain(binList);
+		this.xScale = d3.scaleBand();
 
 		this.yScale = d3.scaleLinear();
 
-		let tooltipSettings = { "id":this.id, "tooltipVars":[this.titleVar, ...this.groupingVars] };
+		let tooltipSettings = { "id":this.id, "tooltipVars":[this.titleVar, ...this.groupingVars], "highlightActive":false };
 		this.tooltip = new Tooltip(tooltipSettings);
+
+		if (this.groupingVars.length > 1) {
+			this.legendSettings.id = this.id;
+			this.legendSettings.markerSettings = { shape:"circle", size:10 };
+			this.legendSettings.disableValueToggling = true;
+
+			this.legend = new Legend(this.legendSettings);
+		}
 	}
 
 	render(data) {
@@ -42,11 +49,14 @@ export class ComparativeDotHistogram {
 		this.setDimensions();
 
 		this.buildGraph();
+		this.annotationSplits ? this.buildAnnotationSplits() : null;
 		this.setXAxis();
+
+		this.legend ? this.setLegend() : null;
 	}
 
 	processData(data) {
-		const labelVarName = this.labelVar.variable,
+		const labelVarName = this.labelVar ? this.labelVar.variable : null,
 			titleVarName = this.titleVar.variable;
 		let retArray = [];
 		this.groupingVars.forEach((groupingVar, i) => {
@@ -61,45 +71,53 @@ export class ComparativeDotHistogram {
 			})
 		})
 
-		console.log(retArray);
-
 		return retArray;
 	}
 
 	setBinScale() {
 		let extents = d3.extent(this.data, (d) => { return d.value; });
 
+		this.numBins = this.customNumBins || extents[1] - extents[0] + 1;
+		let binList = Array.apply(null, {length: this.numBins}).map(Number.call, Number);
+		
+		this.xScale.domain(binList);
+		
 		this.binScale.domain(extents)
 			.range(binList);
 	}
 
 	setDataNest() {
+		console.log(this.binScale.domain(), this.binScale.range());
 		this.dataNest = d3.nest()
 			.key((d) => { return this.binScale(d.value); })
 			.sortKeys((a, b) => { return d3.ascending(+a, +b); })
 			.sortValues((a, b) => { return d3.ascending(+a.value, +b.value);})
 			.entries(this.data);
 
-			console.log(this.dataNest);
+		console.log(this.dataNest);
 	}
 
 	setDimensions() {
+		console.log("setting dimensions");
 		this.w = $(this.id).width();
-		let widthBinRatio = this.w/numBins;
-		this.circleOffset = widthBinRatio/10;
-		this.circleDiam = widthBinRatio - 2*this.circleOffset;
+		console.log(this.w);
+		let widthBinRatio = this.w/this.numBins;
+		this.circleXOffset = widthBinRatio/8;
+		this.circleYOffset = widthBinRatio/30;
+		this.circleDiam = widthBinRatio - 2*this.circleXOffset;
 		
 		this.xScale.range([widthBinRatio/2, this.w - widthBinRatio/2]);
+		this.xAxisScale.range([widthBinRatio/2 + this.circleDiam/2, this.w - widthBinRatio/2 - this.circleDiam/2 - this.circleXOffset]);
+
 
 		this.maxColHeight = d3.max(this.dataNest, (d) => { return d.values.length; })
 
-		this.h = this.maxColHeight * widthBinRatio;
+		this.h = this.maxColHeight * (widthBinRatio + this.circleYOffset);
 
 		this.yScale.domain([0, this.maxColHeight])
 			.range([this.h - widthBinRatio/2, widthBinRatio/2]);
 
 		this.svg
-			.attr("width", this.w)
 			.attr("height", this.h + margin.bottom);
 	}
 
@@ -108,7 +126,7 @@ export class ComparativeDotHistogram {
 			.data(this.dataNest)
 			.enter().append("g")
 			.attr("class", "column")
-			.attr("transform", (d) => { console.log(d.key); return "translate(" + this.xScale(+d.key) + ")"; })
+			.attr("transform", (d) => { return "translate(" + this.xScale(+d.key) + ")"; })
 
 		this.circles = this.circleCols.selectAll("circle")
 			.data((d) => { return d.values;})
@@ -116,12 +134,17 @@ export class ComparativeDotHistogram {
 			.attr("transform", (d, i) => { return "translate(0, " + this.yScale(i) + ")"; })
 			.attr("stroke", (d) => { return this.groupingVars[d.group].color; })
 			.attr("fill", "white")
-			.attr("stroke-width", 2)
+			.attr("stroke-width", 1)
 			.attr("cx", this.circleDiam/2)
 			.attr("cy", -this.circleDiam/2)
 			.attr("r", this.circleDiam/2)
 			.on("mouseover", (d) => { return this.mouseover(d, d3.event); })
 			.on("mouseout", () => { return this.mouseout(); })
+			.on("click", (d) => { 
+				if (this.clickToProfile) {
+		    		window.location.href = this.clickToProfile.url + d.title.replace(" ", "_");
+		    	}
+		    });
 
 		this.circleText = this.circleCols.selectAll("text")
 			.data((d) => { return d.values;})
@@ -135,23 +158,63 @@ export class ComparativeDotHistogram {
     		.style("font-size", this.circleDiam/2)
     		.style("font-weight", "bold")
     		.style("pointer-events", "none")
-			.text((d) => { return d.label; });
+			.text((d) => { return d.label ? d.label : null; });
+	}
+
+	buildAnnotationSplits() {
+		this.annotations = this.svg.selectAll("g.annotation")
+			.data(this.annotationSplits)
+			.enter().append("g")
+			.attr("class", "annotation")
+			.attr("transform", (d) => { return "translate(" + (this.xScale(this.binScale(+d.value)) - this.circleXOffset/2) + "," + 10 + ")"; })
+
+		this.annotationLines = this.annotations.append("line")
+			.attr("x1", 0)
+			.attr("y1", this.h - margin.bottom)
+			.attr("x2", 0)
+			.attr("y2", 0)
+			.attr("class", "comparative-dot-histogram__annotation");
+
+		this.annotations.append("text")
+			.attr("x", 0)
+			.attr("y", 0)
+			.attr("class", "comparative-dot-histogram__annotation-text")
+			.attr("text-anchor", "end")
+			.attr("alignment-baseline", "hanging")
+			.selectAll("tspan")
+			.data((d) => { return d.textSpans; })
+			.enter().append("tspan")
+			.attr("x", -7)
+			.attr("y", (d, i) => { return i*15 + 10; })
+			.text((d) => { return d; })
 	}
 
 	setXAxis() {
 		this.xAxisScale
-			.domain(this.binScale.domain())
-			.range(this.xScale.range());
+			.domain(this.binScale.domain());
 
 		this.xAxis
-			.attr("transform", "translate(-" + 0 + "," + (this.h - 10) + ")")
+			.attr("transform", "translate(" + 0 + "," + (this.h - 10) + ")")
 			.call(
 				d3.axisBottom(this.xAxisScale)
+					.ticks(5)
 					.tickPadding(10)
 					.tickSizeOuter(0)
-					.tickSizeInner(0)
-					.tickFormat((d) => { return formatValue(d, "price"); })
+					.tickSizeInner(7)
+					.tickFormat((d) => { return formatValue(d, this.groupingVars[0].format); })
 			);
+	}
+
+	setLegend() {
+		let colorScale = d3.scaleOrdinal()
+			.domain(this.groupingVars.map((d) => {return d.displayName;}))
+			.range(this.groupingVars.map((d) => {return d.color;}));
+
+		this.legendSettings.format = this.groupingVars[0].format;
+		this.legendSettings.scaleType = "categorical";
+		this.legendSettings.colorScale = colorScale;
+
+		this.legend.render(this.legendSettings);
 	}
 
 	resize() {
@@ -172,6 +235,12 @@ export class ComparativeDotHistogram {
 		let binSpread = (sampleExtent[1] - sampleExtent[0])/2;
 
 		this.setXAxis();
+
+		this.annotations			
+			.attr("transform", (d) => { return "translate(" + (this.xScale(this.binScale(+d.value))) + "," + 10 + ")"; });
+
+		this.annotationLines
+			.attr("y1", this.h - margin.bottom);
 	}
 
 	mouseover(hovered, eventObject) {
@@ -182,7 +251,7 @@ export class ComparativeDotHistogram {
 		let hoveredVals = {};
 		this.circles
 			.attr("fill", (d) => {
-				if (d.label == hovered.label) {
+				if (d.title == hovered.title) {
 					hoveredVals[d.group] = d;
 					return this.groupingVars[d.group].color;
 				} else {
@@ -192,16 +261,15 @@ export class ComparativeDotHistogram {
 
 		this.circleText
 			.attr("fill", (d) => {
-				if (d.label == hovered.label) {
+				if (d.title == hovered.title) {
 					return "white";
 				} else {
 					return this.groupingVars[d.group].color;
 				}
 		    });
 
-		const labelVarName = this.labelVar.variable;
 		this.rawData.forEach((d) => {
-			if (d[labelVarName] == hovered.label) {
+			if (d[this.titleVar.variable] == hovered.title) {
 				this.tooltip.show(d, mousePos);
 				return;
 			}

@@ -1,13 +1,9 @@
 import $ from 'jquery';
 let d3 = require("d3");
 
-
 import { colors } from "../helper_functions/colors.js";
-
 import { formatValue } from "../helper_functions/format_value.js";
-
 import { getColorScale } from "../helper_functions/get_color_scale.js";
-
 import { Tooltip } from "../components/tooltip.js";
 
 const categoryYPadding = 10,
@@ -24,29 +20,21 @@ export class CategoryBreakdown {
 		this.currFilter = this.filterVars[0];
 		this.currFilterVar = this.filterVars[0].variable;
 
-		
+		if (this.tooltipVars) {
+			let tooltipSettings = { "id":this.id, "tooltipVars":this.tooltipVars, "highlightActive": false}
 
-		// let tooltipSettings = { "id":id, "tooltipVars":tooltipVars, tooltipImageVar:"tooltipImageVar", "imageFolderId":imageFolderId, "tooltipScrollable":tooltipScrollable };
-		// this.tooltip = new Tooltip(tooltipSettings);
+			this.tooltip = new Tooltip(tooltipSettings);
+		}
 	}
 
 	render(data) {
-		this.setScale(data[this.primaryDataSheet]);
-		this.data = this.getDataNest(data[this.primaryDataSheet]);
+		this.rawData = data[this.primaryDataSheet];
+		this.setScale(this.rawData);
+		this.data = this.getDataNest(this.rawData);
 		console.log(this.data);
 		this.setDimensions();
 		
-
 		this.buildGraph();
-		// this.sortData();
-		
-
-		// this.buildGraph();
-		
-		// if (!this.isSubComponent) {
-		// 	this.setLegend();
-		// }
-		
 	}
 
 	getDataNest(data) {
@@ -112,7 +100,6 @@ export class CategoryBreakdown {
 	}
 
 	buildGraph() {
-
 		this.categoryContainers = this.chartContainer.selectAll("div")
 			.data(this.data)
 			.enter().append("div")
@@ -129,7 +116,7 @@ export class CategoryBreakdown {
 		this.textContainers.append("h5")
 			.attr("class", "category-breakdown__text__subheading")
 			// .attr("transform", "translate(0,30)")
-			.text((d) => { return d.values.length + " states"; });
+			.text((d) => { return d.values.length + " " + this.quantityLabel; });
 
 
 		this.dataContainers = this.categoryContainers
@@ -148,9 +135,13 @@ export class CategoryBreakdown {
 			.data((d) => { return d.values; })
 			.enter().append("g")
 			.attr("transform", (d, i) => { return "translate(" + this.calcX(i) + "," + this.calcY(i) + ")"; })
-			.on("mouseover", (d) => { return this.mouseover(d); })
+			.on("mouseover", (d) => { return this.mouseover(d, d3.event); })
 		    .on("mouseout", () => { return this.mouseout(); })
-		    .on("click", (d) => { return this.eventSettings.click && this.eventSettings.click.handlerFunc ? this.eventSettings.click.handlerFunc(d.id) : null; });
+		    .on("click", (d) => {
+		    	if (this.clickToProfile) {
+		    		window.location.href = this.clickToProfile.url + d[this.clickToProfile.variable].replace(" ", "_");
+		    	}
+		    })
 
 		this.dataCircles = this.dataG.append("circle")
 			.attr("class", "category-breakdown__data__circle")
@@ -158,32 +149,18 @@ export class CategoryBreakdown {
 			.attr("cx", this.dotSettings.width/2)
 			.attr("cy", this.dotSettings.width/2)
 			.attr("r", this.dotSettings.width/2)
-			.attr("fill", "white")
+			.attr("fill", (d) => { return this.labelVar ? "white" : this.colorScale(d[this.currFilterVar]); })
 			.attr("stroke", (d) => { return this.colorScale(d[this.currFilterVar]); })
 
-		this.dataCircleText = this.dataG.append("text")
-			.attr("class", "category-breakdown__data__label")
-			.attr("id", (d, i) => { return i; })
-			.attr("x", this.dotSettings.width/2)
-			.attr("y", this.dotSettings.width/2)
-			.attr("fill", (d) => { return this.colorScale(d[this.currFilterVar]); })
-			.text((d) => { return d[this.labelVar.variable]; });
-
-		// this.cells = this.svg.selectAll("rect")
-		// 	.data(data)
-		// 	.enter().append("rect")
-		// 	.attr("width", this.dotSettings.width)
-		//     .attr("height", this.dotSettings.width)
-		//     .attr("x", (d, i) => { return this.calcX(d, i); })
-		//     .attr("y", (d, i) => { return this.calcY(i); })
-		//     .attr("fill", (d) => {
-		//     	return this.colorScale(d[this.currFilterVar]);
-		//     })
-		//     .style("cursor", this.eventSettings.click ? "pointer" : "auto")
-		//     .attr("class", (d) => { return d[this.currFilterVar]; })
-		//     .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event); })
-		//     .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); })
-		//     .on("click", (d) => { return this.eventSettings.click && this.eventSettings.click.handlerFunc ? this.eventSettings.click.handlerFunc(d.id) : null; });
+		if (this.labelVar) {
+			this.dataCircleText = this.dataG.append("text")
+				.attr("class", "category-breakdown__data__label")
+				.attr("id", (d, i) => { return i; })
+				.attr("x", this.dotSettings.width/2)
+				.attr("y", this.dotSettings.width/2)
+				.attr("fill", (d) => { return this.colorScale(d[this.currFilterVar]); })
+				.text((d) => { return d[this.labelVar.variable]; });
+		}
 	}
 
 	calcX(i) {
@@ -256,32 +233,56 @@ export class CategoryBreakdown {
 			.attr("transform", (d, i) => { return "translate(" + this.calcX(i) + "," + this.calcY(i) + ")"; })
 	}
 
-	mouseover(hovered) {
+	mouseover(hovered, eventObject) {
 		this.dataCircles
 			.attr("fill", (d) => {
-				if (d.state_id == hovered.state_id) {
-					return this.colorScale(d[this.currFilterVar]);
+				if (this.labelVar) {
+					if (d[this.idVar.variable] == hovered[this.idVar.variable]) {
+						return this.colorScale(d[this.currFilterVar]);
+					} else {
+						return "white";
+					}
 				} else {
-					return "white";
+					if (d[this.idVar.variable] == hovered[this.idVar.variable]) {
+						return "white";
+					} else {
+						return this.colorScale(d[this.currFilterVar]);
+					}
 				}
 		    });
+		if (this.labelVar) {
+			this.dataCircleText
+				.attr("fill", (d) => {
+					if (d[this.idVar.variable] == hovered[this.idVar.variable]) {
+						return "white";
+					} else {
+						return this.colorScale(d[this.currFilterVar]);
+					}
+			    });
+		}
 
-		this.dataCircleText
-			.attr("fill", (d) => {
-				if (d.state_id == hovered.state_id) {
-					return "white";
-				} else {
-					return this.colorScale(d[this.currFilterVar]);
-				}
-		    });
+		let mousePos = [];
+		mousePos[0] = eventObject.pageX;
+		mousePos[1] = eventObject.pageY;
+
+		let rawDataPoint = this.rawData.filter((d) => { return d[this.idVar.variable] == hovered[this.idVar.variable]})[0];
+
+		console.log(rawDataPoint);
+
+		this.tooltip ? this.tooltip.show(rawDataPoint, mousePos, this.currFilter, null) : null;
+
 	}
 
 	mouseout() {
 		this.dataCircles
-			.attr("fill", "white");
+			.attr("fill", (d) => { return this.labelVar ? "white" : this.colorScale(d[this.currFilterVar]); })
 
-		this.dataCircleText
-			.attr("fill", (d) => { return this.colorScale(d[this.currFilterVar]); });
+		if (this.labelVar) {
+			this.dataCircleText
+				.attr("fill", (d) => { return this.colorScale(d[this.currFilterVar]); });
+		}
+
+		this.tooltip ? this.tooltip.hide() : null;
 	}
 
 }

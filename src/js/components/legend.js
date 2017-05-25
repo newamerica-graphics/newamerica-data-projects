@@ -4,6 +4,10 @@ import * as global from "./../utilities.js";
 
 import { formatValue } from "../helper_functions/format_value.js";
 
+import { colors } from "../helper_functions/colors.js";
+
+import { questionSVGPath } from "../utilities/icons.js";
+
 let d3 = require("d3");
 
 let continuousLegendHeight = 20,
@@ -11,20 +15,18 @@ let continuousLegendHeight = 20,
 
 export class Legend {
 	constructor(legendSettings) {
-		let {id, markerSettings, showTitle, showValCounts, orientation, customTitleExpression, annotation, disableValueToggling, openEnded, customLabels, valCountCustomFormattingFunc} = legendSettings;
-		this.id = id;
-		this.showTitle = showTitle;
-		this.customTitleExpression = customTitleExpression;
-		this.markerSettings = markerSettings;
-		this.orientation = orientation;
-		this.disableValueToggling = disableValueToggling;
-		this.openEnded = openEnded;
-		this.customLabels = customLabels;
-		this.showValCounts = showValCounts;
-		this.annotation = annotation;
-		this.valCountCustomFormattingFunc = valCountCustomFormattingFunc;
+		Object.assign(this, legendSettings);
+	}
 
-		
+	render(legendSettings) {
+		let prevOrientation = this.orientation;
+		Object.assign(this, legendSettings);
+
+		this.orientation = prevOrientation ? prevOrientation : this.orientation;
+		if (this.legend) {
+			this.legend.remove();
+		}
+
 		this.legend = d3.select(this.id)
 			.append("div")
 			.attr("class", "legend " + this.orientation);
@@ -40,9 +42,9 @@ export class Legend {
 
 			let title;
 			if (this.customTitleExpression) {
-				title = this.customTitleExpression.replace("<<>>",legendSettings.title);
+				title = this.customTitleExpression.replace("<<>>",this.title);
 			} else {
-				title = legendSettings.title;
+				title = this.title;
 			}
 
 			this.titleDiv = titleContainer.append("h3")
@@ -54,22 +56,29 @@ export class Legend {
 					.attr("class", "legend__annotation")
 					.text(this.annotation);
 			}
+			
+			if (this.varDescriptionData) {
+				let varDescriptionText = this.getVarDescriptionText();
+				console.log(varDescriptionText)
+				if (varDescriptionText) {
+					console.log("showing description!");
+					this.appendVarDescription(varDescriptionText);
+				}
+			}
 
 		}
 
 		this.cellContainer = this.legend.append("div")
 			.attr("class", "legend__cell-container");
 
-		this.colorScale = legendSettings.colorScale;
-
-		if (legendSettings.scaleType == "linear" || legendSettings.scaleType == "logarithmic") {
-			this.renderContinuous(legendSettings);
+		if (this.scaleType == "linear" || this.scaleType == "logarithmic") {
+			this.renderContinuous();
 		} else {
-			this.renderDiscrete(legendSettings);
+			this.renderDiscrete();
 		}
 	}
 
-	renderContinuous(legendSettings) {
+	renderContinuous() {
 		this.legendWidth = $(this.id).width();
 		if (this.legendWidth > 500) {
 			this.legendWidth = 500;
@@ -86,7 +95,7 @@ export class Legend {
 			.attr("y", 0)
 			.style("fill", "url(#linear-gradient)");
 
-		this.addLabels(legendSettings.scaleType);
+		this.addLabels();
 	}
 
 	defineGradient() {
@@ -111,10 +120,10 @@ export class Legend {
 		    .attr("stop-color", this.colorScale.range()[1]);
 	}
 
-	addLabels(scaleType) {
+	addLabels() {
 		let legendXScale;
 		//Set scale for x-axis
-		if (scaleType == "logarithmic") {
+		if (this.scaleType == "logarithmic") {
 			legendXScale = d3.scaleLog();
 		} else {
 			legendXScale = d3.scaleLinear();
@@ -136,8 +145,8 @@ export class Legend {
 			.call(legendXAxis);
 	}
 
-	renderDiscrete(legendSettings) {
-		let {scaleType, format, colorScale, valChangedFunction, valCounts, indentedIndices} = legendSettings;
+	renderDiscrete() {
+		let {scaleType, format, colorScale, valChangedFunction, valCounts} = this;
 
 		this.cellList ? this.cellList.remove() : null;
 		this.cellList = this.cellContainer.append("ul")
@@ -166,7 +175,7 @@ export class Legend {
 			}
 			this.appendCellMarker(cell, i);
 			valCounts ? this.appendValCount(cell, i, valCounts) : null;
-			this.appendCellText(cell, i, scaleType, format);
+			this.appendCellText(cell, i);
 			
 			this.legendCellDivs[i] = cell;
 		}
@@ -212,27 +221,67 @@ export class Legend {
 			.text(this.valCountCustomFormattingFunc ? this.valCountCustomFormattingFunc(valCounts.get(valKey)) : valCounts.get(valKey));
 	}
 
-	appendCellText(cell, i, scaleType, format) {
+	appendCellText(cell, i) {
 		let cellText = cell.append("h5")
 			.classed("legend__cell__label", true);
 
-		if (scaleType == "quantize") {
+		if (this.scaleType == "quantize") {
 			if (this.openEnded && i == this.colorScale.range().length - 1) {
-				cellText.text(formatValue(Math.ceil(this.calcBinVal(i, this.dataMin, this.binInterval)), format) + "+");
+				cellText.text(formatValue(Math.ceil(this.calcBinVal(i, this.dataMin, this.binInterval)), this.format) + "+");
 				return;
 			}
-			if (format == "percent") {
-				cellText.text(formatValue(Math.ceil(100*this.calcBinVal(i, this.dataMin, this.binInterval))/100, format) + " to " + formatValue(Math.floor(100*this.calcBinVal(i+1, this.dataMin, this.binInterval))/100, format));
+			if (this.format == "percent") {
+				cellText.text(formatValue(Math.ceil(100*this.calcBinVal(i, this.dataMin, this.binInterval))/100, this.format) + " to " + formatValue(Math.floor(100*this.calcBinVal(i+1, this.dataMin, this.binInterval))/100, this.format));
 			} else {
-				cellText.text(formatValue(Math.ceil(this.calcBinVal(i, this.dataMin, this.binInterval)), format) + " to " + formatValue(Math.floor(this.calcBinVal(i+1, this.dataMin, this.binInterval)), format));
+				cellText.text(formatValue(Math.ceil(this.calcBinVal(i, this.dataMin, this.binInterval)), this.format) + " to " + formatValue(Math.floor(this.calcBinVal(i+1, this.dataMin, this.binInterval)), this.format));
 			}
-		} else if (scaleType == "categorical") {
+		} else if (this.scaleType == "categorical") {
 			if (this.customLabels) {
 				cellText.text(this.customLabels[i]);
 			} else {
 				cellText.text(this.colorScale.domain()[i] ? this.colorScale.domain()[i] : "null" );
 			}
 		}
+	}
+
+	appendVarDescription(varDescriptionText) {
+		console.log("appending again!");
+		this.titleDiv.append("div")
+			.classed("legend__description-icon", true)
+			.append("svg")
+			.attr("viewBox", "0 0 16 16")
+			.attr("width", "16px")
+			.attr("height", "16px")
+			.on("mouseover", () => { this.showVarDescription(d3.event); })
+			.on("mouseout", () => { this.varDescriptionPopup.classed("hidden", true); })
+			.append("g")
+			.attr("fill", colors.grey.medium)
+			.attr("transform", "translate(-48, -432)")
+			.append("path")
+			.attr("d", questionSVGPath);
+
+		this.varDescriptionPopup = d3.select("body").append("div")
+			.attr("class", "legend__description-popup")
+			.classed("hidden", true)
+			.text(varDescriptionText)
+	}
+
+	showVarDescription(eventObject) {
+		this.varDescriptionPopup
+			.classed("hidden", false)
+			.attr('style', 'left:' + (eventObject.pageX - 70) + 'px; top:' + (eventObject.pageY + 10) + 'px');
+	}
+
+	getVarDescriptionText() {
+		let retVal;
+
+		this.varDescriptionData.forEach((d) => {
+			if (d.variable === this.varDescriptionVariable) {
+				retVal = d.description;
+			}
+		})
+
+		return retVal;
 	}
 
 	toggleValsShown(valToggled) {
@@ -268,7 +317,7 @@ export class Legend {
 	}
 
 	resize() {
-		this.render(this.legendSettings);
+		this.render();
 	}
 
 	removeComponent() {

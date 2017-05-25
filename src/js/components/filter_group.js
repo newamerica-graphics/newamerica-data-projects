@@ -84,10 +84,12 @@ export class FilterGroup {
 			i++;
 		}
 
-		this.showList(this.currCategory);
+		this.currCategory ? this.showList(this.currCategory) : null;
 	}
 
 	showList(newCategory) {
+		console.log(this.categoryDivs);
+		console.log(this.currCategory);
 		// remove active class from currently category and clear its variables
 		this.categoryDivs[this.currCategory].label.classed("active", false);
 		this.categoryDivs[this.currCategory].valueListDiv.style("display", "none");
