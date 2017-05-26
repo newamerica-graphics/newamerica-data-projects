@@ -27,16 +27,16 @@ let vizSettingsList = [
 	// 	idVar: variables.name
 	// 	// clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
 	// },
-	{
-		id: "#intel__start-year",
-		primaryDataSheet: "programs",
-		vizType: "comparative_dot_histogram",
-		groupingVars: [ variables.start_year ],
-		titleVar: variables.name,
-		legendSettings: {"orientation": "horizontal-center", "showTitle": false},
-		annotationSplits: [ {"value": "2011", "textSpans": ["Tablet invented and", "first introduced to schools"] }],
-		// clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
-	},
+	// {
+	// 	id: "#intel__start-year",
+	// 	primaryDataSheet: "programs",
+	// 	vizType: "comparative_dot_histogram",
+	// 	groupingVars: [ variables.start_year ],
+	// 	titleVar: variables.name,
+	// 	legendSettings: {"orientation": "horizontal-center", "showTitle": false},
+	// 	annotationSplits: [ {"value": "2011", "textSpans": ["Tablet invented and", "first introduced to schools"] }],
+	// 	// clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+	// },
 	// {
 	// 	id: "#intel__start-year1",
 	// 	primaryDataSheet: "programs",
@@ -64,11 +64,20 @@ let vizSettingsList = [
 	// },
 ]
 
+const reactVizSettingsList = [
+	{
+		id: "#intel__resource-toolkit", 
+		vizType: "resource_toolkit",
+		primaryDataSheet: "toolkit_resources",
+	},
+]
+
 let projectSettings = {
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/edpolicy/intel.json",
 	downloadDataLink: "https://docs.google.com/spreadsheets/d/1eUKKUR-tAv_BbjD243xRyG2348I125QUgHDJUxVoO78",
 	dataSheetNames:["programs"],
-	vizSettingsList: vizSettingsList
+	vizSettingsList: vizSettingsList,
+	reactVizSettingsList: reactVizSettingsList
 }
 
 setupProject(projectSettings);
