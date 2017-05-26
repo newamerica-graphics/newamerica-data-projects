@@ -6,6 +6,8 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 import domtoimage from 'dom-to-image';
+import React from 'react';
+import { render } from 'react-dom';
 
 import { BarChart } from "./chart_types/bar_chart.js";
 import { StackedBar } from "./chart_types/stacked_bar.js";
@@ -28,24 +30,20 @@ import { Bipartite } from "./chart_types/bipartite.js";
 import { CategoryBreakdown } from "./chart_types/category_breakdown.js";
 import { ComparativeDotHistogram } from "./chart_types/comparative_dot_histogram.js";
 import { PinDropMap } from "./chart_types/pindrop_map.js";
-import { ResourceToolkit } from "./chart_types/resource_toolkit.js";
+import ResourceToolkit from "./react_chart_types/resource_toolkit/ResourceToolkit.js";
 
 import { formatValue } from "./helper_functions/format_value.js";
 
-export function setupProject(projectSettings) {
-	let { vizSettingsList, imageFolderId, dataSheetNames } = projectSettings;
-
+export const setupProject = ({ vizSettingsList, reactVizSettingsList, imageFolderId, dataSheetNames, dataUrl }) => {
 	let vizList = [];
 
 	initialize();
 
 	window.addEventListener('resize', resize);
 
-	render();
+	renderCharts();
 
 	function initialize() {
-
-
 		for (let vizSettingsObject of vizSettingsList) {
 			if($(vizSettingsObject.id).length != 0) {
 				let viz;
@@ -119,7 +117,7 @@ export function setupProject(projectSettings) {
 						break;
 
 					case "resource_toolkit":
-						viz = new ResourceToolkit(vizSettingsObject);
+						viz = vizSettingsObject;
 						break;
 
 					case "summary_box":
@@ -146,11 +144,9 @@ export function setupProject(projectSettings) {
 		}
 	}
 
-
-
-	function render() {
+	function renderCharts() {
 		console.log(vizList);
-		if (!projectSettings.dataUrl) {
+		if (!dataUrl) {
 			for (let viz of vizList) {
 				viz.render();
 				hideLoadingGif(viz.id);
@@ -159,17 +155,38 @@ export function setupProject(projectSettings) {
 			// setDataDownloadLinks(d);
 			// setProfileValues(d);
 		} else {
-			d3.json(projectSettings.dataUrl, (d) => {
+			d3.json(dataUrl, (d) => {
 				for (let viz of vizList) {
 					viz.render(d);
+					
+					renderReact(viz, d);
+					
 					hideLoadingGif(viz.id);
 				}
 
-				setDataDownloadLinks(d);
+				for (let vizSettings of reactVizSettingsList) {
+					renderReact(vizSettings, d);
+					
+					hideLoadingGif(vizSettings.id);
+				}
+
+				// setDataDownloadLinks(d);
 				
-				setProfileValues(d);
+				// setProfileValues(d);
 			});
 		}
+	}
+
+	function renderReact(vizSettings, data) {
+		switch (vizSettings.vizType) {
+			case "resource_toolkit":
+				render(
+					<ResourceToolkit vizSettings={vizSettings} data={data} />,
+					document.getElementById(vizSettings.id.replace("#", ""))
+				)
+				break;
+		}
+		
 	}
 
 	function resize() {

@@ -40,6 +40,8 @@
     "mapbox-gl": "^0.32.1",
     "mapbox-gl-geocoder": "^1.3.1",
     "node-sass": "^3.8.0",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
     "sass-loader": "^4.0.0",
     "style-loader": "^0.13.1",
     "topojson": "^1.6.27",
@@ -50,6 +52,11 @@
     "webpack-s3-plugin": "^0.9.0"
   },
   "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-loader": "^6.4.1",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
     "node-sass": "^3.8.0",
     "sass-loader": "^4.0.0",
     "webpack": "^1.13.1"
