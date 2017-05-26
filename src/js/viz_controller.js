@@ -29,6 +29,8 @@ import { PieChart } from "./chart_types/pie_chart.js";
 import { Bipartite } from "./chart_types/bipartite.js";
 import { CategoryBreakdown } from "./chart_types/category_breakdown.js";
 import { ComparativeDotHistogram } from "./chart_types/comparative_dot_histogram.js";
+import { FilterableDotMatrix } from "./layouts/filterable_dot_matrix.js";
+import { BarLineCombo } from "./chart_types/bar_line_combo.js";
 import { PinDropMap } from "./chart_types/pindrop_map.js";
 import ResourceToolkit from "./react_chart_types/resource_toolkit/ResourceToolkit.js";
 
@@ -50,6 +52,10 @@ export const setupProject = ({ vizSettingsList, reactVizSettingsList, imageFolde
 				switch (vizSettingsObject.vizType) {
 					case "bar_chart":
 						viz = new BarChart(vizSettingsObject, imageFolderId);
+						break;
+
+					case "bar_line_combo":
+						viz = new BarLineCombo(vizSettingsObject);
 						break;
 
 					case "bipartite":
@@ -82,6 +88,10 @@ export const setupProject = ({ vizSettingsList, reactVizSettingsList, imageFolde
 
 					case "fact_box":
 						viz = new FactBox(vizSettingsObject);
+						break;
+
+					case "filterable_dot_matrix":
+						viz = new FilterableDotMatrix(vizSettingsObject);
 						break;
 
 					case "financial_opportunity_map":
@@ -170,11 +180,12 @@ export const setupProject = ({ vizSettingsList, reactVizSettingsList, imageFolde
 					hideLoadingGif(vizSettings.id);
 				}
 
-				// setDataDownloadLinks(d);
+				setDataDownloadLinks(d, projectSettings);
 				
-				// setProfileValues(d);
+				setProfileValues(d);
 			});
 		}
+		console.log("finished rendering!")
 	}
 
 	function renderReact(vizSettings, data) {
@@ -196,19 +207,24 @@ export const setupProject = ({ vizSettingsList, reactVizSettingsList, imageFolde
 	}
 
 	function hideLoadingGif(id) {
+		console.log("hiding loading gif");
+		console.log(id);
 		$(id).siblings(".dataviz__loading-gif").hide();
 		$(id).css("visibility", "visible").css("min-height","none");
 	}
 
-	function setDataDownloadLinks(data) {
-		let publicDataJson = {};
-		for (let sheetName of dataSheetNames) {
-			
-			publicDataJson[sheetName] = data[sheetName];
-		}
+	function setDataDownloadLinks(data, projectSettings) {
+		if (projectSettings.customDataDownloadSource) {
+			$("#in-depth__download__csv").attr("href", projectSettings.customDataDownloadSource);
+		} else {
+			let publicDataJson = {};
+			for (let sheetName of dataSheetNames) {	
+				publicDataJson[sheetName] = data[sheetName];
+			}
 
-		setCSVZipLink(publicDataJson);
-		setJSONZipLink(publicDataJson);
+			setCSVZipLink(publicDataJson);
+			setJSONZipLink(publicDataJson);
+		}
 	}
 
 	function setCSVZipLink(dataJson) {

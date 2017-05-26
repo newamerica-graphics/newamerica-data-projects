@@ -241,8 +241,6 @@ export class BarChart {
 	}
 
 	setDataNest() {
-		// const { groupingVar, filterVar, value } = this.dataNest;
-		// console.log(value)
 		let nestedData = d3.nest()
 			.key((d) => { return d[this.groupingVar.variable]})
 			.rollup((v) => {

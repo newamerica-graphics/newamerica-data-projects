@@ -26,9 +26,15 @@ export class Legend {
 		if (this.legend) {
 			this.legend.remove();
 		}
+
 		this.legend = d3.select(this.id)
 			.append("div")
 			.attr("class", "legend " + this.orientation);
+	}
+
+	render(legendSettings) {
+		this.legendSettings = legendSettings;
+		
 
 		if (this.showTitle) {
 			let titleContainer = this.legend.append("div")
@@ -159,7 +165,8 @@ export class Legend {
 		for (let i = 0; i < this.numBins; i++) {
 			this.valsShown.push(i);
 			let cell = this.cellList.append("li")
-				.classed("legend__cell", true);
+				.classed("legend__cell", true)
+				.classed("indented", indentedIndices && indentedIndices.indexOf(i) > -1);
 
 			if (this.disableValueToggling) {
 				cell.style("cursor", "initial");
@@ -211,7 +218,7 @@ export class Legend {
 		cell.append("h5")
 			.attr("class", "legend__cell__val-count")
 			.style("color", this.colorScale.range()[i])
-			.text(valCounts.get(valKey));
+			.text(this.valCountCustomFormattingFunc ? this.valCountCustomFormattingFunc(valCounts.get(valKey)) : valCounts.get(valKey));
 	}
 
 	appendCellText(cell, i) {
@@ -311,6 +318,10 @@ export class Legend {
 
 	resize() {
 		this.render();
+	}
+
+	removeComponent() {
+		this.legend.remove();
 	}
 
 }

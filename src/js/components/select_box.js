@@ -4,28 +4,25 @@ let d3 = require("d3");
 
 export class SelectBox {
 	constructor(componentSettings) {
-		let { id, filterChangeFunction, primaryDataSheet, variable } = componentSettings;
-		this.id = id;
-		this.primaryDataSheet = primaryDataSheet;
-		this.variable = variable;
-		this.selectBox = d3.select(id).append("select")
+		Object.assign(this, componentSettings);
+		this.selectBox = d3.select(this.id).append("select")
 			.attr("class", "select-box")
 			.on("change", (d) => { 
 				let index = this.selectBox.property('selectedIndex');
-				filterChangeFunction(index, this);
+				this.filterChangeFunction(index, this);
 			});	
 	}
 
 	render(data) {
-		let valList = d3.nest()
+		console.log("rendering!");
+		this.valList = this.customValList || d3.nest()
 			.key((d) => { return d[this.variable.variable]; })
 			.entries(data[this.primaryDataSheet]);
 
-		let selectBoxOption;
 		this.selectBoxOptions = [];
 
 		this.selectBoxOptions = this.selectBox.selectAll("option")
-			.data(valList)
+			.data(this.valList)
 			.enter()
 			.append("option")
 			.text((d) => { return d.key; })

@@ -13,24 +13,24 @@ let margin = {top: 0, right: legendWidth + 40, bottom: 0, left: 0};
 
 export class PieChart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, primaryDataSheet, dataVars, labelVars, legendShowVals} = vizSettings;
+		Object.assign(this, vizSettings);
 
-		this.id = id;
-		
-		this.primaryDataSheet = primaryDataSheet;
-		this.currLabelVar = labelVars[0];
-		this.currDataVar = dataVars[0];
-		this.legendShowVals = legendShowVals;
-
-		this.svg = d3.select(id).append("svg").attr("class", "pie-chart");
+		this.svg = d3.select(this.id).append("svg").attr("class", "pie-chart");
 		this.renderingArea = this.svg.append("g");
+
+		this.xScale = d3.scaleLinear()
+		    .range([2 * Math.PI, 0]);
+
+		this.yScale = d3.scaleSqrt();
+
+		this.partition = d3.partition();
 
 		this.arc = d3.arc();
 		
 		this.setDimensions();
 
 		let legendSettings = {};
-		legendSettings.id = id;
+		legendSettings.id = this.id;
 		legendSettings.showTitle = true;
 		legendSettings.markerSettings = { shape:"circle", size:10 };
 		legendSettings.orientation = "vertical-right-center";
@@ -40,26 +40,26 @@ export class PieChart {
 	}
 
 	render(data) {
-		this.data = data[this.primaryDataSheet];
+		this.rawData = data[this.primaryDataSheet];
+		this.data = d3.stratify()
+		    .id((d) => { return d[this.labelVar.variable]; })
+		    .parentId((d) => { return d[this.categoryVar.variable]; })
+		    (this.rawData);
+
+		this.data.sum((d) => { return d[this.dataVar.variable]});
+
 		this.setColorScale();
 		this.setLegend();
 
-		var pie = d3.pie()
-		    .value((d) => { return d[this.currDataVar.variable]; });
+		this.paths = this.renderingArea.selectAll("path")
+			.data(this.partition(this.data).descendants())
+			.enter().append("path")
+			.attr("d", this.arc)
+			.attr("fill", (d) => { return d.parent ? this.colorScale(d.id) : "white"; })
+			.attr("stroke", "white")
+			.on("mouseover", (d) => { return this.mouseover(d); })
+			.on("mouseout", () => { return this.mouseout(); })
 
-		var g = this.renderingArea.selectAll(".arc")
-		      .data(pie(this.data))
-		    .enter().append("g")
-		      .attr("class", "arc");
-
-		this.paths = g.append("path")
-		      .attr("d", this.arc)
-		      .style("fill", (d) => { return this.colorScale(d.data[this.currLabelVar.variable]); });
-
-		// g.append("text")
-		//       .attr("transform", (d) => { return "translate(" + this.arc.centroid(d) + ")"; })
-		//       .attr("dy", ".35em")
-		//       .text((d) => { return d.data[this.currLabelVar.variable]; });
 	}
 
 	setDimensions() {
@@ -67,15 +67,13 @@ export class PieChart {
 		this.h = this.w;
 		let radius = this.w / 2;
 
-		let innerRadius = 0;
-		if (radius - 70 > 0) {
-		    innerRadius = radius - 70
-		}
+		this.yScale.range([0, radius]);
 
-		this.arc.outerRadius(radius - 10)
-			.innerRadius(innerRadius);
-
-		
+		this.arc
+			.startAngle((d) => { return Math.max(0, Math.min(2 * Math.PI, this.xScale(d.x0))); })
+		    .endAngle((d) => { return Math.max(0, Math.min(2 * Math.PI, this.xScale(d.x1))); })
+			.innerRadius((d) => { return Math.max(0, this.yScale(d.y0)); })
+		    .outerRadius((d) => { return Math.max(0, this.yScale(d.y1)); });
 
 		this.svg
 			.attr("width", "100%")
@@ -86,37 +84,47 @@ export class PieChart {
 	}
 
 	setColorScale() {
-		this.colorScale = getColorScale(this.data, this.currLabelVar);
+		this.colorScale = getColorScale(this.rawData, this.labelVar);
 	}
 
 	setLegend() {
 		let legendSettings = {};
 
+		let indentedIndices = [];
 		let valCounts = new Map();
-		for (let d of this.data) {
-			let value = formatValue(d[this.currDataVar.variable], this.currDataVar.format)
-			valCounts.set(d[this.currLabelVar.variable], value);
-		}
+		let i = 0;
+		this.data.each((d) => {
+			if (d.parent) {
+				let value = formatValue(d.value, this.dataVar.format)
+				valCounts.set(d.id, value);
+				console.log(d.depth, i);
+				if (d.depth > 1) {
+					indentedIndices.push(i);
+				}
+				i++;
+			}
+		})
 
-		legendSettings.title = this.currLabelVar.displayName;
-		legendSettings.format = this.currLabelVar.format;
-		legendSettings.scaleType = this.currLabelVar.scaleType;
+		legendSettings.title = this.labelVar.displayName;
+		legendSettings.format = this.labelVar.format;
+		legendSettings.scaleType = this.labelVar.scaleType;
 		legendSettings.colorScale = this.colorScale;
 		legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
 		legendSettings.valCounts = valCounts;
+		legendSettings.indentedIndices = indentedIndices;
+		console.log(indentedIndices);
 
 		this.legend.render(legendSettings);
 	}
 
 	changeVariableValsShown(valsShown) {
-
 		this.paths
-			.style("fill", (d) => {
-		   		var value = d.data[this.currLabelVar.variable];
-		   			let binIndex = this.colorScale.domain().indexOf(value);
-		   			if (valsShown.indexOf(binIndex) > -1) {
-		   				return this.colorScale(value);
-		   			}
+			.attr("fill", (d) => {
+				if (!d.parent) { return "white"; }
+	   			let binIndex = this.colorScale.domain().indexOf(d.id);
+	   			if (valsShown.indexOf(binIndex) > -1) {
+	   				return this.colorScale(d.id);
+	   			}
 		   		return colors.grey.light;
 		    });
 	}
@@ -125,6 +133,37 @@ export class PieChart {
 		this.setDimensions();
 
 		this.paths.attr("d", this.arc);
+	}
+
+	mouseover(elem) {
+		if (!elem.parent) { return; }
+		this.hoverTextContainer = this.renderingArea.append("g")
+
+		this.paths
+			.attr("fill-opacity", (d) => { return d.id == elem.id ? .7 : 1; });
+
+		this.hoverTextContainer.append("text")
+			.attr("fill", this.colorScale(elem.id))
+			.attr("x", 0)
+			.attr("y", 0)
+			.text(elem.id)
+			.style("text-anchor", "middle")
+			.style("font-weight", "bold")
+			.style("font-size", "20px")
+			.style("alignment-baseline", "middle");
+
+		this.hoverTextContainer.append("text")
+			.attr("fill", colors.grey.dark)
+			.attr("x", 0)
+			.attr("y", 25)
+			.text(formatValue(elem.value, "percent"))
+			.style("text-anchor", "middle")
+			.style("alignment-baseline", "middle");
+	}
+
+	mouseout() {
+		if (this.hoverTextContainer) { this.hoverTextContainer.remove(); }
+		this.paths.attr("fill-opacity", 1);
 	}
 
 }
