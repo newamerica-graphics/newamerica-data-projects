@@ -1,0 +1,15 @@
+.vertical-timeline {
+	&__item {
+		text-align: center;
+		position: relative;
+		background-color: white;
+		z-index: 20;
+	}
+
+	&__line {
+		border-left: 2px solid palette-get(na-black);
+		position: absolute;
+	    top: 0px;
+	    height: 100%;
+	}
+}

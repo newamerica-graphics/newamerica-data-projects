@@ -32,11 +32,14 @@ import { ComparativeDotHistogram } from "./chart_types/comparative_dot_histogram
 import { FilterableDotMatrix } from "./layouts/filterable_dot_matrix.js";
 import { BarLineCombo } from "./chart_types/bar_line_combo.js";
 import { PinDropMap } from "./chart_types/pindrop_map.js";
+import { VerticalTimeline } from "./chart_types/vertical_timeline.js";
+
 import ResourceToolkit from "./react_chart_types/resource_toolkit/ResourceToolkit.js";
 
 import { formatValue } from "./helper_functions/format_value.js";
 
-export const setupProject = ({ vizSettingsList, reactVizSettingsList, imageFolderId, dataSheetNames, dataUrl }) => {
+export const setupProject = (projectSettings) => {
+	const { vizSettingsList, reactVizSettingsList, imageFolderId, dataSheetNames, dataUrl } = projectSettings;
 	let vizList = [];
 
 	initialize();
@@ -145,6 +148,10 @@ export const setupProject = ({ vizSettingsList, reactVizSettingsList, imageFolde
 					case "topo_json_map":
 						viz = new TopoJsonMap(vizSettingsObject);
 						break;
+
+					case "vertical_timeline":
+						viz = new VerticalTimeline(vizSettingsObject);
+						break;
 				}
 
 				vizList.push(viz);
@@ -169,16 +176,14 @@ export const setupProject = ({ vizSettingsList, reactVizSettingsList, imageFolde
 				for (let viz of vizList) {
 					viz.render(d);
 					
-					renderReact(viz, d);
-					
 					hideLoadingGif(viz.id);
 				}
 
-				for (let vizSettings of reactVizSettingsList) {
-					renderReact(vizSettings, d);
+				// for (let vizSettings of reactVizSettingsList) {
+				// 	renderReact(vizSettings, d);
 					
-					hideLoadingGif(vizSettings.id);
-				}
+				// 	hideLoadingGif(vizSettings.id);
+				// }
 
 				setDataDownloadLinks(d, projectSettings);
 				
