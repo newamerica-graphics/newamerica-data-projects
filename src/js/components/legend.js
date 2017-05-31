@@ -30,11 +30,6 @@ export class Legend {
 		this.legend = d3.select(this.id)
 			.append("div")
 			.attr("class", "legend " + this.orientation);
-	}
-
-	render(legendSettings) {
-		this.legendSettings = legendSettings;
-		
 
 		if (this.showTitle) {
 			let titleContainer = this.legend.append("div")
@@ -166,7 +161,7 @@ export class Legend {
 			this.valsShown.push(i);
 			let cell = this.cellList.append("li")
 				.classed("legend__cell", true)
-				.classed("indented", indentedIndices && indentedIndices.indexOf(i) > -1);
+				// .classed("indented", indentedIndices && indentedIndices.indexOf(i) > -1);
 
 			if (this.disableValueToggling) {
 				cell.style("cursor", "initial");

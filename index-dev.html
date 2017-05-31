@@ -7,10 +7,44 @@
       <style>
 
 
-</style>
+        </style>
         
     </head>
     <body>
+        <div class="in-depth__profile">
+            <div class="in-depth__profile__title-block-container">
+                <div class="in-depth__profile__title-block">
+                    
+                    <h5 class="in-depth__profile__title-block__subheading">State Profile</h5>
+                    <h1 class="in-depth__profile__title-block__title" data-sheet-name="states" data-lookup-field="state"></h1>
+                </div>
+                <div class="in-depth__profile__other-value-selector-container">
+                    <select class="in-depth__profile__other-value-selector" onchange="document.location = '?' + this.value;">
+                        <option value="" disabled="" selected="">Select a State Profile</option>
+                    </select>
+                </div>
+            </div>
+            <div class="in-depth__profile__body post-body" data-sheet-name="states" data-lookup-field="state">
+                <div class="block-data_reference">
+                    <div class="data-reference">
+                        <div class="data-reference__row">
+                            <div class="data-reference__label">Minimum Education Requirement<span class="data-reference__footnote__label">1</span></div>
+                            <div class="data-reference__value" data-field-name="min_ed_requirement" data-field-format="string"></div>
+                        </div>
+                    </div>
+                    <div class="data-reference__footnote-container">
+                        <div class="data-reference__footnote">
+                            <span class="data-reference__footnote__label">1.</span>
+                            <span class="data-reference__footnote__value" data-field-name="min_ed_requirement_source"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+                        </div>
         <!-- <select class="in-depth__profile__other-value-selector" onchange="document.location = '?' + this.value;" placeholder="Select Another Value">
             <option value="" disabled selected>Select Another Value</option>
         </select>
@@ -130,7 +164,7 @@
             </div>
           </div>
         </div>
-        <script type="text/javascript" src="/build/intel.js"></script>
+        <script type="text/javascript" src="/build/early_ed_leaders.js"></script>
 
     </body>
 </html>

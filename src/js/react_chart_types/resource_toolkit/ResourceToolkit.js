@@ -16,7 +16,7 @@ class ResourceToolkit extends React.Component {
 		this.data = props.data[props.vizSettings.primaryDataSheet];
 
 		this.state = {
-			activeCategory: null;
+			activeCategory: null
 		}
 
 		this.getCategoryNest();

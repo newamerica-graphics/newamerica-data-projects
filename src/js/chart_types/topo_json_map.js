@@ -185,7 +185,7 @@ export class TopoJsonMap {
 		    	} else if (this.interaction == "click") {
 		    		return this.clicked(d, paths[index], d3.event);
 		    	} else if (this.clickToProfile) {
-		    		window.location.href = this.clickToProfile.url + d.data[this.clickToProfile.variable].replace(" ", "_");
+		    		window.location.href = this.clickToProfile.url + encodeURI(d.data[this.clickToProfile.variable].toLowerCase());
 		    	}
 		    });
 
