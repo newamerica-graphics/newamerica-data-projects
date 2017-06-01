@@ -1,15 +1,66 @@
 .vertical-timeline {
-	&__item {
+	display: table;
+	&__row {
+		display: table-row;
+		position: relative;
+
+		&:after {
+		  content: "";
+		  display: table;
+		  clear: both;
+		}
+	}
+
+
+	&__item-group {
 		text-align: center;
 		position: relative;
-		background-color: white;
 		z-index: 20;
+		vertical-align: top;
+		display: table-cell;
 	}
 
 	&__line {
-		border-left: 2px solid palette-get(na-black);
+		border-left: 1px solid palette-get(na-black-30);
 		position: absolute;
 	    top: 0px;
 	    height: 100%;
+	    z-index: 0;
+	}
+
+	&__category-title-container {
+		display: table-row;
+	}
+
+	&__category-title {
+		display: table-cell;
+		text-align: center;
+		padding: 0px 15px;
+		background-color: white;
+		z-index: 1;
+
+		&__image {
+			max-width: 150px;
+			margin-bottom: 15px;
+		}
+
+		&__text {
+		    font-size: 16px;
+		    font-weight: bold;
+		    background-color: white;
+		    padding-bottom: 15px;
+		    margin-bottom: 15px;
+		}
+	}
+
+	&__time {
+		background-color: white;
+		padding: 10px 10px 0px;
+		margin-bottom: 0px;
+	}
+
+	&__description {
+		background-color: white;
+		padding: 10px;
 	}
 }
