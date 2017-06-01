@@ -298,7 +298,11 @@ export const setupProject = (projectSettings) => {
 				let value = formatValue(currElement[displayField], fieldFormat);
 
 				if (value && value.length > 0) {
-					$(valueDiv).text(value);
+					if (fieldFormat == "markdown") {
+						$(valueDiv).html(value);
+					} else {
+						$(valueDiv).text(value);
+					}
 					if (footnoteField && currElement[footnoteField] && currElement[footnoteField] != null) {
 
 						$(footnoteLabelDiv).text(footnoteCount);
