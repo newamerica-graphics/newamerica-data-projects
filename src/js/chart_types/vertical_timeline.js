@@ -14,11 +14,24 @@ export class VerticalTimeline {
 			.attr("class", "vertical-timeline");
 
 		this.xScale = d3.scaleBand();
+		this.currScrollTop = 0;
 
 		this.windowHeight = $(window).height();
 		console.log("windowHeight", this.windowHeight);
 
-		$(window).scroll(() => { return this.scrollListener(); });
+		$(window).scroll(() => { 
+			let newScrollTop = $(window).scrollTop();
+			let direction;
+			if (newScrollTop > this.currScrollTop) {
+				direction = "down";
+			} else if (newScrollTop < this.currScrollTop) { 
+				direction = "up";
+			} else {
+				return;
+			}
+			this.scrollListener(direction); 
+			this.currScrollTop = newScrollTop;
+		});
 	}
 
 	render(data) {
@@ -63,14 +76,14 @@ export class VerticalTimeline {
 		this.categoryTitle = this.categoryTitleContainer.selectAll(".vertical-timeline__category-title")
 			.data(this.categories)
 			.enter().append("div")
+			.style("width", this.xScale.bandwidth() + "px")
 			.attr("class", "vertical-timeline__category-title")
 
-		this.categoryTitle.append("img")
+		this.categoryTitleImage = this.categoryTitle.append("img")
 			.attr("class", "vertical-timeline__category-title__image")
-			.style("width", this.w/this.categories.length + "px")
 			.attr("src", (d, i) => { return this.categoryImageUrl + this.categoryVar.categoryImagePaths[i];});
 
-		this.categoryTitle.append("div")
+		this.categoryTitleText = this.categoryTitle.append("div")
 			.attr("class", "vertical-timeline__category-title__text")
 			.style("color", (d) => { return this.colorScale(d); })
 			.text((d) => { return d;});
@@ -85,7 +98,9 @@ export class VerticalTimeline {
 	}
 
 	appendItems() {
-		this.timelineRows = this.container.selectAll(".vertical-timeline__row")
+		this.timelineRows = this.container.append("div")
+			.attr("id", "vertical-timeline__row-container")
+		  .selectAll(".vertical-timeline__row")
 			.data(this.dataNest)
 			.enter().append("div")
 			.attr("class", "vertical-timeline__row")
@@ -100,7 +115,7 @@ export class VerticalTimeline {
 				let shiftFactor = this.categories.indexOf(d.key) - i;
 				return shiftFactor*this.xScale.bandwidth() + "px"; 
 			})
-			.style("max-width", this.w/this.categories.length + "px")
+			.style("width", this.xScale.bandwidth() + "px");
 
 		this.timelineItemGroups.append("h5")
 			.attr("class", "vertical-timeline__time")
@@ -112,7 +127,7 @@ export class VerticalTimeline {
 			.enter().append("div")
 			.attr("class", "vertical-timeline__item")
 
-		this.descriptionText = this.timelineItems.append("h5")
+		this.descriptionText = this.timelineItems.append("p")
 			.attr("class", "vertical-timeline__description")
 			.text((d) => { return d[this.descriptionVar.variable]; })
 			// .style("font-size", (d, index, paths) => {
@@ -132,19 +147,74 @@ export class VerticalTimeline {
 
 	}
 
-	scrollListener() {
-		console.log(window);
+	resize() {
+		this.setDimensions();
 
+		this.timelineLines
+			.style("left", (d) => { return (this.xScale(d) + this.xScale.bandwidth()/2) + "px"; })
+
+		this.categoryTitle
+			.style("width", this.xScale.bandwidth() + "px");
+
+		this.timelineItemGroups
+			.style("left", (d, i) => {
+				let shiftFactor = this.categories.indexOf(d.key) - i;
+				return shiftFactor*this.xScale.bandwidth() + "px"; 
+			})
+			.style("width", this.xScale.bandwidth() + "px");
+	}
+
+	scrollListener(direction) {
+		console.log(direction);
+
+		let rowContainerTop = document.getElementById("vertical-timeline__row-container").getBoundingClientRect().top;
+
+		console.log("rowContainerHeight", rowContainerHeight)
 		this.descriptionText
-			.style("font-size", (d, index, paths) => {
-				let distanceFromBottom = this.windowHeight - paths[index].getBoundingClientRect().top - 30;
-				if (distanceFromBottom > 200) {
-					return "20px";
-				} else if (distanceFromBottom < 0) {
-					return "0px";
+			.transition()
+			.duration(100)
+			.style("opacity", (d, index, paths) => {
+				if (direction == "down") {
+					let distanceFromBottom = this.windowHeight - paths[index].getBoundingClientRect().top;
+					return distanceFromBottom > 50 ? 1 : 0;
 				} else {
-					return (distanceFromBottom/10) + "px";
+					let distanceFromBottom = this.windowHeight - paths[index].getBoundingClientRect().bottom;
+					return distanceFromBottom > 50 ? 1 : 0;
 				}
+			});
+
+		// this.timelineItemGroups
+		// 	.transition()
+		// 	.duration(100)
+		// 	.style("opacity", (d, index, paths) => {
+		// 		if (direction == "down") {
+		// 			let distanceFromBottom = this.windowHeight - paths[index].getBoundingClientRect().top;
+		// 			return distanceFromBottom > 50 ? 1 : 0;
+		// 		} else {
+		// 			let distanceFromBottom = this.windowHeight - paths[index].getBoundingClientRect().bottom;
+		// 			return distanceFromBottom > 50 ? 1 : 0;
+		// 		}
+		// 	});
+
+		this.categoryTitleImage
+			.style("height", (d, index, paths) => {
+				let topDistance = paths[index].getBoundingClientRect().top,
+					bottomDistance = paths[index].getBoundingClientRect().bottom;
+				// console.log(topDistance, bottomDistance);
+				// if (direction == "down") {
+					return topDistance <= 10 ? (bottomDistance - 10) + "px" : "auto";
+				// } 
+			});
+
+		this.categoryTitleText
+			.style("position", (d, index, paths) => {
+				let titleHeight = paths[index].getBoundingClientRect().height;
+				if (rowContainerTop <= titleHeight) {
+					return "fixed";
+				} else {
+					return "relative";
+				}
+				// return topDistance <= 30 && rowContainerTop  ? "fixed" : "relative";
 			});
 	}
 }
