@@ -24,6 +24,7 @@ export class PinDropMap {
 		
 		this.currFilterIndex = 0;
 		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
+		this.zoomRatio = 1;
 
 		this.setGeometry(this.geometryType);
 
@@ -33,6 +34,14 @@ export class PinDropMap {
 
 		let mapContainer = d3.select(this.id)
 			.append("div");
+
+		if (this.zoomable) {
+			this.zoomOutPrompt = mapContainer
+				.append("div")
+				.attr("class", "zoom-out-prompt")
+				.text("Return to Full Map")
+				.on("click", () => { return this.zoom(null, null, null); });
+		}
 
 		this.svg = mapContainer
 			.append("svg")
@@ -130,6 +139,21 @@ export class PinDropMap {
 	}
 
 	buildGraph() {
+		if (this.zoomable) {
+			this.g.call(d3.zoom()
+		        .on("zoom", () => { return this.zoom(d3.event); }));
+
+			// function zoomed() {
+			//   g.attr("transform", d3.event.transform);
+			// }
+		    // .call(d3.drag().on("start", (d, index, paths) => { 
+		    // 	console.log("dragging!"); 
+		    // 	console.log(d, paths[index], d3.event);
+		    // 	if (this.zoomable) {
+		    // 		return this.zoom(d, paths[index], d3.event);
+		    // 	}
+		    // }));
+		}
 		this.paths = this.g.selectAll("path")
 		   .data(this.geometry)
 		   .enter()
@@ -137,23 +161,18 @@ export class PinDropMap {
 
 		this.paths
 			.attr("d", (d) => { return this.pathGenerator(d) })
-		    .style("fill", colors.grey.medium_light)
-		    .style("stroke", this.stroke.color || "white")
-		    .style("stroke-width", this.stroke.width || "1")
-		    .style("stroke-opacity", this.stroke.opacity || "1")
-		    .style("cursor", this.zoomable ? "pointer" : "auto")
-		    .on("click", (d, index, paths) => {
-		    	if (this.zoomable) {
-		    		return this.zoom(d, paths[index], d3.event);
-		    	}
-		    });
+		    .attr("fill", colors.grey.medium_light)
+		    .attr("stroke", this.stroke.color || "white")
+		    .attr("stroke-width", this.stroke.width || "1")
+		    .attr("stroke-opacity", this.stroke.opacity || "1")
+		    .style("cursor", this.zoomable ? "pointer" : "auto");
 
 		this.points = this.g.selectAll("circle")
-			.data(this.data).enter()
-			.append("circle")
+			.data(this.data.filter((d) => { return d.long && d.lat; }))
+			.enter().append("circle")
 			.attr("cx", (d) => { return this.projection([d.long, d.lat])[0]; })
 			.attr("cy", (d) => { return this.projection([d.long, d.lat])[1]; })
-			.attr("r", "5.5px")
+			.attr("r", this.pinRadius)
 			.attr("fill", (d) => { return this.setFill(d); })
 			.attr("stroke", "white")
 			.attr("stroke-width", "1px")
@@ -194,7 +213,7 @@ export class PinDropMap {
 
 		this.setScale();
 		this.legendSettings ? this.setLegend() : null;
-		this.points.style("fill", (d) => { return this.setFill(d); })
+		this.points.attr("fill", (d) => { return this.setFill(d); })
 	}
 
 	mouseover(datum, path, eventObject) {
@@ -203,15 +222,15 @@ export class PinDropMap {
 		mousePos[1] = eventObject.pageY;
 		
 		this.points
-			.attr("stroke-width", (d) => { return datum == d ? "2px" : "1px"})
+			.attr("stroke-width", (d) => { return datum == d ? 2/this.zoomRatio : 1/this.zoomRatio})
 		
-		this.tooltip ? this.tooltip.show(datum, mousePos, this.filterVars[this.currFilterIndex], d3.select(path).style("fill")) : null;
+		this.tooltip ? this.tooltip.show(datum, mousePos, this.filterVars[this.currFilterIndex], d3.select(path).attr("fill")) : null;
 	}
 
 	mouseout(path) {
 	    this.tooltip ? this.tooltip.hide() : null;
 	    this.points
-			.attr("stroke-width", "1px")
+			.attr("stroke-width", 1/this.zoomRatio)
 	}
 
 	changeVariableValsShown(valsShown) {
@@ -258,33 +277,45 @@ export class PinDropMap {
 	   	}
 	}
 
-	zoom(datum, path, eventObject) {
-		let x, y, k;
+	zoom(eventObject) {
+		let {k, x, y} = eventObject.transform;
 
-		if (datum && this.centered !== datum) {
-			let centroid = this.pathGenerator.centroid(datum);
-			x = centroid[0];
-			y = centroid[1];
-			k = 4;
-			this.centered = datum;
-			this.zoomOutPrompt.style("display", "block");
-		} else {
-			x = this.w / 2;
-			y = this.h / 2;
-			k = 1;
-			this.centered = null;
-			this.zoomOutPrompt.style("display", "none");
-		}
+		console.log(eventObject);
+		console.log(d3.event);
 
-		this.g.selectAll("path")
-		  .classed("active", this.centered && function(d) { return d === this.centered; });
+		// if (datum && this.centered !== datum) {
+		// 	let centroid = this.pathGenerator.centroid(datum);
+		// 	x = centroid[0];
+		// 	y = centroid[1];
+		// 	this.zoomRatio = 5;
+		// 	this.centered = datum;
+		// 	this.zoomOutPrompt.style("display", "block");
+		// 	this.legend.setOrientation("horizontal-center");
+		// } else {
+		// 	x = this.w / 2;
+		// 	y = this.h / 2;
+		// 	this.zoomRatio = 1;
+		// 	this.centered = null;
+		// 	this.zoomOutPrompt.style("display", "none");
+		// 	this.legend.setOrientation("vertical-right");
+		// }
 
 		this.g.transition()
 		  .duration(750)
-		  .attr("transform", "translate(" + this.w / 2 + "," + this.h / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
-		  .style("stroke-width", 1.5 / k + "px")
-		  .on("end", () => { return this.centered ? this.tooltip.show(datum.data, [this.w / 2 + 30, this.h / 2]) : null; })
+		  .attr("transform", eventObject.transform)
+		  // .attr("stroke-width", 1.5 / this.zoomRatio + "px")
+		  // .on("end", () => { return this.centered ? this.tooltip.show(datum.data, [this.w / 2 + 30, this.h / 2]) : null; })
 
+		this.paths
+			.transition()
+		  	.duration(750)
+			// .attr("stroke-width", 1/this.zoomRatio);
+
+		this.points
+			.transition()
+		  	.duration(750)
+			// .attr("r", this.pinRadius/this.zoomRatio)
+			// .attr("stroke-width", 1/this.zoomRatio)
 	}
 			
 }

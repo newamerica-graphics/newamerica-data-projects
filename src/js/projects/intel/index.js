@@ -12,8 +12,15 @@ let variables = {
 	program_type: {"variable":"program_type", "displayName":"Program Type", "format": "string", "canSplitCategory":true, "scaleType": "categorical", "customDomain":["Center/ School Initiative", "Professional Learning", "Home Visiting/ Family Engagement", "Library/ Museum", "Public Media Partnership"], "customRange":[colors.turquoise.light, colors.blue.light, colors.purple.light, colors.turquoise.medium, colors.blue.medium]},
 	number_served: {"variable":"number_served", "displayName":"Number Served", "format": "string", "canSplitCategory":true, "scaleType": "categorical", "customDomain":["0-100", "100-500", "500-1000", "1000-5000", "5000-10000", "10000+", "Not directly serving children"], "customRange":[colors.turquoise.very_light, colors.turquoise.light, colors.turquoise.medium, colors.turquoise.dark, colors.blue.dark, colors.purple.dark, colors.red.light]},
 	age_served: {"variable":"age_served", "displayName":"Ages Served", "format": "string", "canSplitCategory":true, "scaleType": "categorical", "customDomain":["0-3 years", "4-5 years", "6-8 years", "All 3 Age Groups"], "customRange":[colors.turquoise.light, colors.blue.light, colors.purple.light, colors.turquoise.dark]},
-	tech_tool: {"variable":"tech_tool", "displayName":"Other Tech Tools", "format": "string"}
+	tech_tool: {"variable":"tech_tool", "displayName":"Other Tech Tools", "format": "string"},
+
+	evidence_of_impact_rating: {"variable":"evidence_of_impact_rating", "displayName":"Evidence of Impact Rating", "format": "string", "canSplitCategory":true, "scaleType": "categorical", "customDomain":["Developing", "Emerging", "Promising", "Strong"], "customRange":[colors.turquoise.light, colors.blue.light, colors.purple.light, colors.turquoise.dark]},
+	location: {"variable":"Location", "displayName":"Location", "format": "string"},
+	program: {"variable":"Program", "displayName":"Program", "format": "string"},
+
+
 }
+
 
 let vizSettingsList = [
 	// {
@@ -57,11 +64,25 @@ let vizSettingsList = [
 	// 	primaryDataSheet: "programs",
 	// 	geometryType: "states",
 	// 	stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
-	// 	filterVars: [ variables.program_affiliation, variables.program_type, variables.languages_summarized, variables.number_served, variables.age_served ],
+	// 	pinRadius: 5.5,
+	//	filterVars: [ variables.program_affiliation, variables.program_type, variables.languages_summarized, variables.number_served, variables.age_served ],
 	// 	tooltipVars: [ variables.name, variables.program_affiliation, variables.program_type, variables.languages_summarized, variables.number_served, variables.age_served ],
 	// 	filterGroupSettings: {"hidden": false},
 	// 	legendSettings: {"orientation": "vertical-right", "showTitle": true},
 	// },
+	{
+		id: "#intel__locations", 
+		vizType: "pindrop_map",
+		primaryDataSheet: "program_locations",
+		geometryType: "states",
+		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
+		pinRadius: 4,
+		filterVars: [ variables.evidence_of_impact_rating ],
+		tooltipVars: [ variables.program, variables.location, variables.evidence_of_impact_rating ],
+		filterGroupSettings: {"hidden": false},
+		legendSettings: {"orientation": "vertical-right", "showTitle": true},
+		zoomable: true
+	},
 ]
 
 const reactVizSettingsList = [
