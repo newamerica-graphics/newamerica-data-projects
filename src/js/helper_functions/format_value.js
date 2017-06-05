@@ -2,6 +2,8 @@ import $ from 'jquery';
 
 let d3 = require("d3");
 
+var showdown  = require('showdown');
+
 var formatTime = d3.timeFormat("%B %d, %Y");
 
 export function formatValue(value, format) {
@@ -10,6 +12,9 @@ export function formatValue(value, format) {
 	switch(format) {
 		case "long_text":
 			return value ? value.replace(/<\/?[^>]+(>|$)/g, "") : "";
+		case "markdown":
+		    let converter = new showdown.Converter();
+			return value ? converter.makeHtml(value) : null;
 		case "number":
 			return isNaN(value) ? value : d3.format(",")(value);
 		case "number_with_decimal_2":

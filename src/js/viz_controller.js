@@ -259,16 +259,14 @@ export const setupProject = (projectSettings) => {
 	}
 
 	function setProfileValues(data) {
-		let $inDepthProfileBody = $(".in-depth__profile__body");
-		let dataSheet = $inDepthProfileBody.attr("data-sheet-name");
-		let lookupField = $inDepthProfileBody.attr("data-lookup-field");
+		let $inDepthProfile = $(".in-depth__profile");
+		let dataSheet = $inDepthProfile.attr("data-sheet-name");
+		let lookupField = $inDepthProfile.attr("data-lookup-field");
 		let lookupValue = decodeURI(window.location.search).replace("?", "");
 
 		if (!lookupField) {
 			return;
 		}
-
-		console.log("lookup value is: ", lookupValue);
 
 		let allLookupValues = d3.nest()
 			.key((d) => { return d[lookupField].toLowerCase(); })
@@ -277,51 +275,49 @@ export const setupProject = (projectSettings) => {
 		let currElement = allLookupValues.get(lookupValue);
 		currElement = currElement ? currElement[0] : null;
 
-		console.log(currElement);
-
-
 		if (currElement) {
 			setOtherValueSelectorOptions(allLookupValues.keys(), true);
 		} else {
 			setOtherValueSelectorOptions(allLookupValues.keys(), false);
-			$inDepthProfileBody.empty();
+			$(".in-depth__profile__body").empty();
 			$(".in-depth__profile__title-block").hide();
 			return;
 		}
 
-		let displayField, fieldFormat, footnoteField;
+		let valueDiv, footnoteLabelDiv, displayField, fieldFormat, footnoteField;
 		
 		$(".in-depth__profile__title-block__title").text(currElement[lookupField])
 
-		$(".data-reference__value").each(function(i, item) {
-			displayField = $(item).attr("data-field-name");
-			fieldFormat = $(item).attr("data-field-format");
-			let value = formatValue(currElement[displayField], fieldFormat);
-			if (value && value.length > 0) {
-				$(item).text(value);
-			} else {
-				$(item).siblings().css("display", "none");
-				$(item).hide();
-			}
-			
-		})
+		$(".block-data_reference").each(function(i, container) {
+			let footnoteCount = 1;
+			let footnoteContainer = $(container).children(".data-reference__footnote-container");
 
-		$(".data-reference__footnote__value").each(function(i, item) {
-			footnoteField = $(item).attr("data-field-name");
+			$(container).find(".data-reference__row").each(function(j, dataRow) {
+				valueDiv = $(dataRow).children(".data-reference__value");
+				footnoteLabelDiv = $(dataRow).find(".data-reference__footnote__label");
 
-			let value;
-			for (let d of data[dataSheet]) {
-				if (d[lookupField].toLowerCase() == lookupValue) {
-					value = d[footnoteField];
-					if (value && value.length > 0) {
-						$(item).text(value);
+				displayField = $(valueDiv).attr("data-field-name");
+				fieldFormat = $(valueDiv).attr("data-field-format");
+				footnoteField = $(footnoteLabelDiv).attr("data-footnote-field-name");
+
+				let value = formatValue(currElement[displayField], fieldFormat);
+
+				if (value && value.length > 0) {
+					if (fieldFormat == "markdown") {
+						$(valueDiv).html(value);
 					} else {
-						$(item).hide();
+						$(valueDiv).text(value);
 					}
-					break;
-				}
-			}
+					if (footnoteField && currElement[footnoteField] && currElement[footnoteField] != null) {
 
+						$(footnoteLabelDiv).text(footnoteCount);
+						$(footnoteContainer).append("<li class='data-reference__footnote'>" + footnoteCount + ". " + currElement[footnoteField] + "</li>");
+						footnoteCount++;
+					}
+				} else {
+					$(dataRow).hide();
+				}
+			})
 		})
 
 		$(".video-data-reference").each(function(i, item) {
@@ -329,11 +325,7 @@ export const setupProject = (projectSettings) => {
 			let hostSite = $(item).attr("data-host");
 			
 			let value = currElement[displayField];
-			console.log(currElement);
-			console.log(displayField);
-			console.log(hostSite);
-			console.log(value);
-			console.log($(item));
+
 			if (value && value.length > 0) {
 				if (hostSite == "vimeo") {
 					$(item).append('<iframe width="640" height="360" frameborder="0" src="https://player.vimeo.com/video/' + value + '"></iframe>');
@@ -342,7 +334,6 @@ export const setupProject = (projectSettings) => {
 			} else {
 				$(item).hide();
 			}
-			
 		})
 	}
 
