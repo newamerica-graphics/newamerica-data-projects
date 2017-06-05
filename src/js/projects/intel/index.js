@@ -71,17 +71,40 @@ let vizSettingsList = [
 	// 	legendSettings: {"orientation": "vertical-right", "showTitle": true},
 	// },
 	{
-		id: "#intel__locations", 
-		vizType: "pindrop_map",
-		primaryDataSheet: "program_locations",
-		geometryType: "states",
-		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
-		pinRadius: 4,
-		filterVars: [ variables.evidence_of_impact_rating ],
-		tooltipVars: [ variables.program, variables.location, variables.evidence_of_impact_rating ],
-		filterGroupSettings: {"hidden": false},
-		legendSettings: {"orientation": "vertical-right", "showTitle": true},
-		zoomable: true
+		id: "#intel__locations",
+		vizType: "dashboard",
+		defaultValue: null,
+		layoutRows: [
+			[
+				{
+					vizType: "select_box",
+					primaryDataSheet: "program_locations",
+					variable: variables.program,
+					passValueName: true,
+					isMessagePasser: true,
+					messageHandlerType: "change_value",
+					placeholder: "Select a Program",
+					hasShowAllButton: true
+				}
+			],
+			[
+				{ 
+					vizType: "pindrop_map",
+					primaryDataSheet: "program_locations",
+					isMessagePasser: true,
+					messageHandlerType: "change_value",
+					geometryType: "states",
+					stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
+					pinRadius: 4,
+					idVar: variables.program,
+					filterVars: [ variables.evidence_of_impact_rating ],
+					tooltipVars: [ variables.program, variables.location, variables.evidence_of_impact_rating ],
+					filterGroupSettings: {"hidden": false},
+					legendSettings: {"orientation": "vertical-right", "showTitle": true},
+					zoomable: true
+				}
+			]
+		]
 	},
 ]
 

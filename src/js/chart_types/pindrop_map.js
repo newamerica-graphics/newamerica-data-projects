@@ -221,6 +221,7 @@ export class PinDropMap {
 		mousePos[0] = eventObject.pageX;
 		mousePos[1] = eventObject.pageY;
 		
+		console.log(datum)
 		this.points
 			.attr("stroke-width", (d) => { return datum == d ? 2/this.zoomRatio : 1/this.zoomRatio})
 		
@@ -258,6 +259,9 @@ export class PinDropMap {
 		   		}
 		   		return "none";
 		    });
+
+		// if map is subcomponent of dashboard set filter values to all
+		this.filterChangeFunction ? this.filterChangeFunction(null, this) : null;
 	}
 
 	setFill(d) {
@@ -301,21 +305,34 @@ export class PinDropMap {
 		// }
 
 		this.g.transition()
-		  .duration(750)
+		  .duration(0)
 		  .attr("transform", eventObject.transform)
 		  // .attr("stroke-width", 1.5 / this.zoomRatio + "px")
 		  // .on("end", () => { return this.centered ? this.tooltip.show(datum.data, [this.w / 2 + 30, this.h / 2]) : null; })
 
 		this.paths
 			.transition()
-		  	.duration(750)
+		  	.duration(0)
+		  	.attr("transform", eventObject.transform)
 			// .attr("stroke-width", 1/this.zoomRatio);
 
 		this.points
 			.transition()
-		  	.duration(750)
+		  	.duration(0)
+		  	.attr("transform", eventObject.transform)
 			// .attr("r", this.pinRadius/this.zoomRatio)
 			// .attr("stroke-width", 1/this.zoomRatio)
+	}
+
+	// dashboard function
+	changeValue(value) {
+		console.log(value);
+		this.points
+			.style("display", (d) => {
+		   		return !value || d[this.idVar.variable] === value ? "block" : "none";
+		    });
+
+		this.legend ? this.legend.toggleValsShown("all") : null;
 	}
 			
 }
