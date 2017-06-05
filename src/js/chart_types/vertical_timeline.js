@@ -15,6 +15,7 @@ export class VerticalTimeline {
 
 		this.xScale = d3.scaleBand();
 		this.currScrollTop = 0;
+		this.headerExpanded = true;
 
 		this.windowHeight = $(window).height();
 		console.log("windowHeight", this.windowHeight);
@@ -52,6 +53,7 @@ export class VerticalTimeline {
 
 		this.colorScale = getColorScale(this.data, this.categoryVar);
 		this.xScale.domain(this.categories);
+		console.log("bandwidth", this.xScale.bandwidth());
 		console.log(this.categories);
 
 		this.appendCategoryTitles();
@@ -79,7 +81,11 @@ export class VerticalTimeline {
 			.style("width", this.xScale.bandwidth() + "px")
 			.attr("class", "vertical-timeline__category-title")
 
-		this.categoryTitleImage = this.categoryTitle.append("img")
+		this.categoryTitleImageWrapper = this.categoryTitle.append("div")
+			.attr("class", "vertical-timeline__category-title__image-wrapper")
+			.style("min-height", this.xScale.bandwidth() > 150 ? 150 + "px" : this.xScale.bandwidth() + "px")
+			
+		this.categoryTitleImage = this.categoryTitleImageWrapper.append("img")
 			.attr("class", "vertical-timeline__category-title__image")
 			.attr("src", (d, i) => { return this.categoryImageUrl + this.categoryVar.categoryImagePaths[i];});
 
@@ -98,9 +104,10 @@ export class VerticalTimeline {
 	}
 
 	appendItems() {
-		this.timelineRows = this.container.append("div")
+		this.timelineRowContainer = this.container.append("div")
 			.attr("id", "vertical-timeline__row-container")
-		  .selectAll(".vertical-timeline__row")
+
+		this.timelineRows = this.timelineRowContainer.selectAll(".vertical-timeline__row")
 			.data(this.dataNest)
 			.enter().append("div")
 			.attr("class", "vertical-timeline__row")
@@ -165,11 +172,48 @@ export class VerticalTimeline {
 	}
 
 	scrollListener(direction) {
-		console.log(direction);
+		console.log(direction, this.headerExpanded);
+		let maxTitleImageHeight = this.xScale.bandwidth() > 150 ? 150 : this.xScale.bandwidth();
+		console.log(this.xScale.bandwidth());
+		console.log("maximageHeight", maxTitleImageHeight);
+		let titleContainer = this.categoryTitleContainer.node().getBoundingClientRect(),
+			titleImage = this.categoryTitleImage.node().getBoundingClientRect(),
+			titleText = this.categoryTitleText.node().getBoundingClientRect(),
+			dataRowContainer = this.timelineRowContainer.node().getBoundingClientRect();
 
-		let rowContainerTop = document.getElementById("vertical-timeline__row-container").getBoundingClientRect().top;
+		console.log(titleImage);
 
-		console.log("rowContainerHeight", rowContainerHeight)
+
+		if (this.headerExpanded) {
+			if (titleImage.bottom < 0) {
+				console.log("bottom less");
+				this.categoryTitleImageWrapper //change to image wrapper
+					.style("display", "none");
+
+			} else if (titleImage.top < 0 || titleImage.height < maxTitleImageHeight) {
+				console.log("top less", titleImage.bottom);
+				this.categoryTitleImage
+					.style("margin-top", (maxTitleImageHeight - titleImage.bottom) > 0 ? (maxTitleImageHeight - titleImage.bottom) + "px" : "0px")
+					.style("height", titleImage.bottom + "px");
+			} 
+
+			if (titleText.top < 0) {
+				this.headerExpanded = false;
+				this.categoryTitleContainer
+				 	.style("position", "fixed");
+			}
+		} else {
+			if (dataRowContainer.top > titleText.height) {
+				this.categoryTitleContainer
+				 	.style("position", "relative");
+
+				this.categoryTitleImageWrapper
+					.style("display", "initial");
+
+				this.headerExpanded = true;
+			}
+		}
+
 		this.descriptionText
 			.transition()
 			.duration(100)
@@ -196,25 +240,5 @@ export class VerticalTimeline {
 		// 		}
 		// 	});
 
-		this.categoryTitleImage
-			.style("height", (d, index, paths) => {
-				let topDistance = paths[index].getBoundingClientRect().top,
-					bottomDistance = paths[index].getBoundingClientRect().bottom;
-				// console.log(topDistance, bottomDistance);
-				// if (direction == "down") {
-					return topDistance <= 10 ? (bottomDistance - 10) + "px" : "auto";
-				// } 
-			});
-
-		this.categoryTitleText
-			.style("position", (d, index, paths) => {
-				let titleHeight = paths[index].getBoundingClientRect().height;
-				if (rowContainerTop <= titleHeight) {
-					return "fixed";
-				} else {
-					return "relative";
-				}
-				// return topDistance <= 30 && rowContainerTop  ? "fixed" : "relative";
-			});
 	}
 }
