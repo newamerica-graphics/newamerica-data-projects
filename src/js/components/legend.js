@@ -30,7 +30,7 @@ export class Legend {
 		this.legend = d3.select(this.id)
 			.append("div")
 			.attr("class", "legend " + this.orientation);
-		
+
 		if (this.showTitle) {
 			let titleContainer = this.legend.append("div")
 				.attr("class", "legend__title-container");

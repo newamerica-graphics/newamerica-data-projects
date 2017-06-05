@@ -1,0 +1,114 @@
+$top-nav-height: 70px;
+
+.vertical-timeline {
+	padding-top: 25px;
+	&__row-container {
+		display: table;
+		position: relative;
+	}
+	&__row {
+		display: table-row;
+		position: relative;
+
+		&:after {
+		  content: "";
+		  display: table;
+		  clear: both;
+		}
+	}
+
+	&__item-group {
+		text-align: center;
+		position: relative;
+		z-index: 20;
+		vertical-align: top;
+		display: table-cell;
+		padding: 10px 15px;
+	}
+
+	&__spacing-dot {
+		$dotWidth: 6px;
+		display: block;
+		margin: auto;
+		width: $dotWidth;
+		height: $dotWidth;
+		-moz-border-radius: $dotWidth/2;
+		-webkit-border-radius: $dotWidth/2;
+		border-radius: $dotWidth/2;
+		background-color: palette-get(na-black-30);
+	}
+
+	&__item:last-of-type > .vertical-timeline__spacing-dot {
+		display: none;
+	}
+
+	&__line {
+		border-left: 1px solid palette-get(na-black-30);
+		position: absolute;
+	    top: 0px;
+	    height: 100%;
+	    z-index: 0;
+	}
+
+	&__category-title-container {
+		display: table-row;
+		z-index: 100;
+	}
+
+	&__title {
+		display: table;
+		text-align: center;
+		background-color: white;
+		z-index: 1;
+
+		&__image-row {
+			display: table-row;
+		}
+
+		&__text-row {
+			display: table-row;
+			z-index: 100;
+			background-color: white;
+			top: $top-nav-height;
+		}
+
+		&__image {
+			max-width: 150px;
+			/*margin-bottom: 15px;*/
+			background-size: contain;
+			background-position: 50% 50%;
+			background-repeat: no-repeat;
+			display: table-cell;
+			padding: 0px 15px;
+		}
+
+		&__text {
+			display: table-cell;
+		    font-size: 16px;
+		    font-weight: bold;
+		    text-transform: uppercase;
+		    padding-bottom: 0px;
+		    margin-bottom: 0px;
+		    padding: 15px 15px;
+		    letter-spacing: .5px;
+		    line-height: 1.4;
+		}
+	}
+
+	&__time {
+		background-color: white;
+		padding: 10px 0px 0px;
+		margin-bottom: 0px;
+		font-size: 16px;
+		text-transform: capitalize;
+	}
+
+	&__description {
+		background-color: white;
+		padding: 10px 0px;
+		font-size: 12px !important;
+		line-height: 1.3 !important;
+		margin-bottom: 0px;
+		overflow: hidden;
+	}
+}

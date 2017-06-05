@@ -43,6 +43,7 @@
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "sass-loader": "^4.0.0",
+    "showdown": "^1.7.0",
     "style-loader": "^0.13.1",
     "topojson": "^1.6.27",
     "transform-loader": "^0.2.3",
