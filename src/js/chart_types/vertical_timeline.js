@@ -175,6 +175,11 @@ export class VerticalTimeline {
 				this.titleImages
 					.style("background-position", "50% " + (maxTitleImageHeight - (titleImageClient.bottom - topNavHeight)) + "px")
 					.style("background-size", (titleImageClient.bottom - topNavHeight) + "px");
+			} else {
+				console.log("else!!!!")
+				this.titleImages
+					.style("background-position", "50% 50%")
+					.style("background-size", "contain");
 			}
 			if (titleTextClient.top <= topNavHeight) {
 				this.titleTextRow
