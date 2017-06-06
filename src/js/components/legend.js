@@ -281,7 +281,10 @@ export class Legend {
 
 	toggleValsShown(valToggled) {
 		// if all toggled, just show clicked value
-		if (this.valsShown.length == this.numBins) {
+		if (valToggled == "all") {
+			this.legendCellDivs.map( function(item) { item.classed("disabled", false)});
+			return;
+		} else if (this.valsShown.length == this.numBins) {
 			this.valsShown = [valToggled];
 			this.legendCellDivs.map( function(item) { item.classed("disabled", true)});
 			this.legendCellDivs[valToggled].classed("disabled", false);
@@ -307,8 +310,9 @@ export class Legend {
 		}
 	}
 
-	setOrientation(orientation) {
+	setOrientation(orientation, rerender) {
 		this.orientation = orientation;
+		rerender ? this.render() : null;
 	}
 
 	resize() {

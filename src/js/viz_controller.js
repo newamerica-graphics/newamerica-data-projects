@@ -34,7 +34,7 @@ import { BarLineCombo } from "./chart_types/bar_line_combo.js";
 import { PinDropMap } from "./chart_types/pindrop_map.js";
 import { VerticalTimeline } from "./chart_types/vertical_timeline.js";
 
-import ResourceToolkit from "./react_chart_types/resource_toolkit/ResourceToolkit.js";
+// import ResourceToolkit from "./react_chart_types/resource_toolkit/ResourceToolkit.js";
 
 import { formatValue } from "./helper_functions/format_value.js";
 
@@ -129,10 +129,6 @@ export const setupProject = (projectSettings) => {
 						viz = new StackedBar(vizSettingsObject);
 						break;
 
-					case "resource_toolkit":
-						viz = vizSettingsObject;
-						break;
-
 					case "summary_box":
 						viz = new SummaryBox(vizSettingsObject);
 						break;
@@ -194,14 +190,14 @@ export const setupProject = (projectSettings) => {
 	}
 
 	function renderReact(vizSettings, data) {
-		switch (vizSettings.vizType) {
-			case "resource_toolkit":
-				render(
-					<ResourceToolkit vizSettings={vizSettings} data={data} />,
-					document.getElementById(vizSettings.id.replace("#", ""))
-				)
-				break;
-		}
+		// switch (vizSettings.vizType) {
+		// 	case "resource_toolkit":
+		// 		render(
+		// 			<ResourceToolkit vizSettings={vizSettings} data={data} />,
+		// 			document.getElementById(vizSettings.id.replace("#", ""))
+		// 		)
+		// 		break;
+		// }
 		
 	}
 

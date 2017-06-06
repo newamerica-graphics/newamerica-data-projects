@@ -4,6 +4,7 @@ let d3 = require("d3");
 
 import { DotHistogram } from "../chart_types/dot_histogram.js";
 import { TopoJsonMap } from "../chart_types/topo_json_map.js";
+import { PinDropMap } from "../chart_types/pindrop_map.js";
 import { MapboxMap } from "../chart_types/mapbox_map.js";
 import { SelectBox } from "../components/select_box.js";
 import { TextBox } from "../components/text_box.js";
@@ -55,6 +56,9 @@ export class Dashboard {
 			case "mapbox_map":
 				component = new MapboxMap(componentSettings);
 				break;
+			case "pindrop_map":
+				component = new PinDropMap(componentSettings);
+				break;
 			case "select_box":
 				component = new SelectBox(componentSettings);
 				break;
@@ -80,7 +84,9 @@ export class Dashboard {
 		for (let component of this.componentList) {
 			component.render(data);
 		}
-		this.changeFilter(this.defaultValue, this);
+		if (this.defaultValue) {
+			this.changeFilter(this.defaultValue, this);
+		}
 
 		for (let component of this.componentList) {
 			component.addAnimationTrigger ? component.addAnimationTrigger() : null;
