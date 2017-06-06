@@ -9,6 +9,7 @@ export class SelectBox {
 			.attr("class", "select-box")
 			.on("change", (d) => { 
 				let index = this.selectBox.property('selectedIndex');
+				index -= this.placeholder ? 1 : 0;
 
 				if (this.hasShowAllButton) {
 					console.log("has show all");
@@ -41,7 +42,10 @@ export class SelectBox {
 		console.log("rendering!");
 		this.valList = this.customValList || d3.nest()
 			.key((d) => { return d[this.variable.variable]; })
+			.sortKeys((a, b) => { return this.sortVals ? d3.ascending(a, b) : 1 })
 			.entries(data[this.primaryDataSheet]);
+
+		console.log(this.valList);
 
 		if (this.placeholder) {
 			this.selectBox.append("option")

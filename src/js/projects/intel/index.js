@@ -84,7 +84,8 @@ let vizSettingsList = [
 					isMessagePasser: true,
 					messageHandlerType: "change_value",
 					placeholder: "Select a Program",
-					hasShowAllButton: true
+					hasShowAllButton: true,
+					sortVals: true
 				}
 			],
 			[
