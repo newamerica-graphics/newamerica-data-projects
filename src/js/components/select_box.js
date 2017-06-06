@@ -1,7 +1,5 @@
 import $ from 'jquery';
 
-const escape = require('escape-html');
-
 let d3 = require("d3");
 
 export class SelectBox {
@@ -32,7 +30,7 @@ export class SelectBox {
 		this.showingAll = true;
 
 		if (this.hasShowAllButton) {
-			this.showAllButton = d3.select(this.id).append("div")
+			this.showAllButton = this.selectBoxContainer.append("div")
 				.attr("class", "select-box__show-all")
 				.text("Show All")
 				.style("display", "none")
@@ -44,13 +42,10 @@ export class SelectBox {
 	}
 
 	render(data) {
-		console.log("rendering!");
 		this.valList = this.customValList || d3.nest()
 			.key((d) => { return d[this.variable.variable]; })
 			.sortKeys((a, b) => { return this.sortVals ? d3.ascending(a, b) : 1 })
 			.entries(data[this.primaryDataSheet]);
-
-		console.log(this.valList);
 
 		if (this.placeholder) {
 			this.selectBox.append("option")
@@ -64,14 +59,12 @@ export class SelectBox {
 			.data(this.valList)
 			.enter()
 			.append("option")
-			.text((d) => { return escape(d.key); })
+			.text((d) => { return d.key; })
 			.attr("value", (d) => { return d.values[0].id; })
 			.attr("class", "select-box__option");
 	}
 
 	changeValue(value) {
-		console.log(value);
-		// this.selectBoxOptions.attr("selected", (d, i) => {  return i == Number(value); });
 		$(this.id + " .select-box").val(value);
 
 		if (this.hasShowAllButton) {
