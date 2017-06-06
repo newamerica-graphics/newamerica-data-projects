@@ -46,7 +46,7 @@ export class VerticalTimeline {
 			.key((d) => { console.log(d); return d[this.categoryVar.variable]; })
 			.entries(this.data);
 
-		this.categories = d3.map(this.data, (d) => { return d[this.categoryVar.variable];}).keys();
+		this.categories = this.categoryVar.customDomain || d3.map(this.data, (d) => { return d[this.categoryVar.variable];}).keys();
 		this.setDimensions();
 
 		this.colorScale = getColorScale(this.data, this.categoryVar);
@@ -96,6 +96,16 @@ export class VerticalTimeline {
 		this.timelineRowContainer = this.container.append("div")
 			.attr("class", "vertical-timeline__row-container")
 
+		if (this.begEndLabels) {
+			this.timelineRowContainer.selectAll(".vertical-timeline__beg-end-label-container.top")
+				.data(this.categories)
+				.enter().append("div")
+				.attr("class", "vertical-timeline__beg-end-label-container top")
+				.append("div")
+				.attr("class", "vertical-timeline__beg-end-label")
+				.text(this.begEndLabels[0])
+		}
+
 		this.timelineRows = this.timelineRowContainer.selectAll(".vertical-timeline__row")
 			.data(this.dataNest)
 			.enter().append("div")
@@ -127,7 +137,6 @@ export class VerticalTimeline {
 			.attr("class", "vertical-timeline__description")
 			.html((d) => { return formatValue(d[this.descriptionVar.variable], "markdown"); })
 
-		console.log(this.descriptionText);
 		console.log(this.descriptionText.select("a"))
 		console.log(this.descriptionText.selectAll("a").nodes())
 		let prevColor;
@@ -136,12 +145,22 @@ export class VerticalTimeline {
 				prevColor = datum ? this.colorScale(datum.category) : prevColor; 
 				return prevColor;
 			})
-		// this.descriptionText.selectAll("a").enter().style("color", "green");
+			.attr("target", "_blank")
 
 		this.spacingDot = this.timelineItems.append("div")
 			.attr("class", "vertical-timeline__spacing-dot")
 			.style("background-color", (d) => { return this.colorScale(d.category); });
-			
+		
+		if (this.begEndLabels) {
+			this.timelineRowContainer.selectAll(".vertical-timeline__beg-end-label-container.bottom")
+				.data(this.categories)
+				.enter().append("div")
+				.attr("class", "vertical-timeline__beg-end-label-container bottom")
+				.append("div")
+				.attr("class", "vertical-timeline__beg-end-label")
+				.text(this.begEndLabels[1])
+		}
+
 		this.appendLines();
 
 	}

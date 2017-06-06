@@ -18,7 +18,8 @@ let vizSettingsList = [
 		timeSuffix: " weeks",
 		categoryVar: variables.category,
 		categoryImageUrl: "https://s3-us-west-2.amazonaws.com/na-data-projects/images/paid_family_leave_timeline/",
-		descriptionVar: variables.description
+		descriptionVar: variables.description,
+		begEndLabels: ["Childbirth", "1 Year"]
 	},
 ]
 
