@@ -32,7 +32,7 @@ let vizSettingsList = [
 		tooltipVars: [ variables.name, variables.primary_technological_tool, variables.tech_tool],
 		quantityLabel: "programs",
 		idVar: variables.name
-		// clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
+		clickToProfile: { "variable": variables.name.variable, "url": "https://www.newamerica.org/in-depth/integrating-technology-early-literacy/program-profile/?" }	
 	},
 	{
 		id: "#intel__start-year",
@@ -42,7 +42,7 @@ let vizSettingsList = [
 		titleVar: variables.name,
 		legendSettings: {"orientation": "horizontal-center", "showTitle": false},
 		annotationSplits: [ {"value": "2011", "textSpans": ["Tablet invented and", "first introduced to schools"] }],
-		// clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
+		clickToProfile: { "variable": variables.name.variable, "url": "https://www.newamerica.org/in-depth/integrating-technology-early-literacy/program-profile/?" }
 	},
 	// {
 	// 	id: "#intel__start-year1",
@@ -69,6 +69,8 @@ let vizSettingsList = [
 		tooltipVars: [ variables.name, variables.program_affiliation, variables.program_type, variables.languages_summarized, variables.number_served, variables.age_served ],
 		filterGroupSettings: {"hidden": false},
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
+		clickToProfile: { "variable": variables.name.variable, "url": "https://www.newamerica.org/in-depth/integrating-technology-early-literacy/program-profile/?" }
+
 	},
 	{
 		id: "#intel__locations",
@@ -102,7 +104,8 @@ let vizSettingsList = [
 					tooltipVars: [ variables.program, variables.location, variables.evidence_of_impact_rating ],
 					filterGroupSettings: {"hidden": false},
 					legendSettings: {"orientation": "vertical-right", "showTitle": true},
-					zoomable: true
+					zoomable: true,
+					clickToProfile: { "variable": variables.name.variable, "url": "https://www.newamerica.org/in-depth/integrating-technology-early-literacy/program-profile/?" }
 				}
 			]
 		]
