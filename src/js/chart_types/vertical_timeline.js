@@ -4,6 +4,7 @@ let d3 = require("d3");
 
 import { colors } from "../helper_functions/colors.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
+import { formatValue } from "../helper_functions/format_value.js";
 
 const topNavHeight = 70;
 
@@ -124,7 +125,18 @@ export class VerticalTimeline {
 
 		this.descriptionText = this.timelineItems.append("p")
 			.attr("class", "vertical-timeline__description")
-			.text((d) => { return d[this.descriptionVar.variable]; })
+			.html((d) => { return formatValue(d[this.descriptionVar.variable], "markdown"); })
+
+		console.log(this.descriptionText);
+		console.log(this.descriptionText.select("a"))
+		console.log(this.descriptionText.selectAll("a").nodes())
+		let prevColor;
+		this.descriptionText.selectAll("a")
+			.style("color", (datum) => { 
+				prevColor = datum ? this.colorScale(datum.category) : prevColor; 
+				return prevColor;
+			})
+		// this.descriptionText.selectAll("a").enter().style("color", "green");
 
 		this.spacingDot = this.timelineItems.append("div")
 			.attr("class", "vertical-timeline__spacing-dot")
