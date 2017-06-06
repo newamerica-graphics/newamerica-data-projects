@@ -31,7 +31,7 @@ let vizSettingsList = [
 		filterVars: [ variables.primary_technological_tool ],
 		tooltipVars: [ variables.name, variables.primary_technological_tool, variables.tech_tool],
 		quantityLabel: "programs",
-		idVar: variables.name
+		idVar: variables.name,
 		clickToProfile: { "variable": variables.name.variable, "url": "https://www.newamerica.org/in-depth/integrating-technology-early-literacy/program-profile/?" }	
 	},
 	{
@@ -105,7 +105,7 @@ let vizSettingsList = [
 					filterGroupSettings: {"hidden": false},
 					legendSettings: {"orientation": "vertical-right", "showTitle": true},
 					zoomable: true,
-					clickToProfile: { "variable": variables.name.variable, "url": "https://www.newamerica.org/in-depth/integrating-technology-early-literacy/program-profile/?" }
+					clickToProfile: { "variable": variables.program.variable, "url": "https://www.newamerica.org/in-depth/integrating-technology-early-literacy/program-profile/?" }
 				}
 			]
 		]

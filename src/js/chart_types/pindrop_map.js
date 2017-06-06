@@ -166,8 +166,15 @@ export class PinDropMap {
 			.attr("fill", (d) => { return this.setFill(d); })
 			.attr("stroke", "white")
 			.attr("stroke-width", "1px")
+			.style("cursor", this.clickToProfile ? "pointer" : "auto")
 			.on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event)})
 		    .on("mouseout", () => { return this.mouseout(); })
+		    .on("click", (d) => {
+		    	console.log(d);
+		    	if (this.clickToProfile) {
+		    		window.location.href = this.clickToProfile.url + encodeURI(d[this.clickToProfile.variable].toLowerCase());
+		    	}
+		    });
 	}
 
 	setLegend() {
