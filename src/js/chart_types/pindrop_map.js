@@ -65,6 +65,7 @@ export class PinDropMap {
 		this.svgDefs = this.svg.append("defs");
 
 		this.setDimensions();
+		this.centered = true;
 	}
 
 	setGeometry(geometryType) {
@@ -139,21 +140,7 @@ export class PinDropMap {
 	}
 
 	buildGraph() {
-		if (this.zoomable) {
-			this.g.call(d3.zoom()
-		        .on("zoom", () => { return this.zoom(d3.event); }));
 
-			// function zoomed() {
-			//   g.attr("transform", d3.event.transform);
-			// }
-		    // .call(d3.drag().on("start", (d, index, paths) => { 
-		    // 	console.log("dragging!"); 
-		    // 	console.log(d, paths[index], d3.event);
-		    // 	if (this.zoomable) {
-		    // 		return this.zoom(d, paths[index], d3.event);
-		    // 	}
-		    // }));
-		}
 		this.paths = this.g.selectAll("path")
 		   .data(this.geometry)
 		   .enter()
@@ -165,7 +152,10 @@ export class PinDropMap {
 		    .attr("stroke", this.stroke.color || "white")
 		    .attr("stroke-width", this.stroke.width || "1")
 		    .attr("stroke-opacity", this.stroke.opacity || "1")
-		    .style("cursor", this.zoomable ? "pointer" : "auto");
+		    .style("cursor", this.zoomable ? "pointer" : "auto")
+		    .on("click", (d, index, paths) => {
+		    	this.zoomable ? this.zoom(d, paths[index], d3.event) : null;
+		    });
 
 		this.points = this.g.selectAll("circle")
 			.data(this.data.filter((d) => { return d.long && d.lat; }))
@@ -281,47 +271,44 @@ export class PinDropMap {
 	   	}
 	}
 
-	zoom(eventObject) {
-		let {k, x, y} = eventObject.transform;
+	zoom(datum, path, eventObject) {
+		let x, y;
 
-		console.log(eventObject);
-		console.log(d3.event);
-
-		// if (datum && this.centered !== datum) {
-		// 	let centroid = this.pathGenerator.centroid(datum);
-		// 	x = centroid[0];
-		// 	y = centroid[1];
-		// 	this.zoomRatio = 5;
-		// 	this.centered = datum;
-		// 	this.zoomOutPrompt.style("display", "block");
-		// 	this.legend.setOrientation("horizontal-center");
-		// } else {
-		// 	x = this.w / 2;
-		// 	y = this.h / 2;
-		// 	this.zoomRatio = 1;
-		// 	this.centered = null;
-		// 	this.zoomOutPrompt.style("display", "none");
-		// 	this.legend.setOrientation("vertical-right");
-		// }
+		if (datum && this.centered !== datum) {
+			let centroid = this.pathGenerator.centroid(datum);
+			x = centroid[0];
+			y = centroid[1];
+			this.zoomRatio = 4;
+			this.centered = datum;
+			this.zoomOutPrompt.style("display", "block");
+			this.legend.setOrientation("horizontal-center", true);
+		} else {
+			x = this.w / 2;
+			y = this.h / 2;
+			this.zoomRatio = 1;
+			this.centered = null;
+			this.zoomOutPrompt.style("display", "none");
+			this.legend.setOrientation("vertical-right", true);
+		}
+		  
 
 		this.g.transition()
-		  .duration(0)
-		  .attr("transform", eventObject.transform)
-		  // .attr("stroke-width", 1.5 / this.zoomRatio + "px")
-		  // .on("end", () => { return this.centered ? this.tooltip.show(datum.data, [this.w / 2 + 30, this.h / 2]) : null; })
+		  .duration(750)
+		  .attr("transform", "translate(" + this.w / 2 + "," + this.h / 2 + ")scale(" + this.zoomRatio + ")translate(" + -x + "," + -y + ")")
+		  .style("stroke-width", 1.5 / this.zoomRatio + "px")
 
 		this.paths
+			.style("fill", (d) => { return !this.centered || (this.centered && d === this.centered) ? colors.grey.medium_light : colors.grey.light; })
 			.transition()
-		  	.duration(0)
-		  	.attr("transform", eventObject.transform)
-			// .attr("stroke-width", 1/this.zoomRatio);
+		  	.duration(750)
+			.attr("stroke-width", 1/this.zoomRatio);
 
 		this.points
 			.transition()
-		  	.duration(0)
-		  	.attr("transform", eventObject.transform)
-			// .attr("r", this.pinRadius/this.zoomRatio)
-			// .attr("stroke-width", 1/this.zoomRatio)
+		  	.duration(750)
+			.attr("r", this.pinRadius/this.zoomRatio)
+			.attr("stroke-width", 1/this.zoomRatio)
+
 	}
 
 	// dashboard function

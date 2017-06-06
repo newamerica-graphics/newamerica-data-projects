@@ -399,7 +399,6 @@ export class TopoJsonMap {
 		  .attr("transform", "translate(" + this.w / 2 + "," + this.h / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
 		  .style("stroke-width", 1.5 / k + "px")
 		  .on("end", () => { return this.centered ? this.tooltip.show(datum.data, [this.w / 2 + 30, this.h / 2]) : null; })
-
 	}
 			
 }

@@ -310,8 +310,9 @@ export class Legend {
 		}
 	}
 
-	setOrientation(orientation) {
+	setOrientation(orientation, rerender) {
 		this.orientation = orientation;
+		rerender ? this.render() : null;
 	}
 
 	resize() {

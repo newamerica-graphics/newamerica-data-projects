@@ -1,11 +1,16 @@
 import $ from 'jquery';
 
+const escape = require('escape-html');
+
 let d3 = require("d3");
 
 export class SelectBox {
 	constructor(componentSettings) {
 		Object.assign(this, componentSettings);
-		this.selectBox = d3.select(this.id).append("select")
+		this.selectBoxContainer = d3.select(this.id).append("div")
+			.attr("class", "select-box-container");
+
+		this.selectBox = this.selectBoxContainer.append("select")
 			.attr("class", "select-box")
 			.on("change", (d) => { 
 				let index = this.selectBox.property('selectedIndex');
@@ -59,7 +64,7 @@ export class SelectBox {
 			.data(this.valList)
 			.enter()
 			.append("option")
-			.text((d) => { return d.key; })
+			.text((d) => { return escape(d.key); })
 			.attr("value", (d) => { return d.values[0].id; })
 			.attr("class", "select-box__option");
 	}
