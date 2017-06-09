@@ -103,6 +103,7 @@ export class VerticalTimeline {
 				.attr("class", "vertical-timeline__beg-end-label-container top")
 				.append("div")
 				.attr("class", "vertical-timeline__beg-end-label")
+				.style("background-color", (d) => { console.log(d); return this.colorScale(d); })
 				.text(this.begEndLabels[0])
 		}
 
@@ -158,6 +159,7 @@ export class VerticalTimeline {
 				.attr("class", "vertical-timeline__beg-end-label-container bottom")
 				.append("div")
 				.attr("class", "vertical-timeline__beg-end-label")
+				.style("background-color", (d) => { console.log(d); return this.colorScale(d); })
 				.text(this.begEndLabels[1])
 		}
 
