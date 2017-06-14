@@ -212,7 +212,9 @@ export class VerticalTimeline {
 					.style("background-position", "50% 50%")
 					.style("background-size", "contain");
 			}
+
 			if (titleTextClient.top <= topNavHeight) {
+				console.log("will fix text position");
 				this.titleTextRow
 					.style("position", "fixed");
 
@@ -224,7 +226,9 @@ export class VerticalTimeline {
 					.style("position", "initial");
 
 				this.headerExpanded = true;
-
+			} else if (dataRowContainerClient.bottom < topNavHeight) {
+				this.titleTextRow
+					.style("position", "initial");
 			}
 		}
 
