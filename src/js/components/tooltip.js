@@ -102,22 +102,21 @@ export class Tooltip {
 		if ($(window).width() < 450) {
 			return;
 		}
-
-		console.log(filterColor);
-        // if (this.tooltipImageVar) {
-        // 	if (d[this.tooltipImageVar.variable]) {
-        // 		this.titleDiv
-        // 			.classed("has-image", true)
-        // 		this.imageContainer
-        // 			.style("display", "table-cell");
-        // 		this.image
-        // 			.style("background", "no-repeat center/100% url(https://googledrive.com/host/" + this.imageFolderId + "/" + d[this.tooltipImageVar.variable] + ")");
-        // 	} else {
-        // 		this.imageContainer.style("display", "none");
-        // 		this.titleDiv
-        // 			.classed("has-image", false)
-        // 	}
-        // }
+		
+        if (this.tooltipImageVar) {
+        	if (datum[this.tooltipImageVar.variable]) {
+        		this.titleDiv
+        			.classed("has-image", true)
+        		this.imageContainer
+        			.style("display", "table-cell");
+        		this.image
+        			.style("background", "no-repeat center/100% url(https://googledrive.com/host/" + this.imageFolderId + "/" + datum[this.tooltipImageVar.variable] + ")");
+        	} else {
+        		this.imageContainer.style("display", "none");
+        		this.titleDiv
+        			.classed("has-image", false)
+        	}
+        }
 
 		this.titleDiv.text(datum[this.titleVar]);
 
