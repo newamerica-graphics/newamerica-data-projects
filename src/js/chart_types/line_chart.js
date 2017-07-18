@@ -7,70 +7,41 @@ import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { Legend } from "../components/legend.js";
 import { Tooltip } from "../components/tooltip.js";
 
-let parseDate = d3.timeParse("%B %d, %Y");
-
-let margin = {top: 20, right: 20, bottom: 30, left: 75};
-
-let dataPointWidth = 7;
 
 export class LineChart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, tooltipVars, tooltipImageVar, xVars, yVars, colorVars, yScaleType, primaryDataSheet, interpolation, tooltipScrollable} = vizSettings;
-		this.id = id;
-		this.interpolation = interpolation;
-		this.primaryDataSheet = primaryDataSheet;
-		this.yScaleType = yScaleType;
+		Object.assign(this, vizSettings);
+		this.margin = {top: 20, right: 20, bottom: 30, left: 75};
 
-		this.svg = d3.select(id).append("svg").attr("class", "line-chart");
+
+		this.svg = d3.select(this.id).append("svg").attr("class", "line-chart");
 
 		this.renderingArea = this.svg.append("g");
+		if (this.dualYScale) {
+			this.margin.right = 75;
+		}
 
 		this.setDimensions();
 
-		this.xScale = d3.scaleTime();
+		this.xScale = d3.scaleLinear();
 		this.yScale = d3.scaleLinear();
+		if (this.dualYScale) {
+			this.y2Scale = d3.scaleLinear();
+		}
 
-		this.setScales();
-		this.setLineScaleFunction();
+		this.setXYScaleRanges();
 
-		this.currXVar = xVars[0];
-		this.currXVarName = xVars[0].variable;
-		this.currYVar = yVars[0];
-		this.currYVarName = yVars[0].variable;
-		this.currColorVar = colorVars[0];
-		this.currColorVarName = colorVars[0].variable;
-
-		let legendSettings = {};
-		legendSettings.id = id;
-		legendSettings.showTitle = false;
-		legendSettings.markerSettings = { shape:"rect", size:dataPointWidth };
-		legendSettings.orientation = "horizontal-center";
-		this.legend = new Legend(legendSettings);
-
-		let tooltipSettings = { "id":id, "tooltipVars":tooltipVars, tooltipImageVar:"tooltipImageVar", "imageFolderId":imageFolderId, "tooltipScrollable":tooltipScrollable }
-		this.tooltip = new Tooltip(tooltipSettings);
-		
-	}
-
-	render(data) {
-		this.data = this.processData(data[this.primaryDataSheet]);
-
-		this.yScaleType == "cumulative" ? this.setCumulativeValues() : null;
-		  
-		this.setXYScaleDomains();
-
-		this.setColorScale();
-
-		this.renderAxes();
-        this.renderLines();
-        this.renderPoints();
-
-        this.setLegend();
+		if (this.yVars.length > 1) {
+			this.setColorScale();
+			this.initializeLegend();
+		}
+		this.initializeTooltip();
 	}
 
 	setDimensions() {
+		let {margin} = this;
 		this.w = $(this.id).width() - margin.left - margin.right;
-		this.h = this.w < 400 ? 2*this.w/3 : this.w/2;
+		this.h = this.w < 400 ? 2*this.w/3 : 4*this.w/7;
 		this.h = this.h - margin.top - margin.bottom;
 
 		this.svg
@@ -78,234 +49,234 @@ export class LineChart {
 		    .attr("height", this.h + margin.top + margin.bottom);
 
 		this.renderingArea
+			.attr("width", this.w)
 		    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 	}
 
-	setScales() {
+	setXYScaleRanges() {
 		this.xScale.range([0, this.w]);
-
 		this.yScale.range([this.h, 0]);
+
+		if (this.dualYScale) {
+			this.y2Scale.range([this.h, 0]);
+		}
 	}
 
 	setColorScale() {
-		this.colorScale = getColorScale(this.data, this.currColorVar);
+		this.colorScale = d3.scaleOrdinal()
+			.domain(this.yVars.map((d) => { return d.displayName; }))
+			.range(this.yVars.map((d) => { return d.color; }))
+
+		console.log(this.colorScale.domain(), this.colorScale.range());
 	}
 
-	setLineScaleFunction() {
-		this.line = d3.line()
-		    .x((d, i) => { 
-		    	if (d.falseMin) {	
-		     		return 0;
-		     	} else if (d.falseMax) {
-		     		return this.xScale(this.newXMax)
-		     	} else {
-		     		return this.xScale(d[this.currXVarName]); 
-		     	}
-		 	})
-		    .y((d, i) => { 
-		    	if (d.falseMin) {	
-		     		return this.yScale(0);
-		     	} else if (d.falseMax) {
-		     		return this.yScale(d.lastYVal);
-		     	} else {
-		    		let scaledVal = this.yScaleType == "cumulative" ? d.cumulativeVal : d[this.currYVarName];
-		    		return this.yScale(scaledVal); 
-		    	}
-		    });
+	initializeLegend() {
+		let legendSettings = { "id":this.id, "showTitle":false, "markerSettings":{ "shape":this.dotSettings.shape, "size":this.dotSettings.width }, "orientation": "horizontal-center"};
+		this.legend = new Legend(legendSettings);
+	}
 
-		this.interpolation == "step" ? this.line.curve(d3.curveStepAfter) : null;
+	initializeTooltip() {
+		let tooltipSettings = { "id":this.id, "tooltipVars":this.tooltipVars}
+		this.tooltip = new Tooltip(tooltipSettings);
+	}
+
+	render(data) {
+		this.data = data[this.primaryDataSheet];
+		  
+		this.setXYScaleDomains();
+
+		this.renderAxes();
+        this.renderDataElements();
+
+  		this.yVars.length > 1 ? this.setLegend() : null;
+	}
+
+	setXYScaleDomains() {
+		if (this.xVar.customDomain) {
+			this.xScale.domain(this.xVar.customDomain);
+		} else {
+			this.xScale.domain(d3.extent(this.data, (d) => { return d[this.xVar.variable]; }));
+		}
+
+		console.log(this.xScale.domain());
+		this.yScale.domain(this.getYScaleDomain(this.yVars[0]));
+		
+		if (this.dualYScale) {
+			this.y2Scale.domain(this.getYScaleDomain(this.yVars[1]));
+		}
+	}
+
+	getYScaleDomain(yVar) {
+		if (yVar.customDomain) {
+			return yVar.customDomain;
+		} else {
+			return d3.extent(this.data, (d) => { return d[yVar.variable]; });
+		}
 	}
 
 	renderAxes() {
 		this.xAxis = this.renderingArea.append("g")
-			.attr("class", "axis axis-x")
-			.attr("transform", "translate(0," + this.h + ")")
-			.call(d3.axisBottom(this.xScale).tickPadding(10));
+			.attr("class", "axis axis-x");
 
 		this.yAxis = this.renderingArea.append("g")
-			.attr("class", "axis axis-y")
-			.call(d3.axisLeft(this.yScale).tickPadding(10));
+			.attr("class", "axis axis-y");
 
 		this.yAxisLabel = this.yAxis.append("text")
 			.attr("class", "axis__title")
 			.attr("transform", "rotate(-90)")
-			.attr("x", -this.h/2)
 			.attr("y", -60)
 			.attr("dy", ".71em")
 			.style("text-anchor", "middle")
-			.text(this.currYVar.displayName);
+			.text(this.yVars[0].displayName);
+
+		if (this.dualYScale) {
+			this.y2Axis = this.renderingArea.append("g")
+				.attr("class", "axis axis-y")
+
+			this.y2AxisLabel = this.y2Axis.append("text")
+				.attr("class", "axis__title")
+				.attr("transform", "rotate(90)")
+				.attr("y", -60)
+				.attr("dy", ".71em")
+				.style("text-anchor", "middle")
+				.text(this.yVars[1].displayName);
+		}
+
+		this.setAxesDimensions();
 	}
 
-	renderLines() {
-		this.dataLines = {};
+	setAxesDimensions() {
+		this.xAxis
+			.attr("transform", "translate(0," + this.h + ")")
+			.call(d3.axisBottom(this.xScale).tickPadding(10));
 
-        this.dataNest.forEach((d) => {
-       		let dataLine = this.renderingArea.append("path")
-				.datum(d.values)
-				.attr("class", "line-chart__line")
-				.attr("d", this.line)
-				.attr("stroke", this.colorScale(d.key));
+		this.yAxis
+			.call(d3.axisLeft(this.yScale).tickPadding(10));
 
-		    this.dataLines[d.key] = dataLine;
+		this.yAxisLabel
+			.attr("x", -this.h/2);
+
+		if (this.dualYScale) {
+			this.y2Axis
+				.attr("transform", "translate(" + this.w + ")")
+				.call(d3.axisRight(this.y2Scale).tickPadding(10));
+
+			this.y2AxisLabel
+				.attr("x", this.h/2)
+		}
+	}
+
+	renderDataElements() {
+		this.dataLines = [];
+		this.dataPoints = [];
+
+        this.yVars.forEach((yVar, i) => {
+        	let whichYScale = this.dualYScale && i > 0 ? this.y2Scale : this.yScale;
+		    this.renderLine(yVar, whichYScale);
+		    this.renderPoints(yVar, whichYScale);
 	  	})
 	}
 
-	renderPoints() {
-		this.dataPoints = this.renderingArea.selectAll("rect")
+	renderLine(yVar, yScale) {
+		this.dataLines[yVar.variable] = this.renderingArea.append("path")
+			.datum(this.data)
+			.attr("class", "line-chart__line")
+			.attr("stroke", yVar.color);
+
+		this.setLinePath(yVar, yScale);
+	}
+
+	setLinePath(yVar, yScale) {
+		let lineFunc = d3.line()
+		    .x((d) => { return this.xScale(d[this.xVar.variable]); })
+		    .y((d) => { return yScale(d[yVar.variable]); });
+
+		this.dataLines[yVar.variable].attr("d", lineFunc)
+	}
+
+	renderPoints(yVar, yScale) {
+		const {dotSettings} = this;
+		this.dataPoints[yVar.variable] = this.renderingArea.selectAll(dotSettings.shape + "." + yVar.variable)
 			.data(this.data)
-			.enter().append("svg:rect")
-			.attr("class", "line-chart__point")
-			.attr("x", (d) => { return this.xScale(d[this.currXVarName]) - dataPointWidth/2})
-			.attr("y", (d) => {
-				let scaledVal = this.yScaleType == "cumulative" ? d.cumulativeVal : d[this.currYVarName]; 
-				return this.yScale(scaledVal) - dataPointWidth/2;
-			})
-			.attr("width", dataPointWidth)
-			.attr("height", dataPointWidth)
-			.attr("stroke-width", "none")
-			.attr("fill", (d) => { return this.colorScale(d[this.currColorVarName])})
-			.on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event); })
-		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]); });
-	}
+			.enter().append("svg:" + dotSettings.shape)
+			.attr("class", "line-chart__point " + yVar.variable)
+			.attr("stroke-width", "2px")
+			.attr("stroke", (d) => { return yVar.color})
+			.attr("fill", "white")
+			.on("mouseover", (d, i) => { return this.mouseover(d, i, d3.event); })
+		    .on("mouseout", () => { return this.mouseout(); });
 
-	processData(data) {
-		let retArray = [];
-		for (let d of data) {
-			if (d[this.currXVarName] && d[this.currYVarName] && d[this.currColorVarName]) {
-				if (d[this.currYVarName] != 0) {
-					d[this.currXVarName] = parseDate(d[this.currXVarName]);
-					retArray.push(d);
-				}
-			}
+		if (dotSettings.shape == "rect") {
+			this.dataPoints[yVar.variable]
+				.attr("width", this.dotSettings.width)
+				.attr("height", this.dotSettings.width)
+		} else {
+			this.dataPoints[yVar.variable]
+				.attr("r", this.dotSettings.width/2);
 		}
 
-		return retArray;
+		this.setPointPositions(yVar, yScale);
 	}
 
-	setXYScaleDomains() {
-		let xExtents = d3.extent(this.data, (d) => { return d[this.currXVarName]; });
-		let xMinYear = xExtents[0].getFullYear();
-
-		this.newXMin = new Date("January 1, " + (xMinYear - 1) + " 00:00:00");
-		this.newXMax = Date.now();
-		this.xScale.domain([this.newXMin, this.newXMax]);
-
-		let yExtents = d3.extent(this.data, (d) => { 
-			return this.yScaleType == "cumulative" ? d.cumulativeVal : d[this.currYVarName]; 
-		});
-
-		this.yScale.domain([0, yExtents[1]]);
-
-		for (let nestObject of this.dataNest) {
-			let newMinDatapoint = { falseMin: true };
-			let newMaxDatapoint = { falseMax: true };
-			let lastVal = nestObject.values[nestObject.values.length - 1];
-
-			newMaxDatapoint.lastYVal = this.yScaleType == "cumulative" ? lastVal.cumulativeVal : lastVal[this.currYVarName];
-			nestObject.values.unshift(newMinDatapoint);
-			nestObject.values.push(newMaxDatapoint);
+	setPointPositions(yVar, yScale) {
+		if (this.dotSettings.shape == "rect") {
+			this.dataPoints[yVar.variable]
+				.attr("x", (d) => { return this.xScale(d[this.xVar.variable]) - this.dotSettings.width/2})
+				.attr("y", (d) => { return yScale(d[yVar.variable]) - this.dotSettings.width/2; })
+		} else {
+			this.dataPoints[yVar.variable]
+				.attr("cx", (d) => { return this.xScale(d[this.xVar.variable])})
+				.attr("cy", (d) => { return yScale(d[yVar.variable]); })
 		}
-	}
-
-	setCumulativeValues() {
-		this.dataNest = d3.nest()
-	        .key((d) => {return d[this.currColorVarName];})
-	        .sortValues((a, b) => {return a[this.currXVarName] - b[this.currXVarName];})
-	        .entries(this.data);
-
-	    for (let nestObject of this.dataNest) {
-	    	let valSum = 0;
-
-	    	for (let datapoint of nestObject.values) {
-	    		valSum += Number(datapoint[this.currYVarName]);
-	    		datapoint.cumulativeVal = valSum;
-	    	}
-	    }
 	}
 
 	setLegend() {
-		let valCounts = d3.nest()
-			.key((d) => { return d[this.currColorVarName]; })
-			.rollup((v) => { 
-				return d3.sum(v, (d) => { return Number(d[this.currYVarName]); });
-			})
-			.map(this.data);
-
-		let legendSettings = {};
-		legendSettings.format = this.currColorVar.format;
-		legendSettings.scaleType = this.currColorVar.scaleType;
-		legendSettings.colorScale = this.colorScale;
-		legendSettings.valCounts = valCounts;
-		legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
+		let legendSettings = { "format": this.yVars[0].format, "scaleType": "categorical", "colorScale": this.colorScale, "valChangedFunction": this.changeVariableValsShown.bind(this) };
 
 		this.legend.render(legendSettings);
 	}
 
 	resize() {
 		this.setDimensions();
-		this.setScales();
-		this.setLineScaleFunction();
+		this.setXYScaleRanges();
+		this.setAxesDimensions();
 
-		this.xAxis
-			.attr("transform", "translate(0," + this.h + ")")
-			.call(d3.axisBottom(this.xScale).tickPadding(10));
+		this.yVars.forEach((yVar, i) => {
+        	let whichYScale = this.dualYScale && i > 0 ? this.y2Scale : this.yScale;
+		    this.setLinePath(yVar, whichYScale);
+		    this.setPointPositions(yVar, whichYScale);
+	  	})
 
-		this.yAxis.call(d3.axisLeft(this.yScale).tickPadding(10));
-		this.yAxisLabel.attr("x", -this.h/2);
-
-		for (let key of Object.keys(this.dataLines)) {
-			this.dataLines[key].attr("d", this.line);
-		}
-
-		this.dataPoints
-			.attr("x", (d) => { return this.xScale(d[this.currXVarName]) - dataPointWidth/2})
-			.attr("y", (d) => {
-				let scaledVal = this.yScaleType == "cumulative" ? d.cumulativeVal : d[this.currYVarName]; 
-				return this.yScale(scaledVal) - dataPointWidth/2;
-			})
 	}
 
 	changeVariableValsShown(valsShown) {
-		for (let key of Object.keys(this.dataLines)) {
-			let binIndex = this.colorScale.domain().indexOf(key);
-
-   			if (valsShown.indexOf(binIndex) > -1) {
-   				this.dataLines[key].attr("stroke", this.colorScale(key));
+		this.yVars.forEach((yVar, i) => {
+   			if (valsShown.indexOf(i) > -1) {
+   				this.dataLines[yVar.variable].attr("stroke", yVar.color);
+   				this.dataPoints[yVar.variable].attr("stroke", yVar.color);
    			} else {
-   				this.dataLines[key].attr("stroke", colors.grey.light);
+   				this.dataLines[yVar.variable].attr("stroke", colors.grey.light);
+   				this.dataPoints[yVar.variable].attr("stroke", colors.grey.light);
    			}
-		}
-
-		this.dataPoints
-			.style("fill", (d) => {
-		   		var value = d[this.currColorVarName];
-		   			let binIndex = this.colorScale.domain().indexOf(value);
-		   			if (valsShown.indexOf(binIndex) > -1) {
-		   				return this.colorScale(value);
-		   			}
-		   		return colors.grey.light;
-		    });
+		})
 	}
 
-	mouseover(datum, path, eventObject) {
+	mouseover(datum, index, eventObject) {
 		let mousePos = [];
 		mousePos[0] = eventObject.pageX;
 		mousePos[1] = eventObject.pageY;
 
-		let elem = d3.select(path);
-
-		elem
-			.attr("stroke", "white")
-			.attr("stroke-width", 3.5);
+		this.yVars.forEach((yVar, i) => {	
+   			this.dataPoints[yVar.variable].attr("fill", (d) => { return d[this.xVar.variable] == datum[this.xVar.variable] ? yVar.color : "white"; });
+		})
 			
 		this.tooltip.show(datum, mousePos);
 	}
 
-	mouseout(path) {
-		let elem = d3.select(path);
-
-		elem
-			.attr("stroke", "none");
+	mouseout() {
+		this.yVars.forEach((yVar, i) => {	
+   			this.dataPoints[yVar.variable].attr("fill", "white");
+		})
 
 		this.tooltip.hide();
 	}
