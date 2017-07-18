@@ -179,15 +179,16 @@ let vizSettingsList = [
 	},
 	{
 		id: "#homegrown__deadly-attacks",
-		vizType: "line_chart",
-		interpolation: "step",
+		vizType: "step_chart",
 		yScaleType: "cumulative",
 		primaryDataSheet: "terror_plots",
+		timeFormat: "%B %d, %Y",
 		xVars: [ variables.deadly_attack_date ],
 		yVars: [ variables.victims_killed ],
 		colorVars: [ variables.ideology ],
 		tooltipVars: [ variables.attack_name, variables.ideology, variables.victims_wounded, variables.victims_killed, variables.attack_description ],
 		tooltipScrollable: true,
+		dotSettings: { shape: "circle", width: "7"}
 	},
 	{
 		id: "#homegrown__fact-box__prevention-method", 

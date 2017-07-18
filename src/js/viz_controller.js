@@ -22,6 +22,7 @@ import { ChartWithFactBox } from "./layouts/chart_with_fact_box.js";
 import { Table } from "./chart_types/table.js";
 import { FactBox } from "./chart_types/fact_box.js";
 import { LineChart } from "./chart_types/line_chart.js";
+import { StepChart } from "./chart_types/step_chart.js";
 import { MapboxMap } from "./chart_types/mapbox_map.js";
 import { FinancialOpportunityMap } from "./chart_types/financial_opportunity_map.js";
 import { SummaryBox } from "./chart_types/summary_box.js";
@@ -129,6 +130,10 @@ export const setupProject = (projectSettings) => {
 						viz = new StackedBar(vizSettingsObject);
 						break;
 
+					case "step_chart":
+						viz = new StepChart(vizSettingsObject);
+						break;
+
 					case "summary_box":
 						viz = new SummaryBox(vizSettingsObject);
 						break;
@@ -169,6 +174,7 @@ export const setupProject = (projectSettings) => {
 			// setProfileValues(d);
 		} else {
 			d3.json(dataUrl, (d) => {
+				console.log(d)
 				for (let viz of vizList) {
 					viz.render(d);
 					
