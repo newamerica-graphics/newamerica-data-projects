@@ -31,6 +31,8 @@ export class LineChart {
 
 		this.setXYScaleRanges();
 
+		this.initializeHoverLines();
+
 		if (this.yVars.length > 1) {
 			this.setColorScale();
 			this.initializeLegend();
@@ -70,13 +72,23 @@ export class LineChart {
 		console.log(this.colorScale.domain(), this.colorScale.range());
 	}
 
+	initializeHoverLines() {
+		this.hoverLineHorizontal = this.renderingArea.append("line")
+			.attr("stroke-width", 1)
+			.attr("stroke-opacity", .5);
+
+		this.hoverLineVertical = this.renderingArea.append("line")
+			.attr("stroke-width", 1)
+			.attr("stroke-opacity", .5);
+	}
+
 	initializeLegend() {
 		let legendSettings = { "id":this.id, "showTitle":false, "markerSettings":{ "shape":this.dotSettings.shape, "size":this.dotSettings.width }, "orientation": "horizontal-center"};
 		this.legend = new Legend(legendSettings);
 	}
 
 	initializeTooltip() {
-		let tooltipSettings = { "id":this.id, "tooltipVars":this.tooltipVars}
+		let tooltipSettings = { "id":this.id, "tooltipVars":this.tooltipVars, "highlightActive": true}
 		this.tooltip = new Tooltip(tooltipSettings);
 	}
 
@@ -148,7 +160,7 @@ export class LineChart {
 	setAxesDimensions() {
 		this.xAxis
 			.attr("transform", "translate(0," + this.h + ")")
-			.call(d3.axisBottom(this.xScale).tickPadding(10));
+			.call(d3.axisBottom(this.xScale).tickPadding(10).tickFormat(d3.format("0")));
 
 		this.yAxis
 			.call(d3.axisLeft(this.yScale).tickPadding(10));
@@ -203,7 +215,7 @@ export class LineChart {
 			.attr("stroke-width", "2px")
 			.attr("stroke", (d) => { return yVar.color})
 			.attr("fill", "white")
-			.on("mouseover", (d, i) => { return this.mouseover(d, i, d3.event); })
+			.on("mouseover", (d, i, paths) => { return this.mouseover(d, i, paths[i], d3.event, yVar, yScale); })
 		    .on("mouseout", () => { return this.mouseout(); });
 
 		if (dotSettings.shape == "rect") {
@@ -261,7 +273,7 @@ export class LineChart {
 		})
 	}
 
-	mouseover(datum, index, eventObject) {
+	mouseover(datum, index, elem, eventObject, yVar, yScale) {
 		let mousePos = [];
 		mousePos[0] = eventObject.pageX;
 		mousePos[1] = eventObject.pageY;
@@ -269,14 +281,36 @@ export class LineChart {
 		this.yVars.forEach((yVar, i) => {	
    			this.dataPoints[yVar.variable].attr("fill", (d) => { return d[this.xVar.variable] == datum[this.xVar.variable] ? yVar.color : "white"; });
 		})
-			
-		this.tooltip.show(datum, mousePos);
+
+		this.hoverLineHorizontal
+			.style("display", "block")
+			.attr("x1", yScale == this.yScale ? 0 : this.w)
+			.attr("y1", yScale(datum[yVar.variable]))
+			.attr("x2", this.xScale(datum[this.xVar.variable]))
+			.attr("y2", yScale(datum[yVar.variable]))
+			.attr("stroke", yVar.color);
+
+		this.hoverLineVertical
+			.style("display", "block")
+			.attr("x1", this.xScale(datum[this.xVar.variable]))
+			.attr("y1", 0)
+			.attr("x2", this.xScale(datum[this.xVar.variable]))
+			.attr("y2", this.h)
+			.attr("stroke", colors.grey.medium);
+
+		this.tooltip.show(datum, mousePos, yVar, yVar.color);
 	}
 
 	mouseout() {
 		this.yVars.forEach((yVar, i) => {	
    			this.dataPoints[yVar.variable].attr("fill", "white");
 		})
+
+		this.hoverLineHorizontal
+			.style("display", "none")
+
+		this.hoverLineVertical
+			.style("display", "none")
 
 		this.tooltip.hide();
 	}
