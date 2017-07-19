@@ -10,36 +10,22 @@ class CategoryBlock extends React.Component {
 		super(props)
 
 		this.state = {
-			hovered: false
+			expanded: false
 		}
-	}
-
-	mouseEnter() {
-		this.setState({
-			hovered: true
-		})
-	}
-
-	mouseLeave() {
-		this.setState({
-			hovered: false
-		})
 	}
 
 	onClick() {
-		console.log(isTouchDevice());
-		if (isTouchDevice()) {
-			this.setState({
-				hovered: this.state.hovered
-			})
-		}
+		this.setState({
+			expanded: !this.state.expanded
+		})
 	}
 
 	render() {
 		const {title, description, categoryDefinitions} = this.props;
-		let content;
+		let content, classList;
+		classList = "definition-explorer__category";
 
-		if (this.state.hovered) {
+		if (this.state.expanded) {
 			content = <div className="definition-explorer__category__content" key={title}>
 				<p className="definition-explorer__category__description">{description}</p>
 				<ul className="definition-explorer__category__list">
@@ -53,10 +39,12 @@ class CategoryBlock extends React.Component {
 					})}
 				</ul>
 			</div>;
+
+			classList += " expanded";
 		}
 
 		return (
-			<div className="definition-explorer__category" ref="category_container" onMouseEnter={() => {return this.mouseEnter()}} onMouseLeave={() => {return this.mouseLeave()}} onClick={() => {return this.onClick()}}>
+			<div className={classList} onClick={() => {return this.onClick()}}>
 				<h5 className="definition-explorer__category__title">{title}</h5>
 				<CSSTransitionGroup
 				      transitionName="category-block-content"
