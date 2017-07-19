@@ -36,6 +36,7 @@ import { PinDropMap } from "./chart_types/pindrop_map.js";
 import { VerticalTimeline } from "./chart_types/vertical_timeline.js";
 
 // import ResourceToolkit from "./react_chart_types/resource_toolkit/ResourceToolkit.js";
+import DefinitionExplorer from "./react_chart_types/definition_explorer/DefinitionExplorer.js";
 
 import { formatValue } from "./helper_functions/format_value.js";
 
@@ -181,11 +182,11 @@ export const setupProject = (projectSettings) => {
 					hideLoadingGif(viz.id);
 				}
 
-				// for (let vizSettings of reactVizSettingsList) {
-				// 	renderReact(vizSettings, d);
+				for (let vizSettings of reactVizSettingsList) {
+					renderReact(vizSettings, d);
 					
-				// 	hideLoadingGif(vizSettings.id);
-				// }
+					hideLoadingGif(vizSettings.id);
+				}
 
 				setDataDownloadLinks(d, projectSettings);
 				
@@ -196,14 +197,21 @@ export const setupProject = (projectSettings) => {
 	}
 
 	function renderReact(vizSettings, data) {
-		// switch (vizSettings.vizType) {
-		// 	case "resource_toolkit":
-		// 		render(
-		// 			<ResourceToolkit vizSettings={vizSettings} data={data} />,
-		// 			document.getElementById(vizSettings.id.replace("#", ""))
-		// 		)
-		// 		break;
-		// }
+
+		switch (vizSettings.vizType) {
+			// case "resource_toolkit":
+			// 	render(
+			// 		<ResourceToolkit vizSettings={vizSettings} data={data} />,
+			// 		document.getElementById(vizSettings.id.replace("#", ""))
+			// 	)
+			// 	break;
+			case "definition_explorer":
+				render(
+					<DefinitionExplorer vizSettings={vizSettings} data={data} />,
+					document.getElementById(vizSettings.id.replace("#", ""))
+				)
+				break;
+		}
 		
 	}
 
