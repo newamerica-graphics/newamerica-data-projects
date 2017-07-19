@@ -42,8 +42,8 @@ export class VerticalTimeline {
 
 		this.dataNest = d3.nest()
 			.key((d) => { return d[this.timeVar.variable]; })
-			.sortKeys((a, b) => { console.log(a); return d3.ascending(+a, +b); })
-			.key((d) => { console.log(d); return d[this.categoryVar.variable]; })
+			.sortKeys((a, b) => { return d3.ascending(+a, +b); })
+			.key((d) => { return d[this.categoryVar.variable]; })
 			.entries(this.data);
 
 		this.categories = this.categoryVar.customDomain || d3.map(this.data, (d) => { return d[this.categoryVar.variable];}).keys();
@@ -127,7 +127,7 @@ export class VerticalTimeline {
 		this.timelineItemGroups.append("h5")
 			.attr("class", "vertical-timeline__time")
 			.style("color", (d) => { return this.colorScale(d.key); })
-			.text((d) => { return d.values[0][this.timeVar.variable] + this.timeSuffix; });
+			.text((d) => { console.log(d); return d.values[0][this.timeVar.variable] + this.timeSuffix; });
 
 		this.timelineItems = this.timelineItemGroups.selectAll(".vertical-timeline__item")
 			.data(d => d.values)
@@ -136,6 +136,8 @@ export class VerticalTimeline {
 
 		this.descriptionText = this.timelineItems.append("p")
 			.attr("class", "vertical-timeline__description")
+			.classed("primary", (d) => { return d.primary === "TRUE";})
+			.style("color", (d) => { return d.primary === "TRUE" ? this.colorScale(d.category) : "";})
 			.html((d) => { return formatValue(d[this.descriptionVar.variable], "markdown"); })
 
 		console.log(this.descriptionText.select("a"))
@@ -164,7 +166,6 @@ export class VerticalTimeline {
 		}
 
 		this.appendLines();
-
 	}
 
 	appendLines() {
@@ -204,16 +205,15 @@ export class VerticalTimeline {
 
 		if (this.headerExpanded) {
 			if (titleImageClient.top < topNavHeight) {
-				console.log("top is less!")
 				this.titleImages
 					.style("background-position", "50% " + (maxTitleImageHeight - (titleImageClient.bottom - topNavHeight)) + "px")
 					.style("background-size", (titleImageClient.bottom - topNavHeight) + "px");
 			} else {
-				console.log("else!!!!")
 				this.titleImages
 					.style("background-position", "50% 50%")
 					.style("background-size", "contain");
 			}
+
 			if (titleTextClient.top <= topNavHeight) {
 				this.titleTextRow
 					.style("position", "fixed");
@@ -226,7 +226,9 @@ export class VerticalTimeline {
 					.style("position", "initial");
 
 				this.headerExpanded = true;
-
+			} else if (dataRowContainerClient.bottom < topNavHeight) {
+				this.titleTextRow
+					.style("position", "initial");
 			}
 		}
 
@@ -255,19 +257,5 @@ export class VerticalTimeline {
 					return distanceFromBottom > 50 ? 1 : 0;
 				}
 			});
-
-		// this.timelineItemGroups
-		// 	.transition()
-		// 	.duration(100)
-		// 	.style("opacity", (d, index, paths) => {
-		// 		if (direction == "down") {
-		// 			let distanceFromBottom = this.windowHeight - paths[index].getBoundingClientRect().top;
-		// 			return distanceFromBottom > 50 ? 1 : 0;
-		// 		} else {
-		// 			let distanceFromBottom = this.windowHeight - paths[index].getBoundingClientRect().bottom;
-		// 			return distanceFromBottom > 50 ? 1 : 0;
-		// 		}
-		// 	});
-
 	}
 }

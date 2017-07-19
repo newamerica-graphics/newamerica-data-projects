@@ -8,7 +8,7 @@ let variables = {
 	full_name: {"variable":"full_name", "displayName":"Full Name", "format":"string"},
 	date_charged: {"variable":"date_charged", "displayName":"Date Charged", "format":"string"},
 	terror_plot: {"variable":"terror_plot", "displayName":"Terror Plot", "format":"string"},
-	citizenship_status: {"variable":"citizenship_status", "displayName":"Citizenship Status", "format":"string", "scaleType":"categorical", "customDomain":["U.S. Born Citizen", "Naturalized Citizen", "Citizen of Unknown Status", "Permanent Resident", "Nonimmigrant Visa", "Illegal Immigrant", "Refugee or Asylum Seeker", "Unknown"], "customRange":[colors.turquoise.dark, colors.turquoise.medium, colors.turquoise.light, colors.blue.dark, colors.blue.light, colors.purple.dark, colors.purple.light, colors.grey.medium_light]},
+	citizenship_status: {"variable":"citizenship_status", "displayName":"Citizenship Status", "format":"string", "scaleType":"categorical", "customDomain":["U.S. Born Citizen", "Naturalized Citizen", "Citizen of Unknown Status", "Permanent Resident", "Nonimmigrant Visa", "Visa-Free Travel Eligible Individual", "Illegal Immigrant", "Refugee or Asylum Seeker", "Unknown"], "customRange":[colors.turquoise.dark, colors.turquoise.medium, colors.turquoise.light, colors.blue.dark, colors.blue.medium, colors.blue.light, colors.purple.dark, colors.purple.light, colors.grey.medium_light]},
 	field_convert: {"variable":"field_convert", "displayName":"Convert Status", "format":"string", "scaleType":"categorical", "customDomain":["Convert", "Muslim Non-Convert", "Not Muslim", "Unknown" ], "customRange":[colors.turquoise.light, colors.blue.medium, colors.purple.medium, colors.grey.medium_light]},
 	char_awlaki: {"variable":"char_awlaki", "displayName":"Involvement with Awlaki", "format":"string", "scaleType":"categorical", "customDomain":["Ties", "Contact", "None"], "customRange":[colors.red.light, colors.purple.light, colors.grey.medium_light]},
 	field_kids: {"variable":"field_kids", "displayName":"Kids", "format":"string", "scaleType":"categorical", "color":"blue"},
@@ -179,15 +179,16 @@ let vizSettingsList = [
 	},
 	{
 		id: "#homegrown__deadly-attacks",
-		vizType: "line_chart",
-		interpolation: "step",
+		vizType: "step_chart",
 		yScaleType: "cumulative",
 		primaryDataSheet: "terror_plots",
+		timeFormat: "%B %d, %Y",
 		xVars: [ variables.deadly_attack_date ],
 		yVars: [ variables.victims_killed ],
 		colorVars: [ variables.ideology ],
 		tooltipVars: [ variables.attack_name, variables.ideology, variables.victims_wounded, variables.victims_killed, variables.attack_description ],
 		tooltipScrollable: true,
+		dotSettings: { shape: "circle", width: "7"}
 	},
 	{
 		id: "#homegrown__fact-box__prevention-method", 

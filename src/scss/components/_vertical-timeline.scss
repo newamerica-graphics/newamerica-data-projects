@@ -160,5 +160,10 @@ $foldup-width: 500px;
 				opacity: .7 !important;
 			}
 		}
+
+		&.primary > p {
+			font-weight: bold !important;
+			font-size: 22px !important;
+		}
 	}
 }

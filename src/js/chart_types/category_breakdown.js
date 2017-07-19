@@ -139,7 +139,7 @@ export class CategoryBreakdown {
 		    .on("mouseout", () => { return this.mouseout(); })
 		    .on("click", (d) => {
 		    	if (this.clickToProfile) {
-		    		window.location.href = this.clickToProfile.url + d[this.clickToProfile.variable].replace(" ", "_");
+		    		window.location.href = this.clickToProfile.url + encodeURI(d[this.clickToProfile.variable].toLowerCase());
 		    	}
 		    })
 
