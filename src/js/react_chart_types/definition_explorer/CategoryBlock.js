@@ -2,11 +2,8 @@ import React from 'react';
 import { CSSTransitionGroup } from 'react-transition-group';
 import { colors } from "../../helper_functions/colors.js";
 import { isTouchDevice } from "../../helper_functions/is_touch_device.js";
-import { formatValue } from "../../helper_functions/format_value.js";
 
 const d3 = require("d3");
-
-import Definition from './Definition.js'
 
 class CategoryBlock extends React.Component {
 	constructor(props) {
