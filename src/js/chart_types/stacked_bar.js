@@ -11,23 +11,12 @@ import { formatValue } from "../helper_functions/format_value.js";
 
 export class StackedBar {
 	constructor(vizSettings, imageFolderId) {
-		let {id, primaryDataSheet, xVar, filterVars, legendSettings, xAxisLabelInterval, labelValues, showYAxis, tooltipTitleVar, eventSettings, yAxisLabelText, filterInitialDataBy} = vizSettings;
-		this.id = id;
-		this.primaryDataSheet = primaryDataSheet;
-		this.filterVars = filterVars;
-		this.tooltipTitleVar = tooltipTitleVar;
-		this.xVar = xVar;
-		this.legendSettings = legendSettings;
-		this.xAxisLabelInterval = xAxisLabelInterval;
-		this.labelValues = labelValues;
-		this.showYAxis = showYAxis;
+		Object.assign(this, vizSettings);
 		this.margin = {top: 20, right: 20};
 		this.margin.left = this.showYAxis ? 70 : 20;
 		this.margin.bottom = this.filterVars.length == 1 ? 50 : 30;
-		this.yAxisLabelText = yAxisLabelText;
-		this.filterInitialDataBy = filterInitialDataBy;
 
-		this.svg = d3.select(id).append("svg").attr("class", "bar-chart");
+		this.svg = d3.select(this.id).append("svg").attr("class", "bar-chart");
 
 		this.renderingArea = this.svg.append("g");
 
@@ -41,7 +30,7 @@ export class StackedBar {
 		let colorVals = [],
 			colorLabels = [];
 		
-		for (let filterVar of filterVars) {
+		for (let filterVar of this.filterVars) {
 			colorVals.push(filterVar.color);
 			colorLabels.push(filterVar.displayName);
 		}
@@ -50,14 +39,14 @@ export class StackedBar {
 			.range(colorVals);
 
 		if (filterVars.length > 1) {
-			this.legendSettings.id = id;
+			this.legendSettings.id = this.id;
 			this.legendSettings.markerSettings = { shape:"rect", size:10 };
 			this.legendSettings.customLabels = colorLabels;
 
 			this.legend = new Legend(this.legendSettings);
 		}
 
-		let tooltipSettings = { "id":id, "tooltipVars":[tooltipTitleVar].concat(filterVars) }
+		let tooltipSettings = { "id":this.id, "tooltipVars":[this.tooltipTitleVar].concat(this.filterVars)}
 		this.tooltip = new Tooltip(tooltipSettings);
 	}
 
@@ -89,14 +78,12 @@ export class StackedBar {
 		if (this.filterInitialDataBy) {
             this.data = this.data.filter((d) => { return d[this.filterInitialDataBy.field] == this.filterInitialDataBy.value; })
         }
-
-
 		console.log(this.data);
 	    
 		this.setScaleDomains();
 
-		this.renderBars();
 		this.renderAxes();
+		this.renderBars();
 
 		if (this.filterVars.length > 1) {
 			this.legendSettings.scaleType = "categorical";
@@ -151,8 +138,9 @@ export class StackedBar {
 			.data((d) => { console.log(d); return d.value; })
 		  .enter().append("rect")
 		  	.attr("x", 0)
+		  	.attr("stroke", "white")
 			.style("fill", (d, i) => { return this.filterVars[i].color; })
-			.style("fill-opacity", .8);
+			.style("fill-opacity", 1);
 
 		this.setBarHeights();
 	}
@@ -205,7 +193,11 @@ export class StackedBar {
 	setAxes() {
 		this.yAxis
 			.attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
-            .call(d3.axisLeft(this.yScale).ticks(5));
+            .call(d3.axisLeft(this.yScale)
+            	.ticks(5)
+            	.tickSize(-this.w, 0, 0)
+                .tickSizeOuter(0)
+                .tickPadding(10));
 
         this.yAxisLabel
             .attr("x", -this.h/2)
@@ -247,7 +239,7 @@ export class StackedBar {
 
 	mouseover(datum, path, eventObject) {
 		d3.select(path).selectAll("rect")
-			.style("fill-opacity", 1);
+			.style("fill-opacity", .7);
 		
 		let mousePos = [];
 		mousePos[0] = eventObject.pageX;
@@ -266,7 +258,7 @@ export class StackedBar {
 
 	mouseout(path) {
 		d3.select(path).selectAll("rect")
-			.style("fill-opacity", .8);
+			.style("fill-opacity", 1);
 
 	    this.tooltip.hide();
 	}
