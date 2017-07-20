@@ -199,52 +199,52 @@ let vizSettingsList = [
 	// 	]
 	// },
 
-	{
-		id: "#drone-strikes__yemen__casualties", 
-		vizType: "stacked_bar",
-		primaryDataSheet: "yemen_strikes",
-		// filterInitialDataBy: { field: "country", value:"yemen"},
-		xVar: variables.year,
-		filterVars: [ variables.militants_avg, variables.civilians_avg, variables.unknown_avg],
-		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
-		xAxisLabelInterval: {"small": 5, "medium": 2, "large": 1},
-		yAxisLabelText: "Casualties",
-		showYAxis: true,
-		tooltipTitleVar: variables.year,
-	},
-	{
-		id: "#drone-strikes__yemen__strikes-by-president", 
-		vizType: "stacked_bar",
-		primaryDataSheet: "yemen_strikes",
-		// filterInitialDataBy: { field: "country", value:"yemen"},
-		xVar: variables.year,
-		filterVars: [ variables.president_bush, variables.president_obama, variables.president_trump ],
-		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
-		xAxisLabelInterval: {"small": 5, "medium": 2, "large": 1},
-		yAxisLabelText: "Strikes",
-		showYAxis: true,
-		tooltipTitleVar: variables.year,
-	},
-	{
-		id: "#drone-strikes__yemen__targets", 
-		vizType: "percentage_stacked_bar",
-		// filterInitialDataBy: { field: "country", value:"yemen"},
-		primaryDataSheet: "yemen_strikes",
-		groupingVar: variables.president,
-		filterVar: variables.target_organization_name,
-	},
-	{
-		id: "#drone-strikes__yemen__strike-totals-by-president", 
-		primaryDataSheet: "strikes_by_president",
-		vizType: "table",
-		tableVars: [ variables.president, variables.total_strikes, variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh],
-		defaultOrdering: [0, "asc"],
-		pagination: false,
-		numPerPage: 25,
-		colorScaling: false,
-		disableSearching: true,
-	 	disableOrdering: true
-	},
+	// {
+	// 	id: "#drone-strikes__yemen__casualties", 
+	// 	vizType: "stacked_bar",
+	// 	primaryDataSheet: "yemen_strikes",
+	// 	// filterInitialDataBy: { field: "country", value:"yemen"},
+	// 	xVar: variables.year,
+	// 	filterVars: [ variables.militants_avg, variables.civilians_avg, variables.unknown_avg],
+	// 	legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
+	// 	xAxisLabelInterval: {"small": 5, "medium": 2, "large": 1},
+	// 	yAxisLabelText: "Casualties",
+	// 	showYAxis: true,
+	// 	tooltipTitleVar: variables.year,
+	// },
+	// {
+	// 	id: "#drone-strikes__yemen__strikes-by-president", 
+	// 	vizType: "stacked_bar",
+	// 	primaryDataSheet: "yemen_strikes",
+	// 	// filterInitialDataBy: { field: "country", value:"yemen"},
+	// 	xVar: variables.year,
+	// 	filterVars: [ variables.president_bush, variables.president_obama, variables.president_trump ],
+	// 	legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
+	// 	xAxisLabelInterval: {"small": 5, "medium": 2, "large": 1},
+	// 	yAxisLabelText: "Strikes",
+	// 	showYAxis: true,
+	// 	tooltipTitleVar: variables.year,
+	// },
+	// {
+	// 	id: "#drone-strikes__yemen__targets", 
+	// 	vizType: "percentage_stacked_bar",
+	// 	// filterInitialDataBy: { field: "country", value:"yemen"},
+	// 	primaryDataSheet: "yemen_strikes",
+	// 	groupingVar: variables.president,
+	// 	filterVar: variables.target_organization_name,
+	// },
+	// {
+	// 	id: "#drone-strikes__yemen__strike-totals-by-president", 
+	// 	primaryDataSheet: "strikes_by_president",
+	// 	vizType: "table",
+	// 	tableVars: [ variables.president, variables.total_strikes, variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh],
+	// 	defaultOrdering: [0, "asc"],
+	// 	pagination: false,
+	// 	numPerPage: 25,
+	// 	colorScaling: false,
+	// 	disableSearching: true,
+	//  	disableOrdering: true
+	// },
 	{
 		id: "#drone-strikes__yemen__strike-map",
 		vizType: "tabbed_chart_layout",
@@ -302,109 +302,109 @@ let vizSettingsList = [
 			}
 		]
 	},
-	{
-		id: "#drone-strikes__somalia__casualties", 
-		vizType: "stacked_bar",
-		primaryDataSheet: "somalia_strikes",
-		// filterInitialDataBy: { field: "country", value:"somalia"},
-		xVar: variables.year,
-		filterVars: [ variables.militants_avg, variables.civilians_avg, variables.unknown_avg],
-		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
-		xAxisLabelInterval: {"small": 5, "medium": 2, "large": 1},
-		yAxisLabelText: "Casualties",
-		showYAxis: true,
-		tooltipTitleVar: variables.year,
-	},
-	{
-		id: "#drone-strikes__somalia__strikes-by-president", 
-		vizType: "stacked_bar",
-		primaryDataSheet: "somalia_strikes",
-		// filterInitialDataBy: { field: "country", value:"somalia"},
-		xVar: variables.year,
-		filterVars: [ variables.president_bush, variables.president_obama, variables.president_trump ],
-		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
-		xAxisLabelInterval: {"small": 5, "medium": 2, "large": 1},
-		yAxisLabelText: "Strikes",
-		showYAxis: true,
-		tooltipTitleVar: variables.year,
-	},
-	{
-		id: "#drone-strikes__somalia__targets", 
-		vizType: "percentage_stacked_bar",
-		// filterInitialDataBy: { field: "country", value:"somalia"},
-		primaryDataSheet: "somalia_strikes",
-		groupingVar: variables.president,
-		filterVar: variables.target_organization_name,
-	},
-	{
-		id: "#drone-strikes__somalia__strike-totals-by-president", 
-		primaryDataSheet: "strikes_by_president",
-		vizType: "table",
-		tableVars: [ variables.president, variables.total_strikes, variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh],
-		defaultOrdering: [0, "asc"],
-		pagination: false,
-		numPerPage: 25,
-		colorScaling: false,
-		disableSearching: true,
-	 	disableOrdering: true
-	},
-	{
-		id: "#drone-strikes__somalia__strike-map",
-		vizType: "tabbed_chart_layout",
-		primaryDataSheet: "somalia_strikes",
-		chartSettingsList: [
-			{
-				vizType: "mapbox_map",
-				// filterInitialDataBy: { field: "country", value:"Pakistan"},
-		        mapboxSettings: {
-		        	style: "mapbox://styles/newamericamapbox/ciynaplyx001k2sqepxshx05u",
-		        	center: [46.1996, 5.1521],
-		        	zoom: 5,
-		        	maxBounds: [
-		        		[40.5164, 0.5527],
-		        		[55.5164, 10.5527]
-		        	],
-		        },
-		        colorVar: variables.strike_type,
-		        radiusVar: variables.total_avg,
-		        sliderSettings: {
-					variable: variables.year,
-					showAllButton: true,
-					automated: false,
-		        },
-		        dataBoxVars: {
-		        	title: variables.date,
-		        	subtitle: [variables.village, variables.region],
-		        	categories: [
-			        	{ 
-			        		label: "Target",
-			        		fields: [variables.target_organization_name, variables.target_description] 
-			        	},
-			        	{ 
-			        		label: "Casualties",
-			        		fields: [variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh]
-			        	},
-			        	{ 
-			        		label: "Leaders Killed",
-			        		fields: [variables.leader_names, variables.leader_description]
-			        	},
-			        	{
-			        		label: "Sources",
-			        		fields: [variables.sources_combined]
-			        	}
-		        	],
-		        }
-		    },
-		    {
-				vizType: "table",
-				tableVars: [ variables.date, variables.president, variables.village, variables.region, variables.target_organization_name, variables.target_description, variables.civilians_avg, variables.militants_avg, variables.unknown_avg, variables.total_avg, variables.sources_combined],
-				defaultOrdering: [0, "desc"],
-				pagination: true,
-				numPerPage: 25,
-				colorScaling: false
-			}
-		]
-	},
+	// {
+	// 	id: "#drone-strikes__somalia__casualties", 
+	// 	vizType: "stacked_bar",
+	// 	primaryDataSheet: "somalia_strikes",
+	// 	// filterInitialDataBy: { field: "country", value:"somalia"},
+	// 	xVar: variables.year,
+	// 	filterVars: [ variables.militants_avg, variables.civilians_avg, variables.unknown_avg],
+	// 	legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
+	// 	xAxisLabelInterval: {"small": 5, "medium": 2, "large": 1},
+	// 	yAxisLabelText: "Casualties",
+	// 	showYAxis: true,
+	// 	tooltipTitleVar: variables.year,
+	// },
+	// {
+	// 	id: "#drone-strikes__somalia__strikes-by-president", 
+	// 	vizType: "stacked_bar",
+	// 	primaryDataSheet: "somalia_strikes",
+	// 	// filterInitialDataBy: { field: "country", value:"somalia"},
+	// 	xVar: variables.year,
+	// 	filterVars: [ variables.president_bush, variables.president_obama, variables.president_trump ],
+	// 	legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
+	// 	xAxisLabelInterval: {"small": 5, "medium": 2, "large": 1},
+	// 	yAxisLabelText: "Strikes",
+	// 	showYAxis: true,
+	// 	tooltipTitleVar: variables.year,
+	// },
+	// {
+	// 	id: "#drone-strikes__somalia__targets", 
+	// 	vizType: "percentage_stacked_bar",
+	// 	// filterInitialDataBy: { field: "country", value:"somalia"},
+	// 	primaryDataSheet: "somalia_strikes",
+	// 	groupingVar: variables.president,
+	// 	filterVar: variables.target_organization_name,
+	// },
+	// {
+	// 	id: "#drone-strikes__somalia__strike-totals-by-president", 
+	// 	primaryDataSheet: "strikes_by_president",
+	// 	vizType: "table",
+	// 	tableVars: [ variables.president, variables.total_strikes, variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh],
+	// 	defaultOrdering: [0, "asc"],
+	// 	pagination: false,
+	// 	numPerPage: 25,
+	// 	colorScaling: false,
+	// 	disableSearching: true,
+	//  	disableOrdering: true
+	// },
+	// {
+	// 	id: "#drone-strikes__somalia__strike-map",
+	// 	vizType: "tabbed_chart_layout",
+	// 	primaryDataSheet: "somalia_strikes",
+	// 	chartSettingsList: [
+	// 		{
+	// 			vizType: "mapbox_map",
+	// 			// filterInitialDataBy: { field: "country", value:"Pakistan"},
+	// 	        mapboxSettings: {
+	// 	        	style: "mapbox://styles/newamericamapbox/ciynaplyx001k2sqepxshx05u",
+	// 	        	center: [46.1996, 5.1521],
+	// 	        	zoom: 5,
+	// 	        	maxBounds: [
+	// 	        		[40.5164, 0.5527],
+	// 	        		[55.5164, 10.5527]
+	// 	        	],
+	// 	        },
+	// 	        colorVar: variables.strike_type,
+	// 	        radiusVar: variables.total_avg,
+	// 	        sliderSettings: {
+	// 				variable: variables.year,
+	// 				showAllButton: true,
+	// 				automated: false,
+	// 	        },
+	// 	        dataBoxVars: {
+	// 	        	title: variables.date,
+	// 	        	subtitle: [variables.village, variables.region],
+	// 	        	categories: [
+	// 		        	{ 
+	// 		        		label: "Target",
+	// 		        		fields: [variables.target_organization_name, variables.target_description] 
+	// 		        	},
+	// 		        	{ 
+	// 		        		label: "Casualties",
+	// 		        		fields: [variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh]
+	// 		        	},
+	// 		        	{ 
+	// 		        		label: "Leaders Killed",
+	// 		        		fields: [variables.leader_names, variables.leader_description]
+	// 		        	},
+	// 		        	{
+	// 		        		label: "Sources",
+	// 		        		fields: [variables.sources_combined]
+	// 		        	}
+	// 	        	],
+	// 	        }
+	// 	    },
+	// 	    {
+	// 			vizType: "table",
+	// 			tableVars: [ variables.date, variables.president, variables.village, variables.region, variables.target_organization_name, variables.target_description, variables.civilians_avg, variables.militants_avg, variables.unknown_avg, variables.total_avg, variables.sources_combined],
+	// 			defaultOrdering: [0, "desc"],
+	// 			pagination: true,
+	// 			numPerPage: 25,
+	// 			colorScaling: false
+	// 		}
+	// 	]
+	// },
 	// {
 	// 	id: "#drone-strikes__pakistan__call-out-data", 
 	// 	vizType: "call_out_data",

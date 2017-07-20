@@ -68,11 +68,13 @@ export class Slider {
 
 		this.axis = this.slider.append("g")
 			.attr("class", "x axis")
+			.attr("transform", "translate(0, 20)")
 
 		this.w = $(this.id).width();
 
 		this.track = this.slider.append("line")
 		    .attr("class", "slider__track")
+		    .style("stroke-width", 2)
 		    .attr("x1", margin.left)
 		    .attr("x2", (this.w - margin.right));
 
