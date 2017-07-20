@@ -38,7 +38,7 @@ export class StackedBar {
 		this.colorScale = d3.scaleOrdinal()
 			.range(colorVals);
 
-		if (filterVars.length > 1) {
+		if (this.filterVars.length > 1) {
 			this.legendSettings.id = this.id;
 			this.legendSettings.markerSettings = { shape:"rect", size:10 };
 			this.legendSettings.customLabels = colorLabels;
