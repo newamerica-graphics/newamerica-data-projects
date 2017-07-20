@@ -16,8 +16,10 @@ export class StackedBar {
 		this.margin.left = this.showYAxis ? 70 : 20;
 		this.margin.bottom = this.filterVars.length == 1 ? 50 : 30;
 
+
 		this.svg = d3.select(this.id).append("svg").attr("class", "bar-chart");
 
+		this.initializeAxes();
 		this.renderingArea = this.svg.append("g");
 
 		this.xScale = d3.scaleBand()
@@ -82,7 +84,7 @@ export class StackedBar {
 	    
 		this.setScaleDomains();
 
-		this.renderAxes();
+		this.setAxes();
 		this.renderBars();
 
 		if (this.filterVars.length > 1) {
@@ -145,7 +147,7 @@ export class StackedBar {
 		this.setBarHeights();
 	}
 
-	renderAxes() {
+	initializeAxes() {
 		this.yAxis = this.svg.append("g")
             .attr("class", "axis axis--y");
 
@@ -160,8 +162,7 @@ export class StackedBar {
         this.xAxis = this.svg.append("g")
             .attr("class", "axis axis--x");
 
-        this.setAxes();
-    }
+	}
 
 	calculateTicks() {
 		let currInterval;

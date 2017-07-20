@@ -144,12 +144,6 @@ export class MapboxMap {
     }
 
     addControls() {
-        this.map.addControl(new MapboxGeocoder({
-            accessToken: mapboxgl.accessToken, 
-            country:'pk',
-            // types: ['region', 'district', 'place', 'postcode']
-        }), 'top-left');
-
         this.map.addControl(new mapboxgl.NavigationControl(), 'top-left');
     }
 
