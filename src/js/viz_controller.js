@@ -37,6 +37,7 @@ import { VerticalTimeline } from "./chart_types/vertical_timeline.js";
 
 // import ResourceToolkit from "./react_chart_types/resource_toolkit/ResourceToolkit.js";
 import DefinitionExplorer from "./react_chart_types/definition_explorer/DefinitionExplorer.js";
+import CalloutBox from "./react_chart_types/callout_box/CalloutBox.js";
 
 import { formatValue } from "./helper_functions/format_value.js";
 
@@ -207,6 +208,12 @@ export const setupProject = (projectSettings) => {
 			// 		document.getElementById(vizSettings.id.replace("#", ""))
 			// 	)
 			// 	break;
+			case "callout_box":
+				render(
+					<CalloutBox vizSettings={vizSettings} data={data} />,
+					document.getElementById(vizSettings.id.replace("#", ""))
+				)
+				break;
 			case "definition_explorer":
 				render(
 					<DefinitionExplorer vizSettings={vizSettings} data={data} />,
