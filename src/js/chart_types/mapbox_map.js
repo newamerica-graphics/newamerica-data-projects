@@ -276,20 +276,14 @@ export class MapboxMap {
 
     changeValue(value) {
         console.log("setting value to:", value);
-        if (this.map.loaded() && value) {
+        console.log(this.map.loaded())
+        if (value) {
+            console.log(value);
             if (value == "all") {
-                this.map.setPaintProperty('points', 'circle-color', {
-                    property: this.colorVar.variable,
-                    type: 'categorical',
-                    stops: this.colorStops
-                });
+                console.log("setting value to ALL");
+                this.map.setFilter('points', ['!=', 'year', ""]);
             } else {
-                this.map.setPaintProperty('points', 'circle-color', {
-                    property: "year",
-                    type: 'categorical',
-                    stops: [[String(value), 'grey'],
-                        ['2017', 'purple']]
-                });
+                this.map.setFilter('points', ['==', 'year', String(value)]);
             }
         }
     }

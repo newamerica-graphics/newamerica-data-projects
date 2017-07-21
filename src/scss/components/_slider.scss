@@ -1,6 +1,5 @@
 .slider {
 	&__track {
-		stroke-linecap: round;
 		stroke: palette-get(na-black-10);
 		stroke-opacity: 1;
 		pointer-events: stroke;
@@ -59,6 +58,21 @@
             border-right: 1px solid palette-get(na-black-10);
         }
     }
+
+    &__track-color-bar {
+        pointer-events: none;
+    }
+
+    &__value-display {
+        position: relative;
+        display: inline-block;
+        top: 50%;
+        right: 0px;
+        font-weight: bold;
+        font-size: 26px;
+        transform: translateY(-90%);
+
+    }
 }
 
 .slider-div {
@@ -68,7 +82,8 @@
 
 .mapboxgl-map {
 	.slider-container {
-		width: calc(100% - 300px);
+		width: calc(100% - 100px);
+        max-width: 700px;
         position: absolute;
         right: 10px;
         top: 10px;
@@ -76,13 +91,13 @@
         display: none;
         background-color: white;
         border: 1px solid palette-get(na-black-10);
-        @media (min-width: 700px) {
+        @media (min-width: 600px) {
         	display: block;
         }
 
         & > .has-show-all {
             position: relative;
-        	width: calc(100% - 150px);
+        	width: calc(100% - 225px);
             display: inline-block;
         }
 
@@ -93,6 +108,10 @@
 
         .slider__button-container {
             width: 150px;
+        }
+
+        .axis path {
+            stroke-width: 1px !important;
         }
 	}
 }
