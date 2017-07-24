@@ -1,0 +1,95 @@
+.callout-box {
+	background-color: palette-get(na-black);
+	color: palette-get(na-black-30);
+	padding: 40px 50px;
+
+	&__section {
+		padding: 20px 0px;
+		&__title {
+			font-weight: bold;
+			text-decoration: underline;
+			font-size: 16px;
+			color: white;
+		}
+
+		&__content {
+			display: table;
+			padding: 20px 0px;
+			& > * {
+				vertical-align: top;
+				display: table-cell;
+				padding: 0px 10px;
+			}
+		}
+	}
+
+	&__fact-box-list {
+		&.horizontal {
+			 .callout-box__fact-box {
+				display: inline-block;
+				padding: 5px 15px;
+				margin: 0px 10px;
+				border-left: 1px solid palette-get(na-black-40);
+
+				&:first-child {
+					margin-left: 0px;
+				}
+				&:last-child {
+					margin-right: 0px;
+				}
+
+				&__value {
+					font-size: 50px;
+					font-family: 'Platform';
+					color: palette-get(na-black-30);
+				   -webkit-text-fill-color: palette-get(na-black); /* Will override color (regardless of order) */
+				   -webkit-text-stroke-width: 1px;
+				   -webkit-text-stroke-color: palette-get(na-black-30);
+				}
+
+				&__label {
+					
+				}
+			}
+		}
+
+		&.vertical {
+			.callout-box__fact-box {
+				display: block;
+				border-bottom: 1px solid palette-get(na-black-30);
+
+				&__value, &__label {
+					display: inline-block;
+					margin-bottom: 0px;
+				}
+				&__value {
+					font-size: 24px;
+					font-family: 'Platform';
+					color: white;
+					font-weight: bold;
+				   	float: right;
+				}
+
+				&__label {
+					
+				}
+			}
+		}
+
+
+
+	}
+
+	&__fact-box {
+		&__label {
+			font-size: 14px;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+		}
+	}
+
+	&__data-paragraph {
+		font-size: 14px;
+		font-weight: normal;
+	}
+}

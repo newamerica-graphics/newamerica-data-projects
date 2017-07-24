@@ -26,10 +26,12 @@ class CalloutBox extends React.Component {
 					return (
 						<div className="callout-box__section" key={sectionSettings.title}>
 							<h3 className="callout-box__section__title">{sectionSettings.title}</h3>
-							{ sectionSettings.dataElements.map((dataElementSettings, i) => {
-								console.log(dataElementSettings)
-								return <CalloutBoxDataElement settings={dataElementSettings} data={this.data} key={i} />
-							})}
+							<div className="callout-box__section__content">
+								{ sectionSettings.dataElements.map((dataElementSettings, i) => {
+									console.log(dataElementSettings)
+									return <CalloutBoxDataElement settings={dataElementSettings} data={this.data} key={i} />
+								})}
+							</div>
 						</div>
 					)
 				})}
