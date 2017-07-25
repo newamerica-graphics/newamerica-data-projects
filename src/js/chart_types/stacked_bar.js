@@ -8,13 +8,14 @@ import { Tooltip } from "../components/tooltip.js";
 import { Trendline } from "../components/trendline.js";
 
 import { formatValue } from "../helper_functions/format_value.js";
+import { getColorScale } from "../helper_functions/get_color_scale.js";
 
 export class StackedBar {
 	constructor(vizSettings, imageFolderId) {
 		Object.assign(this, vizSettings);
 		this.margin = {top: 20, right: 20};
 		this.margin.left = this.showYAxis ? 70 : 20;
-		this.margin.bottom = this.filterVars.length == 1 ? 50 : 30;
+		this.margin.bottom = 30;
 
 
 		this.svg = d3.select(this.id).append("svg").attr("class", "bar-chart");
@@ -29,30 +30,10 @@ export class StackedBar {
 
 		this.setDimensions();
 
-		let colorVals = [],
-			colorLabels = [],
-			colorVarNames = [];
-		
-		for (let filterVar of this.filterVars) {
-			colorVals.push(filterVar.color);
-			colorLabels.push(filterVar.displayName);
-			colorVarNames.push(filterVar.variable);
-		}
+		this.legendSettings.id = this.id;
+		this.legendSettings.markerSettings = { shape:"rect", size:10 };
 
-		this.colorScale = d3.scaleOrdinal()
-			.domain(colorVarNames)
-			.range(colorVals);
-
-		if (this.filterVars.length > 1) {
-			this.legendSettings.id = this.id;
-			this.legendSettings.markerSettings = { shape:"rect", size:10 };
-			this.legendSettings.customLabels = colorLabels;
-
-			this.legend = new Legend(this.legendSettings);
-		}
-
-		let tooltipSettings = { "id":this.id, "tooltipVars":[this.tooltipTitleVar].concat(this.filterVars), "colorScale": this.tooltipColorVals ? this.colorScale : null};
-		this.tooltip = new Tooltip(tooltipSettings);
+		this.legend = new Legend(this.legendSettings);
 	}
 
 	setDimensions() {
@@ -86,46 +67,68 @@ export class StackedBar {
 		console.log(this.data);
 	    
 		this.setScaleDomains();
+		this.setColorScale();
 
 		this.setAxes();
 		this.renderBars();
 
-		if (this.filterVars.length > 1) {
-			this.legendSettings.scaleType = "categorical";
-			this.legendSettings.colorScale = this.colorScale;
-			this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
-
-			this.legend.render(this.legendSettings);
+		let tooltipSettings = { "id":this.id, "tooltipVars":this.setTooltipVars() };
+		this.tooltip = new Tooltip(tooltipSettings);
+		if (this.tooltipColorVals) {
+			this.tooltip.setColorScale(this.colorScale);
 		}
+
+		this.legendSettings.scaleType = "categorical";
+		this.legendSettings.colorScale = this.colorScale;
+		this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
+
+		this.legend.render(this.legendSettings);
+	}
+
+	setTooltipVars() {
+		let title = [{variable: "year", displayName:"Year", format:"year"}]
+		let categoryList = this.colorScale.domain().map((d) => {
+			return {variable: d, displayName: d, format: "number"};
+		});
+
+		console.log(categoryList);
+		return [...title, ...categoryList];
 	}
 
 	setScaleDomains() {
-		let keyList = new Set();
+		let yearList = new Set();
 
-		let maxVal = 0;
+		let maxTotalYearVal = 0;
 
-		this.nestedVals = d3.nest()
-			.key((d) => { keyList.add(d.year); return d.year; })
-			.sortKeys(d3.ascending)
-			.rollup((v) => {
-				let retVal = [];
-				let total = 0;
-				let i = 0;
-				for (let filter of this.filterVars) {
-					let localSum = d3.sum(v, (d) => { return Number(d[filter.variable]); });
-					retVal.push(localSum);
-					total += localSum;
+		this.nestedVals = this.dataNestFunction(this.data, this.filterVar);
 
-					i++;
-				}
-				maxVal = Math.max(maxVal, total);
-				return retVal;
-			})
-			.entries(this.data);
+		console.log(this.nestedVals);
+		this.nestedVals.forEach((yearObject) => {
+			yearList.add(yearObject.key);
+			let valArray = yearObject.values || yearObject.value;
+			console.log(valArray)
+			let localSum = d3.sum(valArray, (d) => { return d.value; })
+			console.log(localSum);
+			maxTotalYearVal = Math.max(maxTotalYearVal, localSum);
 
-		this.yScale.domain([0, maxVal]);
-		this.xScale.domain(Array.from(keyList).sort());
+		})
+		console.log(maxTotalYearVal)
+		console.log(yearList)
+		
+		this.yScale.domain([0, maxTotalYearVal]);
+		this.xScale.domain(Array.from(yearList).sort());
 
+	}
+
+	setColorScale() {
+		if (this.customColorScale) {
+			this.colorScale = d3.scaleOrdinal()
+				.domain(this.customColorScale.domain)
+				.range(this.customColorScale.range);
+		} else {
+			this.colorScale = getColorScale(this.data, this.filterVar);
+		}
+		
 	}
 
 	renderBars() {
@@ -135,13 +138,12 @@ export class StackedBar {
 		  	.on("mouseover", (d, index, paths) => {  return this.mouseover(d, paths[index], d3.event); })
 		  	.on("mouseout", (d, index, paths) => {  return this.mouseout(paths[index]); });
 
-		let currCumulativeY = 0;
 		this.bars = this.barGroups.selectAll("rect")
-			.data((d) => { console.log(d); return d.value; })
+			.data((d) => { console.log(d); return d.values || d.value; })
 		  .enter().append("rect")
 		  	.attr("x", 0)
 		  	.attr("stroke", "white")
-			.style("fill", (d, i) => { return this.filterVars[i].color; })
+			.style("fill", (d) => { console.log(d); return this.colorScale(d.key); })
 			.style("fill-opacity", 1);
 
 		this.setBarHeights();
@@ -182,12 +184,13 @@ export class StackedBar {
 		
 		let currCumulativeY = 0;
 		this.bars
-			.attr("y", (d, i) => { 
-				let barHeight = this.h - this.yScale(d);
+			.attr("y", (d, i) => {
+				console.log(d);
+				let barHeight = this.h - this.yScale(d.value);
 				currCumulativeY = i == 0 ? this.h - barHeight : currCumulativeY - barHeight;
 				return currCumulativeY; 
 			})
-			.attr("height", (d) => { return this.h - this.yScale(d); })
+			.attr("height", (d) => { return this.h - this.yScale(d.value); })
 			.attr("width", this.xScale.bandwidth());
 	}
 
@@ -239,6 +242,7 @@ export class StackedBar {
 	}
 
 	mouseover(datum, path, eventObject) {
+		console.log(datum)
 		d3.select(path).selectAll("rect")
 			.style("fill-opacity", .7);
 		
@@ -247,13 +251,14 @@ export class StackedBar {
 		mousePos[1] = eventObject.pageY;
 
 		let tooltipData = {};
-		tooltipData[this.tooltipTitleVar.variable] = datum.key;
-		let i = 0;
-		for (let filter of this.filterVars) {
-			tooltipData[filter.variable] = datum.value[i];
-			i++;
-		}
+		tooltipData.year = datum.key;
+		let valArray = datum.values || datum.value;
 
+		valArray.forEach((d) => {
+			tooltipData[d.key] = d.value;
+		})
+			
+		console.log(tooltipData);	
 		this.tooltip.show(tooltipData, mousePos);
 	}
 
@@ -265,10 +270,13 @@ export class StackedBar {
 	}
 
 	changeVariableValsShown(valsShown) {
+		console.log(valsShown)
 		this.bars
 			.style("fill", (d, i) => {
-	   			if (valsShown.indexOf(i) > -1) {
-	   				return this.filterVars[i].color;
+				let binIndex = this.colorScale.domain().indexOf(d.key);
+				console.log(d.key, binIndex);
+	   			if (valsShown.indexOf(binIndex) > -1) {
+	   				return this.colorScale(d.key);
 	   			}
 		   		return colors.grey.light;
 		    });

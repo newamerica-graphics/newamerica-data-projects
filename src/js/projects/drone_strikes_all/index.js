@@ -1,6 +1,7 @@
 import { setupProject } from "../../viz_controller.js";
 
 import { colors } from "../../helper_functions/colors.js";
+const d3 = require("d3");
 
 let currDate = new Date();
 console.log(currDate);
@@ -45,33 +46,87 @@ let variables = {
 	leader_percent: {"variable":"leader_percent", "displayName":"Leader Percentage", "format": "percent", "disableTableOrdering": true},
 }
 
+const casualtiesNestDataFunction = (data, filterVar) => {
+	let nestedVals = d3.nest()
+		.key((d) => { return d.year; })
+		.sortKeys(d3.ascending)
+		.rollup((v) => {
+			let retVal = [];
+			
+			for (let filter of [variables.militants_avg, variables.civilians_avg, variables.unknown_avg]) {
+				let sum = d3.sum(v, (d) => { return Number(d[filter.variable]); });
+				retVal.push({key:filter.displayName, value: sum});
+			}
+			return retVal;
+		})
+		.entries(data);
+
+	return nestedVals;
+}
+
+const strikesNestDataFunction = (data, filterVar) => {
+	let nestedVals = d3.nest()
+		.key((d) => { return d.year; })
+		.key((d) => { return d[filterVar.variable]})
+		.sortKeys(d3.ascending)
+		.rollup((v) => { return v.length; })
+		.entries(data);
+
+	return nestedVals;
+}
+
 let vizSettingsList = [
+	// {
+	// 	id: "#drone-strikes__pakistan__casualties", 
+	// 	vizType: "filterable_chart",
+	// 	primaryDataSheet: "strike_data",
+	// 	chartType: "stacked_bar",
+	// 	filterVars: [ variables.avg_student_age, variables.avg_student_dependents, variables.avg_student_employment, variables.avg_student_financial_aid, variables.avg_student_full_part_time, variables.avg_student_gender, variables.avg_student_housing, variables.avg_student_learning_environment, variables.avg_student_race_ethnicity, variables.avg_student_school_type ],
+	// 	filterType: "select-box",
+	// 	chartSettings: {
+	// 		xVar: variables.year,
+	// 		filterVars: [ variables.militants_avg, variables.civilians_avg, variables.unknown_avg],
+	// 		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
+	// 		xAxisLabelInterval: {"small": 5, "medium": 2, "large": 1},
+	// 		yAxisLabelText: "Casualties",
+	// 		showYAxis: true,
+	// 		tooltipTitleVar: variables.year,
+	// 		tooltipColorVals: true
+	// 	},
+		
+	// },
 	{
 		id: "#drone-strikes__pakistan__casualties", 
 		vizType: "stacked_bar",
 		primaryDataSheet: "strike_data",
 		// filterInitialDataBy: { field: "country", value:"Pakistan"},
 		xVar: variables.year,
-		filterVars: [ variables.militants_avg, variables.civilians_avg, variables.unknown_avg],
+		customColorScale: {
+			domain: [ variables.militants_avg.displayName, variables.civilians_avg.displayName, variables.unknown_avg.displayName],
+			range: [ colors.turquoise.light, colors.blue.light, colors.grey.medium ]
+		},
+		dataNestFunction: casualtiesNestDataFunction,
 		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
 		xAxisLabelInterval: {"small": 5, "medium": 2, "large": 1},
 		yAxisLabelText: "Casualties",
 		showYAxis: true,
-		tooltipTitleVar: variables.year,
-		tooltipColorVals: true
+		tooltipVars: [variables.year, variables.militants_avg, variables.civilians_avg, variables.unknown_avg],
+		tooltipColorVals: true,
+
 	},
 	{
 		id: "#drone-strikes__pakistan__strikes-by-president", 
 		vizType: "stacked_bar",
 		primaryDataSheet: "strike_data",
+		dataNestFunction: strikesNestDataFunction,
 		// filterInitialDataBy: { field: "country", value:"Pakistan"},
 		xVar: variables.year,
-		filterVars: [ variables.president_bush, variables.president_obama, variables.president_trump ],
+		filterVar: variables.president,
 		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
 		xAxisLabelInterval: {"small": 5, "medium": 2, "large": 1},
 		yAxisLabelText: "Strikes",
 		showYAxis: true,
-		tooltipTitleVar: variables.year,
+		tooltipVars: [variables.year],
 		tooltipColorVals: true
 	},
 	// {

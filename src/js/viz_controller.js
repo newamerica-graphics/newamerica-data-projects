@@ -30,7 +30,7 @@ import { PieChart } from "./chart_types/pie_chart.js";
 import { Bipartite } from "./chart_types/bipartite.js";
 import { CategoryBreakdown } from "./chart_types/category_breakdown.js";
 import { ComparativeDotHistogram } from "./chart_types/comparative_dot_histogram.js";
-import { FilterableDotMatrix } from "./layouts/filterable_dot_matrix.js";
+import { FilterableChart } from "./layouts/filterable_chart.js";
 import { BarLineCombo } from "./chart_types/bar_line_combo.js";
 import { PinDropMap } from "./chart_types/pindrop_map.js";
 import { VerticalTimeline } from "./chart_types/vertical_timeline.js";
@@ -96,8 +96,8 @@ export const setupProject = (projectSettings) => {
 						viz = new FactBox(vizSettingsObject);
 						break;
 
-					case "filterable_dot_matrix":
-						viz = new FilterableDotMatrix(vizSettingsObject);
+					case "filterable_chart":
+						viz = new FilterableChart(vizSettingsObject);
 						break;
 
 					case "financial_opportunity_map":

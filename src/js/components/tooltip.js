@@ -91,21 +91,26 @@ export class Tooltip {
 			.enter().append("li")
 			.attr("class", "tooltip__category__list-item");
 
-		this.listItems.append("h3")
+		this.listItemLabels = this.listItems.append("h3")
 			.attr("class", "tooltip__category__list-item__label")
 			.text((d) => { return d.displayName + ":" })
-			.style("color", (d) => { return this.colorScale ? this.colorScale(d.variable) : colors.grey.dark; })
-			.style("font-weight", (d) => { return this.colorScale ? "bold" : "normal"; })
 
+		console.log(this.colorScale);
+		if(this.colorScale) {
+			console.log(this.colorScale.domain(), this.colorScale.range())
+		}
 		this.listItems.append("h3")
 			.attr("class", "tooltip__category__list-item__value")
+	}
+
+	setColorScale(colorScale) {
+		this.colorScale = colorScale;
 	}
 
 	show(datum, mouse, currFilterVar, filterColor) {
 		if ($(window).width() < 450) {
 			return;
 		}
-
 		
         if (this.tooltipImageVar) {
         	if (datum[this.tooltipImageVar.variable]) {
@@ -137,6 +142,10 @@ export class Tooltip {
 
 		this.listItems.selectAll("h3.tooltip__category__list-item__value")
 			.text((d) => { return formatValue(datum[d.variable], d.format); })
+			
+		this.listItemLabels
+			.style("color", (d) => { return this.colorScale ? this.colorScale(d.variable) : colors.black; })
+			.style("font-weight", (d) => { return this.colorScale ? "bold" : "normal"; })
 
 
 		let tooltipCoords = this.getTooltipCoords(mouse);
