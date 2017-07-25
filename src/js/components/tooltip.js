@@ -5,6 +5,7 @@ let d3 = require("d3");
 const nonScrollXPadding = 15;
 const scrollXPadding = 2;
 
+import { colors } from "../helper_functions/colors.js";
 import { formatValue } from "../helper_functions/format_value.js";
 
 export class Tooltip {
@@ -93,6 +94,8 @@ export class Tooltip {
 		this.listItems.append("h3")
 			.attr("class", "tooltip__category__list-item__label")
 			.text((d) => { return d.displayName + ":" })
+			.style("color", (d) => { return this.colorScale ? this.colorScale(d.variable) : colors.grey.dark; })
+			.style("font-weight", (d) => { return this.colorScale ? "bold" : "normal"; })
 
 		this.listItems.append("h3")
 			.attr("class", "tooltip__category__list-item__value")
@@ -102,6 +105,7 @@ export class Tooltip {
 		if ($(window).width() < 450) {
 			return;
 		}
+
 		
         if (this.tooltipImageVar) {
         	if (datum[this.tooltipImageVar.variable]) {

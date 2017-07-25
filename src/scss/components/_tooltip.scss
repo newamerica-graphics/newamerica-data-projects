@@ -52,7 +52,7 @@
 	}
 
 	&__title-container {
-		padding-bottom: 15px;
+		padding-bottom: 10px;
 		&.no-content {
 			padding-bottom: 0px;
 		}
@@ -105,7 +105,7 @@
 
 			&__value {
 				padding-left: 5px;
-				color: palette-get(na-black-40);
+				color: palette-get(na-black);
 				line-height: 1.2;
 
 				

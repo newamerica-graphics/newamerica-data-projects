@@ -30,14 +30,17 @@ export class StackedBar {
 		this.setDimensions();
 
 		let colorVals = [],
-			colorLabels = [];
+			colorLabels = [],
+			colorVarNames = [];
 		
 		for (let filterVar of this.filterVars) {
 			colorVals.push(filterVar.color);
 			colorLabels.push(filterVar.displayName);
+			colorVarNames.push(filterVar.variable);
 		}
 
 		this.colorScale = d3.scaleOrdinal()
+			.domain(colorVarNames)
 			.range(colorVals);
 
 		if (this.filterVars.length > 1) {
@@ -48,7 +51,7 @@ export class StackedBar {
 			this.legend = new Legend(this.legendSettings);
 		}
 
-		let tooltipSettings = { "id":this.id, "tooltipVars":[this.tooltipTitleVar].concat(this.filterVars)}
+		let tooltipSettings = { "id":this.id, "tooltipVars":[this.tooltipTitleVar].concat(this.filterVars), "colorScale": this.tooltipColorVals ? this.colorScale : null};
 		this.tooltip = new Tooltip(tooltipSettings);
 	}
 
@@ -122,9 +125,6 @@ export class StackedBar {
 
 		this.yScale.domain([0, maxVal]);
 		this.xScale.domain(Array.from(keyList).sort());
-
-		this.colorScale
-			.domain(this.xScale.domain());
 
 	}
 
