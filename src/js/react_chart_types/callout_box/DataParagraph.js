@@ -10,7 +10,7 @@ const DataParagraph = ({variable, data}) => {
 	let value = getValue(variable, data);
 	return (
 		<div className="callout-box__data-paragraph">
-			<h5 className="callout-box__fact-box__label">{ variable.label }</h5>
+			<h5 className="callout-box__data-paragraph__label">{ variable.label }</h5>
 			<p className="callout-box__data-paragraph__value">{ value }</p>
 		</div>
 	)
