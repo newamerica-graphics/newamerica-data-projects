@@ -10,21 +10,19 @@ import { Dashboard } from "./dashboard.js";
 
 export class TabbedChartLayout {
 	constructor(vizSettings) {
-		let { id, primaryDataSheet, chartSettingsList } = vizSettings;
-		this.id = id;
-		this.chartToggle = new ChartToggle(id);
+		Object.assign(this, vizSettings);
+		this.chartToggle = new ChartToggle(this.id, this.tabIcons);
 		this.vizList = [];
 		let i = 0;
 
 		// let filterGroup = new FilterGroup(vizSettings);
-		for (let chartSettingsObject of chartSettingsList) {
-			d3.select(id).append("div")
-				.attr("id", id.replace("#", "") + "__chart" + i)
-				.style("display", function() { return i == 0 ? "block" : "none"; });
-
+		for (let chartSettingsObject of this.chartSettingsList) {
+			let chartDiv = d3.select(this.id).append("div")
+				.attr("id", this.id.replace("#", "") + "__chart" + i);
+				
 			// let chartSettingsObject = Object.assign({}, vizSettings);
-			chartSettingsObject.id = id + "__chart" + i;
-			chartSettingsObject.primaryDataSheet = primaryDataSheet;
+			chartSettingsObject.id = this.id + "__chart" + i;
+			chartSettingsObject.primaryDataSheet = this.primaryDataSheet;
 			
 			let viz;
 			switch (chartSettingsObject.vizType) {
@@ -42,6 +40,8 @@ export class TabbedChartLayout {
 					break;
 			}
 			this.vizList.push(viz);
+
+			chartDiv.style("display", () => { return i == 0 ? "block" : "none"; });
 
 			i++;
 		}
@@ -65,7 +65,6 @@ export class TabbedChartLayout {
 	}
 
 	toggleChangedFunction() {
-		console.log("changing toggles");
 		for (let i = 0; i < this.vizList.length; i++) {
 			$(this.id + "__chart" + i).toggle();
 		}
