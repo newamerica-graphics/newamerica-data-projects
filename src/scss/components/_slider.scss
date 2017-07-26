@@ -28,34 +28,72 @@
     &__button-container {
         position: relative;
         left: 20px;
-        top: -12px;
+        top: -9px;
         padding-right: 10px;
         display: inline-block;
         width: 75px
+
     }
 
     &__button {
         box-shadow: none !important;
         display: table-cell;
         cursor: normal;
-        font-size: 12px;
-        padding: 0.75em .75em !important;
+        padding: 0px !important;
+        border: none;
 
-        &:not(.selected) {
-            background-color: white;
-            border-top: 1px solid palette-get(na-black-10);
-            border-bottom: 1px solid palette-get(na-black-10);
-            border-left: 1px solid palette-get(na-black-10);
-            color: palette-get(na-black);
-            cursor: pointer;
+        
+        &.show-all {
+            width: 70px;
+
+            text {
+                fill: palette-get(na-black-40) !important;
+                stroke: none !important;
+                font-family: 'Simplon';
+            }
+            .background {
+                fill: white;
+            }
+
+            &.selected {
+                text {
+                    fill: white !important;
+
+                }
+                .background {
+                    fill: palette-get(na-black-40) !important;
+                    stroke: none;
+                }
+            }
 
             &:hover {
-                background-color: palette-get(na-black-10);
+                text {
+                    fill: white !important;
+                }
+                .background {
+                    fill: #a0d6d2;
+                    stroke: none;
+                }
             }
         }
 
-        &:last-child {
-            border-right: 1px solid palette-get(na-black-10);
+        &.play-pause {
+            width: 37px;
+            padding-left: 10px !important;
+            .foreground {
+                stroke: palette-get(na-black-40);
+                fill: none;
+            }
+            &:hover {
+                .foreground {
+                    fill: white;
+                    stroke: none;
+                }
+                .background {
+                    fill: #a0d6d2;
+                    stroke: none;
+                }
+            }
         }
     }
 

@@ -38,8 +38,8 @@ export class MapboxMap {
 
         Object.assign(this.mapboxSettings, {
             container: this.id.replace("#", "") + '-map-container',
-            minZoom: 4,
-            maxZoom: 15,
+            minZoom: 3,
+            maxZoom: 10,
             attributionControl: true
         })
 

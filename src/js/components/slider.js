@@ -11,8 +11,14 @@ let margin = {right: 20, left: 20};
 
 let valueDisplayWidth = 100;
 
-let animationButtonPaths = {pause: "M11,10 L17,10 17,26 11,26 M20,10 L26,10 26,26 20,26",
-	play: "M11,10 L18,13.74 18,22.28 11,26 M18,13.74 L26,18 26,18 18,22.28"};
+// let animationButtonPaths = {pause: "M11,10 L17,10 17,26 11,26 M20,10 L26,10 26,26 20,26",
+// 	play: "M11,10 L18,13.74 18,22.28 11,26 M18,13.74 L26,18 26,18 18,22.28"};
+
+let animationButtonIcons = {
+	showAll:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 71.55 27.34"><defs><style>.background{fill:#fff;stroke:#b3b3b3;stroke-miterlimit:10;stroke-width:0.75px;}.foreground,.cls-6,.cls-7{font-size:13px;fill:#999;font-family:SimplonBP-Medium, Simplon BP;}.foreground{letter-spacing:0.09em;}.cls-3{letter-spacing:0.08em;}.cls-4{letter-spacing:0.09em;}.cls-5{letter-spacing:0.07em;}.cls-6{letter-spacing:0.08em;}.cls-7{letter-spacing:0.1em;}.cls-8{letter-spacing:0.1em;}.cls-9{letter-spacing:0.08em;}</style></defs><title>show_all</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_2-2" data-name="Layer 2"><rect class="background" x="0.37" y="0.38" width="70.8" height="26.59" rx="13.29" ry="13.29"/><text class="foreground" transform="translate(12.32 16.96) scale(0.7)">S<tspan class="cls-3" x="8.33" y="0">H</tspan><tspan class="cls-4" x="17.87" y="0">O</tspan><tspan class="cls-5" x="26.91" y="0">W</tspan></text><text class="cls-6" transform="translate(38.61 16.96)"> </text><text class="cls-7" transform="translate(42.43 16.96) scale(0.7)">A<tspan class="cls-8" x="9.31" y="0">L</tspan><tspan class="cls-9" x="17.05" y="0">L</tspan></text></g></g></svg>',
+	play: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26.51 26.51"><defs><style>.background{fill:#fff;stroke:#b3b3b3;}.background,.foreground{stroke-miterlimit:10;stroke-width:0.75px;}.foreground{fill:none;stroke:#999;}</style></defs><title>play</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_2-2" data-name="Layer 2"><circle class="background" cx="13.25" cy="13.25" r="12.88"/><polygon class="foreground" points="17.69 13.25 11.04 9.41 11.04 17.09 17.69 13.25"/></g></g></svg>',
+	pause: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26.51 26.51"><defs><style>.background,.foreground{fill:#fff;stroke-miterlimit:10;stroke-width:0.75px;}.background{stroke:#b3b3b3;}.foreground{stroke:#999;}</style></defs><title>pause</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_2-2" data-name="Layer 2"><circle class="background" cx="13.25" cy="13.25" r="12.88"/><rect class="foreground" x="14.44" y="9.82" width="2.38" height="6.86"/><rect class="foreground" x="9.69" y="9.82" width="2.38" height="6.86"/></g></g></svg>',
+}
 
 export class Slider {
 	constructor(componentSettings) {
@@ -40,8 +46,8 @@ export class Slider {
 
 			this.showAll = buttonContainer
 				.append("div")
-				.attr("class", "button slider__button selected")
-				.text("Show All")
+				.attr("class", "slider__button show-all selected")
+				.html(animationButtonIcons.showAll)
 				.on("click", () => { 
 					this.showAll.classed("selected", true); 
 					this.handle.classed("hidden", true); 
@@ -53,8 +59,9 @@ export class Slider {
 
 		this.animationButton = buttonContainer
 			.append("div")
-			.attr("class", "button slider__button")
-			.text(this.automated ? "Pause" : "Play")
+			.attr("class", "slider__button play-pause")
+			.html(this.automated ? animationButtonIcons.pause : animationButtonIcons.play)
+			// .text(this.automated ? "Pause" : "Play")
 			.on("click", () => { this.handle.classed("hidden", false); return this.toggleAnimation(this.currAnimationVal); });
 
 		this.svg = this.containerDiv
@@ -193,7 +200,8 @@ export class Slider {
 			console.log("stopping animation " + this.animationState + " " + this.currAnimationVal);
 			window.clearInterval(this.intervalFunction);
 			
-			this.animationButton.text("Play");
+			this.animationButton
+				.html(animationButtonIcons.play)
 
 			console.log("resting state " + this.animationState + " " + this.currAnimationVal);
 		} else {
@@ -224,7 +232,7 @@ export class Slider {
 			}, interval);
 
 			this.animationButton
-				.text("Pause")
+				.html(animationButtonIcons.pause)
 
 			this.showAll ? this.showAll.classed("selected", false) : null;
 			this.handle.classed("hidden", false);

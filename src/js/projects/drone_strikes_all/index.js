@@ -629,63 +629,63 @@ let vizSettingsList = [
 	// 	disableSearching: true,
 	//  	disableOrdering: true
 	// },
-	// {
-	// 	id: "#drone-strikes__somalia__strike-map",
-	// 	vizType: "tabbed_chart_layout",
-	// 	primaryDataSheet: "somalia_strikes",
-	// 	chartSettingsList: [
-	// 		{
-	// 			vizType: "mapbox_map",
-	// 			// filterInitialDataBy: { field: "country", value:"Pakistan"},
-	// 	        mapboxSettings: {
-	// 	        	style: "mapbox://styles/newamericamapbox/ciynaplyx001k2sqepxshx05u",
-	// 	        	center: [46.1996, 5.1521],
-	// 	        	zoom: 5,
-	// 	        	maxBounds: [
-	// 	        		[40.5164, 0.5527],
-	// 	        		[55.5164, 10.5527]
-	// 	        	],
-	// 	        },
-	// 	        colorVar: variables.strike_type,
-	// 	        radiusVar: variables.total_avg,
-	// 	        sliderSettings: {
-	// 				sliderVar: variables.year,
-	// 				showAllButton: true,
-	// 				automated: false,
-	// 	        },
-	// 	        dataBoxVars: {
-	// 	        	title: variables.date,
-	// 	        	subtitle: [variables.village, variables.region],
-	// 	        	categories: [
-	// 		        	{ 
-	// 		        		label: "Target",
-	// 		        		fields: [variables.target_organization_name, variables.target_description] 
-	// 		        	},
-	// 		        	{ 
-	// 		        		label: "Casualties",
-	// 		        		fields: [variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh]
-	// 		        	},
-	// 		        	{ 
-	// 		        		label: "Leaders Killed",
-	// 		        		fields: [variables.leader_names, variables.leader_description]
-	// 		        	},
-	// 		        	{
-	// 		        		label: "Sources",
-	// 		        		fields: [variables.sources_combined]
-	// 		        	}
-	// 	        	],
-	// 	        }
-	// 	    },
-	// 	    {
-	// 			vizType: "table",
-	// 			tableVars: [ variables.date, variables.president, variables.village, variables.region, variables.target_organization_name, variables.target_description, variables.civilians_avg, variables.militants_avg, variables.unknown_avg, variables.total_avg, variables.sources_combined],
-	// 			defaultOrdering: [0, "desc"],
-	// 			pagination: true,
-	// 			numPerPage: 10,
-	// 			colorScaling: false
-	// 		}
-	// 	]
-	// },
+	{
+		id: "#drone-strikes__somalia__strike-map",
+		vizType: "tabbed_chart_layout",
+		primaryDataSheet: "somalia_strikes",
+		chartSettingsList: [
+			{
+				vizType: "mapbox_map",
+				// filterInitialDataBy: { field: "country", value:"Pakistan"},
+		        mapboxSettings: {
+		        	style: "mapbox://styles/newamericamapbox/ciynaplyx001k2sqepxshx05u",
+		        	center: [46.1996, 5.1521],
+		        	zoom: 5,
+		        	maxBounds: [
+		        		[40.5164, 0.5527],
+		        		[55.5164, 10.5527]
+		        	],
+		        },
+		        colorVar: variables.strike_type,
+		        radiusVar: variables.total_avg,
+		        sliderSettings: {
+					sliderVar: variables.year,
+					showAllButton: true,
+					automated: false,
+		        },
+		        dataBoxVars: {
+		        	title: variables.date,
+		        	subtitle: [variables.village, variables.region],
+		        	categories: [
+			        	{ 
+			        		label: "Target",
+			        		fields: [variables.target_organization_name, variables.target_description] 
+			        	},
+			        	{ 
+			        		label: "Casualties",
+			        		fields: [variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh]
+			        	},
+			        	{ 
+			        		label: "Leaders Killed",
+			        		fields: [variables.leader_names, variables.leader_description]
+			        	},
+			        	{
+			        		label: "Sources",
+			        		fields: [variables.sources_combined]
+			        	}
+		        	],
+		        }
+		    },
+		    {
+				vizType: "table",
+				tableVars: [ variables.date, variables.president, variables.village, variables.region, variables.target_organization_name, variables.target_description, variables.civilians_avg, variables.militants_avg, variables.unknown_avg, variables.total_avg, variables.sources_combined],
+				defaultOrdering: [0, "desc"],
+				pagination: true,
+				numPerPage: 10,
+				colorScaling: false
+			}
+		]
+	},
 	{
 		id: "#drone-strikes__somalia__leaders-map",
 		vizType: "tabbed_chart_layout",
@@ -705,10 +705,10 @@ let vizSettingsList = [
 				// filterInitialDataBy: { field: "country", value:"Pakistan" },
 		        mapboxSettings: {
 		        	style: "mapbox://styles/newamericamapbox/ciynaplyx001k2sqepxshx05u",
-		        	center: [46.1996, 5.1521],
-		        	zoom: 5,
+		        	center: [42.1996, 5.1521],
+		        	zoom: 3,
 		        	maxBounds: [
-		        		[40.5164, 0.5527],
+		        		[38.5164, 0.5527],
 		        		[55.5164, 10.5527]
 		        	],
 		        },
