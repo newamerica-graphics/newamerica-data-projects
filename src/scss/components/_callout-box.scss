@@ -1,11 +1,11 @@
 .callout-box {
 	background-color: palette-get(na-black);
 	color: palette-get(na-black-30);
-	padding: 20px;
+	padding: 20px 0px;
 	font-size: 18px;
 	@media all and (min-width: 900px) {
 		font-size: 2vw;
-		padding: 35px 50px;
+		padding: 35px 0px;
 	}
 	@media all and (min-width: 1250px) {
 		font-size: 24px;
@@ -144,8 +144,9 @@
 		margin-bottom: 0px;
 
 		&__value {
-			color: white;
+			color: white !important;
 			font-size: .7em;
+			line-height: 1.5;
 		}
 
 		&__label {
