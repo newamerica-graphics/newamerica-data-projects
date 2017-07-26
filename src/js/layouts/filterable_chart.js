@@ -10,7 +10,7 @@ export class FilterableChart {
 	constructor(vizSettings) {
 		Object.assign(this, vizSettings);
 		console.log("in filterable chart");
-		this.getFilterValList();
+		this.filterValList = this.customFilterOptions || this.getFilterValList();
 
 		let selectBoxSettings = {
 			id: this.id,
@@ -31,22 +31,34 @@ export class FilterableChart {
 	}
 
 	renderChart() {
-		this.chart ? this.chart.removeChart() : null;
+		if (this.chart) {
+			this.chart.removeChart();
+			delete this.chart;
+		}
+		let chartSettings = {};
 
-		this.chartSettings.id = this.id;
-		this.chartSettings.primaryDataSheet = this.primaryDataSheet ? this.primaryDataSheet : this.filterVars[this.currTopic].dataSheet;
-		this.chartSettings.filterVars = [this.filterVars[this.currTopic]];
-		this.chart = initializeChart();
+		if (this.customFilterOptions) {
+			Object.assign(chartSettings, this.chartSettings[this.currTopic])
+			chartSettings.id = this.id;
+			chartSettings.primaryDataSheet = this.primaryDataSheet || this.filterVars[this.currTopic].dataSheet;
+		} else {
+			Object.assign(chartSettings, this.chartSettings)
+			chartSettings.id = this.id;
+			chartSettings.primaryDataSheet = this.primaryDataSheet || this.filterVars[this.currTopic].dataSheet;
+			chartSettings.filterVars = [this.filterVars[this.currTopic]];
+		}
+
+		this.chart = this.initializeChart(chartSettings);
 		this.chart.render(this.data);
 	}
 
-	initializeChart() {
+	initializeChart(chartSettings) {
 		switch(this.chartType) {
 			case "dot_matrix":
-				return new DotMatrix(this.chartSettings)
+				return new DotMatrix(chartSettings)
 
 			case "stacked_bar":
-				return new StackedBar(this.chartSettings)
+				return new StackedBar(chartSettings)
 		}
 	}
 
@@ -60,18 +72,19 @@ export class FilterableChart {
 		console.log(index);
 		this.currTopic = index;
 		this.renderChart();
-
 	}
 
 	getFilterValList() {
-		this.filterValList = [];
+		let filterValList = [];
 
 		this.filterVars.forEach((d) => {
-			this.filterValList.push({
+			filterValList.push({
 				key: d.displayName,
 				values: [{id:d.variable}]
 			});
 		})
+
+		return filterValList;
 
 	}
 

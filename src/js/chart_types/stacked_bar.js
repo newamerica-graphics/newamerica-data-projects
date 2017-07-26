@@ -106,9 +106,7 @@ export class StackedBar {
 		this.nestedVals.forEach((yearObject) => {
 			yearList.add(yearObject.key);
 			let valArray = yearObject.values || yearObject.value;
-			console.log(valArray)
 			let localSum = d3.sum(valArray, (d) => { return d.value; })
-			console.log(localSum);
 			maxTotalYearVal = Math.max(maxTotalYearVal, localSum);
 
 		})
@@ -280,5 +278,10 @@ export class StackedBar {
 	   			}
 		   		return colors.grey.light;
 		    });
+	}
+
+	removeChart() {
+		this.svg.remove();
+		this.legend.removeComponent();
 	}
 }
