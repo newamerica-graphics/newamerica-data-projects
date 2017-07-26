@@ -1,6 +1,6 @@
 .slider {
 	&__track {
-		stroke: palette-get(na-black-10);
+		stroke: palette-get(na-black-30);
 		stroke-opacity: 1;
 		pointer-events: stroke;
 		stroke-width: 1px;
@@ -9,7 +9,7 @@
 
 	&__handle {
 		fill: white;
-		stroke: palette-get(na-black-10);
+		stroke: palette-get(na-black-30);
 		stroke-opacity: 1;
 		stroke-width: 1.25px;
 		cursor: pointer;

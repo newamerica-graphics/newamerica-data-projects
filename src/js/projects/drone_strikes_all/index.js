@@ -175,7 +175,7 @@ let vizSettingsList = [
 	// 	tableVars: [ variables.president, variables.total_strikes, variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh],
 	// 	defaultOrdering: [0, "asc"],
 	// 	pagination: false,
-	// 	numPerPage: 25,
+	// 	numPerPage: 10,
 	// 	colorScaling: false,
 	// 	disableSearching: true,
 	//  	disableOrdering: true
@@ -237,7 +237,7 @@ let vizSettingsList = [
 	// 			tableVars: [ variables.date, variables.president, variables.village, variables.region, variables.target_organization_name, variables.target_description, variables.civilians_avg, variables.militants_avg, variables.unknown_avg, variables.total_avg, variables.sources_combined],
 	// 			defaultOrdering: [0, "desc"],
 	// 			pagination: true,
-	// 			numPerPage: 25,
+	// 			numPerPage: 10,
 	// 			colorScaling: false
 	// 		}
 	// 	]
@@ -253,7 +253,7 @@ let vizSettingsList = [
 				tableVars: [ variables.date, variables.leader_names, variables.leader_description, variables.village, variables.region, variables.sources_combined],
 				defaultOrdering: [0, "desc"],
 				pagination: true,
-				numPerPage: 25,
+				numPerPage: 10,
 				colorScaling: false
 			},
 			{
@@ -404,7 +404,7 @@ let vizSettingsList = [
 	// 	tableVars: [ variables.president, variables.total_strikes, variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh],
 	// 	defaultOrdering: [0, "asc"],
 	// 	pagination: false,
-	// 	numPerPage: 25,
+	// 	numPerPage: 10,
 	// 	colorScaling: false,
 	// 	disableSearching: true,
 	//  	disableOrdering: true
@@ -461,11 +461,69 @@ let vizSettingsList = [
 	// 			tableVars: [ variables.date, variables.president, variables.village, variables.region, variables.target_organization_name, variables.target_description, variables.civilians_avg, variables.militants_avg, variables.unknown_avg, variables.total_avg, variables.sources_combined],
 	// 			defaultOrdering: [0, "desc"],
 	// 			pagination: true,
-	// 			numPerPage: 25,
+	// 			numPerPage: 10,
 	// 			colorScaling: false
 	// 		}
 	// 	]
 	// },
+	{
+		id: "#drone-strikes__yemen__leaders-map",
+		vizType: "tabbed_chart_layout",
+		primaryDataSheet: "yemen_strikes",
+		tabIcons: ["table", "globe"],
+		chartSettingsList: [
+		    {
+				vizType: "table",
+				tableVars: [ variables.date, variables.leader_names, variables.leader_description, variables.village, variables.region, variables.sources_combined],
+				defaultOrdering: [0, "desc"],
+				pagination: true,
+				numPerPage: 10,
+				colorScaling: false
+			},
+			{
+				vizType: "mapbox_map",
+				// filterInitialDataBy: { field: "country", value:"Pakistan" },
+		        mapboxSettings: {
+		        	style: "mapbox://styles/newamericamapbox/ciynaplyx001k2sqepxshx05u",
+		        	center: [45.5164, 15.5527],
+		        	zoom: 5,
+		        	maxBounds: [
+		        		[40.5164, 12.5527],
+		        		[55.5164, 20.5527]
+		        	],
+		        },
+		        colorVar: variables.strike_type,
+		        radiusVar: variables.leaders_killed,
+		        sliderSettings: {
+					sliderVar: variables.year,
+					showAllButton: true,
+					automated: false,
+		        },
+		        dataBoxVars: {
+		        	title: variables.date,
+		        	subtitle: [variables.village, variables.region],
+		        	categories: [
+		        		{ 
+			        		label: "Leaders Killed",
+			        		fields: [variables.leader_names, variables.leader_description]
+			        	},
+			        	// { 
+			        	// 	label: "Target",
+			        	// 	fields: [variables.target_organization_name, variables.target_description] 
+			        	// },
+			        	// { 
+			        	// 	label: "Casualties",
+			        	// 	fields: [variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh]
+			        	// },
+			        	{
+			        		label: "Sources",
+			        		fields: [variables.sources_combined]
+			        	}
+		        	],
+		        }
+		    },
+		]
+	},
 
 	// {
 	// 	id: "#drone-strikes__somalia__by-casualty-type", 
@@ -566,7 +624,7 @@ let vizSettingsList = [
 	// 	tableVars: [ variables.president, variables.total_strikes, variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh],
 	// 	defaultOrdering: [0, "asc"],
 	// 	pagination: false,
-	// 	numPerPage: 25,
+	// 	numPerPage: 10,
 	// 	colorScaling: false,
 	// 	disableSearching: true,
 	//  	disableOrdering: true
@@ -623,11 +681,69 @@ let vizSettingsList = [
 	// 			tableVars: [ variables.date, variables.president, variables.village, variables.region, variables.target_organization_name, variables.target_description, variables.civilians_avg, variables.militants_avg, variables.unknown_avg, variables.total_avg, variables.sources_combined],
 	// 			defaultOrdering: [0, "desc"],
 	// 			pagination: true,
-	// 			numPerPage: 25,
+	// 			numPerPage: 10,
 	// 			colorScaling: false
 	// 		}
 	// 	]
 	// },
+	{
+		id: "#drone-strikes__somalia__leaders-map",
+		vizType: "tabbed_chart_layout",
+		primaryDataSheet: "somalia_strikes",
+		tabIcons: ["table", "globe"],
+		chartSettingsList: [
+		    {
+				vizType: "table",
+				tableVars: [ variables.date, variables.leader_names, variables.leader_description, variables.village, variables.region, variables.sources_combined],
+				defaultOrdering: [0, "desc"],
+				pagination: true,
+				numPerPage: 10,
+				colorScaling: false
+			},
+			{
+				vizType: "mapbox_map",
+				// filterInitialDataBy: { field: "country", value:"Pakistan" },
+		        mapboxSettings: {
+		        	style: "mapbox://styles/newamericamapbox/ciynaplyx001k2sqepxshx05u",
+		        	center: [46.1996, 5.1521],
+		        	zoom: 5,
+		        	maxBounds: [
+		        		[40.5164, 0.5527],
+		        		[55.5164, 10.5527]
+		        	],
+		        },
+		        colorVar: variables.strike_type,
+		        radiusVar: variables.leaders_killed,
+		        sliderSettings: {
+					sliderVar: variables.year,
+					showAllButton: true,
+					automated: false,
+		        },
+		        dataBoxVars: {
+		        	title: variables.date,
+		        	subtitle: [variables.village, variables.region],
+		        	categories: [
+		        		{ 
+			        		label: "Leaders Killed",
+			        		fields: [variables.leader_names, variables.leader_description]
+			        	},
+			        	// { 
+			        	// 	label: "Target",
+			        	// 	fields: [variables.target_organization_name, variables.target_description] 
+			        	// },
+			        	// { 
+			        	// 	label: "Casualties",
+			        	// 	fields: [variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh]
+			        	// },
+			        	{
+			        		label: "Sources",
+			        		fields: [variables.sources_combined]
+			        	}
+		        	],
+		        }
+		    },
+		]
+	},
 ]
 
 let reactVizSettingsList = [
