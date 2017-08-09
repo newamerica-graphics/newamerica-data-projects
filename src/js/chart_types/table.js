@@ -3,6 +3,7 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 let dt = require('datatables.net');
+let dtFixed = require('datatables.net-fixedcolumns');
 
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { formatValue } from "../helper_functions/format_value.js";
@@ -10,29 +11,22 @@ import { formatValue } from "../helper_functions/format_value.js";
 
 export class Table {
 	constructor(vizSettings) {
-		let {id, tableVars, colorScaling, primaryDataSheet, pagination, numPerPage, defaultOrdering, disableSearching, disableOrdering, filterInitialDataBy} = vizSettings;
+		Object.assign(this, vizSettings)
 
-		this.id = id;
-		this.tableVars = tableVars;
-		this.colorScaling = colorScaling;
-		this.pagination = pagination;
-		this.numPerPage = numPerPage;
-		this.defaultOrdering = defaultOrdering;
-		this.primaryDataSheet = primaryDataSheet;
-		this.disableSearching = disableSearching;
-		this.disableOrdering = disableOrdering;
-		this.filterInitialDataBy = filterInitialDataBy;
-
-		d3.select(id).append("table")
+		d3.select(this.id).append("table")
 			.attr("id", "dataTable")
 			.attr("class", "table");
 
 		this.popup = d3.select("body").append("div")
 			.attr("class", "table__popup hidden");
+
+
 	}
 
 	render(data) {
 		this.data = data[this.primaryDataSheet];
+
+		// should phase this one out in favor of the filter function below
 		if (this.filterInitialDataBy) {
 			for (let filter of this.filterInitialDataBy) {
 				if (filter.value) {
@@ -43,17 +37,45 @@ export class Table {
 			}
 			
         }
+        console.log(this.filterInitialDataFunction)
+        if (this.filterInitialDataFunction) { 
+        	this.data = this.data.filter((d) => { return this.filterInitialDataFunction(d); });
+        }
+
+        if (this.colorScaleColumns) {
+			this.colorScales = [];
+
+			this.colorScaleColumns.forEach((d) => {
+				this.colorScales[d] = getColorScale(data, this.tableVars[d])
+			})
+
+			console.log(this.colorScales[5].domain(), this.colorScales[5].range())
+		}
+
 		this.table = $(this.id + " #dataTable").DataTable({
 			data: this.data,
 			columns: this.getColumnNames(),
 		    lengthChange: false,
 		    paging: this.pagination ? true : false,
 		    pageLength: this.numPerPage,
-		    scrollX: false,
+		    scrollX: this.freezeColumn ? true : false,
 		    ordering: this.disableOrdering? false : true,
 		    order: this.defaultOrdering ? this.defaultOrdering : ["0", "asc"],
-		    searching: this.disableSearching ? false : true
+		    searching: this.disableSearching ? false : true,
+		    fixedColumns: this.freezeColumn ? this.freezeColumn : {}
 		});
+
+		d3.selectAll("tr")
+			.selectAll("td")
+			.style("color", (d, i, paths) => { 
+				
+				if (this.colorScales[i]) {
+					console.log(d, i , paths[i], $(paths[i]).text(), this.colorScales[i].domain(), this.colorScales[i].range(), this.colorScales[i]($(paths[i]).text())); 
+					return this.colorScales[i]($(paths[i]).text().trim())
+				}
+				return "black"; 
+			})
+			.style("font-weight", (d, i) => { return this.colorScales[i] ? "bold" : "normal"; })
 
 		if (this.colorScaling) {
 			this.table.on('order.dt', this.orderChanged.bind(this));
@@ -87,7 +109,7 @@ export class Table {
         	};
 
         	tableVar.format == "date" ? varObject["type"] = "date" : null;
-        	console.log(varObject);
+
 			columnNames.push(varObject);
 		}
 
