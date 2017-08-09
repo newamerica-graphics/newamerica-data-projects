@@ -10,6 +10,8 @@ import { Trendline } from "../components/trendline.js";
 import { formatValue } from "../helper_functions/format_value.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 
+const range = (start, end) => [...Array(end - start + 1)].map((_, i) => start + i);
+
 export class StackedBar {
 	constructor(vizSettings, imageFolderId) {
 		Object.assign(this, vizSettings);
@@ -64,7 +66,6 @@ export class StackedBar {
 		if (this.filterInitialDataBy) {
             this.data = this.data.filter((d) => { return d[this.filterInitialDataBy.field] == this.filterInitialDataBy.value; })
         }
-		console.log(this.data);
 	    
 		this.setScaleDomains();
 		this.setColorScale();
@@ -91,30 +92,28 @@ export class StackedBar {
 			return {variable: d, displayName: d, format: "number"};
 		});
 
-		console.log(categoryList);
 		return [...title, ...categoryList];
 	}
 
 	setScaleDomains() {
-		let yearList = new Set();
+		let yearList = [];
 
 		let maxTotalYearVal = 0;
 
 		this.nestedVals = this.dataNestFunction(this.data, this.filterVar);
 
-		console.log(this.nestedVals);
 		this.nestedVals.forEach((yearObject) => {
-			yearList.add(yearObject.key);
+			yearList.push(yearObject.key);
 			let valArray = yearObject.values || yearObject.value;
 			let localSum = d3.sum(valArray, (d) => { return d.value; })
 			maxTotalYearVal = Math.max(maxTotalYearVal, localSum);
 
 		})
-		console.log(maxTotalYearVal)
-		console.log(yearList)
+		
+		let yearExtents = d3.extent(yearList);
 		
 		this.yScale.domain([0, maxTotalYearVal]);
-		this.xScale.domain(Array.from(yearList).sort());
+		this.xScale.domain(range(+yearExtents[0], +yearExtents[1]));
 
 	}
 
@@ -137,11 +136,11 @@ export class StackedBar {
 		  	.on("mouseout", (d, index, paths) => {  return this.mouseout(paths[index]); });
 
 		this.bars = this.barGroups.selectAll("rect")
-			.data((d) => { console.log(d); return d.values || d.value; })
+			.data((d) => { return d.values || d.value; })
 		  .enter().append("rect")
 		  	.attr("x", 0)
 		  	.attr("stroke", "white")
-			.style("fill", (d) => { console.log(d); return this.colorScale(d.key); })
+			.style("fill", (d) => { return this.colorScale(d.key); })
 			.style("fill-opacity", 1);
 
 		this.setBarHeights();
@@ -178,12 +177,11 @@ export class StackedBar {
 
 	setBarHeights() {
 		this.barGroups
-			.attr("transform", (d) => { console.log(d); return "translate(" + this.xScale(d.key) + ")"})
+			.attr("transform", (d) => { return "translate(" + this.xScale(d.key) + ")"})
 		
 		let currCumulativeY = 0;
 		this.bars
 			.attr("y", (d, i) => {
-				console.log(d);
 				let barHeight = this.h - this.yScale(d.value);
 				currCumulativeY = i == 0 ? this.h - barHeight : currCumulativeY - barHeight;
 				return currCumulativeY; 
@@ -240,7 +238,6 @@ export class StackedBar {
 	}
 
 	mouseover(datum, path, eventObject) {
-		console.log(datum)
 		d3.select(path).selectAll("rect")
 			.style("fill-opacity", .7);
 		
@@ -256,7 +253,6 @@ export class StackedBar {
 			tooltipData[d.key] = d.value;
 		})
 			
-		console.log(tooltipData);	
 		this.tooltip.show(tooltipData, mousePos);
 	}
 
@@ -268,11 +264,9 @@ export class StackedBar {
 	}
 
 	changeVariableValsShown(valsShown) {
-		console.log(valsShown)
 		this.bars
 			.style("fill", (d, i) => {
 				let binIndex = this.colorScale.domain().indexOf(d.key);
-				console.log(d.key, binIndex);
 	   			if (valsShown.indexOf(binIndex) > -1) {
 	   				return this.colorScale(d.key);
 	   			}

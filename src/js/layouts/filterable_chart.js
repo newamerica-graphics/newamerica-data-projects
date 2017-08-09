@@ -19,7 +19,6 @@ export class FilterableChart {
 			variable: vizSettings.topicFilterVar,
 		};
 		
-		console.log(selectBoxSettings);
 		this.selectBox = new SelectBox(selectBoxSettings);
 		this.currTopic = 0;
 	}
@@ -31,6 +30,7 @@ export class FilterableChart {
 	}
 
 	renderChart() {
+		console.log(this.data)
 		if (this.chart) {
 			this.chart.removeChart();
 			delete this.chart;

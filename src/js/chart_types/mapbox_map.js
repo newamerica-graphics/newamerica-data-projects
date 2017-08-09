@@ -39,7 +39,7 @@ export class MapboxMap {
         Object.assign(this.mapboxSettings, {
             container: this.id.replace("#", "") + '-map-container',
             minZoom: 3,
-            maxZoom: 10,
+            maxZoom: 8,
             attributionControl: true
         })
 
@@ -72,23 +72,24 @@ export class MapboxMap {
 
     }
 
-    render(d) {
+    render(data) {
         if (this.filterInitialDataBy) {
-            d[this.primaryDataSheet] = d[this.primaryDataSheet].filter((d) => { return d[this.filterInitialDataBy.field] == this.filterInitialDataBy.value; })
+            this.data = data[this.primaryDataSheet].filter((d) => { return d[this.filterInitialDataBy.field] == this.filterInitialDataBy.value; })
         }
 
-        d[this.primaryDataSheet] = d[this.primaryDataSheet].filter((d) => { return d[this.radiusVar.variable] && Number(d[this.radiusVar.variable]) > 0 });
+        this.data = data[this.primaryDataSheet].filter((d) => { return d[this.radiusVar.variable] && Number(d[this.radiusVar.variable]) > 0 });
 
+        console.log(this.data)
         this.setPopupDataBox();
-        this.setColorScale(d[this.primaryDataSheet]);
-        this.setRadiusScale(d[this.primaryDataSheet]);
+        this.setColorScale(this.data);
+        this.setRadiusScale(this.data);
 
         this.addSlider();
-        this.slider.render(d);
+        this.slider.render(this.data);
 
         this.addLegend();
 
-        this.processData(d[this.primaryDataSheet]);
+        this.processData(this.data);
         this.map.on('load', () => {
             this.map.addSource("dataSource", this.source);
             this.map.addLayer({
@@ -141,6 +142,7 @@ export class MapboxMap {
             "data" : this.data
         }
         console.log(this.data);
+        console.log(data)
     }
 
     addControls() {

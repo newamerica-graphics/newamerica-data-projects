@@ -185,9 +185,11 @@ export const setupProject = (projectSettings) => {
 
 				if (reactVizSettingsList) {
 					for (let vizSettings of reactVizSettingsList) {
-						renderReact(vizSettings, d);
+						if($(vizSettings.id).length != 0) {
+							renderReact(vizSettings, d);
 						
-						hideLoadingGif(vizSettings.id);
+							hideLoadingGif(vizSettings.id);
+						}
 					}
 				}
 
