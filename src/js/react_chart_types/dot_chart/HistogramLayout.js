@@ -11,6 +11,7 @@ const d3 = require("d3");
 const getRange = (start, end) => { return Array(end - start + 1).fill().map((_, idx) => start + idx) }
 
 let dotWidth = 5;
+let dotPadding = 1;
 
 class HistogramLayout {
 	constructor(data, width, height) {
@@ -18,7 +19,6 @@ class HistogramLayout {
 		console.log("in constructor");
 
 		this.width = width;
-		this.height = height;
 		this.data = data;
 
 		let extents = d3.extent(this.data, (d) => {
@@ -30,24 +30,29 @@ class HistogramLayout {
 		this.xScale = d3.scaleLinear();
 		this.binScale = d3.scaleQuantize().domain(extents)
 		this.yScale = d3.scaleLinear();
+		this.axisScale = d3.scaleLinear();
 		
 		this.setDataColumns();
 
 	}
 
 	setDataColumns() {
-		this.numColumns = Math.floor(this.width/(dotWidth*2));
+		this.numColumns = Math.floor(this.width/((dotWidth + dotPadding)*2));
 
 		console.log(this.numColumns)
 
 		this.binScale
 			.range(getRange(0, this.numColumns));
 
-		console.log(this.binScale.domain(), this.binScale.range())
+		// console.log(this.binScale.domain(), this.binScale.range())
 
 		this.xScale
 			.domain([0, this.numColumns])
-			.range([0, this.width])
+			.range([dotWidth + dotPadding, this.width - dotWidth - dotPadding])
+
+		this.axisScale 
+			.domain(this.binScale.domain())
+			.range(this.xScale.range())
 
 
 		this.dataNest = d3.nest()
@@ -61,17 +66,17 @@ class HistogramLayout {
 			})
 			.entries(this.data)
 
-		console.log(this.dataNest)
+		// console.log(this.dataNest)
 
 		this.maxColCount = d3.max(this.dataNest, (d) => { return d.values.length});
+		this.height = (this.maxColCount + 1)*((dotWidth + dotPadding)*2)
 
-		console.log(this.maxColCount);
+		// console.log(this.maxColCount);
 	}
 
 
-	resize(width, height) {
+	resize(width) {
 		this.width = width;
-		this.height = height;
 
 		this.setDataColumns();
 	}
@@ -84,7 +89,7 @@ class HistogramLayout {
 			let bin = this.binScale(new Date(d.date));
 			yPos = this.getYPos(bin, d, i);
 			
-			console.log(yPos)
+			// console.log(yPos)
 			xPos = this.xScale(bin)
 
 		}
@@ -95,17 +100,17 @@ class HistogramLayout {
 		let binValList;
 		let retVal = 0;
 
-		console.log(whichBin)
+		// console.log(whichBin)
 
 		this.dataNest.forEach((bin) => {
 			if (+bin.key === whichBin) {
-				console.log(bin)
+				// console.log(bin)
 				binValList = bin.values;
 				return;
 			}
 		})
 
-		console.log(binValList)
+		// console.log(binValList)
 
 		if (binValList) {
 			binValList.forEach((val, index) => {
@@ -116,7 +121,7 @@ class HistogramLayout {
 
 			})
 		}
-		return dotWidth + ((this.maxColCount - retVal)*dotWidth*2);
+		return dotWidth + ((this.maxColCount - retVal)*((dotWidth + dotPadding)*2));
 	}
 }
 

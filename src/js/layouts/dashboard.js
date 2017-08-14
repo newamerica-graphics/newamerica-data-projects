@@ -42,7 +42,7 @@ export class Dashboard {
 
 	initializeComponent(componentSettings) {
 		if (componentSettings.isMessagePasser) {
-			componentSettings.filterChangeFunction = this.changeFilter.bind(this);
+			componentSettings.dashboardChangeFunc = this.changeFilter.bind(this);
 		}
 			
 		let component;
@@ -99,17 +99,17 @@ export class Dashboard {
 		}
 	}
 
-	changeFilter(value, messageOriginator) {
+	changeFilter(messageObject, messageOriginator) {
 		for (let component of this.componentList) {
 			if (component.id != messageOriginator.id) {
 				switch (component.messageHandlerType) {
 					case null:
 						break;
 					case "change_filter":
-						component.changeFilter(value) ? component.changeFilter(value) : null;
+						component.changeFilter(messageObject) ? component.changeFilter(messageObject) : null;
 						break;
 					case "change_value":
-						component.changeValue(value) ? component.changeValue(value) : null;
+						component.changeValue(messageObject) ? component.changeValue(messageObject) : null;
 						break;
 				}
 			}

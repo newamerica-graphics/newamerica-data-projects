@@ -4,34 +4,79 @@ import { colors } from "../../helper_functions/colors.js";
 
 
 let variables = {
-	cateogry: {"variable":"cateogry", "displayName":"Category", "format": "string"},
-	primary_technological_tool: {"variable":"primary_technological_tool", "displayName":"Primary Tech Tool", "format": "string", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Video", "Video Conference", "Video Recorder", "Touchscreen Tablet", "Web App/ Website", "Mobile: Text Message", "Mobile: App", "Other"], "customRange":[colors.turquoise.light, colors.turquoise.medium, colors.turquoise.dark, colors.purple.light, colors.purple.dark, colors.blue.light, colors.blue.medium, colors.grey.medium]},
-	start_year: {"variable":"start_year", "displayName":"Year", "format": "year", "color": colors.turquoise.light},
-	program_affiliation: {"variable":"program_affiliation", "displayName":"Program Affiliation", "format": "string", "canSplitCategory":true, "scaleType": "categorical", "customDomain":["The Campaign for Grade-Level Reading", "Ready to Learn", "Neither"], "customRange":[colors.turquoise.light, colors.blue.light, colors.grey.medium]},
-	languages_summarized: {"variable":"languages_summarized", "displayName":"Languages", "format": "string", "canSplitCategory":true, "scaleType": "categorical", "customDomain":["English", "English and Spanish", "English, Spanish, and Other", "English and L3 is multi-lingual"], "customRange": [colors.turquoise.light, colors.turquoise.medium, colors.turquoise.dark, colors.blue.light]},
-	program_type: {"variable":"program_type", "displayName":"Program Type", "format": "string", "canSplitCategory":true, "scaleType": "categorical", "customDomain":["Center/ School Initiative", "Professional Learning", "Home Visiting/ Family Engagement", "Library/ Museum", "Public Media Partnership"], "customRange":[colors.turquoise.light, colors.blue.light, colors.purple.light, colors.turquoise.medium, colors.blue.medium]},
-	number_served: {"variable":"number_served", "displayName":"Number Served", "format": "string", "canSplitCategory":true, "scaleType": "categorical", "customDomain":["0-100", "100-500", "500-1000", "1000-5000", "5000-10000", "10000+", "Not directly serving children"], "customRange":[colors.turquoise.very_light, colors.turquoise.light, colors.turquoise.medium, colors.turquoise.dark, colors.blue.dark, colors.purple.dark, colors.red.light]},
-	age_served: {"variable":"age_served", "displayName":"Ages Served", "format": "string", "canSplitCategory":true, "scaleType": "categorical", "customDomain":["0-3 years", "4-5 years", "6-8 years", "All 3 Age Groups"], "customRange":[colors.turquoise.light, colors.blue.light, colors.purple.light, colors.turquoise.dark]},
-	tech_tool: {"variable":"tech_tool", "displayName":"Other Tech Tools", "format": "string"},
-
-	evidence_of_impact_rating: {"variable":"evidence_of_impact_rating", "displayName":"Evidence of Impact Rating", "format": "string", "canSplitCategory":true, "scaleType": "categorical", "customDomain":["Developing", "Emerging", "Promising", "Strong"], "customRange":[colors.turquoise.light, colors.blue.light, colors.purple.light, colors.turquoise.dark]},
-	location: {"variable":"Location", "displayName":"Location", "format": "string"},
-	program: {"variable":"Program", "displayName":"Program", "format": "string"},
-
+	category: {"variable":"category", "displayName":"Category", "format": "string", "scaleType":"categorical"},
+	state: {"variable":"state", "displayName":"State", "format": "string"},
+	state_id: {"variable":"state_id", "displayName":"State id", "format": "string"},
+	description: {"variable":"description", "displayName":"Description", "format": "string"},
+	date: {"variable":"date", "displayName":"Date", "format": "date"},
+	incidents_total: {"variable":"incidents_total", "displayName":"All Incidents", "format": "number", "scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.turquoise.light, colors.turquoise.dark]},
+	incidents_anti_sharia: {"variable":"incidents_anti_sharia", "displayName":"Anti-Sharia Incidents", "format": "number", "scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.blue.light, colors.blue.dark]},
+	incidents_anti_refugee: {"variable":"incidents_anti_refugee", "displayName":"Anti-Refugee Incidents", "format": "number", "scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.purple.light, colors.purple.dark]},
+	incidents_anti_construction: {"variable":"incidents_anti_construction", "displayName":"Anti-Construction Incidents", "format": "number", "scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.red.light, colors.red.dark]},
+	incidents_elected_official: {"variable":"incidents_elected_official", "displayName":"Elected Official Incidents", "format": "number", "scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.turquoise.light, colors.turquoise.dark]},
+	incidents_other: {"variable":"incidents_other", "displayName":"Other Incidents", "format": "number", "scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.turquoise.light, colors.turquoise.dark]},
 
 }
 
 
 let vizSettingsList = [
-	
+	// {
+	// 	id: "#muslim-community-restrictions__states-map", 
+	// 	vizType: "topo_json_map",
+	// 	primaryDataSheet: "states",
+	// 	filterVars: [ variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_other],
+	// 	geometryType: "states",
+	// 	geometryVar: variables.state_id,
+	// 	stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
+	// 	filterGroupSettings: {"hidden": false},
+	// 	tooltipVars: [ variables.state, variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_other],
+	// 	legendSettings: {"orientation": "vertical-right", "showTitle": true},
+	// 	addSmallStateInsets: true
+	// },
+	{
+		id: "#muslim-community-restrictions__states-map", 
+		vizType: "dashboard",
+		layoutRows: [
+			[
+				{
+					vizType: "topo_json_map",
+					primaryDataSheet: "states",
+					width: "70%",
+					filterVars: [ variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_other],
+					geometryType: "states",
+					geometryVar: variables.state_id,
+					stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
+					filterGroupSettings: {"hidden": false},
+					// tooltipVars: [ variables.state, variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_other],
+					legendSettings: {"orientation": "horizontal-center", "showTitle": true},
+					addSmallStateInsets: true,
+					isMessagePasser: true,
+					interaction: "click",
+				},
+				{
+					vizType: "content_stream",
+					primaryDataSheet: "incidents",
+					defaultText: "Click on a state to view incidents for that state.",
+					width: "30%",
+					isMessagePasser: false,
+					messageHandlerType: "change_value",
+					idVar: variables.state,
+					showCurrFilterVal: true
+				}
+			],
+		]
+	}
 ]
 
 const reactVizSettingsList = [
-	{
-		id: "#muslim-community-restrictions__dot-chart", 
-		vizType: "dot_chart",
-		primaryDataSheet: "incidents",
-	},
+	// {
+	// 	id: "#muslim-community-restrictions__dot-chart", 
+	// 	vizType: "dot_chart",
+	// 	primaryDataSheet: "incidents",
+	// 	filterVar: variables.category,
+	// 	colorVar: variables.category,
+	// 	tooltipVars: [variables.category, variables.state, variables.description, variables.date]
+	// },
 ]
 
 let projectSettings = {

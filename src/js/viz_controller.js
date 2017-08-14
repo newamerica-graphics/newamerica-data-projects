@@ -182,11 +182,12 @@ export const setupProject = (projectSettings) => {
 					
 					hideLoadingGif(viz.id);
 				}
-
-				for (let vizSettings of reactVizSettingsList) {
-					renderReact(vizSettings, d);
-					
-					hideLoadingGif(vizSettings.id);
+				if (reactVizSettingsList) {
+					for (let vizSettings of reactVizSettingsList) {
+						renderReact(vizSettings, d);
+						
+						hideLoadingGif(vizSettings.id);
+					}
 				}
 
 				setDataDownloadLinks(d, projectSettings);
