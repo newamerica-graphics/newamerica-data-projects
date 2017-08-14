@@ -1,5 +1,5 @@
 .content-stream {
-	max-height: 500px;
+	max-height: 415px;
 	overflow-y: scroll;
 	margin-right: 20px;
 
@@ -22,6 +22,8 @@
 
 	&__container {
 		padding-left: 25px;
+		padding-top: 25px;
+		padding-bottom: 25px;
 		max-height: 550px;
 		min-height: 300px;
 		position: relative;
@@ -32,13 +34,30 @@
 	}
 
 	&__title-container {
-		height: 50px;
+		/*height: 50px;*/
 	}
 
 	&__title {
 		font-weight: bold;
 		font-size: 23px;
 		color: palette-get(na-black);
+	}
+
+	&__filter-val {
+		padding-bottom: 10px;
+		&__label, &__value {
+			display: inline-block;
+			font-size: 15px;
+		}
+
+		&__label {
+			color: palette-get(na-black-40);
+		}
+
+		&__value {
+			padding-left: 5px;
+			font-weight: bold;
+		}
 	}
 
 	&__default-text {
