@@ -15,12 +15,6 @@ class DefinitionExplorer extends React.Component {
 
 		this.data = props.data[props.vizSettings.primaryDataSheet];
 		this.getCategoryNest();
-
-		console.log(this.categoryNest);
-
-		this.state = {
-			
-		}
 	}
 
 	getCategoryNest() {
@@ -31,9 +25,6 @@ class DefinitionExplorer extends React.Component {
 			.map(this.data)
 
 		this.categoryTitles = this.categoryData.get("null").sort((a, b) => { return a[titleVar.variable] > b[titleVar.variable]; });
-
-		console.log(this.categoryData)
-		console.log(this.categoryTitles)
 	}
 
 	render() {
@@ -41,7 +32,6 @@ class DefinitionExplorer extends React.Component {
 
 		return (
 			<div className="definition-explorer">
-				<h1 className="definition-explorer__title">{chartTitle}</h1>
 				<div className="definition-explorer__category-container">
 					{this.categoryTitles.map((d) => {
 						let title = d[titleVar.variable],
