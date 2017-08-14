@@ -335,7 +335,7 @@ export class TopoJsonMap {
 		let mousePos = [];
 		mousePos[0] = eventObject.pageX;
 		mousePos[1] = eventObject.pageY;
-		this.dashboardChangeFunc ? this.dashboardChangeFunc(datum.id, this) : null;
+		this.dashboardChangeFunc ? this.dashboardChangeFunc({dataPoint: datum.data, color: d3.select(path).style("fill"), currFilter: this.currFilter}, this) : null;
 		
 		this.tooltip ? this.tooltip.show(datum.data, mousePos, this.filterVars[this.currFilterIndex], d3.select(path).style("fill")) : null;
 	}
@@ -354,8 +354,8 @@ export class TopoJsonMap {
 			this.mouseout(this.currClicked);
 			this.currClicked = null;
 		}
-
-		if (datum && datum[this.currFilterVar] != 0) {
+		console.log(datum, this.currFilterVar)
+		if (datum && datum.data && datum.data[this.currFilterVar] != 0) {
 			this.mouseover(datum, path, eventObject);
 			this.currClicked = path
 		}

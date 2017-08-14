@@ -6,18 +6,18 @@ export class ContentStream {
 	constructor(vizSettings) {
 		Object.assign(this, vizSettings);
 
-		let contentStreamContainer = d3.select(this.id)
+		this.contentStreamContainer = d3.select(this.id)
 			.append("div")
 			.attr("class", "content-stream__container");
 
 		console.log(vizSettings);
-		this.defaultText = contentStreamContainer
+		this.defaultText = this.contentStreamContainer
 			.append("div")
 			.append("h5")
 			.attr("class", "content-stream__default-text")
 			.text(this.defaultText);
 
-		let contentStreamTitleContainer = contentStreamContainer
+		let contentStreamTitleContainer = this.contentStreamContainer
 			.append("div")
 			.attr("class", "content-stream__title-container");
 
@@ -25,7 +25,21 @@ export class ContentStream {
 			.append("div")
 			.attr("class", "content-stream__title");
 
-		this.contentStream = contentStreamContainer
+		if (this.showCurrFilterVal) {
+			let filterValContainer = contentStreamTitleContainer
+				.append("div")
+				.attr("class", "content-stream__filter-val-container");
+
+			this.filterValLabel = filterValContainer
+				.append("h5")
+				.attr("class", "content-stream__filter-val-label");
+
+			this.filterValValue = filterValContainer
+				.append("h5")
+				.attr("class", "content-stream__filter-val-value");
+		}
+
+		this.contentStream = this.contentStreamContainer
 			.append("ul")
 			.attr("class", "content-stream");
 	}
@@ -34,7 +48,7 @@ export class ContentStream {
 		console.log(data);
 		console.log(data[this.primaryDataSheet]);
 		this.dataNest = d3.nest()
-			.key((d) => { return d.state_id; })
+			.key((d) => { return d.state; })
 			.map(data[this.primaryDataSheet]);
 
 		console.log(this.dataNest);
@@ -49,18 +63,33 @@ export class ContentStream {
 		this.defaultText.classed("hidden", false);
 	}
 
-	changeValue(value) {
+	changeValue({color, dataPoint, currFilter}) {
+		let value = dataPoint.state;
 		if (!value) { return; }
 		let valueList = this.dataNest.get(String(value));
 		if (!valueList) { this.hide(); return; }
 		this.defaultText.classed("hidden", true);
 		let sortedList = valueList.sort((a, b) => { return new Date(b.date) - new Date(a.date); });
-
+		console.log(currFilter)
 		if (this.entries) { this.entries.remove(); }
 		if (this.fadeout) { this.fadeout.remove(); }
 
+		if (color) {
+			this.contentStreamContainer
+				.style("border", "2px solid " + color)
+		}
+
 		this.contentStreamTitle
 			.text(sortedList[0].state);
+
+		if (this.currFilterValContainer) {
+			console.log("showing currFilterVal!")
+			this.currFilterValLabel
+				.text(currFilter.displayName)
+
+			this.currFilterValValue
+				.text(dataPoint[currFilter.variable])
+		}
 
 		this.entries = this.contentStream.selectAll("li")
 			.data(sortedList)
