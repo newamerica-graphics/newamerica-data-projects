@@ -20,7 +20,7 @@ export class Table {
 		this.popup = d3.select("body").append("div")
 			.attr("class", "table__popup hidden");
 
-
+		$(window).resize(this.setTableWidth);
 	}
 
 	render(data) {
@@ -42,14 +42,22 @@ export class Table {
         	this.data = this.data.filter((d) => { return this.filterInitialDataFunction(d); });
         }
 
-        if (this.colorScaleColumns) {
-			this.colorScales = [];
+        if (this.colorVals) {
+			this.colorScales = {};
 
-			this.colorScaleColumns.forEach((d) => {
-				this.colorScales[d] = getColorScale(data, this.tableVars[d])
+			this.tableVars.forEach((varObject, i) => {
+				console.log(varObject)
+				if (varObject.colorTable) {
+					this.colorScales[i] = getColorScale(this.data, varObject)
+				} else {
+					this.colorScales[i] = null;
+				}
+				
+				
 			})
 
-			console.log(this.colorScales[5].domain(), this.colorScales[5].range())
+			console.log(this.colorScales)
+			console.log(this.colorScales[5].range())
 		}
 
 		this.table = $(this.id + " #dataTable").DataTable({
@@ -65,17 +73,18 @@ export class Table {
 		    fixedColumns: this.freezeColumn ? this.freezeColumn : {}
 		});
 
-		d3.selectAll("tr")
-			.selectAll("td")
-			.style("color", (d, i, paths) => { 
-				
-				if (this.colorScales[i]) {
-					console.log(d, i , paths[i], $(paths[i]).text(), this.colorScales[i].domain(), this.colorScales[i].range(), this.colorScales[i]($(paths[i]).text())); 
-					return this.colorScales[i]($(paths[i]).text().trim())
-				}
-				return "black"; 
-			})
-			.style("font-weight", (d, i) => { return this.colorScales[i] ? "bold" : "normal"; })
+		if (this.colorVals) {
+			d3.selectAll("tr")
+				.selectAll("td")
+				.style("color", (d, i, paths) => { 
+					if (this.colorScales[i]) {
+						console.log(d, i , paths[i], $(paths[i]).text(), this.colorScales[i].domain(), this.colorScales[i].range(), this.colorScales[i]($(paths[i]).text())); 
+						return this.colorScales[i]($(paths[i]).text().trim())
+					}
+					return "black"; 
+				})
+				.style("font-weight", (d, i) => { return this.colorScales[i] ? "bold" : "normal"; })
+		}
 
 		if (this.colorScaling) {
 			this.table.on('order.dt', this.orderChanged.bind(this));
@@ -83,11 +92,12 @@ export class Table {
 
 		$(this.id + ' input').addClass("search-box__input").attr("placeholder", "Search");
 
-		$(this.id + " #dataTable").wrap( "<div class='block-table'></div>" );
+		// $(this.id + " #dataTable").wrap( "<div class='block-table'></div>" );
 
 		// hide "showing _ of _ results footer if no searching and pagination"
 		this.disableSearching && !this.pagination ? $(this.id + " .dataTables_info").hide() : null;
 		this.attachPopup();
+	
 	}
 
 	getColumnNames() {
@@ -177,6 +187,23 @@ export class Table {
 
 	applyColorScale() {
 		console.log($(".sorting_1"));
+	}
+
+	setTableWidth() {
+		var $contentContainer = $(".content-container");
+		var $body = $("body")
+		var bodyWidth = $body.width();
+
+		console.log("setting table width!")
+		console.log(bodyWidth)
+
+		if ($contentContainer.hasClass("has-sidemenu") && (bodyWidth > 965)) {
+			$("#dataTable_wrapper").width(bodyWidth - 300);
+		} else if ($body.hasClass("template-indepthsection") || $body.hasClass("template-indepthproject")) {
+			$("#dataTable_wrapper").width(bodyWidth - 100);
+		} else {
+			$("#dataTable_wrapper").width(bodyWidth - 50);
+		}
 	}
 }
 

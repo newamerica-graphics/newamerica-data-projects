@@ -26,6 +26,7 @@
     "datatables": "^1.10.12",
     "datatables.net": "^1.10.12",
     "datatables.net-dt": "^1.10.12",
+    "datatables.net-fixedcolumns": "^3.2.2",
     "datatables.net-responsive": "^2.1.0",
     "datatables.net-responsive-dt": "^2.1.0",
     "datatables.net-zf": "^1.10.12",
