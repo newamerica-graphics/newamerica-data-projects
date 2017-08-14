@@ -44,7 +44,7 @@ class DotChart extends React.Component {
         let w = this.getCurrWidth();
 
         this.setState({
-        	currLayout: new HistogramLayout(this.data, w, w/2),
+        	currLayout: new HistogramLayout(this.state.currDataShown, w, w/2),
             width: w,
             height: w/2,
             
@@ -56,9 +56,9 @@ class DotChart extends React.Component {
     }
 
     clicked() {
-    	this.setState({
-    		currLayout: new HistogramLayout(this.data, this.state.width, this.state.height)
-    	})
+    	// this.setState({
+    	// 	currLayout: new HistogramLayout(this.data, this.state.width, this.state.height)
+    	// })
     }
 
     filterChangeFunc(newFilter) {
@@ -97,9 +97,9 @@ class DotChart extends React.Component {
 			<div className="dot-chart" ref="renderingArea" onClick={ () => { return this.clicked() } }>
 				{filterSelector}
 				{ currLayout &&
-					<svg className="dot-chart__container" width="100%" height={currLayout.height}>
+					<svg className="dot-chart__container" width="100%" height={currLayout.height + 50}>
 						
-							<g className="dot-chart__rendering-area" width={width} height={currLayout.height}>
+							<g className="dot-chart__rendering-area" width={width} height={currLayout.height }>
 								
 								{currDataShown.map((d, i) => {
 									let style = currLayout.renderDot(d, i)
@@ -116,8 +116,10 @@ class DotChart extends React.Component {
 
 								})}
 								
-								<Axis {...axisPropsFromTickScale(currLayout.axisScale, 6)} format={(d) => { return d3.timeFormat("%B %Y")(d) }} style={{orient: BOTTOM}}/>
-							</g>
+                            </g>
+                            <g style={{transform: "translateY(" + currLayout.height + "px)"}}>
+                                <Axis {...axisPropsFromTickScale(currLayout.axisScale, 6)} format={(d) => { return d3.timeFormat("%B %Y")(d) }} style={{orient: BOTTOM}}/>
+                            </g>
 						}
 					</svg>
 				}

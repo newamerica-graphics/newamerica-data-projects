@@ -13,7 +13,7 @@ const getRange = (start, end) => { return Array(end - start + 1).fill().map((_, 
 let dotWidth = 5;
 let dotPadding = 1;
 
-class HistogramLayout {
+class CategoryLayout {
 	constructor(data, width, height) {
 		console.log(height, width)
 		console.log("in constructor");
@@ -123,4 +123,4 @@ class HistogramLayout {
 	}
 }
 
-export default HistogramLayout;
+export default CategoryLayout;
