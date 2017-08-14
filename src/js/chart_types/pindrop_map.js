@@ -128,15 +128,25 @@ export class PinDropMap {
 		this.data = data[this.primaryDataSheet];
 		this.varDescriptionData = this.varDescriptionSheet ? data[this.varDescriptionSheet] : null;
 
-		this.setScale();
+		this.setScales();
 
 		this.buildGraph();
 		this.legendSettings ? this.setLegend() : null;
 		this.filterGroup ? this.setFilterGroup() : null;
 	}
 
-	setScale() {
+	setScales() {
 		this.colorScale = getColorScale(this.data, this.filterVars[this.currFilterIndex]);
+		if (this.radiusVar) {
+			this.radiusScale = d3.scaleLinear().range([3.5, 4.5]);
+
+			this.data = this.data.filter((d) => { return !isNaN(d[this.radiusVar.variable])})
+
+			let extents = d3.extent(this.data, (d) => { return d[this.radiusVar.variable]; });
+
+			console.log(extents)
+			this.radiusScale.domain(extents);
+		}
 	}
 
 	buildGraph() {
@@ -162,7 +172,7 @@ export class PinDropMap {
 			.enter().append("circle")
 			.attr("cx", (d) => { return this.projection([d.long, d.lat])[0]; })
 			.attr("cy", (d) => { return this.projection([d.long, d.lat])[1]; })
-			.attr("r", this.pinRadius)
+			.attr("r", (d) => { return this.radiusScale ? this.radiusScale(d[this.radiusVar.variable]) : this.pinRadius; })
 			.attr("fill", (d) => { return this.setFill(d); })
 			.attr("stroke", "white")
 			.attr("stroke-width", "1px")
@@ -208,7 +218,7 @@ export class PinDropMap {
 		this.currFilterIndex = variableIndex;
 		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
 
-		this.setScale();
+		this.setScales();
 		this.legendSettings ? this.setLegend() : null;
 		this.points.attr("fill", (d) => { return this.setFill(d); })
 	}
@@ -313,7 +323,8 @@ export class PinDropMap {
 		this.points
 			.transition()
 		  	.duration(750)
-			.attr("r", this.pinRadius/this.zoomRatio)
+			.attr("r", (d) => { return this.radiusScale ? this.radiusScale(d[this.radiusVar.variable])/this.zoomRatio : this.pinRadius/this.zoomRatio; })
+
 			.attr("stroke-width", 1/this.zoomRatio)
 
 	}

@@ -24,6 +24,8 @@ class DefinitionExplorer extends React.Component {
 			.key((d) => { return d[categoryVar.variable]})
 			.map(this.data)
 
+		console.log(this.categoryData)
+		console.log(this.categoryData.get("null"))
 		this.categoryTitles = this.categoryData.get("null").sort((a, b) => { return a[titleVar.variable] > b[titleVar.variable]; });
 	}
 
@@ -35,10 +37,11 @@ class DefinitionExplorer extends React.Component {
 				<div className="definition-explorer__category-container">
 					{this.categoryTitles.map((d) => {
 						let title = d[titleVar.variable],
-							description = d[descriptionVar.variable];
+							description = d[descriptionVar.variable], 
+							definitions = this.categoryData.get(title) ? this.categoryData.get(title).sort((a, b) => { return a[titleVar.variable] > b[titleVar.variable]; }) : null;
 
 						return (
-							<CategoryBlock key={title} title={title} description={description} categoryDefinitions={this.categoryData.get(title).sort((a, b) => { return a[titleVar.variable] > b[titleVar.variable]; })} />
+							<CategoryBlock key={title} title={title} description={description} categoryDefinitions={definitions} />
 						)
 					})}
 				</div>

@@ -30,13 +30,14 @@ import { PieChart } from "./chart_types/pie_chart.js";
 import { Bipartite } from "./chart_types/bipartite.js";
 import { CategoryBreakdown } from "./chart_types/category_breakdown.js";
 import { ComparativeDotHistogram } from "./chart_types/comparative_dot_histogram.js";
-import { FilterableDotMatrix } from "./layouts/filterable_dot_matrix.js";
+import { FilterableChart } from "./layouts/filterable_chart.js";
 import { BarLineCombo } from "./chart_types/bar_line_combo.js";
 import { PinDropMap } from "./chart_types/pindrop_map.js";
 import { VerticalTimeline } from "./chart_types/vertical_timeline.js";
 
 // import ResourceToolkit from "./react_chart_types/resource_toolkit/ResourceToolkit.js";
 import DefinitionExplorer from "./react_chart_types/definition_explorer/DefinitionExplorer.js";
+import CalloutBox from "./react_chart_types/callout_box/CalloutBox.js";
 
 import { formatValue } from "./helper_functions/format_value.js";
 
@@ -95,8 +96,8 @@ export const setupProject = (projectSettings) => {
 						viz = new FactBox(vizSettingsObject);
 						break;
 
-					case "filterable_dot_matrix":
-						viz = new FilterableDotMatrix(vizSettingsObject);
+					case "filterable_chart":
+						viz = new FilterableChart(vizSettingsObject);
 						break;
 
 					case "financial_opportunity_map":
@@ -182,10 +183,14 @@ export const setupProject = (projectSettings) => {
 					hideLoadingGif(viz.id);
 				}
 
-				for (let vizSettings of reactVizSettingsList) {
-					renderReact(vizSettings, d);
-					
-					hideLoadingGif(vizSettings.id);
+				if (reactVizSettingsList) {
+					for (let vizSettings of reactVizSettingsList) {
+						if($(vizSettings.id).length != 0) {
+							renderReact(vizSettings, d);
+						
+							hideLoadingGif(vizSettings.id);
+						}
+					}
 				}
 
 				setDataDownloadLinks(d, projectSettings);
@@ -205,6 +210,12 @@ export const setupProject = (projectSettings) => {
 			// 		document.getElementById(vizSettings.id.replace("#", ""))
 			// 	)
 			// 	break;
+			case "callout_box":
+				render(
+					<CalloutBox vizSettings={vizSettings} data={data} />,
+					document.getElementById(vizSettings.id.replace("#", ""))
+				)
+				break;
 			case "definition_explorer":
 				render(
 					<DefinitionExplorer vizSettings={vizSettings} data={data} />,

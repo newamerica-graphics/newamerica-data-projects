@@ -66,8 +66,7 @@ table.dataTable {
 		vertical-align: top;
 		text-align: left;
 		line-height: 1.3;
-		border-left: none !important;
-		border-right: $standard-border !important;
+		border-left: 1px solid palette-get(na-black-10) !important;
 		border-top: none !important;
 		border-bottom: none !important;
 
@@ -78,11 +77,11 @@ table.dataTable {
 	}
 
 	tr {
-		background-color: transparent;
+		background-color: white;
 	}
 
 	tbody tr:nth-of-type(odd) {
-      background-color: rgba(44, 47, 53, 0.05) !important;
+      background-color: palette-get(na-black-05) !important;
     }
 
     tbody tr:nth-of-type(even) {
@@ -118,13 +117,15 @@ table.dataTable {
 	}
 }
 
-.dataTables_wrapper {
-	/*overflow-x: scroll;*/
-}
+/*.dataTables_wrapper {
+	.block-table {
+		overflow-x: scroll;
+	}
+}*/
 
 table.dataTable thead th {
-	padding: 10px 25px 10px 10px !important;
-	text-align: left;
+/*	padding: 10px 25px 10px 10px !important;
+*/	text-align: left;
 	border-bottom: none;
 	color: palette-get(na-black);
 }
@@ -135,4 +136,19 @@ table.dataTable thead .sorting_asc {
 }
 table.dataTable thead .sorting_desc {
   background-image: url("../images/sort_descending.png");
+}
+
+table.dataTable.DTFC_Cloned {
+	td:last-child, th:last-child {
+		border-right: 1px solid palette-get(na-black-10) !important;
+	}
+}
+
+.DTFC_LeftBodyWrapper, .DTFC_LeftHeadWrapper {
+	border-right: 2px solid palette-get(na-black-10) !important;
+}
+
+.DTFC_RightBodyWrapper, .DTFC_RightHeadWrapper {
+	border-left: 2px solid palette-get(na-black-10) !important;
+
 }

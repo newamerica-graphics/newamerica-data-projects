@@ -1,7 +1,6 @@
 .slider {
 	&__track {
-		stroke-linecap: round;
-		stroke: palette-get(na-black-10);
+		stroke: palette-get(na-black-30);
 		stroke-opacity: 1;
 		pointer-events: stroke;
 		stroke-width: 1px;
@@ -10,7 +9,7 @@
 
 	&__handle {
 		fill: white;
-		stroke: palette-get(na-black-10);
+		stroke: palette-get(na-black-30);
 		stroke-opacity: 1;
 		stroke-width: 1.25px;
 		cursor: pointer;
@@ -29,35 +28,88 @@
     &__button-container {
         position: relative;
         left: 20px;
-        top: -12px;
+        top: -9px;
         padding-right: 10px;
         display: inline-block;
         width: 75px
+
     }
 
     &__button {
         box-shadow: none !important;
         display: table-cell;
         cursor: normal;
-        font-size: 12px;
-        padding: 0.75em .75em !important;
+        padding: 0px !important;
+        border: none;
 
-        &:not(.selected) {
-            background-color: white;
-            border-top: 1px solid palette-get(na-black-10);
-            border-bottom: 1px solid palette-get(na-black-10);
-            border-left: 1px solid palette-get(na-black-10);
-            color: palette-get(na-black);
-            cursor: pointer;
+        
+        &.show-all {
+            width: 70px;
+
+            text {
+                fill: palette-get(na-black-40) !important;
+                stroke: none !important;
+                font-family: 'Simplon';
+            }
+            .background {
+                fill: white;
+            }
+
+            &.selected {
+                text {
+                    fill: white !important;
+
+                }
+                .background {
+                    fill: palette-get(na-black-40) !important;
+                    stroke: none;
+                }
+            }
 
             &:hover {
-                background-color: palette-get(na-black-10);
+                text {
+                    fill: white !important;
+                }
+                .background {
+                    fill: #a0d6d2;
+                    stroke: none;
+                }
             }
         }
 
-        &:last-child {
-            border-right: 1px solid palette-get(na-black-10);
+        &.play-pause {
+            width: 37px;
+            padding-left: 10px !important;
+            .foreground {
+                stroke: palette-get(na-black-40);
+                fill: none;
+            }
+            &:hover {
+                .foreground {
+                    fill: white;
+                    stroke: none;
+                }
+                .background {
+                    fill: #a0d6d2;
+                    stroke: none;
+                }
+            }
         }
+    }
+
+    &__track-color-bar {
+        pointer-events: none;
+    }
+
+    &__value-display {
+        position: relative;
+        display: inline-block;
+        top: 50%;
+        right: 0px;
+        font-weight: bold;
+        font-size: 26px;
+        transform: translateY(-90%);
+
     }
 }
 
@@ -68,7 +120,8 @@
 
 .mapboxgl-map {
 	.slider-container {
-		width: calc(100% - 300px);
+		width: calc(100% - 100px);
+        max-width: 700px;
         position: absolute;
         right: 10px;
         top: 10px;
@@ -76,13 +129,13 @@
         display: none;
         background-color: white;
         border: 1px solid palette-get(na-black-10);
-        @media (min-width: 700px) {
+        @media (min-width: 600px) {
         	display: block;
         }
 
         & > .has-show-all {
             position: relative;
-        	width: calc(100% - 150px);
+        	width: calc(100% - 225px);
             display: inline-block;
         }
 
@@ -93,6 +146,10 @@
 
         .slider__button-container {
             width: 150px;
+        }
+
+        .axis path {
+            stroke-width: 1px !important;
         }
 	}
 }

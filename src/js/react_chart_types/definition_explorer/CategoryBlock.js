@@ -28,16 +28,18 @@ class CategoryBlock extends React.Component {
 		if (this.state.expanded) {
 			content = <div className="definition-explorer__category__content" key={title}>
 				<p className="definition-explorer__category__description">{description}</p>
-				<ul className="definition-explorer__category__list">
-					{ categoryDefinitions.map((d) => {
-						return (
-							<li className="definition-explorer__definition" key={d.title}>
-								<h5 className="definition-explorer__definition__title">{d.title}</h5>
-								<p className="definition-explorer__definition__text">{d.description}</p>
-							</li>
-						)
-					})}
-				</ul>
+				{ categoryDefinitions &&
+					<ul className="definition-explorer__category__list">
+						{ categoryDefinitions.map((d) => {
+							return (
+								<li className="definition-explorer__definition" key={d.title}>
+									<h5 className="definition-explorer__definition__title">{d.title}</h5>
+									<p className="definition-explorer__definition__text">{d.description}</p>
+								</li>
+							)
+						})}
+					</ul>
+				}
 			</div>;
 
 			classList += " expanded";
