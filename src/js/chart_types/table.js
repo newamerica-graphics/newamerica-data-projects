@@ -46,10 +46,11 @@ export class Table {
 			this.colorScales = [];
 
 			this.colorScaleColumns.forEach((d) => {
-				this.colorScales[d] = getColorScale(data, this.tableVars[d])
+				console.log(d)
+				this.colorScales[+d] = getColorScale(data, this.tableVars[d])
 			})
 
-			console.log(this.colorScales[5].domain(), this.colorScales[5].range())
+			console.log(this.colorScales[9].domain(), this.colorScales[9].range())
 		}
 
 		this.table = $(this.id + " #dataTable").DataTable({
