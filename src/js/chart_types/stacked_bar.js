@@ -8,27 +8,45 @@ import { Tooltip } from "../components/tooltip.js";
 import { Trendline } from "../components/trendline.js";
 
 import { formatValue } from "../helper_functions/format_value.js";
+import { getColorScale } from "../helper_functions/get_color_scale.js";
+import { infoSVGPath } from "../utilities/icons.js";
+
+const range = (start, end) => [...Array(end - start + 1)].map((_, i) => start + i);
 
 export class StackedBar {
 	constructor(vizSettings, imageFolderId) {
-		let {id, primaryDataSheet, xVar, filterVars, legendSettings, xAxisLabelInterval, labelValues, showYAxis, tooltipTitleVar, eventSettings, yAxisLabelText, filterInitialDataBy} = vizSettings;
-		this.id = id;
-		this.primaryDataSheet = primaryDataSheet;
-		this.filterVars = filterVars;
-		this.tooltipTitleVar = tooltipTitleVar;
-		this.xVar = xVar;
-		this.legendSettings = legendSettings;
-		this.xAxisLabelInterval = xAxisLabelInterval;
-		this.labelValues = labelValues;
-		this.showYAxis = showYAxis;
+		Object.assign(this, vizSettings);
 		this.margin = {top: 20, right: 20};
 		this.margin.left = this.showYAxis ? 70 : 20;
-		this.margin.bottom = this.filterVars.length == 1 ? 50 : 30;
-		this.yAxisLabelText = yAxisLabelText;
-		this.filterInitialDataBy = filterInitialDataBy;
+		this.margin.bottom = 30;
 
-		this.svg = d3.select(id).append("svg").attr("class", "bar-chart");
+		if (this.infoText) {
+			this.infoTextContainer = d3.select(this.id).append("div")
+				.attr("class", "bar-chart__info-text")
 
+			this.infoTextContainer.append("svg")
+				.attr("class", "bar-chart__info-text__icon")
+				.attr("viewBox", "0 0 25 25")
+				.attr("width", "16px")
+				.attr("height", "16px")
+				.on("mouseover", () => { this.showVarDescription(d3.event); })
+				.on("mouseout", () => { this.varDescriptionPopup.classed("hidden", true); })
+				.append("g")
+				.attr("fill", this.infoText.color)
+				.append("path")
+				.attr("d", infoSVGPath);
+
+			this.infoTextContainer.append("h5")
+				.attr("class", "bar-chart__info-text__text")
+				.text(this.infoText.text)
+
+
+		}
+
+		this.svg = d3.select(this.id).append("svg").attr("class", "bar-chart");
+
+
+		this.initializeAxes();
 		this.renderingArea = this.svg.append("g");
 
 		this.xScale = d3.scaleBand()
@@ -38,27 +56,10 @@ export class StackedBar {
 
 		this.setDimensions();
 
-		let colorVals = [],
-			colorLabels = [];
-		
-		for (let filterVar of filterVars) {
-			colorVals.push(filterVar.color);
-			colorLabels.push(filterVar.displayName);
-		}
+		this.legendSettings.id = this.id;
+		this.legendSettings.markerSettings = { shape:"rect", size:10 };
 
-		this.colorScale = d3.scaleOrdinal()
-			.range(colorVals);
-
-		if (filterVars.length > 1) {
-			this.legendSettings.id = id;
-			this.legendSettings.markerSettings = { shape:"rect", size:10 };
-			this.legendSettings.customLabels = colorLabels;
-
-			this.legend = new Legend(this.legendSettings);
-		}
-
-		let tooltipSettings = { "id":id, "tooltipVars":[tooltipTitleVar].concat(filterVars) }
-		this.tooltip = new Tooltip(tooltipSettings);
+		this.legend = new Legend(this.legendSettings);
 	}
 
 	setDimensions() {
@@ -89,54 +90,66 @@ export class StackedBar {
 		if (this.filterInitialDataBy) {
             this.data = this.data.filter((d) => { return d[this.filterInitialDataBy.field] == this.filterInitialDataBy.value; })
         }
-
-
-		console.log(this.data);
 	    
 		this.setScaleDomains();
+		this.setColorScale();
 
+		this.setAxes();
 		this.renderBars();
-		this.renderAxes();
 
-		if (this.filterVars.length > 1) {
-			this.legendSettings.scaleType = "categorical";
-			this.legendSettings.colorScale = this.colorScale;
-			this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
-
-			this.legend.render(this.legendSettings);
+		let tooltipSettings = { "id":this.id, "tooltipVars":this.setTooltipVars() };
+		this.tooltip = new Tooltip(tooltipSettings);
+		if (this.tooltipColorVals) {
+			this.tooltip.setColorScale(this.colorScale);
 		}
+
+		this.legendSettings.scaleType = "categorical";
+		this.legendSettings.colorScale = this.colorScale;
+		this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
+
+		this.legend.render(this.legendSettings);
+	}
+
+	setTooltipVars() {
+		let title = [{variable: "year", displayName:"Year", format:"year"}]
+		let categoryList = this.colorScale.domain().map((d) => {
+			return {variable: d, displayName: d, format: "number"};
+		});
+
+		return [...title, ...categoryList];
 	}
 
 	setScaleDomains() {
-		let keyList = new Set();
+		let yearList = [];
 
-		let maxVal = 0;
+		let maxTotalYearVal = 0;
 
-		this.nestedVals = d3.nest()
-			.key((d) => { keyList.add(d.year); return d.year; })
-			.sortKeys(d3.ascending)
-			.rollup((v) => {
-				let retVal = [];
-				let total = 0;
-				let i = 0;
-				for (let filter of this.filterVars) {
-					let localSum = d3.sum(v, (d) => { return Number(d[filter.variable]); });
-					retVal.push(localSum);
-					total += localSum;
+		this.nestedVals = this.dataNestFunction(this.data, this.filterVar);
 
-					i++;
-				}
-				maxVal = Math.max(maxVal, total);
-				return retVal;
-			})
-			.entries(this.data);
+		this.nestedVals.forEach((yearObject) => {
+			yearList.push(yearObject.key);
+			let valArray = yearObject.values || yearObject.value;
+			let localSum = d3.sum(valArray, (d) => { return d.value; })
+			maxTotalYearVal = Math.max(maxTotalYearVal, localSum);
 
-		this.yScale.domain([0, maxVal]);
-		this.xScale.domain(Array.from(keyList).sort());
+		})
+		
+		let yearExtents = d3.extent(yearList);
+		
+		this.yScale.domain([0, maxTotalYearVal]);
+		this.xScale.domain(range(+yearExtents[0], +yearExtents[1]));
 
-		this.colorScale
-			.domain(this.xScale.domain());
+	}
 
+	setColorScale() {
+		if (this.customColorScale) {
+			this.colorScale = d3.scaleOrdinal()
+				.domain(this.customColorScale.domain)
+				.range(this.customColorScale.range);
+		} else {
+			this.colorScale = getColorScale(this.data, this.filterVar);
+		}
+		
 	}
 
 	renderBars() {
@@ -146,18 +159,18 @@ export class StackedBar {
 		  	.on("mouseover", (d, index, paths) => {  return this.mouseover(d, paths[index], d3.event); })
 		  	.on("mouseout", (d, index, paths) => {  return this.mouseout(paths[index]); });
 
-		let currCumulativeY = 0;
 		this.bars = this.barGroups.selectAll("rect")
-			.data((d) => { console.log(d); return d.value; })
+			.data((d) => { return d.values || d.value; })
 		  .enter().append("rect")
 		  	.attr("x", 0)
-			.style("fill", (d, i) => { return this.filterVars[i].color; })
-			.style("fill-opacity", .8);
+		  	.attr("stroke", "white")
+			.style("fill", (d) => { return this.colorScale(d.key); })
+			.style("fill-opacity", 1);
 
 		this.setBarHeights();
 	}
 
-	renderAxes() {
+	initializeAxes() {
 		this.yAxis = this.svg.append("g")
             .attr("class", "axis axis--y");
 
@@ -172,8 +185,7 @@ export class StackedBar {
         this.xAxis = this.svg.append("g")
             .attr("class", "axis axis--x");
 
-        this.setAxes();
-    }
+	}
 
 	calculateTicks() {
 		let currInterval;
@@ -189,23 +201,27 @@ export class StackedBar {
 
 	setBarHeights() {
 		this.barGroups
-			.attr("transform", (d) => { console.log(d); return "translate(" + this.xScale(d.key) + ")"})
+			.attr("transform", (d) => { return "translate(" + this.xScale(d.key) + ")"})
 		
 		let currCumulativeY = 0;
 		this.bars
-			.attr("y", (d, i) => { 
-				let barHeight = this.h - this.yScale(d);
+			.attr("y", (d, i) => {
+				let barHeight = this.h - this.yScale(d.value);
 				currCumulativeY = i == 0 ? this.h - barHeight : currCumulativeY - barHeight;
 				return currCumulativeY; 
 			})
-			.attr("height", (d) => { return this.h - this.yScale(d); })
+			.attr("height", (d) => { return this.h - this.yScale(d.value); })
 			.attr("width", this.xScale.bandwidth());
 	}
 
 	setAxes() {
 		this.yAxis
 			.attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
-            .call(d3.axisLeft(this.yScale).ticks(5));
+            .call(d3.axisLeft(this.yScale)
+            	.ticks(5)
+            	.tickSize(-this.w, 0, 0)
+                .tickSizeOuter(0)
+                .tickPadding(10));
 
         this.yAxisLabel
             .attr("x", -this.h/2)
@@ -247,26 +263,26 @@ export class StackedBar {
 
 	mouseover(datum, path, eventObject) {
 		d3.select(path).selectAll("rect")
-			.style("fill-opacity", 1);
+			.style("fill-opacity", .7);
 		
 		let mousePos = [];
 		mousePos[0] = eventObject.pageX;
 		mousePos[1] = eventObject.pageY;
 
 		let tooltipData = {};
-		tooltipData[this.tooltipTitleVar.variable] = datum.key;
-		let i = 0;
-		for (let filter of this.filterVars) {
-			tooltipData[filter.variable] = datum.value[i];
-			i++;
-		}
+		tooltipData.year = datum.key;
+		let valArray = datum.values || datum.value;
 
+		valArray.forEach((d) => {
+			tooltipData[d.key] = d.value;
+		})
+			
 		this.tooltip.show(tooltipData, mousePos);
 	}
 
 	mouseout(path) {
 		d3.select(path).selectAll("rect")
-			.style("fill-opacity", .8);
+			.style("fill-opacity", 1);
 
 	    this.tooltip.hide();
 	}
@@ -274,10 +290,17 @@ export class StackedBar {
 	changeVariableValsShown(valsShown) {
 		this.bars
 			.style("fill", (d, i) => {
-	   			if (valsShown.indexOf(i) > -1) {
-	   				return this.filterVars[i].color;
+				let binIndex = this.colorScale.domain().indexOf(d.key);
+	   			if (valsShown.indexOf(binIndex) > -1) {
+	   				return this.colorScale(d.key);
 	   			}
 		   		return colors.grey.light;
 		    });
+	}
+
+	removeChart() {
+		this.svg.remove();
+		this.legend.removeComponent();
+		this.infoTextContainer ? this.infoTextContainer.remove() : null;
 	}
 }
