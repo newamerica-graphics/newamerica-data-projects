@@ -9,6 +9,7 @@ import { Trendline } from "../components/trendline.js";
 
 import { formatValue } from "../helper_functions/format_value.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
+import { infoSVGPath } from "../utilities/icons.js";
 
 const range = (start, end) => [...Array(end - start + 1)].map((_, i) => start + i);
 
@@ -19,8 +20,31 @@ export class StackedBar {
 		this.margin.left = this.showYAxis ? 70 : 20;
 		this.margin.bottom = 30;
 
+		if (this.infoText) {
+			this.infoTextContainer = d3.select(this.id).append("div")
+				.attr("class", "bar-chart__info-text")
+
+			this.infoTextContainer.append("svg")
+				.attr("class", "bar-chart__info-text__icon")
+				.attr("viewBox", "0 0 25 25")
+				.attr("width", "16px")
+				.attr("height", "16px")
+				.on("mouseover", () => { this.showVarDescription(d3.event); })
+				.on("mouseout", () => { this.varDescriptionPopup.classed("hidden", true); })
+				.append("g")
+				.attr("fill", this.infoText.color)
+				.append("path")
+				.attr("d", infoSVGPath);
+
+			this.infoTextContainer.append("h5")
+				.attr("class", "bar-chart__info-text__text")
+				.text(this.infoText.text)
+
+
+		}
 
 		this.svg = d3.select(this.id).append("svg").attr("class", "bar-chart");
+
 
 		this.initializeAxes();
 		this.renderingArea = this.svg.append("g");
@@ -277,5 +301,6 @@ export class StackedBar {
 	removeChart() {
 		this.svg.remove();
 		this.legend.removeComponent();
+		this.infoTextContainer ? this.infoTextContainer.remove() : null;
 	}
 }

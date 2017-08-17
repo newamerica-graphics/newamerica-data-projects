@@ -11,7 +11,6 @@ import SimpleMap from './SimpleMap.js';
 const d3 = require("d3");
 
 const CalloutBoxDataElement = ({settings, data}) => {
-	console.log(settings, data)
 	switch (settings.type) {
 		case 'fact-box-list':
 			return <FactBoxList variables={settings.factBoxVars} format={settings.format} data={data} />

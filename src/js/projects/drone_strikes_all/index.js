@@ -151,7 +151,7 @@ let vizSettingsList = [
 		xVar: variables.year,
 		customColorScale: {
 			domain: [ variables.militants_avg.displayName, variables.civilians_avg.displayName, variables.unknown_avg.displayName],
-			range: [ colors.turquoise.medium, colors.blue.medium, colors.grey.medium ]
+			range: [ colors.turquoise.light, colors.blue.light, colors.grey.medium ]
 		},
 		dataNestFunction: casualtyTypeNestDataFunction,
 		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
@@ -306,7 +306,6 @@ let vizSettingsList = [
 		    },
 		]
 	},
-
 	{
 		id: "#drone-strikes__yemen__by-casualty-type", 
 		vizType: "stacked_bar",
@@ -322,6 +321,7 @@ let vizSettingsList = [
 		yAxisLabelText: "Casualties",
 		showYAxis: true,
 		tooltipColorVals: true,
+		infoText: { "location": "top-left", "color": colors.grey.medium, "text": "This is the text explaining the change in reporting strikes during the Trump administration"}
 	},
 	{
 		id: "#drone-strikes__yemen__by-president", 
@@ -343,7 +343,8 @@ let vizSettingsList = [
 				xAxisLabelInterval: {"small": 5, "medium": 2, "large": 1},
 				yAxisLabelText: "Strikes",
 				showYAxis: true,
-				tooltipColorVals: true
+				tooltipColorVals: true,
+				infoText: { "location": "top-left", "color": colors.red.dark, "text": "This is the text explaining the change in reporting strikes during the Trump administration"}
 			},
 			{
 				xVar: variables.year,
@@ -376,7 +377,8 @@ let vizSettingsList = [
 				xAxisLabelInterval: {"small": 5, "medium": 2, "large": 1},
 				yAxisLabelText: "Strikes",
 				showYAxis: true,
-				tooltipColorVals: true
+				tooltipColorVals: true,
+				infoText: { "location": "top-left", "color": colors.grey.medium, "text": "This is the text explaining the change in reporting strikes during the Trump administration"}
 			},
 			{
 				xVar: variables.year,
@@ -534,7 +536,7 @@ let vizSettingsList = [
 		xVar: variables.year,
 		customColorScale: {
 			domain: [ variables.militants_avg.displayName, variables.civilians_avg.displayName, variables.unknown_avg.displayName],
-			range: [ colors.turquoise.medium, colors.blue.medium, colors.grey.medium ]
+			range: [ colors.turquoise.light, colors.blue.light, colors.grey.medium ]
 		},
 		dataNestFunction: casualtyTypeNestDataFunction,
 		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
@@ -763,9 +765,9 @@ let reactVizSettingsList = [
 						format:"horizontal",
 						factBoxVars: [
 							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:currDate.setMonth(currDate.getMonth() - 6)} },
-							{ label: "Total strikes",type: "count" },
-							{ label: "Civilian casualties",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
-							{ label: "Total casualties",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
+							{ label: "Total strikes (Overall)",type: "count" },
+							{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
+							{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
 						]
 					},
 				]
@@ -783,8 +785,12 @@ let reactVizSettingsList = [
 						type:"fact-box-list",
 						format:"vertical",
 						factBoxVars: [
-							{ label: "Date", type: "value", variable: variables.date, query: {varName:"date", operation:"max"} },
-							{ label: "Casualties", type: "value", variable: variables.total_lowhigh, query: {varName:"date", operation:"max"} },
+							{ label: "Date", type: "value", variable: variables.date, format: "date", query: {varName:"date", operation:"max"} },
+							{ label: "Total Casualties", type: "value", variable: variables.total_lowhigh, query: {varName:"date", operation:"max"}, subVars: [
+								{ label: "Militants", type: "value", variable: variables.militants_lowhigh, query: {varName:"date", operation:"max"} },
+								{ label: "Civilians", type: "value", variable: variables.civilians_lowhigh, query: {varName:"date", operation:"max"} },
+								{ label: "Unknown", type: "value", variable: variables.unknown_lowhigh, query: {varName:"date", operation:"max"} }
+							]},
 							{ label: "Target organization", type: "value", variable: variables.target_organization_name, query: {varName:"date", operation:"max"} }
 						],
 					},
@@ -810,9 +816,9 @@ let reactVizSettingsList = [
 						format:"horizontal",
 						factBoxVars: [
 							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:currDate.setMonth(currDate.getMonth() - 6)} },
-							{ label: "Total strikes",type: "count" },
-							{ label: "Civilian casualties",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
-							{ label: "Total casualties",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
+							{ label: "Total strikes (Overall)",type: "count" },
+							{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
+							{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
 						]
 					},
 				]
@@ -830,8 +836,13 @@ let reactVizSettingsList = [
 						type:"fact-box-list",
 						format:"vertical",
 						factBoxVars: [
-							{ label: "Date", type: "value", variable: variables.date, query: {varName:"date", operation:"max"} },
-							{ label: "Casualties", type: "value", variable: variables.total_lowhigh, query: {varName:"date", operation:"max"} },
+							{ label: "Date", type: "value", variable: variables.date, format: "date", query: {varName:"date", operation:"max"} },
+							{ label: "Strike type", type: "value", variable: variables.strike_type, query: {varName:"date", operation:"max"} },						
+							{ label: "Total casualties", type: "value", variable: variables.total_lowhigh, query: {varName:"date", operation:"max"}, subVars: [
+								{ label: "Militants", type: "value", variable: variables.militants_lowhigh, query: {varName:"date", operation:"max"} },
+								{ label: "Civilians", type: "value", variable: variables.civilians_lowhigh, query: {varName:"date", operation:"max"} },
+								{ label: "Unknown", type: "value", variable: variables.unknown_lowhigh, query: {varName:"date", operation:"max"} }
+							]},
 							{ label: "Target organization", type: "value", variable: variables.target_organization_name, query: {varName:"date", operation:"max"} }
 						],
 					},
@@ -857,9 +868,9 @@ let reactVizSettingsList = [
 						format:"horizontal",
 						factBoxVars: [
 							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:currDate.setMonth(currDate.getMonth() - 6)} },
-							{ label: "Total strikes",type: "count" },
-							{ label: "Civilian casualties",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
-							{ label: "Total casualties",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
+							{ label: "Total strikes (Overall)",type: "count" },
+							{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
+							{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
 						]
 					},
 				]
@@ -868,11 +879,22 @@ let reactVizSettingsList = [
 				title: "Most Recent Strike",
 				dataElements: [
 					{
+						type:"simple-map",
+						country: "somalia",
+						latVar: { type: "value", variable: variables.geo_lat, query: {varName:"date", operation:"max"} },
+						lngVar: { type: "value", variable: variables.geo_lon, query: {varName:"date", operation:"max"} }
+					},
+					{
 						type:"fact-box-list",
 						format:"vertical",
 						factBoxVars: [
-							{ label: "Date", type: "value", variable: variables.date, query: {varName:"date", operation:"max"} },
-							{ label: "Casualties", type: "value", variable: variables.total_lowhigh, query: {varName:"date", operation:"max"} },
+							{ label: "Date", type: "value", variable: variables.date, format: "date", query: {varName:"date", operation:"max"} },
+							{ label: "Strike type", type: "value", variable: variables.strike_type, query: {varName:"date", operation:"max"} },							
+							{ label: "Total casualties", type: "value", variable: variables.total_lowhigh, query: {varName:"date", operation:"max"}, subVars: [
+								{ label: "Militants", type: "value", variable: variables.militants_lowhigh, query: {varName:"date", operation:"max"} },
+								{ label: "Civilians", type: "value", variable: variables.civilians_lowhigh, query: {varName:"date", operation:"max"} },
+								{ label: "Unknown", type: "value", variable: variables.unknown_lowhigh, query: {varName:"date", operation:"max"} }
+							]},
 							{ label: "Target organization", type: "value", variable: variables.target_organization_name, query: {varName:"date", operation:"max"} }
 						],
 					},
@@ -881,6 +903,29 @@ let reactVizSettingsList = [
 						paragraphVar: { label: "Details", type: "value", variable: variables.target_description, query: {varName:"date", operation:"max"} },
 							
 					}
+				]
+			}
+		]
+	},
+	{
+		id: "#drone-strikes__all__call-out-data", 
+		vizType: "callout_box",
+		primaryDataSheet: "strike_data",
+		secondaryDataSheets: ["yemen_strikes", "somalia_strikes"],
+		sections:[
+			{
+				title: "Live Statistics",
+				dataElements: [
+					{
+						type:"fact-box-list",
+						format:"horizontal",
+						factBoxVars: [
+							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:currDate.setMonth(currDate.getMonth() - 6)} },
+							{ label: "Total strikes (Overall)", type: "count" },
+							{ label: "Civilian casualties (Overall)", type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
+							{ label: "Total casualties (Overall)", type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
+						]
+					},
 				]
 			}
 		]
