@@ -15,23 +15,12 @@ let dataPointWidth = 7;
 
 export class BarChart {
 	constructor(vizSettings, imageFolderId) {
-		let {id, primaryDataSheet, groupingVar, filterVars, legendSettings, xAxisLabelInterval, labelValues, showYAxis, tooltipVars, eventSettings, hasTrendline, dataNest} = vizSettings;
-		this.id = id;
-		this.primaryDataSheet = primaryDataSheet;
-		this.filterVars = filterVars;
-		this.tooltipVars = tooltipVars;
-		this.eventSettings = eventSettings;
-		this.groupingVar = groupingVar;
-		this.legendSettings = legendSettings;
-		this.xAxisLabelInterval = xAxisLabelInterval;
-		this.labelValues = labelValues;
-		this.showYAxis = showYAxis;
+		Object.assign(this. vizSettings);
 		this.margin = {top: 20, right: 20};
 		this.margin.left = this.showYAxis ? 85 : 20;
 		this.margin.bottom = this.filterVars.length == 1 ? 50 : 30;
-		this.dataNest = dataNest;
 
-		this.svg = d3.select(id).append("svg").attr("class", "bar-chart");
+		this.svg = d3.select(this.id).append("svg").attr("class", "bar-chart");
 
 		this.renderingArea = this.svg.append("g");
 
@@ -60,7 +49,7 @@ export class BarChart {
 		this.setXYScaleDomains;
 
 		if (this.filterVars.length > 1) {
-			this.legendSettings.id = id;
+			this.legendSettings.id = this.id;
 			this.legendSettings.markerSettings = { shape:"rect", size:10 };
 			this.legendSettings.customLabels = colorLabels;
 
@@ -82,8 +71,8 @@ export class BarChart {
 			this.tooltip = new Tooltip(tooltipSettings);
 		}
 
-		if (hasTrendline) {
-			this.trendline = new Trendline(this.renderingArea, filterVars);
+		if (this.hasTrendline) {
+			this.trendline = new Trendline(this.renderingArea, this.filterVars);
 		}
 	}
 
