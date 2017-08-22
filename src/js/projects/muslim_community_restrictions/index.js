@@ -75,9 +75,19 @@ const reactVizSettingsList = [
 		id: "#muslim-community-restrictions__dot-chart", 
 		vizType: "dot_chart",
 		primaryDataSheet: "incidents",
-		filterVar: variables.category,
 		colorVar: variables.category,
-		tooltipVars: [variables.category, variables.state, variables.description, variables.date]
+		tooltipVars: [variables.state, variables.category, variables.date, variables.description],
+		layouts: [
+			{
+				label: "Incidents Over Time",
+				layout: "histogram"
+			},
+			{
+				label: "Incidents by State",
+				layout: "category"
+			}
+		]
+
 	},
 ]
 

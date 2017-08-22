@@ -7,33 +7,39 @@ import { getColorScale } from "../../helper_functions/get_color_scale.js";
 
 import SelectBox from './SelectBox.js';
 import Tooltip from './Tooltip.js';
+import LayoutSelector from './LayoutSelector.js';
+import LegendCategorical from './LegendCategorical.js';
 import ScatterLayout from './ScatterLayout.js';
 import HistogramLayout from './HistogramLayout.js';
-import {Motion} from 'react-motion';
-import {Axis, axisPropsFromTickScale, BOTTOM} from 'react-d3-axis';
+import CategoryLayout from './CategoryLayout.js';
+
+import { Motion, spring } from 'react-motion';
+import { Axis, axisPropsFromTickScale, BOTTOM } from 'react-d3-axis';
 
 const d3 = require("d3");
 
 class DotChart extends React.Component {
 	constructor(props) {
 		super(props);
-		console.log(props);
+        const {data, vizSettings} = props
 
-		this.data = props.data[props.vizSettings.primaryDataSheet];
+		this.data = data[vizSettings.primaryDataSheet];
 
 		this.resizeFunc = this.resize.bind(this);
 
-		if (props.vizSettings.colorVar) {
+		if (vizSettings.colorVar) {
 			this.colorScale = getColorScale(this.data, props.vizSettings.colorVar)
 		}
 
 		this.state = {
+            currLayoutSettings: vizSettings.layouts[0],
 			currLayout: null,
 			currDataShown: this.data,
 			width: 0,
             height: 0,
             currHovered: null,
             tooltipSettings: null,
+            valsShown:[]
 		}
 
 	}
@@ -44,10 +50,9 @@ class DotChart extends React.Component {
         let w = this.getCurrWidth();
 
         this.setState({
-        	currLayout: new HistogramLayout(this.state.currDataShown, w, w/2),
+            currLayout: this.getCurrLayout(this.state.currDataShown, this.state.currLayoutSettings, w),
             width: w,
             height: w/2,
-            
         })
     }
 
@@ -55,17 +60,78 @@ class DotChart extends React.Component {
         return $(this.refs.renderingArea).width();
     }
 
-    clicked() {
-    	// this.setState({
-    	// 	currLayout: new HistogramLayout(this.data, this.state.width, this.state.height)
-    	// })
+    getCurrLayout(data, layoutSettings, w) {
+        switch(layoutSettings.layout) {
+            case "histogram":
+                return new HistogramLayout(data, w, w/2)
+
+            case "category":
+                return new CategoryLayout(data, w, w/2, {variable: "state"})
+        }
     }
 
-    filterChangeFunc(newFilter) {
-    	let varName = this.props.vizSettings.filterVar.variable
-    	this.setState({
-    		currDataShown: this.data.filter((d) => { return d[varName] == newFilter })
-    	})
+    getCurrAxis() {
+        const {currLayoutSettings, currDataShown} = this.state;
+
+        switch(currLayoutSettings.layout) {
+            case "histogram":
+                return this.getHistogramAxis()
+
+            case "category":
+                return this.getCategoryAxis()
+        }
+    }
+
+    getHistogramAxis() {
+        const { currLayout } = this.state;
+        return (
+            <Motion style={{currTransform: spring(currLayout.height)}} >
+                {({currTransform}) => {
+                    return (
+                        <g style={{transform: "translateY(" + currTransform + "px)"}}>
+                            <Axis {...axisPropsFromTickScale(currLayout.axisScale, 6)} format={(d) => { return d3.timeFormat("%B %Y")(d) }} style={{orient: BOTTOM}} />
+                        </g>
+                    )
+                }}
+            </Motion>
+        )
+    }
+
+    getCategoryAxis() {
+        const { currLayout } = this.state;
+        return (
+            <g>
+                {currLayout.yScale.domain().map((d) => {
+                    return (
+                        <Motion style={{y:spring(currLayout.yScale(d))}} key={d}>
+                            {({y}) => {
+                                return <text x="0" y={y}>{d}</text>;
+                            }}
+                        </Motion>
+                    )
+                })}
+                
+            </g>
+        )
+    }
+
+    toggleChartVals(newVals) {
+        let newData;
+        
+        let varName = this.props.vizSettings.colorVar.variable
+        newData = this.data.filter((d) => { return newVals.indexOf(d[varName]) > -1 })
+        
+        this.setState({
+            currDataShown: newData,
+            currLayout: this.getCurrLayout(newData, this.state.currLayoutSettings, this.state.width),
+        })
+    }
+
+    changeLayout(newLayoutSettings) {
+        this.setState({
+            currLayoutSettings: newLayoutSettings,
+            currLayout: this.getCurrLayout(this.state.currDataShown, newLayoutSettings, this.state.width)
+        })
     }
 
     setFill(d) {
@@ -83,51 +149,42 @@ class DotChart extends React.Component {
     }
 
 	render() {
-		const { currLayout, currDataShown, width, height } = this.state;
-		const {filterVar} = this.props.vizSettings;
+		const { valsShown, currLayout, currLayoutSettings, currDataShown, width, height } = this.state;
 
-		let filterSelector;
+        let axis;
+        console.log(currLayout);
 
-		let filterVals = d3.map(this.data, (d) => {return d[filterVar.variable];}).keys()
-		console.log(filterVals)
-		filterSelector = <SelectBox values={filterVals} filterChangeFunc={this.filterChangeFunc.bind(this)} />
-
-
+        if (currLayout) {
+            axis = this.getCurrAxis();
+        }
 		return (
-			<div className="dot-chart" ref="renderingArea" onClick={ () => { return this.clicked() } }>
-				{filterSelector}
+			<div className="dot-chart" ref="renderingArea">
+                <LayoutSelector layouts={this.props.vizSettings.layouts} currSelected={currLayoutSettings} layoutChangeFunc={this.changeLayout.bind(this)} />
 				{ currLayout &&
 					<svg className="dot-chart__container" width="100%" height={currLayout.height + 50}>
-						
-							<g className="dot-chart__rendering-area" width={width} height={currLayout.height }>
-								
-								{currDataShown.map((d, i) => {
-									let style = currLayout.renderDot(d, i)
-									let fillColor = this.setFill(d),
-										stroke = this.setStroke(d)
+						<g className="dot-chart__rendering-area" width={width} height={currLayout.height }>
+							{currDataShown.map((d) => {
+                                if (!d.id) return null;
+								let style = currLayout.renderDot(d)
+								let fillColor = this.setFill(d),
+									stroke = this.setStroke(d)
 
-									return (
-										<Motion style={style} key={i}>
-											{({x, y, r}) => {
-												return <circle className="dot-chart__dot" cx={x} cy={y} r={r} fill={fillColor} stroke={stroke} strokeWidth="2px" onMouseOver={() => { return this.mouseover(d, x, y); }} onMouseOut={() => { return this.mouseout(); }}/>;
-											}}
-										</Motion>
-									)
-
-								})}
-								
-                            </g>
-                            <g style={{transform: "translateY(" + currLayout.height + "px)"}}>
-                                <Axis {...axisPropsFromTickScale(currLayout.axisScale, 6)} format={(d) => { return d3.timeFormat("%B %Y")(d) }} style={{orient: BOTTOM}}/>
-                            </g>
-						}
+								return (
+									<Motion style={style} key={d.id}>
+										{({x, y, r}) => {
+											return <circle className="dot-chart__dot" cx={x} cy={y} r={r} fill={fillColor} stroke={stroke} strokeWidth="2px" onMouseOver={() => { return this.mouseover(d, x, y); }} onMouseOut={() => { return this.mouseout(); }}/>;
+										}}
+									</Motion>
+								)
+							})}
+                        </g>
+                        {axis}
 					</svg>
 				}
+                <LegendCategorical valsShown={valsShown} toggleChartVals={this.toggleChartVals.bind(this)} colorScale={this.colorScale} />
 				<Tooltip settings={this.state.tooltipSettings} />
 			</div>
 		)
-		
-
 	}
 
 	resize() {

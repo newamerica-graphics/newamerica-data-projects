@@ -12,114 +12,65 @@ const getRange = (start, end) => { return Array(end - start + 1).fill().map((_, 
 
 let dotWidth = 5;
 let dotPadding = 1;
+let leftMargin = 120;
 
 class CategoryLayout {
-	constructor(data, width, height) {
+	constructor(data, width, height, categoryVar) {
 		console.log(height, width)
 		console.log("in constructor");
 
+		this.categoryVar = categoryVar;
 		this.width = width;
 		this.data = data;
 
-		let extents = d3.extent(this.data, (d) => {
-			if (d.date) {
-				return new Date(d.date);
-			}
-		})
-
+		this.yScale = d3.scaleBand();
 		this.xScale = d3.scaleLinear();
-		this.binScale = d3.scaleQuantize().domain(extents)
-		this.yScale = d3.scaleLinear();
-		this.axisScale = d3.scaleLinear();
-		
-		this.setDataColumns();
 
-	}
+		let categoryNest = d3.nest()
+			.key((d) => { return d[categoryVar.variable]})
+			.sortValues((a, b) => { return new Date(a.date) - new Date(b.date)})
+			.entries(data)
 
-	setDataColumns() {
-		this.numColumns = Math.floor(this.width/((dotWidth + dotPadding)*2));
+		console.log(categoryNest)
 
-		console.log(this.numColumns)
+		this.sortedCategoryVals = categoryNest.sort((a, b) => { return b.values.length - a.values.length})
 
-		this.binScale
-			.range(getRange(0, this.numColumns));
+		console.log(this.sortedCategoryVals)
 
-		// console.log(this.binScale.domain(), this.binScale.range())
+		this.height = this.sortedCategoryVals.length * (dotWidth + dotPadding + 2) * 2
 
-		this.xScale
-			.domain([0, this.numColumns])
-			.range([dotWidth + dotPadding, this.width - dotWidth - dotPadding])
+		this.yScale.domain(this.sortedCategoryVals.map(d => d.key))
+			.range([0, this.height])
 
-		this.axisScale 
-			.domain(this.binScale.domain())
-			.range(this.xScale.range())
-
-
-		this.dataNest = d3.nest()
-			.key((d) => { return d.date ? this.binScale(new Date(d.date)) : null })
-			.sortKeys(d3.ascending)
-			.sortValues((a, b) => { 
-				if (!a.date) return b;
-				if (!b.date) return a;
-
-				return a.date > b.date
-			})
-			.entries(this.data)
-
-		// console.log(this.dataNest)
-
-		this.maxColCount = d3.max(this.dataNest, (d) => { return d.values.length});
-		this.height = (this.maxColCount + 1)*((dotWidth + dotPadding)*2)
-
-		// console.log(this.maxColCount);
 	}
 
 
 	resize(width) {
 		this.width = width;
 
-		this.setDataColumns();
 	}
 
-	renderDot(d, i) {
-		// console.log(this.width, this.height)
+	renderDot(d) {
 		let xPos = 0,
-			yPos = 0;
-		if (d.date) {
-			let bin = this.binScale(new Date(d.date));
-			yPos = this.getYPos(bin, d, i);
-			
-			// console.log(yPos)
-			xPos = this.xScale(bin)
+			yPos = 0,
+			index;
 
-		}
-		return {x: spring(xPos), y: spring(yPos), r: 5 }
-	}
+		if (d[this.categoryVar.variable]) {
+			yPos = this.yScale(d[this.categoryVar.variable])
+			index = this.yScale.domain().indexOf(d[this.categoryVar.variable])
 
-	getYPos(whichBin, d, i) {
-		let binValList;
-		let retVal = 0;
+			let categoryList = this.sortedCategoryVals[index].values
 
-
-		this.dataNest.forEach((bin) => {
-			if (+bin.key === whichBin) {
-				// console.log(bin)
-				binValList = bin.values;
-				return;
-			}
-		})
-
-		if (binValList) {
-			binValList.forEach((val, index) => {
+			let xIndex;
+			categoryList.forEach((val, i) => {
 				if (val.id == d.id) {
-					retVal = index;
+					xIndex = i
 					return;
 				}
-
 			})
+			xPos = xIndex * (dotWidth + dotPadding) * 2 + leftMargin
 		}
-
-		return dotWidth + ((this.maxColCount - retVal)*((dotWidth + dotPadding)*2));
+		return {x: spring(xPos), y: spring(yPos), r: 5 }
 	}
 }
 
