@@ -36,23 +36,21 @@ class DotChart extends React.Component {
 			currLayout: null,
 			currDataShown: this.data,
 			width: 0,
-            height: 0,
             currHovered: null,
             tooltipSettings: null,
             valsShown:[]
 		}
-
 	}
 
 	componentDidMount() {
         $(window).resize(this.resizeFunc);
 
-        let w = this.getCurrWidth();
+        let w = this.getCurrWidth(),
+            currLayout = this.getCurrLayout(this.state.currDataShown, this.state.currLayoutSettings, w)
 
         this.setState({
-            currLayout: this.getCurrLayout(this.state.currDataShown, this.state.currLayoutSettings, w),
+            currLayout: currLayout,
             width: w,
-            height: w/2,
         })
     }
 
@@ -63,10 +61,10 @@ class DotChart extends React.Component {
     getCurrLayout(data, layoutSettings, w) {
         switch(layoutSettings.layout) {
             case "histogram":
-                return new HistogramLayout(data, w, w/2)
+                return new HistogramLayout(data, w)
 
             case "category":
-                return new CategoryLayout(data, w, w/2, {variable: "state"})
+                return new CategoryLayout(data, w, {variable: "state"})
         }
     }
 
@@ -88,7 +86,7 @@ class DotChart extends React.Component {
             <Motion style={{currTransform: spring(currLayout.height)}} >
                 {({currTransform}) => {
                     return (
-                        <g style={{transform: "translateY(" + currTransform + "px)"}}>
+                        <g className="dot-chart__axis-time" style={{transform: "translateY(" + currTransform + "px)"}}>
                             <Axis {...axisPropsFromTickScale(currLayout.axisScale, 6)} format={(d) => { return d3.timeFormat("%B %Y")(d) }} style={{orient: BOTTOM}} />
                         </g>
                     )
@@ -105,7 +103,7 @@ class DotChart extends React.Component {
                     return (
                         <Motion style={{y:spring(currLayout.yScale(d))}} key={d}>
                             {({y}) => {
-                                return <text x="0" y={y}>{d}</text>;
+                                return <text className="dot-chart__axis-categorical__text" x="110" y={y}>{d}</text>;
                             }}
                         </Motion>
                     )
@@ -162,7 +160,7 @@ class DotChart extends React.Component {
                 <LayoutSelector layouts={this.props.vizSettings.layouts} currSelected={currLayoutSettings} layoutChangeFunc={this.changeLayout.bind(this)} />
 				{ currLayout &&
 					<svg className="dot-chart__container" width="100%" height={currLayout.height + 50}>
-						<g className="dot-chart__rendering-area" width={width} height={currLayout.height }>
+						<g className="dot-chart__rendering-area" width={width} height={currLayout.height}>
 							{currDataShown.map((d) => {
                                 if (!d.id) return null;
 								let style = currLayout.renderDot(d)

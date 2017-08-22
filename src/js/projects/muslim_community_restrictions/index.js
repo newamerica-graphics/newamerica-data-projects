@@ -34,40 +34,40 @@ let vizSettingsList = [
 	// 	legendSettings: {"orientation": "vertical-right", "showTitle": true},
 	// 	addSmallStateInsets: true
 	// },
-	// {
-	// 	id: "#muslim-community-restrictions__states-map", 
-	// 	vizType: "dashboard",
-	// 	layoutRows: [
-	// 		[
-	// 			{
-	// 				vizType: "topo_json_map",
-	// 				primaryDataSheet: "states",
-	// 				width: "70%",
-	// 				filterVars: [ variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_other],
-	// 				geometryType: "states",
-	// 				geometryVar: variables.state_id,
-	// 				stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
-	// 				filterGroupSettings: {"hidden": false},
-	// 				// tooltipVars: [ variables.state, variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_other],
-	// 				legendSettings: {"orientation": "horizontal-center", "showTitle": true},
-	// 				addSmallStateInsets: true,
-	// 				isMessagePasser: true,
-	// 				interaction: "click",
-	// 			},
-	// 			{
-	// 				vizType: "content_stream",
-	// 				primaryDataSheet: "incidents",
-	// 				defaultText: "Click on a state to view incidents for that state.",
-	// 				width: "30%",
-	// 				isMessagePasser: false,
-	// 				messageHandlerType: "change_value",
-	// 				idVar: variables.state,
-	// 				showCurrFilterVal: true, 
-	// 				filterVar: variables.category
-	// 			}
-	// 		],
-	// 	]
-	// }
+	{
+		id: "#muslim-community-restrictions__states-map", 
+		vizType: "dashboard",
+		layoutRows: [
+			[
+				{
+					vizType: "topo_json_map",
+					primaryDataSheet: "states",
+					width: "70%",
+					filterVars: [ variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_other],
+					geometryType: "states",
+					geometryVar: variables.state_id,
+					stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
+					filterGroupSettings: {"hidden": false},
+					// tooltipVars: [ variables.state, variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_other],
+					legendSettings: {"orientation": "horizontal-center", "showTitle": true},
+					addSmallStateInsets: true,
+					isMessagePasser: true,
+					interaction: "click",
+				},
+				{
+					vizType: "content_stream",
+					primaryDataSheet: "incidents",
+					defaultText: "Click on a state to view incidents for that state.",
+					width: "30%",
+					isMessagePasser: false,
+					messageHandlerType: "change_value",
+					idVar: variables.state,
+					showCurrFilterVal: true, 
+					filterVar: variables.category
+				}
+			],
+		]
+	}
 ]
 
 const reactVizSettingsList = [

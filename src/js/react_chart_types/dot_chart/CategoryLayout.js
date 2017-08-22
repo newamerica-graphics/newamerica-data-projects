@@ -15,8 +15,8 @@ let dotPadding = 1;
 let leftMargin = 120;
 
 class CategoryLayout {
-	constructor(data, width, height, categoryVar) {
-		console.log(height, width)
+	constructor(data, width, categoryVar) {
+		console.log(width)
 		console.log("in constructor");
 
 		this.categoryVar = categoryVar;
@@ -31,23 +31,17 @@ class CategoryLayout {
 			.sortValues((a, b) => { return new Date(a.date) - new Date(b.date)})
 			.entries(data)
 
-		console.log(categoryNest)
-
 		this.sortedCategoryVals = categoryNest.sort((a, b) => { return b.values.length - a.values.length})
-
-		console.log(this.sortedCategoryVals)
 
 		this.height = this.sortedCategoryVals.length * (dotWidth + dotPadding + 2) * 2
 
 		this.yScale.domain(this.sortedCategoryVals.map(d => d.key))
-			.range([0, this.height])
-
+			.range([dotWidth + dotPadding, this.height])
 	}
 
 
 	resize(width) {
 		this.width = width;
-
 	}
 
 	renderDot(d) {
@@ -68,7 +62,7 @@ class CategoryLayout {
 					return;
 				}
 			})
-			xPos = xIndex * (dotWidth + dotPadding) * 2 + leftMargin
+			xPos = xIndex * (dotWidth + dotPadding) * 2 + leftMargin + (dotWidth + dotPadding)
 		}
 		return {x: spring(xPos), y: spring(yPos), r: 5 }
 	}
