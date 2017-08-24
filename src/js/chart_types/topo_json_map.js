@@ -143,7 +143,6 @@ export class TopoJsonMap {
 		if (!this.hideFilterGroup) {
 			this.filterGroup ? this.setFilterGroup() : null;
 		}
-		// super.render();
 	}
 
 	setScale() {
@@ -262,7 +261,7 @@ export class TopoJsonMap {
 		this.paths.style("fill", (d) => { return this.setFill(d); })
 
 		this.currClicked ? this.mouseout(this.currClicked) : null;
-		this.dashboardChangeFunc ? this.dashboardChangeFunc(null, this) : null;
+		this.dashboardChangeFunc ? this.dashboardChangeFunc({currFilter: this.filterVars[this.currFilterIndex]}, this) : null;
 
 	}
 
@@ -359,12 +358,12 @@ export class TopoJsonMap {
 			this.currClicked = null;
 		}
 		console.log(datum, this.currFilterVar)
-		if (datum && datum.data && datum.data[this.currFilterVar] != 0) {
+		if (datum && datum.data && datum.data[this.currFilterVar] != 0 && datum.data[this.currFilterVar] != "None") {
 			console.log("has data")
 			this.mouseover(datum, path, eventObject);
 			this.currClicked = path
 		} else {
-			this.dashboardChangeFunc ? this.dashboardChangeFunc(null, this) : null;
+			this.dashboardChangeFunc ? this.dashboardChangeFunc({currFilter: this.filterVars[this.currFilterIndex]}, this) : null;
 
 		}
 	}

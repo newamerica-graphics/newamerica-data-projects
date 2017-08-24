@@ -225,11 +225,21 @@ export class Legend {
 				cellText.text(formatValue(Math.ceil(this.calcBinVal(i, this.dataMin, this.binInterval)), this.format) + "+");
 				return;
 			}
+			let start, end;
 			if (this.format == "percent") {
-				cellText.text(formatValue(Math.ceil(100*this.calcBinVal(i, this.dataMin, this.binInterval))/100, this.format) + " to " + formatValue(Math.floor(100*this.calcBinVal(i+1, this.dataMin, this.binInterval))/100, this.format));
+				start = formatValue(Math.ceil(100*this.calcBinVal(i, this.dataMin, this.binInterval))/100, this.format);
+				end = formatValue(Math.floor(100*this.calcBinVal(i+1, this.dataMin, this.binInterval))/100, this.format);
 			} else {
-				cellText.text(formatValue(Math.ceil(this.calcBinVal(i, this.dataMin, this.binInterval)), this.format) + " to " + formatValue(Math.floor(this.calcBinVal(i+1, this.dataMin, this.binInterval)), this.format));
+				start = formatValue(Math.ceil(this.calcBinVal(i, this.dataMin, this.binInterval)), this.format);
+				end = formatValue(Math.floor(this.calcBinVal(i+1, this.dataMin, this.binInterval)), this.format);
 			}
+
+			if (start === end) {
+				cellText.text(start);
+			} else {
+				cellText.text(start + " to " + end);
+			}
+			
 		} else if (this.scaleType == "categorical") {
 			if (this.customLabels) {
 				cellText.text(this.customLabels[i]);

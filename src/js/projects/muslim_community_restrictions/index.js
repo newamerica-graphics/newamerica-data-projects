@@ -10,12 +10,12 @@ let variables = {
 	state_id: {"variable":"state_id", "displayName":"State id", "format": "string"},
 	description: {"variable":"description", "displayName":"Description", "format": "string"},
 	date: {"variable":"date", "displayName":"Date", "format": "date"},
-	incidents_total: {"variable":"incidents_total", "displayName":"All Incidents", "format": "number", "filterVal": null, "scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.turquoise.light, colors.turquoise.dark]},
-	incidents_anti_sharia: {"variable":"incidents_anti_sharia", "displayName":"Anti-Sharia Incidents", "format": "number", "filterVal": "Anti-Sharia Legislation","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.blue.light, colors.blue.dark]},
-	incidents_anti_refugee: {"variable":"incidents_anti_refugee", "displayName":"Anti-Refugee Incidents", "format": "number", "filterVal": "Anti-Refugee Legislation","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.purple.light, colors.purple.dark]},
-	incidents_anti_construction: {"variable":"incidents_anti_construction", "displayName":"Anti-Construction Incidents", "format": "number", "filterVal": "Opposition to mosque, cemetery, and Islamic school construction","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.red.light, colors.red.dark]},
-	incidents_elected_official: {"variable":"incidents_elected_official", "displayName":"Elected Official Incidents", "format": "number", "filterVal": "Anti-Muslim actions by elected or appointed officials","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.turquoise.light, colors.turquoise.dark]},
-	incidents_other: {"variable":"incidents_other", "displayName":"Other Incidents", "format": "number", "filterVal": "Other","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.turquoise.light, colors.turquoise.dark]},
+	incidents_total: {"variable":"incidents_total", "displayName":"All Incidents", "format": "number", "filterVal": null, "scaleType": "quantize", "numBins":4, "customRange":[colors.white, colors.turquoise.light, colors.turquoise.dark]},
+	incidents_anti_sharia: {"variable":"incidents_anti_sharia", "displayName":"Anti-Sharia Incidents", "format": "number", "filterVal": "Anti-Sharia Legislation","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.blue.light, colors.blue.dark]},
+	incidents_anti_refugee: {"variable":"incidents_anti_refugee", "displayName":"Anti-Refugee Incidents", "format": "number", "filterVal": "Anti-Refugee Legislation","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.purple.light, colors.purple.dark]},
+	incidents_anti_construction: {"variable":"incidents_anti_construction", "displayName":"Anti-Construction Incidents", "format": "number", "filterVal": "Opposition to mosque, cemetery, and Islamic school construction","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.red.light, colors.red.dark]},
+	incidents_elected_official: {"variable":"incidents_elected_official", "displayName":"Elected Official Incidents", "format": "number", "filterVal": "Anti-Muslim actions by elected or appointed officials","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.turquoise.light, colors.turquoise.dark]},
+	incidents_other: {"variable":"incidents_other", "displayName":"Other Incidents", "format": "number", "filterVal": "Other","scaleType": "quantize", "numBins":2, "customRange":[colors.white, colors.turquoise.light, colors.turquoise.dark]},
 
 }
 
@@ -53,11 +53,13 @@ let vizSettingsList = [
 					addSmallStateInsets: true,
 					isMessagePasser: true,
 					interaction: "click",
+					defaultFill: colors.grey.light
 				},
 				{
 					vizType: "content_stream",
 					primaryDataSheet: "incidents",
-					defaultText: "Click on a state to view incidents for that state.",
+					// secondaryDataSheet:
+					defaultFilter: variables.incidents_total,
 					width: "30%",
 					isMessagePasser: false,
 					messageHandlerType: "change_value",

@@ -1,5 +1,7 @@
 import $ from 'jquery';
 
+import { colors } from "../helper_functions/colors.js";
+
 let d3 = require("d3");
 
 export class ContentStream {
@@ -10,12 +12,13 @@ export class ContentStream {
 			.append("div")
 			.attr("class", "content-stream__container");
 
-		console.log(vizSettings);
-		this.defaultText = this.contentStreamContainer
-			.append("div")
-			.append("h5")
-			.attr("class", "content-stream__default-text")
-			.text(this.defaultText);
+		if (this.defaultText) {
+			this.defaultTextDiv = this.contentStreamContainer
+				.append("div")
+				.append("h5")
+				.attr("class", "content-stream__default-text")
+				.text(this.defaultText);
+		} 
 
 		let contentStreamTitleContainer = this.contentStreamContainer
 			.append("div")
@@ -45,13 +48,13 @@ export class ContentStream {
 	}
 
 	render(data) {
-		console.log(data);
-		console.log(data[this.primaryDataSheet]);
+		this.data = data[this.primaryDataSheet]
 		this.dataNest = d3.nest()
 			.key((d) => { return d.state; })
-			.map(data[this.primaryDataSheet]);
-
-		console.log(this.dataNest);
+			.map(this.data);
+		if (!this.defaultText) {
+			this.setStreamContent({color: colors.grey.medium, dataPoint: "all", currFilter: this.defaultFilter});
+		}
 	}
 
 	hide() {
@@ -60,54 +63,63 @@ export class ContentStream {
 		this.contentStreamTitle
 			.text("");
 
-		this.defaultText.classed("hidden", false);
+		this.defaultText ? this.defaultTextDiv.classed("hidden", false) : null;
 	}
 
 	changeValue(params) {
 		if (this.entries) { this.entries.remove(); }
-		if (this.fadeout) { this.fadeout.remove(); }
 
-		if (!params) {
-			this.defaultText.classed("hidden", false);
-			this.contentStreamContainer.style("border", "none")
-			this.contentStreamTitle.text("")
+		if (params.dataPoint) {
+			this.defaultText ? this.defaultTextDiv.classed("hidden", true) : null;
+			this.setStreamContent(params);
+		} else {
+			if (this.defaultText) {
+				this.defaultTextDiv.classed("hidden", false);
+				this.contentStreamContainer.style("border", "none")
+				this.contentStreamTitle.text("")
 
-			if (this.showCurrFilterVal) {
-				this.filterValLabel.text("")
-				this.filterValValue.text("")
+				if (this.showCurrFilterVal) {
+					this.filterValLabel.text("")
+					this.filterValValue.text("")
+				}
+				return;
+			} else {
+				this.setStreamContent({color: colors.grey.medium, dataPoint: "all", currFilter: params.currFilter});
 			}
-			return;
+		}
+	}
+
+	setStreamContent({color, dataPoint, currFilter}) {
+		let valueList, filterVal;
+
+		if (dataPoint == "all" || !dataPoint.state || !this.dataNest.get(String(dataPoint.state))) {
+			valueList = this.data;
+			this.contentStreamTitle
+				.text("All States");
+
+		} else {
+			let value = dataPoint.state;
+			valueList = this.dataNest.get(String(value));
+			
+			this.contentStreamTitle
+				.text(value);
 		}
 
-		const {color, dataPoint, currFilter} = params;
-		
-		let value = dataPoint.state;
-		if (!value) { return; }
-		let valueList = this.dataNest.get(String(value));
-		if (!valueList) { this.hide(); return; }
-		this.defaultText.classed("hidden", true);
-		console.log(valueList, currFilter, this.filterVar)
 		valueList = currFilter && currFilter.filterVal && this.filterVar ? valueList.filter((d) => { return d[this.filterVar.variable] == currFilter.filterVal}) : valueList
-		console.log(valueList)
 		let sortedList = valueList.sort((a, b) => { return new Date(b.date) - new Date(a.date); });
-		
 
 		if (color) {
 			this.contentStreamContainer
 				.style("border", "2px solid " + color)
 		}
 
-		this.contentStreamTitle
-			.text(sortedList[0].state);
-
+		
 		if (this.showCurrFilterVal && currFilter) {
-			console.log("showing currFilterVal!")
 			this.filterValLabel
 				.text(currFilter.displayName + ":")
 
-
 			this.filterValValue
-				.text(dataPoint[currFilter.variable])
+				.text(sortedList.length)
 				.style("color", color)
 		}
 
@@ -120,7 +132,7 @@ export class ContentStream {
 		   	.attr("href", (d) => { return d.url; });
 
 		entriesLinks.selectAll("div.content-stream__entry__image-container")
-			.data((d) => { console.log(d); return d.image_url ? [d] : []})
+			.data((d) => { return d.image_url ? [d] : []})
 		  .enter().append("div")
 			.attr("class", "content-stream__entry__image-container")
 		  .append("img")
@@ -140,14 +152,6 @@ export class ContentStream {
 
 		entryTextContainers.append("h5")
 			.attr("class", "content-stream__entry__description")
-			.text((d) => { return d.description; });
-
-
-		// this.fadeout = this.contentStream
-		// 	.append("div")
-		// 	.attr("class", "content-stream__fadeout");
-		   	
+			.text((d) => { return d.description; });   	
 	}
-
-
 }
