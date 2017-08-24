@@ -6,18 +6,18 @@ export class ContentStream {
 	constructor(vizSettings) {
 		Object.assign(this, vizSettings);
 
-		let contentStreamContainer = d3.select(this.id)
+		this.contentStreamContainer = d3.select(this.id)
 			.append("div")
 			.attr("class", "content-stream__container");
 
 		console.log(vizSettings);
-		this.defaultText = contentStreamContainer
+		this.defaultText = this.contentStreamContainer
 			.append("div")
 			.append("h5")
 			.attr("class", "content-stream__default-text")
 			.text(this.defaultText);
 
-		let contentStreamTitleContainer = contentStreamContainer
+		let contentStreamTitleContainer = this.contentStreamContainer
 			.append("div")
 			.attr("class", "content-stream__title-container");
 
@@ -25,7 +25,21 @@ export class ContentStream {
 			.append("div")
 			.attr("class", "content-stream__title");
 
-		this.contentStream = contentStreamContainer
+		if (this.showCurrFilterVal) {
+			let filterValContainer = contentStreamTitleContainer
+				.append("div")
+				.attr("class", "content-stream__filter-val");
+
+			this.filterValLabel = filterValContainer
+				.append("h5")
+				.attr("class", "content-stream__filter-val__label");
+
+			this.filterValValue = filterValContainer
+				.append("h5")
+				.attr("class", "content-stream__filter-val__value");
+		}
+
+		this.contentStream = this.contentStreamContainer
 			.append("ul")
 			.attr("class", "content-stream");
 	}
@@ -34,7 +48,7 @@ export class ContentStream {
 		console.log(data);
 		console.log(data[this.primaryDataSheet]);
 		this.dataNest = d3.nest()
-			.key((d) => { return d.state_id; })
+			.key((d) => { return d.state; })
 			.map(data[this.primaryDataSheet]);
 
 		console.log(this.dataNest);
@@ -49,18 +63,53 @@ export class ContentStream {
 		this.defaultText.classed("hidden", false);
 	}
 
-	changeValue(value) {
+	changeValue(params) {
+		if (this.entries) { this.entries.remove(); }
+		if (this.fadeout) { this.fadeout.remove(); }
+
+		if (!params) {
+			this.defaultText.classed("hidden", false);
+			this.contentStreamContainer.style("border", "none")
+			this.contentStreamTitle.text("")
+
+			if (this.showCurrFilterVal) {
+				this.filterValLabel.text("")
+				this.filterValValue.text("")
+			}
+			return;
+		}
+
+		const {color, dataPoint, currFilter} = params;
+		
+		let value = dataPoint.state;
 		if (!value) { return; }
 		let valueList = this.dataNest.get(String(value));
 		if (!valueList) { this.hide(); return; }
 		this.defaultText.classed("hidden", true);
+		console.log(valueList, currFilter, this.filterVar)
+		valueList = currFilter && currFilter.filterVal && this.filterVar ? valueList.filter((d) => { return d[this.filterVar.variable] == currFilter.filterVal}) : valueList
+		console.log(valueList)
 		let sortedList = valueList.sort((a, b) => { return new Date(b.date) - new Date(a.date); });
+		
 
-		if (this.entries) { this.entries.remove(); }
-		if (this.fadeout) { this.fadeout.remove(); }
+		if (color) {
+			this.contentStreamContainer
+				.style("border", "2px solid " + color)
+		}
 
 		this.contentStreamTitle
 			.text(sortedList[0].state);
+
+		if (this.showCurrFilterVal && currFilter) {
+			console.log("showing currFilterVal!")
+			this.filterValLabel
+				.text(currFilter.displayName + ":")
+
+
+			this.filterValValue
+				.text(dataPoint[currFilter.variable])
+				.style("color", color)
+		}
 
 		this.entries = this.contentStream.selectAll("li")
 			.data(sortedList)
@@ -94,9 +143,9 @@ export class ContentStream {
 			.text((d) => { return d.description; });
 
 
-		this.fadeout = this.contentStream
-			.append("div")
-			.attr("class", "content-stream__fadeout");
+		// this.fadeout = this.contentStream
+		// 	.append("div")
+		// 	.attr("class", "content-stream__fadeout");
 		   	
 	}
 

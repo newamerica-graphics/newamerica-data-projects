@@ -260,6 +260,10 @@ export class TopoJsonMap {
 		this.setScale();
 		this.legendSettings ? this.setLegend() : null;
 		this.paths.style("fill", (d) => { return this.setFill(d); })
+
+		this.currClicked ? this.mouseout(this.currClicked) : null;
+		this.dashboardChangeFunc ? this.dashboardChangeFunc(null, this) : null;
+
 	}
 
 	changeValue(newVal) {
@@ -335,7 +339,7 @@ export class TopoJsonMap {
 		let mousePos = [];
 		mousePos[0] = eventObject.pageX;
 		mousePos[1] = eventObject.pageY;
-		this.dashboardChangeFunc ? this.dashboardChangeFunc(datum.id, this) : null;
+		this.dashboardChangeFunc ? this.dashboardChangeFunc({dataPoint: datum.data, color: d3.select(path).style("fill"), currFilter: this.filterVars[this.currFilterIndex]}, this) : null;
 		
 		this.tooltip ? this.tooltip.show(datum.data, mousePos, this.filterVars[this.currFilterIndex], d3.select(path).style("fill")) : null;
 	}
@@ -354,10 +358,14 @@ export class TopoJsonMap {
 			this.mouseout(this.currClicked);
 			this.currClicked = null;
 		}
-
-		if (datum && datum[this.currFilterVar] != 0) {
+		console.log(datum, this.currFilterVar)
+		if (datum && datum.data && datum.data[this.currFilterVar] != 0) {
+			console.log("has data")
 			this.mouseover(datum, path, eventObject);
 			this.currClicked = path
+		} else {
+			this.dashboardChangeFunc ? this.dashboardChangeFunc(null, this) : null;
+
 		}
 	}
 
