@@ -38,12 +38,21 @@ let variables = {
 	leaders_killed: {"variable":"leaders_killed", "displayName":"Leaders Killed", "format": "number", "scaleType": "linear"},
 	strike_type: {"variable":"strike_type", "displayName":"Strike Type", "format": "string", "scaleType": "categorical", "customDomain": ["Drone Strike", "Air Strike", "Ground Operation", "Surveillance Operation"], "customRange": [colors.turquoise.light, colors.blue.light, colors.purple.light, colors.red.medium]},
 
-	total_strikes: {"variable":"total_strikes", "displayName":"Total Strikes", "format": "number"},
-	civilians_lowhigh: {"variable":"civilians_lowhigh", "displayName":"Civilians", "format": "string", "disableTableOrdering": true},
-	militants_lowhigh: {"variable":"militants_lowhigh", "displayName":"Militants", "format": "string", "disableTableOrdering": true},
-	unknown_lowhigh: {"variable":"unknown_lowhigh", "displayName":"Unknown", "format": "string", "disableTableOrdering": true},
-	total_lowhigh: {"variable":"total_lowhigh", "displayName":"Total", "format": "string", "disableTableOrdering": true},
-	leader_percent: {"variable":"leader_percent", "displayName":"Leader Percentage", "format": "percent", "disableTableOrdering": true},
+	pk_total_strikes: {"variable":"pk_total_strikes", "displayName":"Total Strikes", "format": "number"},
+	pk_civilians_lowhigh: {"variable":"pk_civilians_lowhigh", "displayName":"Civilians", "format": "string", "disableTableOrdering": true},
+	pk_militants_lowhigh: {"variable":"pk_militants_lowhigh", "displayName":"Militants", "format": "string", "disableTableOrdering": true},
+	pk_unknown_lowhigh: {"variable":"pk_unknown_lowhigh", "displayName":"Unknown", "format": "string", "disableTableOrdering": true},
+	pk_total_lowhigh: {"variable":"pk_total_lowhigh", "displayName":"Total", "format": "string", "disableTableOrdering": true},
+	ym_total_strikes: {"variable":"ym_total_strikes", "displayName":"Total Strikes", "format": "number"},
+	ym_civilians_lowhigh: {"variable":"ym_civilians_lowhigh", "displayName":"Civilians", "format": "string", "disableTableOrdering": true},
+	ym_militants_lowhigh: {"variable":"ym_militants_lowhigh", "displayName":"Militants", "format": "string", "disableTableOrdering": true},
+	ym_unknown_lowhigh: {"variable":"ym_unknown_lowhigh", "displayName":"Unknown", "format": "string", "disableTableOrdering": true},
+	ym_total_lowhigh: {"variable":"ym_total_lowhigh", "displayName":"Total", "format": "string", "disableTableOrdering": true},
+	sm_total_strikes: {"variable":"sm_total_strikes", "displayName":"Total Strikes", "format": "number"},
+	sm_civilians_lowhigh: {"variable":"sm_civilians_lowhigh", "displayName":"Civilians", "format": "string", "disableTableOrdering": true},
+	sm_militants_lowhigh: {"variable":"sm_militants_lowhigh", "displayName":"Militants", "format": "string", "disableTableOrdering": true},
+	sm_unknown_lowhigh: {"variable":"sm_unknown_lowhigh", "displayName":"Unknown", "format": "string", "disableTableOrdering": true},
+	sm_total_lowhigh: {"variable":"sm_total_lowhigh", "displayName":"Total", "format": "string", "disableTableOrdering": true},
 }
 
 const casualtyTypeNestDataFunction = (data, filterVar) => {
@@ -113,7 +122,7 @@ let vizSettingsList = [
 	{
 		id: "#drone-strikes__pakistan__by-president", 
 		vizType: "filterable_chart",
-		primaryDataSheet: "strike_data",
+		primaryDataSheet: "pakistan_strikes",
 		chartType: "stacked_bar",
 		customFilterOptions: [ 
 			{key:"Strikes", values:[{id:"strikes"}]},
@@ -147,7 +156,7 @@ let vizSettingsList = [
 	{
 		id: "#drone-strikes__pakistan__by-casualty-type", 
 		vizType: "stacked_bar",
-		primaryDataSheet: "strike_data",
+		primaryDataSheet: "pakistan_strikes",
 		xVar: variables.year,
 		customColorScale: {
 			domain: [ variables.militants_avg.displayName, variables.civilians_avg.displayName, variables.unknown_avg.displayName],
@@ -164,7 +173,7 @@ let vizSettingsList = [
 		id: "#drone-strikes__pakistan__targets", 
 		vizType: "percentage_stacked_bar",
 		// filterInitialDataBy: { field: "country", value:"Pakistan"},
-		primaryDataSheet: "strike_data",
+		primaryDataSheet: "pakistan_strikes",
 		groupingVar: variables.president,
 		filterVar: variables.target_organization_name,
 	},
@@ -172,7 +181,7 @@ let vizSettingsList = [
 		id: "#drone-strikes__pakistan__strike-totals-by-president", 
 		primaryDataSheet: "strikes_by_president",
 		vizType: "table",
-		tableVars: [ variables.president, variables.total_strikes, variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh],
+		tableVars: [ variables.president, variables.pk_total_strikes, variables.pk_civilians_lowhigh, variables.pk_militants_lowhigh, variables.pk_unknown_lowhigh, variables.pk_total_lowhigh],
 		defaultOrdering: [0, "asc"],
 		pagination: false,
 		numPerPage: 10,
@@ -183,7 +192,7 @@ let vizSettingsList = [
 	{
 		id: "#drone-strikes__pakistan__strike-map",
 		vizType: "tabbed_chart_layout",
-		primaryDataSheet: "strike_data",
+		primaryDataSheet: "pakistan_strikes",
 		tabIcons: ["globe", "table"],
 		chartSettingsList: [
 			{
@@ -246,7 +255,7 @@ let vizSettingsList = [
 	{
 		id: "#drone-strikes__pakistan__leaders-map",
 		vizType: "tabbed_chart_layout",
-		primaryDataSheet: "strike_data",
+		primaryDataSheet: "pakistan_strikes",
 		tabIcons: ["table", "globe"],
 		chartSettingsList: [
 		    {
@@ -404,7 +413,7 @@ let vizSettingsList = [
 		id: "#drone-strikes__yemen__strike-totals-by-president", 
 		primaryDataSheet: "strikes_by_president",
 		vizType: "table",
-		tableVars: [ variables.president, variables.total_strikes, variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh],
+		tableVars: [ variables.president, variables.ym_total_strikes, variables.ym_civilians_lowhigh, variables.ym_militants_lowhigh, variables.ym_unknown_lowhigh, variables.ym_total_lowhigh],
 		defaultOrdering: [0, "asc"],
 		pagination: false,
 		numPerPage: 10,
@@ -625,7 +634,7 @@ let vizSettingsList = [
 		id: "#drone-strikes__somalia__strike-totals-by-president", 
 		primaryDataSheet: "strikes_by_president",
 		vizType: "table",
-		tableVars: [ variables.president, variables.total_strikes, variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh],
+		tableVars: [ variables.president, variables.sm_total_strikes, variables.sm_civilians_lowhigh, variables.sm_militants_lowhigh, variables.sm_unknown_lowhigh, variables.sm_total_lowhigh],
 		defaultOrdering: [0, "asc"],
 		pagination: false,
 		numPerPage: 10,
@@ -755,7 +764,7 @@ let reactVizSettingsList = [
 	{
 		id: "#drone-strikes__pakistan__call-out-data", 
 		vizType: "callout_box",
-		primaryDataSheet: "strike_data",
+		primaryDataSheet: "pakistan_strikes",
 		sections:[
 			{
 				title: "Live Statistics",
@@ -910,7 +919,7 @@ let reactVizSettingsList = [
 	{
 		id: "#drone-strikes__all__call-out-data", 
 		vizType: "callout_box",
-		primaryDataSheet: "strike_data",
+		primaryDataSheet: "pakistan_strikes",
 		secondaryDataSheets: ["yemen_strikes", "somalia_strikes"],
 		sections:[
 			{
@@ -933,9 +942,9 @@ let reactVizSettingsList = [
 ]
 
 let projectSettings = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/drone-strikes.json",
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/drone-strikes-all.json",
 	downloadDataLink: "https://docs.google.com/spreadsheets/d/11uMYLFFk8sEbYNIOrX3ENRdgCWxttKdYQ6b8hUW-XbI/",
-	dataSheetNames:["strike_data", "strikes_by_president"],
+	dataSheetNames:["pakistan_strikes", "yemen_strikes", "somalia_strikes", "strikes_by_president"],
 	vizSettingsList: vizSettingsList,
 	reactVizSettingsList: reactVizSettingsList
 }
