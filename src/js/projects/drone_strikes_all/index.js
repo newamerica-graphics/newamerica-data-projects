@@ -43,19 +43,16 @@ let variables = {
 	pk_militants_lowhigh: {"variable":"pk_militants_lowhigh", "displayName":"Militants", "format": "string", "disableTableOrdering": true},
 	pk_unknown_lowhigh: {"variable":"pk_unknown_lowhigh", "displayName":"Unknown", "format": "string", "disableTableOrdering": true},
 	pk_total_lowhigh: {"variable":"pk_total_lowhigh", "displayName":"Total", "format": "string", "disableTableOrdering": true},
-	pk_leader_percent: {"variable":"pk_leader_percent", "displayName":"Leader Percentage", "format": "percent", "disableTableOrdering": true},
 	ym_total_strikes: {"variable":"ym_total_strikes", "displayName":"Total Strikes", "format": "number"},
 	ym_civilians_lowhigh: {"variable":"ym_civilians_lowhigh", "displayName":"Civilians", "format": "string", "disableTableOrdering": true},
 	ym_militants_lowhigh: {"variable":"ym_militants_lowhigh", "displayName":"Militants", "format": "string", "disableTableOrdering": true},
 	ym_unknown_lowhigh: {"variable":"ym_unknown_lowhigh", "displayName":"Unknown", "format": "string", "disableTableOrdering": true},
 	ym_total_lowhigh: {"variable":"ym_total_lowhigh", "displayName":"Total", "format": "string", "disableTableOrdering": true},
-	ym_leader_percent: {"variable":"ym_leader_percent", "displayName":"Leader Percentage", "format": "percent", "disableTableOrdering": true},
 	sm_total_strikes: {"variable":"sm_total_strikes", "displayName":"Total Strikes", "format": "number"},
 	sm_civilians_lowhigh: {"variable":"sm_civilians_lowhigh", "displayName":"Civilians", "format": "string", "disableTableOrdering": true},
 	sm_militants_lowhigh: {"variable":"sm_militants_lowhigh", "displayName":"Militants", "format": "string", "disableTableOrdering": true},
 	sm_unknown_lowhigh: {"variable":"sm_unknown_lowhigh", "displayName":"Unknown", "format": "string", "disableTableOrdering": true},
 	sm_total_lowhigh: {"variable":"sm_total_lowhigh", "displayName":"Total", "format": "string", "disableTableOrdering": true},
-	sm_leader_percent: {"variable":"sm_leader_percent", "displayName":"Leader Percentage", "format": "percent", "disableTableOrdering": true},
 }
 
 const casualtyTypeNestDataFunction = (data, filterVar) => {
