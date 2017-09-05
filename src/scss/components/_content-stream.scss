@@ -86,7 +86,7 @@
 		display: table;
 		padding: 10px 20px 10px 0px;
 
-		&:hover {
+		&__link-wrapper:hover {
 			.content-stream__entry__title {
 				color: palette-get(na-turquoise);
 			}
@@ -109,6 +109,7 @@
 		&__date {
 			font-size: 12px;
 			color: palette-get(na-black-40);
+			margin-bottom: 5px;
 		}
 
 		&__title {

@@ -128,10 +128,16 @@ export class ContentStream {
 		   .enter().append("li")
 		   	.attr("class", "content-stream__entry");
 
-		let entriesLinks = this.entries.append("a")
-		   	.attr("href", (d) => { return d.url; });
+		let entryContainer;
+		if (this.clickable) {
+			entryContainer = this.entries.append("a")
+				.attr("class", "content-stream__entry__link-wrapper")
+			   	.attr("href", (d) => { return d.url; });
+		} else {
+			entryContainer = this.entries;
+		}
 
-		entriesLinks.selectAll("div.content-stream__entry__image-container")
+		entryContainer.selectAll("div.content-stream__entry__image-container")
 			.data((d) => { return d.image_url ? [d] : []})
 		  .enter().append("div")
 			.attr("class", "content-stream__entry__image-container")
@@ -139,7 +145,7 @@ export class ContentStream {
 			.attr("class", "content-stream__entry__image")
 			.attr("src", (d) => { return d.image_url });
 
-		let entryTextContainers = entriesLinks.append("div")
+		let entryTextContainers = entryContainer.append("div")
 			.attr("class", "content-stream__entry__text-container");
 
 		entryTextContainers.append("h5")

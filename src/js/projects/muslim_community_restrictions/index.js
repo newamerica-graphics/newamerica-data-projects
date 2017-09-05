@@ -5,11 +5,14 @@ import { colors } from "../../helper_functions/colors.js";
 
 let variables = {
 	category: {"variable":"category", "displayName":"Category", "format": "string", "scaleType":"categorical"},
-	
 	state: {"variable":"state", "displayName":"State", "format": "string"},
-	state_id: {"variable":"state_id", "displayName":"State id", "format": "string"},
+	title: {"variable":"title", "displayName":"Title", "format": "string"},
 	description: {"variable":"description", "displayName":"Description", "format": "string"},
 	date: {"variable":"date", "displayName":"Date", "format": "date"},
+	processed_date: {"variable":"processed_date", "displayName":"Date", "format": "date_simple"},
+	sources_combined: {"variable":"sources_combined", "displayName":"Sources", "format": "link"},
+
+	state_id: {"variable":"state_id", "displayName":"State id", "format": "string"},
 	incidents_total: {"variable":"incidents_total", "displayName":"All Incidents", "format": "number", "filterVal": null, "scaleType": "quantize", "numBins":4, "customRange":[colors.white, colors.turquoise.light, colors.turquoise.dark]},
 	incidents_anti_sharia: {"variable":"incidents_anti_sharia", "displayName":"Anti-Sharia Incidents", "format": "number", "filterVal": "Anti-Sharia Legislation","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.blue.light, colors.blue.dark]},
 	incidents_anti_refugee: {"variable":"incidents_anti_refugee", "displayName":"Anti-Refugee Incidents", "format": "number", "filterVal": "Anti-Refugee Legislation","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.purple.light, colors.purple.dark]},
@@ -62,7 +65,7 @@ let vizSettingsList = [
 						{
 							vizType: "content_stream",
 							primaryDataSheet: "incidents",
-							// secondaryDataSheet:
+							clickable: false,
 							defaultFilter: variables.incidents_total,
 							width: "30%",
 							isMessagePasser: false,
@@ -77,7 +80,7 @@ let vizSettingsList = [
 			{
 				vizType: "table",
 				primaryDataSheet: "incidents",
-				tableVars: [ variables.date, variables.category, variables.description],
+				tableVars: [ variables.processed_date, variables.state, variables.category, variables.description, variables.sources_combined],
 				defaultOrdering: [0, "desc"],
 				pagination: true,
 				numPerPage: 10,

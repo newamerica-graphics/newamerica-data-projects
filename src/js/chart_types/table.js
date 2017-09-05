@@ -86,7 +86,7 @@ export class Table {
         		}
         	};
 
-        	tableVar.format == "date" ? varObject["type"] = "date" : null;
+        	tableVar.format == "date" || tableVar.format == "date_simple" ? varObject["type"] = "date" : null;
         	console.log(varObject);
 			columnNames.push(varObject);
 		}

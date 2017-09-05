@@ -44,6 +44,8 @@ export function formatValue(value, format) {
 		    return value+(s[(v-20)%10]||s[v]||s[0]);
 		case "date":
 			return formatTime(new Date(value));
+		case "date_simple":
+			return value;
 		case "link":
 			return value;
 	}
