@@ -35,39 +35,54 @@ let vizSettingsList = [
 	// 	addSmallStateInsets: true
 	// },
 	{
-		id: "#muslim-community-restrictions__states-map", 
-		vizType: "dashboard",
-		layoutRows: [
-			[
-				{
-					vizType: "topo_json_map",
-					primaryDataSheet: "states",
-					width: "70%",
-					filterVars: [ variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_other],
-					geometryType: "states",
-					geometryVar: variables.state_id,
-					stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
-					filterGroupSettings: {"hidden": false},
-					// tooltipVars: [ variables.state, variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_other],
-					legendSettings: {"orientation": "horizontal-center", "showTitle": true},
-					addSmallStateInsets: true,
-					isMessagePasser: true,
-					interaction: "click",
-					defaultFill: colors.grey.light
-				},
-				{
-					vizType: "content_stream",
-					primaryDataSheet: "incidents",
-					// secondaryDataSheet:
-					defaultFilter: variables.incidents_total,
-					width: "30%",
-					isMessagePasser: false,
-					messageHandlerType: "change_value",
-					idVar: variables.state,
-					showCurrFilterVal: true, 
-					filterVar: variables.category
-				}
-			],
+		id: "#muslim-community-restrictions__states-map",
+		vizType: "tabbed_chart_layout",
+		tabIcons: ["globe", "table"],
+		chartSettingsList: [
+			{
+				vizType: "dashboard",
+				layoutRows: [
+					[
+						{
+							vizType: "topo_json_map",
+							primaryDataSheet: "states",
+							width: "70%",
+							filterVars: [ variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_other],
+							geometryType: "states",
+							geometryVar: variables.state_id,
+							stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
+							filterGroupSettings: {"hidden": false},
+							// tooltipVars: [ variables.state, variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_other],
+							legendSettings: {"orientation": "horizontal-center", "showTitle": true},
+							addSmallStateInsets: true,
+							isMessagePasser: true,
+							interaction: "click",
+							defaultFill: colors.grey.light
+						},
+						{
+							vizType: "content_stream",
+							primaryDataSheet: "incidents",
+							// secondaryDataSheet:
+							defaultFilter: variables.incidents_total,
+							width: "30%",
+							isMessagePasser: false,
+							messageHandlerType: "change_value",
+							idVar: variables.state,
+							showCurrFilterVal: true, 
+							filterVar: variables.category
+						}
+					],
+				]
+			},
+			{
+				vizType: "table",
+				primaryDataSheet: "incidents",
+				tableVars: [ variables.date, variables.category, variables.description],
+				defaultOrdering: [0, "desc"],
+				pagination: true,
+				numPerPage: 10,
+				colorScaling: false
+			}
 		]
 	}
 ]

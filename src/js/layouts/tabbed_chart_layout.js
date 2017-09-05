@@ -22,7 +22,7 @@ export class TabbedChartLayout {
 				
 			// let chartSettingsObject = Object.assign({}, vizSettings);
 			chartSettingsObject.id = this.id + "__chart" + i;
-			chartSettingsObject.primaryDataSheet = this.primaryDataSheet;
+			chartSettingsObject.primaryDataSheet = chartSettingsObject.primaryDataSheet ? chartSettingsObject.primaryDataSheet : this.primaryDataSheet;
 			
 			let viz;
 			switch (chartSettingsObject.vizType) {
