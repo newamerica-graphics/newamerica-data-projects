@@ -158,16 +158,6 @@ let vizSettingsList = [
 			],
 		},
 	},
-	// {
-	// 	id: "#homegrown__extremist-data-table", 
-	// 	vizType: "table",
-	// 	tableVars: [ variables.full_name, variables.gender, variables.age],
-	// 	defaultOrdering: [0, "asc"],
-	// 	pagination: true,
-	// 	numPerPage: 25,
-	// 	primaryDataSheet: "people_protected",
-	// 	colorScaling: false
-	// },
 	{
 		id: "#homegrown__fact-box__method-of-radicalization", 
 		vizType: "fact_box",
@@ -188,7 +178,8 @@ let vizSettingsList = [
 		colorVars: [ variables.ideology ],
 		tooltipVars: [ variables.attack_name, variables.ideology, variables.victims_wounded, variables.victims_killed, variables.attack_description ],
 		tooltipScrollable: true,
-		dotSettings: { shape: "circle", width: "7"}
+		interpolation: "step",
+		dotSettings: { shape: "rect", width: "7"}
 	},
 	{
 		id: "#homegrown__fact-box__prevention-method", 
