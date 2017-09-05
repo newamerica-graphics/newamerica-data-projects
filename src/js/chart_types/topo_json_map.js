@@ -311,7 +311,7 @@ export class TopoJsonMap {
 			   				return fillColor2;
 			   			}
 		   			} else {
-		   				let fillColor = this.colorScale(splitVals[0].trim())
+		   				let fillColor = this.setFill(d)
 		   				let binIndex = this.colorScale.range().indexOf(fillColor);
 		   				if (valsShown.indexOf(binIndex) > -1) {
 			   				return fillColor;
