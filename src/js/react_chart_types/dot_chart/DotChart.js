@@ -9,12 +9,13 @@ import SelectBox from './SelectBox.js';
 import Tooltip from './Tooltip.js';
 import LayoutSelector from './LayoutSelector.js';
 import LegendCategorical from './LegendCategorical.js';
+import HistogramAnnotations from './HistogramAnnotations.js';
 import ScatterLayout from './ScatterLayout.js';
 import HistogramLayout from './HistogramLayout.js';
 import CategoryLayout from './CategoryLayout.js';
 
 import { Motion, spring } from 'react-motion';
-import { Axis, axisPropsFromTickScale, BOTTOM } from 'react-d3-axis';
+import { Axis, axisPropsFromTickScale, BOTTOM, TOP } from 'react-d3-axis';
 
 const d3 = require("d3");
 
@@ -81,14 +82,34 @@ class DotChart extends React.Component {
     }
 
     getHistogramAxis() {
-        const { currLayout } = this.state;
+        const { currLayout, currLayoutSettings } = this.state;
         return (
             <Motion style={{currTransform: spring(currLayout.height)}} >
                 {({currTransform}) => {
                     return (
-                        <g className="dot-chart__axis-time" style={{transform: "translateY(" + currTransform + "px)"}}>
-                            <Axis {...axisPropsFromTickScale(currLayout.axisScale, 6)} format={(d) => { return d3.timeFormat("%B %Y")(d) }} style={{orient: BOTTOM}} />
+                        <g>
+                            <g className="dot-chart__axis-time" style={{transform: "translateY(" + currTransform + "px)"}}>
+                                <Axis {...axisPropsFromTickScale(currLayout.axisScale, 6)} format={(d) => { return d3.timeFormat("%B %Y")(d) }} style={{orient: BOTTOM}} />
+                            </g>
+                            {currLayoutSettings.annotationSheet &&
+                                <g className="dot-chart__axis-time" style={{transform: "translateY(" + (currTransform + 25) + "px)"}}>
+                                    <Axis {...axisPropsFromTickScale(currLayout.axisScale, 6)} format={(d) => { return "" }} style={{orient: TOP}} />
+                                </g>
+                            }
                         </g>
+                    )
+                }}
+            </Motion>
+        )
+    }
+
+    getHistogramAnnotations() {
+        const { currLayout, currLayoutSettings } = this.state;
+        return (
+            <Motion style={{currTransform: spring(currLayout.height + 40)}} >
+                {({currTransform}) => {
+                    return (
+                        <HistogramAnnotations data={this.props.data[currLayoutSettings.annotationSheet]} scale={currLayout.axisScale} width={this.state.width} />
                     )
                 }}
             </Motion>
@@ -149,35 +170,47 @@ class DotChart extends React.Component {
 	render() {
 		const { valsShown, currLayout, currLayoutSettings, currDataShown, width, height } = this.state;
 
-        let axis;
+        let axis, layoutAnnotations;
         console.log(currLayout);
 
         if (currLayout) {
             axis = this.getCurrAxis();
         }
+
+        if (currLayout && currLayoutSettings.annotationSheet) {
+            layoutAnnotations = this.getHistogramAnnotations()
+        }
+
+        let layoutHeight = currLayout ? currLayout.height + 27 : 0;
+        // layoutHeight += currLayoutSettings.annotationSheet ? 50 : 0;
+
 		return (
 			<div className="dot-chart" ref="renderingArea">
                 <LayoutSelector layouts={this.props.vizSettings.layouts} currSelected={currLayoutSettings} layoutChangeFunc={this.changeLayout.bind(this)} />
 				{ currLayout &&
-					<svg className="dot-chart__container" width="100%" height={currLayout.height + 50}>
-						<g className="dot-chart__rendering-area" width={width} height={currLayout.height}>
-							{currDataShown.map((d) => {
-                                if (!d.id) return null;
-								let style = currLayout.renderDot(d)
-								let fillColor = this.setFill(d),
-									stroke = this.setStroke(d)
+                    <div>
+    					<svg className="dot-chart__container" width="100%" height={layoutHeight}>
+    						<g className="dot-chart__rendering-area" width={width} >
+    							{currDataShown.map((d) => {
+                                    if (!d.id) return null;
+    								let style = currLayout.renderDot(d)
+    								let fillColor = this.setFill(d),
+    									stroke = this.setStroke(d)
 
-								return (
-									<Motion style={style} key={d.id}>
-										{({x, y, r}) => {
-											return <circle className="dot-chart__dot" cx={x} cy={y} r={r} fill={fillColor} stroke={stroke} strokeWidth="2px" onMouseOver={() => { return this.mouseover(d, x, y); }} onMouseOut={() => { return this.mouseout(); }}/>;
-										}}
-									</Motion>
-								)
-							})}
-                        </g>
-                        {axis}
-					</svg>
+    								return (
+    									<Motion style={style} key={d.id}>
+    										{({x, y, r}) => {
+    											return <circle className="dot-chart__dot" cx={x} cy={y} r={r} fill={fillColor} stroke={stroke} strokeWidth="2px" onMouseOver={() => { return this.mouseover(d, x, y); }} onMouseOut={() => { return this.mouseout(); }}/>;
+    										}}
+    									</Motion>
+    								)
+    							})}
+                            </g>
+                            {axis}
+                        </svg>
+                        {layoutAnnotations}
+                    </div>
+					
 				}
                 <LegendCategorical valsShown={valsShown} toggleChartVals={this.toggleChartVals.bind(this)} colorScale={this.colorScale} />
 				<Tooltip settings={this.state.tooltipSettings} />
@@ -204,9 +237,9 @@ class DotChart extends React.Component {
             tooltipSettings: {
                 x: x,
                 y: y - 30,
+                title: d[this.props.vizSettings.tooltipTitleVar.variable],
                 tooltipVars: this.props.vizSettings.tooltipVars,
-                // renderingAreaWidth: renderingAreaWidth,
-                // title: year,
+                renderingAreaWidth: this.state.width,
                 datum: d
             }
         })

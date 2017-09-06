@@ -3,19 +3,21 @@ var d3 = require("d3");
 import { formatValue } from "../../helper_functions/format_value.js";
 
 export default function Tooltip(props) {
-	let styleObject;
+	let styleObject, tooltipTitle;
 	if (props.settings) {
-		const {datum, tooltipVars, x, y} = props.settings
+		const {datum, tooltipVars, x, y, title, renderingAreaWidth} = props.settings
 		styleObject = {
 			display: "block",
 			top: y + "px"
 		};
 
-		// if (x < (renderingAreaWidth - 200)) {
+		if (x < (renderingAreaWidth - 200)) {
 			styleObject.left = (x + 10) + "px";
-		// } else {
-		// 	styleObject.right = (renderingAreaWidth - x + 10) + "px";
-		// }
+		} else {
+			styleObject.right = (renderingAreaWidth - x + 10) + "px";
+		}
+
+		tooltipTitle = title;
 	} else {
 		styleObject = {
 			display: "none"
@@ -27,7 +29,7 @@ export default function Tooltip(props) {
 		{ props.settings &&
 			<div className="tooltip__content-container">
 				<div className="tooltip__title-container">
-					<h1 className="tooltip__title">Title</h1>
+					<h1 className="tooltip__title">{tooltipTitle}</h1>
 				</div>
 				<div className="tooltip__category">
 					<ul className="tooltip__category__val-list">

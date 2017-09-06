@@ -28,6 +28,23 @@ export class ContentStream {
 			.append("div")
 			.attr("class", "content-stream__title");
 
+		if (this.additionalDataVars) {
+			let additionalDataContainers = contentStreamTitleContainer
+				.selectAll("div.content-stream__additional-data")
+				.data(this.additionalDataVars)
+				.enter()
+				.append("div")
+				.attr("class", "content-stream__additional-data")
+
+			additionalDataContainers.append("h5")
+				.attr("class", "content-stream__additional-data__label")
+				.text((varSettings) => { return varSettings.displayName + ":"})
+
+			this.additionDataValues = additionalDataContainers.append("h5")
+				.attr("class", "content-stream__additional-data__value")
+
+		}
+
 		if (this.showCurrFilterVal) {
 			let filterValContainer = contentStreamTitleContainer
 				.append("div")
@@ -92,6 +109,8 @@ export class ContentStream {
 	setStreamContent({color, dataPoint, currFilter}) {
 		let valueList, filterVal;
 
+		console.log(dataPoint)
+
 		if (dataPoint == "all" || !dataPoint.state || !this.dataNest.get(String(dataPoint.state))) {
 			valueList = this.data;
 			this.contentStreamTitle
@@ -111,6 +130,11 @@ export class ContentStream {
 		if (color) {
 			this.contentStreamContainer
 				.style("border", "2px solid " + color)
+		}
+
+		if (this.additionalDataVars) {
+			this.additionDataValues
+				.text((varSettings) => { return dataPoint[varSettings.variable]})
 		}
 
 		

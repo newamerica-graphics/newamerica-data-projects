@@ -31,4 +31,16 @@
 			}
 		}
 	}
+
+	&__histogram-annotation {
+		&__text {
+			font-size: 12px;
+			fill: palette-get(na-black-70);
+		}
+
+		&__line {
+			stroke: palette-get(na-black);
+			stroke-width: 1px;
+		}
+	}
 }
