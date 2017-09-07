@@ -10,7 +10,6 @@ const d3 = require("d3");
 
 const getRange = (start, end) => { return Array(end - start + 1).fill().map((_, idx) => start + idx) }
 
-let dotWidth = 5;
 let dotPadding = 1;
 
 class HistogramLayout {
@@ -31,13 +30,14 @@ class HistogramLayout {
 		this.binScale = d3.scaleQuantize().domain(extents)
 		this.yScale = d3.scaleLinear();
 		this.axisScale = d3.scaleLinear();
+
+		this.dotWidth = width/200;
 		
 		this.setDataColumns();
-
 	}
 
 	setDataColumns() {
-		this.numColumns = Math.floor(this.width/((dotWidth + dotPadding)*2));
+		this.numColumns = Math.floor(this.width/((this.dotWidth + dotPadding)*2));
 
 		console.log(this.numColumns)
 
@@ -48,7 +48,7 @@ class HistogramLayout {
 
 		this.xScale
 			.domain([0, this.numColumns])
-			.range([dotWidth + dotPadding, this.width - dotWidth - dotPadding])
+			.range([this.dotWidth + dotPadding, this.width - this.dotWidth - dotPadding])
 
 		this.axisScale 
 			.domain(this.binScale.domain())
@@ -69,7 +69,7 @@ class HistogramLayout {
 		// console.log(this.dataNest)
 
 		this.maxColCount = d3.max(this.dataNest, (d) => { return d.values.length});
-		this.height = (this.maxColCount + 1)*((dotWidth + dotPadding)*2)
+		this.height = (this.maxColCount + 1)*((this.dotWidth + dotPadding)*2)
 
 		// console.log(this.maxColCount);
 	}
@@ -77,6 +77,8 @@ class HistogramLayout {
 
 	resize(width) {
 		this.width = width;
+
+		this.dotWidth = width/200;
 
 		this.setDataColumns();
 	}
@@ -93,13 +95,12 @@ class HistogramLayout {
 			xPos = this.xScale(bin)
 
 		}
-		return {x: spring(xPos), y: spring(yPos), r: 5 }
+		return {x: spring(xPos), y: spring(yPos), r: this.dotWidth }
 	}
 
 	getYPos(whichBin, d, i) {
 		let binValList;
 		let retVal = 0;
-
 
 		this.dataNest.forEach((bin) => {
 			if (+bin.key === whichBin) {
@@ -119,7 +120,7 @@ class HistogramLayout {
 			})
 		}
 
-		return dotWidth + ((this.maxColCount - retVal)*((dotWidth + dotPadding)*2));
+		return this.dotWidth + ((this.maxColCount - retVal)*((this.dotWidth + dotPadding)*2));
 	}
 }
 

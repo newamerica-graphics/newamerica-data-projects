@@ -82,18 +82,19 @@ class DotChart extends React.Component {
     }
 
     getHistogramAxis() {
-        const { currLayout, currLayoutSettings } = this.state;
+        const { currLayout, currLayoutSettings, width } = this.state;
+        let numTicks = Math.floor(width/150)
         return (
             <Motion style={{currTransform: spring(currLayout.height)}} >
                 {({currTransform}) => {
                     return (
                         <g>
                             <g className="dot-chart__axis-time" style={{transform: "translateY(" + currTransform + "px)"}}>
-                                <Axis {...axisPropsFromTickScale(currLayout.axisScale, 6)} format={(d) => { return d3.timeFormat("%B %Y")(d) }} style={{orient: BOTTOM}} />
+                                <Axis {...axisPropsFromTickScale(currLayout.axisScale, numTicks)} format={(d) => { return d3.timeFormat("%B %Y")(d) }} style={{orient: BOTTOM}} />
                             </g>
                             {currLayoutSettings.annotationSheet &&
                                 <g className="dot-chart__axis-time" style={{transform: "translateY(" + (currTransform + 25) + "px)"}}>
-                                    <Axis {...axisPropsFromTickScale(currLayout.axisScale, 6)} format={(d) => { return "" }} style={{orient: TOP}} />
+                                    <Axis {...axisPropsFromTickScale(currLayout.axisScale, numTicks)} format={(d) => { return "" }} style={{orient: TOP}} />
                                 </g>
                             }
                         </g>
@@ -186,7 +187,9 @@ class DotChart extends React.Component {
 
 		return (
 			<div className="dot-chart" ref="renderingArea">
-                <LayoutSelector layouts={this.props.vizSettings.layouts} currSelected={currLayoutSettings} layoutChangeFunc={this.changeLayout.bind(this)} />
+                {this.props.vizSettings.layouts.length > 1 && 
+                    <LayoutSelector layouts={this.props.vizSettings.layouts} currSelected={currLayoutSettings} layoutChangeFunc={this.changeLayout.bind(this)} /> }
+                <LegendCategorical valsShown={valsShown} toggleChartVals={this.toggleChartVals.bind(this)} colorScale={this.colorScale} orientation="horizontal-center"/>
 				{ currLayout &&
                     <div>
     					<svg className="dot-chart__container" width="100%" height={layoutHeight}>
@@ -212,7 +215,7 @@ class DotChart extends React.Component {
                     </div>
 					
 				}
-                <LegendCategorical valsShown={valsShown} toggleChartVals={this.toggleChartVals.bind(this)} colorScale={this.colorScale} />
+                
 				<Tooltip settings={this.state.tooltipSettings} />
 			</div>
 		)

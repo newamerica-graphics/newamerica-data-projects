@@ -4,7 +4,7 @@ import { colors } from "../../helper_functions/colors.js";
 
 
 let variables = {
-	category: {"variable":"category", "displayName":"Category", "format": "string", "scaleType":"categorical", "customDomain":["Anti-Sharia Legislation", "Anti-Refugee Legislation", "Opposition to mosque, cemetery, and Islamic school construction", "Anti-Muslim actions by elected or appointed officials", "Anti-Muslim hate crimes", "Other"], "customRange":[colors.yellow.light, colors.purple.light, colors.orange.light, colors.blue.light, colors.red.light, colors.brown.light]},
+	category: {"variable":"category", "displayName":"Category", "format": "string", "scaleType":"categorical", "customDomain":["Anti-Sharia Legislation", "Anti-Refugee Legislation", "Opposition to mosque, cemetery, and Islamic school construction", "Anti-Muslim actions by elected or appointed officials", "Anti-Muslim hate crimes", "Other"], "customRange":[colors.brown.light, colors.purple.light, colors.orange.light, colors.red.light, colors.blue.light, colors.yellow.light]},
 	state: {"variable":"state", "displayName":"State", "format": "string"},
 	title: {"variable":"title", "displayName":"Title", "format": "string"},
 	description: {"variable":"description", "displayName":"Description", "format": "string"},
@@ -16,12 +16,12 @@ let variables = {
 	population_total: {"variable":"population_total", "displayName":"Total Population", "format": "number"},
 	population_muslim: {"variable":"population_muslim", "displayName":"Estimated Muslim Population", "format": "number"},
 	incidents_total: {"variable":"incidents_total", "displayName":"All Incidents", "format": "number", "filterVal": null, "scaleType": "quantize", "numBins":4, "customRange":[colors.white, colors.turquoise.light, colors.turquoise.dark]},
-	incidents_anti_sharia: {"variable":"incidents_anti_sharia", "displayName":"Anti-Sharia Incidents", "format": "number", "filterVal": "Anti-Sharia Legislation","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.yellow.light, colors.yellow.dark]},
+	incidents_anti_sharia: {"variable":"incidents_anti_sharia", "displayName":"Anti-Sharia Incidents", "format": "number", "filterVal": "Anti-Sharia Legislation","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.orange.light, colors.orange.dark]},
 	incidents_anti_refugee: {"variable":"incidents_anti_refugee", "displayName":"Anti-Refugee Incidents", "format": "number", "filterVal": "Anti-Refugee Legislation","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.purple.light, colors.purple.dark]},
-	incidents_anti_construction: {"variable":"incidents_anti_construction", "displayName":"Anti-Construction Incidents", "format": "number", "filterVal": "Opposition to mosque, cemetery, and Islamic school construction","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.orange.light, colors.orange.dark]},
-	incidents_elected_official: {"variable":"incidents_elected_official", "displayName":"Elected Official Incidents", "format": "number", "filterVal": "Anti-Muslim actions by elected or appointed officials","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.blue.light, colors.blue.dark]},
-	incidents_other: {"variable":"incidents_other", "displayName":"Other Incidents", "format": "number", "filterVal": "Other","scaleType": "quantize", "numBins":2, "customRange":[colors.white, colors.brown.light, colors.brown.dark]},
-	incidents_hate: {"variable":"incidents_hate", "displayName":"Hate Incidents", "format": "number", "filterVal": "Anti-Muslim hate crimes","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.red.light, colors.red.dark]},
+	incidents_anti_construction: {"variable":"incidents_anti_construction", "displayName":"Anti-Construction Incidents", "format": "number", "filterVal": "Opposition to mosque, cemetery, and Islamic school construction","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.brown.light, colors.brown.dark]},
+	incidents_elected_official: {"variable":"incidents_elected_official", "displayName":"Elected Official Incidents", "format": "number", "filterVal": "Anti-Muslim actions by elected or appointed officials","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.red.light, colors.red.dark]},
+	incidents_other: {"variable":"incidents_other", "displayName":"Other Incidents", "format": "number", "filterVal": "Other","scaleType": "quantize", "numBins":2, "customRange":[colors.white, colors.yellow.light, colors.yellow.dark]},
+	incidents_hate: {"variable":"incidents_hate", "displayName":"Hate Incidents", "format": "number", "filterVal": "Anti-Muslim hate crimes","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.blue.light, colors.blue.dark]},
 
 }
 
@@ -97,7 +97,7 @@ let vizSettingsList = [
 
 const reactVizSettingsList = [
 	{
-		id: "#muslim-community-restrictions__dot-chart", 
+		id: "#muslim-community-restrictions__time-dot-chart", 
 		vizType: "dot_chart",
 		primaryDataSheet: "incidents",
 		colorVar: variables.category,
@@ -108,14 +108,25 @@ const reactVizSettingsList = [
 				label: "Incidents Over Time",
 				layout: "histogram",
 				annotationSheet:"timeline_annotations"
-			},
+			}
+		]
+	},
+	{
+		id: "#muslim-community-restrictions__state-dot-chart", 
+		vizType: "dot_chart",
+		primaryDataSheet: "incidents",
+		colorVar: variables.category,
+		tooltipTitleVar: variables.title,
+		tooltipVars: [variables.state, variables.category, variables.date, variables.description],
+		layouts: [
 			{
 				label: "Incidents by State",
 				layout: "category"
 			}
 		]
-
 	},
+
+			
 ]
 
 let projectSettings = {

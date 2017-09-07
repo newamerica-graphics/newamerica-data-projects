@@ -10,6 +10,7 @@
 		text {
 			fill: palette-get(na-black-40);
 			font-size: 10px;
+			font-weight: bold;
 		}
 
 		line, path {
@@ -41,6 +42,13 @@
 		&__line {
 			stroke: palette-get(na-black);
 			stroke-width: 1px;
+		}
+	}
+
+	.legend {
+		padding-bottom: 15px;
+		&__cell__label {
+			margin-bottom: 0px;
 		}
 	}
 }

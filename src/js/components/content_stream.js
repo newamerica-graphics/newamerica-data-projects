@@ -29,18 +29,18 @@ export class ContentStream {
 			.attr("class", "content-stream__title");
 
 		if (this.additionalDataVars) {
-			let additionalDataContainers = contentStreamTitleContainer
+			this.additionalDataContainers = contentStreamTitleContainer
 				.selectAll("div.content-stream__additional-data")
 				.data(this.additionalDataVars)
 				.enter()
 				.append("div")
 				.attr("class", "content-stream__additional-data")
 
-			additionalDataContainers.append("h5")
+			this.additionalDataContainers.append("h5")
 				.attr("class", "content-stream__additional-data__label")
 				.text((varSettings) => { return varSettings.displayName + ":"})
 
-			this.additionDataValues = additionalDataContainers.append("h5")
+			this.additionalDataValues = this.additionalDataContainers.append("h5")
 				.attr("class", "content-stream__additional-data__value")
 
 		}
@@ -116,12 +116,20 @@ export class ContentStream {
 			this.contentStreamTitle
 				.text("All States");
 
+			if (this.additionalDataContainers) {
+				this.additionalDataContainers.style("display", "none")
+			}
+
 		} else {
 			let value = dataPoint.state;
 			valueList = this.dataNest.get(String(value));
 			
 			this.contentStreamTitle
 				.text(value);
+
+			if (this.additionalDataContainers) {
+				this.additionalDataContainers.style("display", "block")
+			}
 		}
 
 		valueList = currFilter && currFilter.filterVal && this.filterVar ? valueList.filter((d) => { return d[this.filterVar.variable] == currFilter.filterVal}) : valueList
@@ -133,10 +141,9 @@ export class ContentStream {
 		}
 
 		if (this.additionalDataVars) {
-			this.additionDataValues
+			this.additionalDataValues
 				.text((varSettings) => { return dataPoint[varSettings.variable]})
 		}
-
 		
 		if (this.showCurrFilterVal && currFilter) {
 			this.filterValLabel

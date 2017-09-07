@@ -10,7 +10,6 @@ const d3 = require("d3");
 
 const getRange = (start, end) => { return Array(end - start + 1).fill().map((_, idx) => start + idx) }
 
-let dotWidth = 5;
 let dotPadding = 1;
 let leftMargin = 120;
 
@@ -33,15 +32,24 @@ class CategoryLayout {
 
 		this.sortedCategoryVals = categoryNest.sort((a, b) => { return b.values.length - a.values.length})
 
-		this.height = this.sortedCategoryVals.length * (dotWidth + dotPadding + 2) * 2
+		this.dotWidth = width/200;
+
+		this.height = this.sortedCategoryVals.length * (this.dotWidth + dotPadding + 2) * 2
 
 		this.yScale.domain(this.sortedCategoryVals.map(d => d.key))
-			.range([dotWidth + dotPadding, this.height])
+			.range([this.dotWidth + dotPadding, this.height])
 	}
 
 
 	resize(width) {
 		this.width = width;
+
+		this.dotWidth = width/200;
+
+		this.height = this.sortedCategoryVals.length * (this.dotWidth + dotPadding + 2) * 2
+
+		this.yScale.range([this.dotWidth + dotPadding, this.height])
+
 	}
 
 	renderDot(d) {
@@ -62,9 +70,9 @@ class CategoryLayout {
 					return;
 				}
 			})
-			xPos = xIndex * (dotWidth + dotPadding) * 2 + leftMargin + (dotWidth + dotPadding)
+			xPos = xIndex * (this.dotWidth + dotPadding) * 2 + leftMargin + (this.dotWidth + dotPadding)
 		}
-		return {x: spring(xPos), y: spring(yPos), r: 5 }
+		return {x: spring(xPos), y: spring(yPos), r: this.dotWidth }
 	}
 }
 
