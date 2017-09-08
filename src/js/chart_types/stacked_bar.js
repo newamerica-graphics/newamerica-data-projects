@@ -135,6 +135,8 @@ export class StackedBar {
 		})
 		
 		let yearExtents = d3.extent(yearList);
+
+		console.log(yearExtents, yearList, this.nestedVals)
 		
 		this.yScale.domain([0, maxTotalYearVal]);
 		this.xScale.domain(range(+yearExtents[0], +yearExtents[1]));

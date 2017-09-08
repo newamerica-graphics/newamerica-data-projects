@@ -310,7 +310,7 @@ export class StepChart {
 		}
 
 		this.dataPoints
-			.style("fill", (d) => {
+		    .attr("stroke", (d) => {
 		   		var value = d[this.currColorVarName];
 		   			let binIndex = this.colorScale.domain().indexOf(value);
 		   			if (valsShown.indexOf(binIndex) > -1) {
