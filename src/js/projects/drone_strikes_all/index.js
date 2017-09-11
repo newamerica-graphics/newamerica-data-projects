@@ -352,7 +352,6 @@ let vizSettingsList = [
 				yAxisLabelText: "Strikes",
 				showYAxis: true,
 				tooltipColorVals: true,
-				infoText: { "location": "top-left", "color": colors.red.dark, "text": "New America calculates drone strikes that occur in short succession and in one location as one strike. However, since President Trump took office, the Pentagon reports multiple series of strikes that are not possible to verify individually. By the Pentagon’s estimates, Trump’s counterterrorism strikes exceed what is represented here."}
 			},
 			{
 				xVar: variables.year,
