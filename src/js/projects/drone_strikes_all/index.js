@@ -3,8 +3,8 @@ import { setupProject } from "../../viz_controller.js";
 import { colors } from "../../helper_functions/colors.js";
 const d3 = require("d3");
 
-let currDate = new Date();
-console.log(currDate);
+let strikeCompareDate = new Date();
+strikeCompareDate.setMonth(strikeCompareDate.getMonth() - 6)
 
 let variables = {
 	country: {"variable":"country", "displayName":"Country", "format": "string"},
@@ -770,7 +770,7 @@ let reactVizSettingsList = [
 						type:"fact-box-list",
 						format:"horizontal",
 						factBoxVars: [
-							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:currDate.setMonth(currDate.getMonth() - 6)} },
+							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
 							{ label: "Total strikes (Overall)",type: "count" },
 							{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
 							{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
@@ -821,7 +821,7 @@ let reactVizSettingsList = [
 						type:"fact-box-list",
 						format:"horizontal",
 						factBoxVars: [
-							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:currDate.setMonth(currDate.getMonth() - 6)} },
+							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
 							{ label: "Total strikes (Overall)",type: "count" },
 							{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
 							{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
@@ -873,7 +873,7 @@ let reactVizSettingsList = [
 						type:"fact-box-list",
 						format:"horizontal",
 						factBoxVars: [
-							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:currDate.setMonth(currDate.getMonth() - 6)} },
+							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
 							{ label: "Total strikes (Overall)",type: "count" },
 							{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
 							{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
@@ -926,7 +926,7 @@ let reactVizSettingsList = [
 						type:"fact-box-list",
 						format:"horizontal",
 						factBoxVars: [
-							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:currDate.setMonth(currDate.getMonth() - 6)} },
+							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
 							{ label: "Total strikes (Overall)", type: "count" },
 							{ label: "Civilian casualties (Overall)", type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
 							{ label: "Total casualties (Overall)", type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
