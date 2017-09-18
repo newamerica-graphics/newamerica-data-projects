@@ -84,9 +84,9 @@ let vizSettingsList = [
 			},
 			{
 				vizType: "table",
-				primaryDataSheet: "incidents",
-				tableVars: [ variables.processed_date, variables.state, variables.category, variables.description, variables.sources_combined],
-				defaultOrdering: [0, "desc"],
+				primaryDataSheet: "states",
+				tableVars: [ variables.state, variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_hate, variables.incidents_other],
+				defaultOrdering: [1, "desc"],
 				pagination: true,
 				numPerPage: 10,
 				colorScaling: false
@@ -108,25 +108,13 @@ const reactVizSettingsList = [
 				label: "Incidents Over Time",
 				layout: "histogram",
 				annotationSheet:"timeline_annotations"
-			}
-		]
-	},
-	{
-		id: "#muslim-community-restrictions__state-dot-chart", 
-		vizType: "dot_chart",
-		primaryDataSheet: "incidents",
-		colorVar: variables.category,
-		tooltipTitleVar: variables.title,
-		tooltipVars: [variables.state, variables.category, variables.date, variables.description],
-		layouts: [
+			},
 			{
 				label: "Incidents by State",
 				layout: "category"
 			}
 		]
-	},
-
-			
+	},		
 ]
 
 let projectSettings = {

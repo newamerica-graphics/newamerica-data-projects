@@ -14,9 +14,6 @@ let dotPadding = 1;
 
 class HistogramLayout {
 	constructor(data, width, height) {
-		console.log(height, width)
-		console.log("in constructor");
-
 		this.width = width;
 		this.data = data;
 
@@ -32,6 +29,7 @@ class HistogramLayout {
 		this.axisScale = d3.scaleLinear();
 
 		this.dotWidth = width/200;
+		this.dotWidth = this.dotWidth > 3.5 ? 3.5 : this.dotWidth;
 		
 		this.setDataColumns();
 	}
@@ -43,8 +41,6 @@ class HistogramLayout {
 
 		this.binScale
 			.range(getRange(0, this.numColumns));
-
-		// console.log(this.binScale.domain(), this.binScale.range())
 
 		this.xScale
 			.domain([0, this.numColumns])
@@ -58,15 +54,15 @@ class HistogramLayout {
 		this.dataNest = d3.nest()
 			.key((d) => { return d.date ? this.binScale(new Date(d.date)) : null })
 			.sortKeys(d3.ascending)
-			.sortValues((a, b) => { 
+			.sortValues((a, b) => {
 				if (!a.date) return b;
 				if (!b.date) return a;
 
-				return a.date > b.date
+				return new Date(a.date) - new Date(b.date)
 			})
 			.entries(this.data)
 
-		// console.log(this.dataNest)
+		console.log(this.dataNest)
 
 		this.maxColCount = d3.max(this.dataNest, (d) => { return d.values.length});
 		this.height = (this.maxColCount + 1)*((this.dotWidth + dotPadding)*2)
@@ -79,6 +75,7 @@ class HistogramLayout {
 		this.width = width;
 
 		this.dotWidth = width/200;
+		this.dotWidth = this.dotWidth > 3.5 ? 3.5 : this.dotWidth;
 
 		this.setDataColumns();
 	}

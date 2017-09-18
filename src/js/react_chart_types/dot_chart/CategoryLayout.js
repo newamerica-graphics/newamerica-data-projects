@@ -33,6 +33,7 @@ class CategoryLayout {
 		this.sortedCategoryVals = categoryNest.sort((a, b) => { return b.values.length - a.values.length})
 
 		this.dotWidth = width/200;
+		this.dotWidth = this.dotWidth > 3.5 ? 3.5 : this.dotWidth;
 
 		this.height = this.sortedCategoryVals.length * (this.dotWidth + dotPadding + 2) * 2
 
@@ -45,6 +46,7 @@ class CategoryLayout {
 		this.width = width;
 
 		this.dotWidth = width/200;
+		this.dotWidth = this.dotWidth > 3.5 ? 3.5 : this.dotWidth;
 
 		this.height = this.sortedCategoryVals.length * (this.dotWidth + dotPadding + 2) * 2
 
