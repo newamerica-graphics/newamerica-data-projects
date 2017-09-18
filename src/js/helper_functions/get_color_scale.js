@@ -113,6 +113,7 @@ function setCategoricalRange(uniqueVals, customRange) {
 }
 
 function getUniqueVals(data, filterVar) {
+	console.log(data)
 	let uniqueVals = d3.nest()
 		.key((d) => { return d[filterVar.variable] })
 		.map(data);
