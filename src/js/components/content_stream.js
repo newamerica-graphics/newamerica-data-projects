@@ -190,5 +190,9 @@ export class ContentStream {
 		entryTextContainers.append("h5")
 			.attr("class", "content-stream__entry__description")
 			.text((d) => { return d.description; });   	
+
+		entryTextContainers.append("div")
+			.attr("class", "content-stream__entry__source")
+			.html((d) => { return d.sources_combined; });
 	}
 }
