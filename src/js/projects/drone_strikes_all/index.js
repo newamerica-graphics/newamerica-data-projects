@@ -3,8 +3,8 @@ import { setupProject } from "../../viz_controller.js";
 import { colors } from "../../helper_functions/colors.js";
 const d3 = require("d3");
 
-let currDate = new Date();
-console.log(currDate);
+let strikeCompareDate = new Date();
+strikeCompareDate.setMonth(strikeCompareDate.getMonth() - 6)
 
 let variables = {
 	country: {"variable":"country", "displayName":"Country", "format": "string"},
@@ -39,20 +39,20 @@ let variables = {
 	strike_type: {"variable":"strike_type", "displayName":"Strike Type", "format": "string", "scaleType": "categorical", "customDomain": ["Drone Strike", "Air Strike", "Ground Operation", "Surveillance Operation"], "customRange": [colors.turquoise.light, colors.blue.light, colors.purple.light, colors.red.medium]},
 
 	pk_total_strikes: {"variable":"pk_total_strikes", "displayName":"Total Strikes", "format": "number"},
-	pk_civilians_lowhigh: {"variable":"pk_civilians_lowhigh", "displayName":"Civilians", "format": "string", "disableTableOrdering": true},
-	pk_militants_lowhigh: {"variable":"pk_militants_lowhigh", "displayName":"Militants", "format": "string", "disableTableOrdering": true},
-	pk_unknown_lowhigh: {"variable":"pk_unknown_lowhigh", "displayName":"Unknown", "format": "string", "disableTableOrdering": true},
-	pk_total_lowhigh: {"variable":"pk_total_lowhigh", "displayName":"Total", "format": "string", "disableTableOrdering": true},
+	pk_civilians_lowhigh: {"variable":"pk_civilians_lowhigh", "displayName":"Civilian Casualties", "format": "string", "disableTableOrdering": true},
+	pk_militants_lowhigh: {"variable":"pk_militants_lowhigh", "displayName":"Militant Casualties", "format": "string", "disableTableOrdering": true},
+	pk_unknown_lowhigh: {"variable":"pk_unknown_lowhigh", "displayName":"Unknown Casualties", "format": "string", "disableTableOrdering": true},
+	pk_total_lowhigh: {"variable":"pk_total_lowhigh", "displayName":"Total Casualties", "format": "string", "disableTableOrdering": true},
 	ym_total_strikes: {"variable":"ym_total_strikes", "displayName":"Total Strikes", "format": "number"},
-	ym_civilians_lowhigh: {"variable":"ym_civilians_lowhigh", "displayName":"Civilians", "format": "string", "disableTableOrdering": true},
-	ym_militants_lowhigh: {"variable":"ym_militants_lowhigh", "displayName":"Militants", "format": "string", "disableTableOrdering": true},
-	ym_unknown_lowhigh: {"variable":"ym_unknown_lowhigh", "displayName":"Unknown", "format": "string", "disableTableOrdering": true},
-	ym_total_lowhigh: {"variable":"ym_total_lowhigh", "displayName":"Total", "format": "string", "disableTableOrdering": true},
+	ym_civilians_lowhigh: {"variable":"ym_civilians_lowhigh", "displayName":"Civilian Casualties", "format": "string", "disableTableOrdering": true},
+	ym_militants_lowhigh: {"variable":"ym_militants_lowhigh", "displayName":"Militant Casualties", "format": "string", "disableTableOrdering": true},
+	ym_unknown_lowhigh: {"variable":"ym_unknown_lowhigh", "displayName":"Unknown Casualties", "format": "string", "disableTableOrdering": true},
+	ym_total_lowhigh: {"variable":"ym_total_lowhigh", "displayName":"Total Casualties", "format": "string", "disableTableOrdering": true},
 	sm_total_strikes: {"variable":"sm_total_strikes", "displayName":"Total Strikes", "format": "number"},
-	sm_civilians_lowhigh: {"variable":"sm_civilians_lowhigh", "displayName":"Civilians", "format": "string", "disableTableOrdering": true},
-	sm_militants_lowhigh: {"variable":"sm_militants_lowhigh", "displayName":"Militants", "format": "string", "disableTableOrdering": true},
-	sm_unknown_lowhigh: {"variable":"sm_unknown_lowhigh", "displayName":"Unknown", "format": "string", "disableTableOrdering": true},
-	sm_total_lowhigh: {"variable":"sm_total_lowhigh", "displayName":"Total", "format": "string", "disableTableOrdering": true},
+	sm_civilians_lowhigh: {"variable":"sm_civilians_lowhigh", "displayName":"Civilian Casualties", "format": "string", "disableTableOrdering": true},
+	sm_militants_lowhigh: {"variable":"sm_militants_lowhigh", "displayName":"Militant Casualties", "format": "string", "disableTableOrdering": true},
+	sm_unknown_lowhigh: {"variable":"sm_unknown_lowhigh", "displayName":"Unknown Casualties", "format": "string", "disableTableOrdering": true},
+	sm_total_lowhigh: {"variable":"sm_total_lowhigh", "displayName":"Total Casualties", "format": "string", "disableTableOrdering": true},
 }
 
 const casualtyTypeNestDataFunction = (data, filterVar) => {
@@ -329,8 +329,7 @@ let vizSettingsList = [
 		xAxisLabelInterval: {"small": 5, "medium": 2, "large": 1},
 		yAxisLabelText: "Casualties",
 		showYAxis: true,
-		tooltipColorVals: true,
-		infoText: { "location": "top-left", "color": colors.grey.medium, "text": "This is the text explaining the change in reporting strikes during the Trump administration"}
+		tooltipColorVals: true
 	},
 	{
 		id: "#drone-strikes__yemen__by-president", 
@@ -353,7 +352,6 @@ let vizSettingsList = [
 				yAxisLabelText: "Strikes",
 				showYAxis: true,
 				tooltipColorVals: true,
-				infoText: { "location": "top-left", "color": colors.red.dark, "text": "This is the text explaining the change in reporting strikes during the Trump administration"}
 			},
 			{
 				xVar: variables.year,
@@ -387,7 +385,6 @@ let vizSettingsList = [
 				yAxisLabelText: "Strikes",
 				showYAxis: true,
 				tooltipColorVals: true,
-				infoText: { "location": "top-left", "color": colors.grey.medium, "text": "This is the text explaining the change in reporting strikes during the Trump administration"}
 			},
 			{
 				xVar: variables.year,
@@ -773,7 +770,7 @@ let reactVizSettingsList = [
 						type:"fact-box-list",
 						format:"horizontal",
 						factBoxVars: [
-							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:currDate.setMonth(currDate.getMonth() - 6)} },
+							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
 							{ label: "Total strikes (Overall)",type: "count" },
 							{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
 							{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
@@ -824,7 +821,7 @@ let reactVizSettingsList = [
 						type:"fact-box-list",
 						format:"horizontal",
 						factBoxVars: [
-							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:currDate.setMonth(currDate.getMonth() - 6)} },
+							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
 							{ label: "Total strikes (Overall)",type: "count" },
 							{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
 							{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
@@ -876,7 +873,7 @@ let reactVizSettingsList = [
 						type:"fact-box-list",
 						format:"horizontal",
 						factBoxVars: [
-							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:currDate.setMonth(currDate.getMonth() - 6)} },
+							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
 							{ label: "Total strikes (Overall)",type: "count" },
 							{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
 							{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
@@ -929,7 +926,7 @@ let reactVizSettingsList = [
 						type:"fact-box-list",
 						format:"horizontal",
 						factBoxVars: [
-							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:currDate.setMonth(currDate.getMonth() - 6)} },
+							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
 							{ label: "Total strikes (Overall)", type: "count" },
 							{ label: "Civilian casualties (Overall)", type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
 							{ label: "Total casualties (Overall)", type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
