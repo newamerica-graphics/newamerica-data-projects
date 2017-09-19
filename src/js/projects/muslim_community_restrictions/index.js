@@ -26,22 +26,8 @@ let variables = {
 }
 
 
-let vizSettingsList = [
-	// {
-	// 	id: "#muslim-community-restrictions__states-map", 
-	// 	vizType: "topo_json_map",
-	// 	primaryDataSheet: "states",
-	// 	filterVars: [ variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_other],
-	// 	geometryType: "states",
-	// 	geometryVar: variables.state_id,
-	// 	stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
-	// 	filterGroupSettings: {"hidden": false},
-	// 	tooltipVars: [ variables.state, variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_other],
-	// 	legendSettings: {"orientation": "vertical-right", "showTitle": true},
-	// 	addSmallStateInsets: true
-	// },
-	{
-		id: "#muslim-community-restrictions__states-map",
+let vizSettings = {
+	"muslim-community-restrictions__states-map": {
 		vizType: "tabbed_chart_layout",
 		tabIcons: ["globe", "table"],
 		chartSettingsList: [
@@ -93,7 +79,7 @@ let vizSettingsList = [
 			}
 		]
 	}
-]
+}
 
 const reactVizSettingsList = [
 	{
@@ -121,7 +107,7 @@ let projectSettings = {
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/muslimdiaspora/muslim_community_restrictions.json",
 	downloadDataLink: "https://docs.google.com/spreadsheets/d/1t5lGCzrBMkvkb6zCfXQsQ9Kwqomvj_YzWRvfnS75vTs/",
 	dataSheetNames:["incidents", "states"],
-	vizSettingsList: vizSettingsList,
+	vizSettings: vizSettings,
 	reactVizSettingsList: reactVizSettingsList
 }
 

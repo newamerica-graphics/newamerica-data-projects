@@ -1,7 +1,58 @@
-var showLegendBreakpoint = 800;
-var legendWidth = 200;
+import { BarChart } from "./chart_types/bar_chart.js";
+import { StackedBar } from "./chart_types/stacked_bar.js";
+import { PercentageStackedBar } from "./chart_types/percentage_stacked_bar.js";
+import { Dashboard } from "./layouts/dashboard.js";
+import { DotMatrix } from "./chart_types/dot_matrix.js";
+import { DotHistogram } from "./chart_types/dot_histogram.js";
+import { GroupedDotMatrix } from "./chart_types/grouped_dot_matrix.js";
+import { TopoJsonMap } from "./chart_types/topo_json_map.js";
+import { TabbedChartLayout } from "./layouts/tabbed_chart_layout.js";
+import { ChartWithFactBox } from "./layouts/chart_with_fact_box.js";
+import { Table } from "./chart_types/table.js";
+import { FactBox } from "./chart_types/fact_box.js";
+import { LineChart } from "./chart_types/line_chart.js";
+import { StepChart } from "./chart_types/step_chart.js";
+import { MapboxMap } from "./chart_types/mapbox_map.js";
+import { FinancialOpportunityMap } from "./chart_types/financial_opportunity_map.js";
+import { SummaryBox } from "./chart_types/summary_box.js";
+import { PieChart } from "./chart_types/pie_chart.js";
+import { Bipartite } from "./chart_types/bipartite.js";
+import { CategoryBreakdown } from "./chart_types/category_breakdown.js";
+import { ComparativeDotHistogram } from "./chart_types/comparative_dot_histogram.js";
+import { FilterableChart } from "./layouts/filterable_chart.js";
+import { BarLineCombo } from "./chart_types/bar_line_combo.js";
+import { PinDropMap } from "./chart_types/pindrop_map.js";
+import { VerticalTimeline } from "./chart_types/vertical_timeline.js";
 
-export {
-	showLegendBreakpoint,
-	legendWidth
-};
+// import ResourceToolkit from "./react_chart_types/resource_toolkit/ResourceToolkit.js";
+import DefinitionExplorer from "./react_chart_types/definition_explorer/DefinitionExplorer.js";
+import CalloutBox from "./react_chart_types/callout_box/CalloutBox.js";
+import DotChart from "./react_chart_types/dot_chart/DotChart.js";
+
+export const whichChart = {
+	"bar_chart": BarChart,
+	"bar_line_combo": BarLineCombo,
+	"bipartite": Bipartite,
+	"category_breakdown": CategoryBreakdown,
+	"chart_with_fact_box": ChartWithFactBox,
+	"comparative_dot_histogram": ComparativeDotHistogram,
+	"dashboard": Dashboard,
+	"dot_matrix": DotMatrix,
+	"dot_histogram": DotHistogram,
+	"fact_box": FactBox,
+	"filterable_chart": FilterableChart,
+	"financial_opportunity_map": FinancialOpportunityMap,		
+	"grouped_dot_matrix": GroupedDotMatrix,
+	"line_chart": LineChart,
+	"mapbox_map": MapboxMap,
+	"percentage_stacked_bar": PercentageStackedBar,
+	"pie_chart": PieChart,
+	"pindrop_map": PinDropMap,
+	"stacked_bar": StackedBar,
+	"step_chart": StepChart,
+	"summary_box": SummaryBox,
+	"tabbed_chart_layout": TabbedChartLayout,
+	"table": Table,
+	"topo_json_map": TopoJsonMap,
+	"vertical_timeline": VerticalTimeline,
+}
