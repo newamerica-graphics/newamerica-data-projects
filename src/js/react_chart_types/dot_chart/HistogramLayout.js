@@ -10,7 +10,7 @@ const d3 = require("d3");
 
 const getRange = (start, end) => { return Array(end - start + 1).fill().map((_, idx) => start + idx) }
 
-let dotPadding = 1;
+let dotPadding = .5;
 
 class HistogramLayout {
 	constructor(data, width, height) {
@@ -29,15 +29,13 @@ class HistogramLayout {
 		this.axisScale = d3.scaleLinear();
 
 		this.dotWidth = width/200;
-		this.dotWidth = this.dotWidth > 3.5 ? 3.5 : this.dotWidth;
+		this.dotWidth = this.dotWidth > 3.75 ? 3.75 : this.dotWidth;
 		
 		this.setDataColumns();
 	}
 
 	setDataColumns() {
 		this.numColumns = Math.floor(this.width/((this.dotWidth + dotPadding)*2));
-
-		console.log(this.numColumns)
 
 		this.binScale
 			.range(getRange(0, this.numColumns));
@@ -75,7 +73,7 @@ class HistogramLayout {
 		this.width = width;
 
 		this.dotWidth = width/200;
-		this.dotWidth = this.dotWidth > 3.5 ? 3.5 : this.dotWidth;
+		this.dotWidth = this.dotWidth > 3.75 ? 3.75 : this.dotWidth;
 
 		this.setDataColumns();
 	}

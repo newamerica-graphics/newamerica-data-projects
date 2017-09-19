@@ -10,14 +10,11 @@ const d3 = require("d3");
 
 const getRange = (start, end) => { return Array(end - start + 1).fill().map((_, idx) => start + idx) }
 
-let dotPadding = 1;
+let dotPadding = .5;
 let leftMargin = 120;
 
 class CategoryLayout {
 	constructor(data, width, categoryVar) {
-		console.log(width)
-		console.log("in constructor");
-
 		this.categoryVar = categoryVar;
 		this.width = width;
 		this.data = data;
@@ -33,7 +30,7 @@ class CategoryLayout {
 		this.sortedCategoryVals = categoryNest.sort((a, b) => { return b.values.length - a.values.length})
 
 		this.dotWidth = width/200;
-		this.dotWidth = this.dotWidth > 3.5 ? 3.5 : this.dotWidth;
+		this.dotWidth = this.dotWidth > 3.75 ? 3.75 : this.dotWidth;
 
 		this.height = this.sortedCategoryVals.length * (this.dotWidth + dotPadding + 2) * 2
 
@@ -46,7 +43,7 @@ class CategoryLayout {
 		this.width = width;
 
 		this.dotWidth = width/200;
-		this.dotWidth = this.dotWidth > 3.5 ? 3.5 : this.dotWidth;
+		this.dotWidth = this.dotWidth > 3.75 ? 3.75 : this.dotWidth;
 
 		this.height = this.sortedCategoryVals.length * (this.dotWidth + dotPadding + 2) * 2
 

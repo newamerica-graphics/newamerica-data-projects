@@ -32,7 +32,7 @@ class HistogramAnnotations extends React.Component {
 	setAnnotationPositions({ scale, width }) {
 		console.log("setting positions")
 
-		let startXPos, endXPos, yIndex;
+		let scaledXVal, startXPos, endXPos, yIndex;
 		this.rows = [];
 		this.rows[0] = [];
 
@@ -40,8 +40,16 @@ class HistogramAnnotations extends React.Component {
 			let textElem = this.refs[i];
 			let textBounds = textElem.getBBox();
 			console.log(textBounds)
-			startXPos = scale(new Date(d.date)) - textBounds.width/2
+			scaledXVal = scale(new Date(d.date))
+
+			if (scaledXVal < 0 || scaledXVal > scale.range()[1]) {
+				return d;
+			}
+
+			startXPos = scaledXVal - textBounds.width/2
 			endXPos = startXPos + textBounds.width;
+
+			console.log(startXPos, endXPos)
 
 			if (endXPos > width) {
 				startXPos = width - textBounds.width;
@@ -85,6 +93,9 @@ class HistogramAnnotations extends React.Component {
 	}
 
 	renderAnnotationText(d, i) {
+		if (!d.startXPos || !d.yPos) { 
+			return <text className="dot-chart__histogram-annotation__text" ref={i}></text>; 
+		}
 		let xPos = d.startXPos || 0,
 			yPos = d.yPos + 10 || 0
 		console.log(d)
@@ -95,6 +106,9 @@ class HistogramAnnotations extends React.Component {
 	}
 
 	renderAnnotationLine(d) {
+		if (!d.startXPos || !d.yPos) { 
+			return <line className="dot-chart__histogram-annotation__line" />; 
+		}
 		const { scale } = this.props;
 
 		let xPos = scale(new Date(d.date)),

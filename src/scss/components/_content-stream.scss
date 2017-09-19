@@ -126,8 +126,12 @@
 			color: palette-get(na-black);
 		}
 
-		a {
-			border-bottom: none !important;
+		&__source > a {
+			border-bottom: 1px solid palette-get(na-black-70);
 		}
+
+		/*a {
+			border-bottom: none !important;
+		}*/
 	}
 }

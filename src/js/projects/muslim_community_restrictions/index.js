@@ -18,7 +18,7 @@ let variables = {
 	incidents_total: {"variable":"incidents_total", "displayName":"All Incidents", "format": "number", "filterVal": null, "scaleType": "quantize", "numBins":4, "customRange":[colors.white, colors.turquoise.light, colors.turquoise.dark]},
 	incidents_anti_sharia: {"variable":"incidents_anti_sharia", "displayName":"Anti-Sharia Incidents", "format": "number", "filterVal": "Anti-Sharia Legislation","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.orange.light, colors.orange.dark]},
 	incidents_anti_refugee: {"variable":"incidents_anti_refugee", "displayName":"Anti-Refugee Incidents", "format": "number", "filterVal": "Anti-Refugee Legislation","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.purple.light, colors.purple.dark]},
-	incidents_anti_construction: {"variable":"incidents_anti_construction", "displayName":"Anti-Construction Incidents", "format": "number", "filterVal": "Opposition to mosque, cemetery, and Islamic school construction","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.brown.light, colors.brown.dark]},
+	incidents_anti_construction: {"variable":"incidents_anti_construction", "displayName":"Anti-Construction Incidents", "format": "number", "filterVal": "Opposition to mosque, cemetery, and Islamic school construction","scaleType": "quantize", "numBins":2, "customRange":[colors.white, colors.brown.light, colors.brown.dark]},
 	incidents_elected_official: {"variable":"incidents_elected_official", "displayName":"Elected Official Incidents", "format": "number", "filterVal": "Anti-Muslim actions by elected or appointed officials","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.red.light, colors.red.dark]},
 	incidents_other: {"variable":"incidents_other", "displayName":"Other Incidents", "format": "number", "filterVal": "Other","scaleType": "quantize", "numBins":2, "customRange":[colors.white, colors.yellow.light, colors.yellow.dark]},
 	incidents_hate: {"variable":"incidents_hate", "displayName":"Hate Incidents", "format": "number", "filterVal": "Anti-Muslim hate crimes","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.blue.light, colors.blue.dark]},
@@ -88,7 +88,7 @@ let vizSettingsList = [
 				tableVars: [ variables.state, variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_hate, variables.incidents_other],
 				defaultOrdering: [1, "desc"],
 				pagination: true,
-				numPerPage: 10,
+				numPerPage: 25,
 				colorScaling: false
 			}
 		]

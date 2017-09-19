@@ -159,20 +159,19 @@ class DotChart extends React.Component {
     	return this.colorScale(d[colorVar.variable])
     }
 
-    setStroke(d) {
+    setStrokeWidth(d) {
     	const {currHovered} = this.state;
 
     	if (currHovered && currHovered == d) {
-    		return "white"
+    		return "2px"
     	} 
-    	return "none"
+    	return "1px"
     }
 
 	render() {
 		const { valsShown, currLayout, currLayoutSettings, currDataShown, width, height } = this.state;
 
         let axis, layoutAnnotations;
-        console.log(currLayout);
 
         if (currLayout) {
             axis = this.getCurrAxis();
@@ -198,12 +197,15 @@ class DotChart extends React.Component {
                                     if (!d.id) return null;
     								let style = currLayout.renderDot(d)
     								let fillColor = this.setFill(d),
-    									stroke = this.setStroke(d)
+    									strokeWidth = this.setStrokeWidth(d)
 
+                                    if (d.id === "403") {
+                                        console.log(d);
+                                    }
     								return (
     									<Motion style={style} key={d.id}>
     										{({x, y, r}) => {
-    											return <circle className="dot-chart__dot" cx={x} cy={y} r={r} fill={fillColor} stroke={stroke} strokeWidth="2px" onMouseOver={() => { return this.mouseover(d, x, y); }} onMouseOut={() => { return this.mouseout(); }}/>;
+    											return <circle className="dot-chart__dot" cx={x} cy={y} r={r} fill={fillColor} stroke="white" strokeWidth={strokeWidth} onMouseOver={() => { return this.mouseover(d, x, y); }} onMouseOut={() => { return this.mouseout(); }}/>;
     										}}
     									</Motion>
     								)
@@ -233,8 +235,6 @@ class DotChart extends React.Component {
     }
 
     mouseover(d, x, y) {
-    	console.log(d, x, y)
-
     	this.setState({
             currHovered: d,
             tooltipSettings: {
