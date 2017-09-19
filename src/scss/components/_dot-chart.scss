@@ -1,0 +1,54 @@
+.dot-chart {
+	&__axis-categorical__text {
+		fill: palette-get(na-black-40);
+		font-size: 14px;
+		alignment-baseline: middle;
+		text-anchor: end;
+	}
+
+	&__axis-time {
+		text {
+			fill: palette-get(na-black-40);
+			font-size: 10px;
+			font-weight: bold;
+		}
+
+		line, path {
+			stroke: palette-get(na-black-40) !important;
+		}
+	}
+
+	&__layout-selector {
+		padding-bottom: 20px;
+		&__option {
+			color: palette-get(na-black-40);
+			font-size: 16px;
+			padding-right: 15px;
+			cursor: pointer;
+
+			&.active {
+				font-weight: bold;
+				color: palette-get(na-black);
+			}
+		}
+	}
+
+	&__histogram-annotation {
+		&__text {
+			font-size: 12px;
+			fill: palette-get(na-black-70);
+		}
+
+		&__line {
+			stroke: palette-get(na-black);
+			stroke-width: 1px;
+		}
+	}
+
+	.legend {
+		padding-bottom: 15px;
+		&__cell__label {
+			margin-bottom: 0px;
+		}
+	}
+}

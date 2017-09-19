@@ -61,6 +61,17 @@
 		&:hover {
 			color: palette-get(na-turquoise);
 		}
+
+		&::after {
+		    display:block;
+		    content:attr(title);
+		    font-weight:bold;
+		    height:1px;
+		    color:transparent;
+		    overflow:hidden;
+		    visibility:hidden;
+		    margin-bottom:-1px;
+		}
 	}
 
 	&__category-container, &__variable-container {

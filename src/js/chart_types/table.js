@@ -50,7 +50,7 @@ export class Table {
 		    paging: this.pagination ? true : false,
 		    pageLength: this.numPerPage,
 		    scrollX: false,
-		    ordering: this.disableOrdering? false : true,
+		    ordering: this.disableOrdering ? false : true,
 		    order: this.defaultOrdering ? this.defaultOrdering : ["0", "asc"],
 		    searching: this.disableSearching ? false : true
 		});
@@ -83,10 +83,14 @@ export class Table {
 						return formatValue(data, tableVar.format);
 					}
         			
-        		}
+        		},
         	};
 
-        	tableVar.format == "date" ? varObject["type"] = "date" : null;
+        	if (tableVar.format == "date" || tableVar.format == "date_simple") {
+        		varObject["type"] = "date";
+        	} else if (tableVar.format == "number") {
+        		varObject["type"] = "num";
+        	}
         	console.log(varObject);
 			columnNames.push(varObject);
 		}
