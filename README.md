@@ -47,7 +47,7 @@ The bundled script for a given project will instantiate a viz controller class o
 
 ##### render(dataVizId)
 * renders a given dataviz element
-* @param {String} dataVizId - id (without #) for the viz element you wish to render
+* (required) @param {String} dataVizId - id (without #) for the viz element you wish to render
 
 ##### resize()
 * loops through list of non-react viz elements, calling each element's resize function
