@@ -7,9 +7,9 @@ Primary repository for New America's data visualization projects
 1. clone repo
 2. run ``` npm install ```
 
-## Creating a New Project
+## Creating/Editing a Project
 
-#### Initializing the Project
+#### Initializing a New Project
 1. Create a new folder within the src/js/projects directory titled with the project_id (no spaces/capital letters)
 2. Create an index.js file within this new folder.  index.js must contain:
     * variables definitions array (see spec below)
@@ -18,7 +18,8 @@ Primary repository for New America's data visualization projects
 
 #### Development
 
-1. to create a dev build of the project run ``` npm run dev --project=<project_id> ``` 
+1. to start the dev server run ``` npm run start ```
+2. to create a dev build of the project run ``` npm run dev --project=<project_id> ``` 
 (where project id is the title given to the folder in step 1) 
     * You should now see a file in the local build directory entitled project_id.js
     * leave this command running, as it will watch for any changes you make to the project and update the bundle in your local build directory
@@ -40,9 +41,21 @@ The bundled script for a given project will instantiate a viz controller class o
 
 
 ##### initialize({dataUrl, clickToProfileFunction})
+* initiates data fetch call and optionally overrides click to profile function
+* (required) @param {String} dataUrl - url path for project's data json source
+* (optional) @param {String} clickToProfileFunction - overrides default clickToProfileFunction (function called within viz elements that link to a project's profile pages)
+
+##### render(dataVizId)
+* renders a given dataviz element
+* @param {String} dataVizId - id (without #) for the viz element you wish to render
+
+##### resize()
+* loops through list of non-react viz elements, calling each element's resize function
+
+##### reset()
+* clears list of non-react viz elements (should be called upon component unmount)
 
 ##### getData()
-##### render(dataVizId)
-##### reset()
-##### resize()
+* get method for retrieving the project data, if async data call has not yet completed, will return null
+* @return {object} object containing an array for each sheet in the datasheet
 
