@@ -1,5 +1,4 @@
 import { setupProject } from "../../viz_controller.js";
-
 import { colors } from "../../helper_functions/colors.js";
 import $ from 'jquery';
 
@@ -35,94 +34,84 @@ let variables = {
 	federal_spending_year: {"variable":"year", "displayName":"Year", "format":"year", "scaleType":"categorical"},
 	federal_spending_total: {"variable":"total", "displayName":"Total Spending (Billions)", "format":"price_billions_round", "color": colors.turquoise.light, "scaleType": "linear", "customDomain": [100000000000, 200000000000]},
 	federal_spending_per_student: {"variable":"per_student", "displayName":"Per Student", "format":"price", "color": colors.turquoise.dark ,"customDomain": [5000, 10000]},
-
 }
 
-let vizSettingsList = [
-	// {
-	// 	id: "#varying-degrees__students-funding", 
-	// 	vizType: "percentage_stacked_bar",
-	// 	primaryDataSheet: "funding",
-	// 	groupingVar: variables.sector,
-	// 	filterVars: [ variables.students_funding ],
-	// 	aggregateData: false,
-	// },
-	// {
-	// 	id: "#varying-degrees__government-funding", 
-	// 	vizType: "percentage_stacked_bar",
-	// 	primaryDataSheet: "funding",
-	// 	groupingVar: variables.sector,
-	// 	filterVars: [ variables.states_funding, variables.feds_funding ],
-	// 	aggregateData: false,
-	// 	showLegend: true
-	// },
-	// {
-	// 	id: "#varying-degrees__avg-student-age", 
-	// 	vizType: "dot_matrix",
-	// 	primaryDataSheet: "avg_student_age",
-	// 	orientation: "horizontal",
-	// 	dotSettings: { "width": 9, "offset": 3},
-	// 	filterVars: [ variables.avg_student_age ],
-	// 	legendSettings: {"orientation": "horizontal-center", "showValCounts": true },
-	// 	simpleDataVals: true,
-	// 	eventSettings: {
-	// 		"mouseover":{ "tooltip": false, "fill": false, "stroke": "white", "strokeWidth": 3},
-	// 	}
-	// },
-	// {
-	// 	id: "#varying-degrees__avg-student-full-part-time", 
-	// 	vizType: "dot_matrix",
-	// 	primaryDataSheet: "avg_student_full_part_time",
-	// 	orientation: "horizontal",
-	// 	dotSettings: { "width": 9, "offset": 3},
-	// 	filterVars: [ variables.avg_student_full_part_time ],
-	// 	legendSettings: {"orientation": "horizontal-center", "showValCounts": true },
-	// 	simpleDataVals: true,
-	// 	eventSettings: {
-	// 		"mouseover":{ "tooltip": false, "fill": false, "stroke": "white", "strokeWidth": 3},
-	// 	}
-	// },
-	// {
-	// 	id: "#varying-degrees__avg-student-school-type", 
-	// 	vizType: "dot_matrix",
-	// 	primaryDataSheet: "avg_student_school_type",
-	// 	orientation: "horizontal",
-	// 	dotSettings: { "width": 9, "offset": 3},
-	// 	filterVars: [ variables.avg_student_school_type ],
-	// 	legendSettings: {"orientation": "horizontal-center", "showValCounts": true },
-	// 	simpleDataVals: true,
-	// 	eventSettings: {
-	// 		"mouseover":{ "tooltip": false, "fill": false, "stroke": "white", "strokeWidth": 3},
-	// 	}
-	// },
-	// {
-	// 	id: "#varying-degrees__percent-fin-aid", 
-	// 	vizType: "pie_chart",
-	// 	primaryDataSheet: "percent_fin_aid",
-	// 	labelVar: variables.ethnicity,
-	// 	dataVar: variables.percent_of_aid,
-	// 	categoryVar: variables.category,
-	// 	legendShowVals: true,
-	// },
-	// {
-	// 	id: "#varying-degrees__state-spending", 
-	// 	vizType: "bar_line_combo",
-	// 	primaryDataSheet: "state_spending",
-	// 	xVar: variables.state_spending_year,
-	// 	barVar: variables.state_spending_total,
-	// 	lineVar: variables.state_spending_per_student,
+let vizSettings = {
+	"varying-degrees__students-funding": {
+		vizType: "percentage_stacked_bar",
+		primaryDataSheet: "funding",
+		groupingVar: variables.sector,
+		filterVars: [ variables.students_funding ],
+		aggregateData: false,
+	},
+	"varying-degrees__government-funding": {
+		vizType: "percentage_stacked_bar",
+		primaryDataSheet: "funding",
+		groupingVar: variables.sector,
+		filterVars: [ variables.states_funding, variables.feds_funding ],
+		aggregateData: false,
+		showLegend: true
+	},
+	"varying-degrees__avg-student-age": {
+		vizType: "dot_matrix",
+		primaryDataSheet: "avg_student_age",
+		orientation: "horizontal",
+		dotSettings: { "width": 9, "offset": 3},
+		filterVars: [ variables.avg_student_age ],
+		legendSettings: {"orientation": "horizontal-center", "showValCounts": true },
+		simpleDataVals: true,
+		eventSettings: {
+			"mouseover":{ "tooltip": false, "fill": false, "stroke": "white", "strokeWidth": 3},
+		}
+	},
+	"varying-degrees__avg-student-full-part-time": {
+		vizType: "dot_matrix",
+		primaryDataSheet: "avg_student_full_part_time",
+		orientation: "horizontal",
+		dotSettings: { "width": 9, "offset": 3},
+		filterVars: [ variables.avg_student_full_part_time ],
+		legendSettings: {"orientation": "horizontal-center", "showValCounts": true },
+		simpleDataVals: true,
+		eventSettings: {
+			"mouseover":{ "tooltip": false, "fill": false, "stroke": "white", "strokeWidth": 3},
+		}
+	},
+	"varying-degrees__avg-student-school-type": {
+		vizType: "dot_matrix",
+		primaryDataSheet: "avg_student_school_type",
+		orientation: "horizontal",
+		dotSettings: { "width": 9, "offset": 3},
+		filterVars: [ variables.avg_student_school_type ],
+		legendSettings: {"orientation": "horizontal-center", "showValCounts": true },
+		simpleDataVals: true,
+		eventSettings: {
+			"mouseover":{ "tooltip": false, "fill": false, "stroke": "white", "strokeWidth": 3},
+		}
+	},
+	"varying-degrees__percent-fin-aid": {
+		vizType: "pie_chart",
+		primaryDataSheet: "percent_fin_aid",
+		labelVar: variables.ethnicity,
+		dataVar: variables.percent_of_aid,
+		categoryVar: variables.category,
+		legendShowVals: true,
+	},
+	"varying-degrees__state-spending": {
+		vizType: "bar_line_combo",
+		primaryDataSheet: "state_spending",
+		xVar: variables.state_spending_year,
+		barVar: variables.state_spending_total,
+		lineVar: variables.state_spending_per_student,
 		
-	// },
-	// {
-	// 	id: "#varying-degrees__federal-spending", 
-	// 	vizType: "bar_line_combo",
-	// 	primaryDataSheet: "fed_spending",
-	// 	xVar: variables.federal_spending_year,
-	// 	barVar: variables.federal_spending_total,
-	// 	lineVar: variables.federal_spending_per_student,
-	// },
-	{
-		id: "#varying-degrees__avg-student-aggregate", 
+	},
+	"varying-degrees__federal-spending": {
+		vizType: "bar_line_combo",
+		primaryDataSheet: "fed_spending",
+		xVar: variables.federal_spending_year,
+		barVar: variables.federal_spending_total,
+		lineVar: variables.federal_spending_per_student,
+	},
+	"varying-degrees__avg-student-aggregate": {
 		vizType: "filterable_chart",
 		chartType: "dot_matrix",
 		filterVars: [ variables.avg_student_age, variables.avg_student_dependents, variables.avg_student_employment, variables.avg_student_financial_aid, variables.avg_student_full_part_time, variables.avg_student_gender, variables.avg_student_housing, variables.avg_student_learning_environment, variables.avg_student_race_ethnicity, variables.avg_student_school_type ],
@@ -137,17 +126,7 @@ let vizSettingsList = [
 				"mouseover":{ "tooltip": false, "fill": false, "stroke": "white", "strokeWidth": 3},
 			}
 		},
-		
 	},
-]
-
-let projectSettings = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/edpolicy/varying_degrees.json",
-	customDataDownloadSource: "https://na-data-projects.s3.amazonaws.com/data/edpolicy/NA_VaryingDegrees_Data.zip",
-	dataSheetNames:["funding", "percent_fin_aid"],
-	vizSettingsList: vizSettingsList
 }
 
-setupProject(projectSettings);
-
-	
+setupProject(vizSettings);

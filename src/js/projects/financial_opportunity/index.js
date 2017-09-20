@@ -73,9 +73,8 @@ let insetMapSettings = [
     },
 ]
 
-let vizSettingsList = [
-    {
-        id: "#financial-opportunity__census-tract-map", 
+let vizSettings = {
+    "financial-opportunity__census-tract-map": {
         vizType: "financial_opportunity_map",
         mapboxStyleUrl: "mapbox://styles/newamericamapbox/civcm5ziy00d92imrwswlo1wv",
         source: {
@@ -107,8 +106,7 @@ let vizSettingsList = [
         popupContentFunction: censusTractMapSetPopupContent,
         popupColumns: 3
     },
-    {
-        id: "#financial-opportunity__county-map", 
+    "financial-opportunity__county-map": {
         vizType: "financial_opportunity_map",
         mapboxStyleUrl: "mapbox://styles/newamericamapbox/ciwdu1mzs003j2pmq94myzf8q",
         source: {
@@ -129,8 +127,7 @@ let vizSettingsList = [
         popupContentFunction: countyMapSetPopupContent,
         popupColumns: 1
     },
-    {
-        id: "#financial-opportunity__census-tract-map-other-services", 
+    "financial-opportunity__census-tract-map-other-services": {
         vizType: "financial_opportunity_map",
         mapboxStyleUrl: "mapbox://styles/newamericamapbox/cixql9hl200762rp5qynmxcfe",
         source: {
@@ -162,13 +159,9 @@ let vizSettingsList = [
         popupContentFunction: censusTractOtherServicesMapSetPopupContent,
         popupColumns: 3
     },
-]
-
-let projectSettings = {
-    vizSettingsList: vizSettingsList
 }
 
-setupProject(projectSettings);
+setupProject(vizSettings);
 
 function censusTractMapSetPopupContent(feature) {
     console.log(this);

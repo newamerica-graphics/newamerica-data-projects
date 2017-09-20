@@ -1,7 +1,5 @@
 import { setupProject } from "../../viz_controller.js";
-
 import { colors } from "../../helper_functions/colors.js";
-
 
 let variables = {
 	title: {"variable":"title", "displayName":"Title", "format": "string"},
@@ -13,9 +11,8 @@ let variables = {
 	city: {"variable":"city", "displayName":"city", "format": "string"},
 }
 
-let vizSettingsList = [
-	{
-		id: "#dll-work-group__map", 
+let vizSettings = {
+	"dll-work-group__map": { 
 		vizType: "dashboard",
 		layoutRows: [
 			[
@@ -45,15 +42,6 @@ let vizSettingsList = [
 			],
 		]
 	}
-	
-]
-
-let projectSettings = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/edpolicy/dll_work_group.json",
-	downloadDataLink: "https://docs.google.com/spreadsheets/d/1kJyTZR372JIXYCWnHEOQPv3r56dlLZqjuZUwr56FUGc/",
-	dataSheetNames:["states", "dll_work"],
-	vizSettingsList: vizSettingsList
 }
 
-setupProject(projectSettings);
-
+setupProject(vizSettings);

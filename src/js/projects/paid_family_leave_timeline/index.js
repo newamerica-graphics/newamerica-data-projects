@@ -1,7 +1,5 @@
 import { setupProject } from "../../viz_controller.js";
-
 import { colors } from "../../helper_functions/colors.js";
-
 
 let variables = {
 	week: {"variable":"week", "displayName":"Week", "format": "string"},
@@ -9,9 +7,8 @@ let variables = {
 	description: {"variable":"description", "displayName":"Description", "format": "string"},
 }
 
-let vizSettingsList = [
-	{
-		id: "#paid-family-leave-timeline__timeline", 
+let vizSettings = {
+	"paid-family-leave-timeline__timeline": {
 		vizType: "vertical_timeline",
 		primaryDataSheet: "timeline",
 		timeVar: variables.week,
@@ -21,16 +18,6 @@ let vizSettingsList = [
 		descriptionVar: variables.description,
 		begEndLabels: ["Childbirth", "1 Year"]
 	},
-]
-
-
-let projectSettings = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/bll/paid_family_leave.json",
-	downloadDataLink: "https://docs.google.com/spreadsheets/d/1LNeGat4tkirj4IqpXUEa4DhD3nO39saOmjWRMyU-a1I",
-	dataSheetNames:["timeline"],
-	vizSettingsList: vizSettingsList,
 }
 
-setupProject(projectSettings);
-
-	
+setupProject(vizSettings);

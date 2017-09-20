@@ -41,9 +41,8 @@ let variables = {
 	cd_avg_salary_source: {"variable":"cd_avg_salary_source", "displayName":"Average Salary Source", "format": "string", "category":"Center Directors"},
 }
 
-let vizSettingsList = [
-	{
-		id: "#early-ed-leaders__pre-service-map", 
+let vizSettings = {
+	"early-ed-leaders__pre-service-map": {
 		vizType: "topo_json_map",
 		primaryDataSheet: "states",
 		geometryType: "states",
@@ -58,8 +57,7 @@ let vizSettingsList = [
 		addSmallStateInsets: true,
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 	},
-	{
-		id: "#early-ed-leaders__in-service-map", 
+	"early-ed-leaders__in-service-map": {
 		vizType: "topo_json_map",
 		primaryDataSheet: "states",
 		geometryType: "states",
@@ -74,8 +72,7 @@ let vizSettingsList = [
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 
 	},
-	{
-		id: "#early-ed-leaders__retention-map", 
+	"early-ed-leaders__retention-map": {
 		vizType: "topo_json_map",
 		primaryDataSheet: "states",
 		geometryType: "states",
@@ -89,8 +86,7 @@ let vizSettingsList = [
 		addSmallStateInsets: true,
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }		
 	},
-	{
-		id: "#early-ed-leaders__min-ed-requirement", 
+	"early-ed-leaders__min-ed-requirement": {
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -100,8 +96,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#early-ed-leaders__license-grade-span", 
+	"early-ed-leaders__license-grade-span": {
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -111,8 +106,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#early-ed-leaders__higher-ed-coursework", 
+	"early-ed-leaders__higher-ed-coursework": {
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -122,8 +116,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#early-ed-leaders__clinical-experience", 
+	"early-ed-leaders__clinical-experience": {
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -133,8 +126,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#early-ed-leaders__prior-teaching-experience", 
+	"early-ed-leaders__prior-teaching-experience": {
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -144,8 +136,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#early-ed-leaders__cd-ed-training-requirement", 
+	"early-ed-leaders__cd-ed-training-requirement": {
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -155,8 +146,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#early-ed-leaders__cd-prior-experience", 
+	"early-ed-leaders__cd-prior-experience": {
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -166,8 +156,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#early-ed-leaders__cd-has-credential", 
+	"early-ed-leaders__cd-has-credential": {
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -177,8 +166,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#early-ed-leaders__professional-learning", 
+	"early-ed-leaders__professional-learning": {
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -188,8 +176,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#early-ed-leaders__joint-professional-learning", 
+	"early-ed-leaders__joint-professional-learning": {
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -199,8 +186,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#early-ed-leaders__cd-qris-different-tiers", 
+	"early-ed-leaders__cd-qris-different-tiers": {
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -210,8 +196,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#early-ed-leaders__track-principal-turnover", 
+	"early-ed-leaders__track-principal-turnover": {
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -221,8 +206,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#early-ed-leaders__benefits", 
+	"early-ed-leaders__benefits": {
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -232,30 +216,27 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#early-ed-leaders__avg-salary",
-		primaryDataSheet: "states",
+	"early-ed-leaders__avg-salary": {
 		vizType: "comparative_dot_histogram",
+		primaryDataSheet: "states",
 		groupingVars: [ variables.avg_salary_continuous_scale ],
 		labelVar: variables.state_abbrev,
 		titleVar: variables.state,
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" },
 		customNumBins: 25
 	},
-	{
-		id: "#early-ed-leaders__cd-avg-salary",
-		primaryDataSheet: "states",
+	"early-ed-leaders__cd-avg-salary": {
 		vizType: "comparative_dot_histogram",
+		primaryDataSheet: "states",
 		groupingVars: [ variables.cd_avg_salary_continuous_scale ],
 		labelVar: variables.state_abbrev,
 		titleVar: variables.state,
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" },
 		customNumBins: 25
 	},
-	{
-		id: "#early-ed-leaders__avg-salary-combined",
-		primaryDataSheet: "states",
+	"early-ed-leaders__avg-salary-combined": {
 		vizType: "comparative_dot_histogram",
+		primaryDataSheet: "states",
 		groupingVars: [ variables.cd_avg_salary_continuous_scale, variables.avg_salary_continuous_scale ],
 		labelVar: variables.state_abbrev,
 		titleVar: variables.state,
@@ -263,15 +244,7 @@ let vizSettingsList = [
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" },
 		customNumBins: 25
 	},
-]
-
-let projectSettings = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/edpolicy/early_ed_leaders.json",
-	downloadDataLink: "https://docs.google.com/spreadsheets/d/1Ojj6gLytFubMwoAC95lWhqwjA1X8D-CKuf1wFWkgtQE/",
-	dataSheetNames:["states"],
-	vizSettingsList: vizSettingsList
 }
 
-setupProject(projectSettings);
-
+setupProject(vizSettings);
 	

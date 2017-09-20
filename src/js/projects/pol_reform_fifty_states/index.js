@@ -1,7 +1,5 @@
 import { setupProject } from "../../viz_controller.js";
-
 import { colors } from "../../helper_functions/colors.js";
-
 
 let variables = {
 	state_id: {"variable":"state_id", "displayName":"State Id"},
@@ -33,9 +31,8 @@ let variables = {
 	ranked_choice_voting: {"variable":"ranked_choice_voting", "displayName":"Ranked Choice Voting", "format": "string", "category":"Voting"},
 }
 
-let vizSettingsList = [
-	{
-		id: "#pol-reform-50-states__elections-map", 
+let vizSettings = {
+	"pol-reform-50-states__elections-map": { 
 		vizType: "topo_json_map",
 		primaryDataSheet: "states",
 		geometryType: "states",
@@ -49,8 +46,7 @@ let vizSettingsList = [
 		filterGroupSettings: {"hidden": false},
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
 	},
-	{
-		id: "#pol-reform-50-states__redistricting-map", 
+	"pol-reform-50-states__redistricting-map": { 
 		vizType: "topo_json_map",
 		primaryDataSheet: "states",
 		geometryType: "states",
@@ -64,8 +60,7 @@ let vizSettingsList = [
 		filterGroupSettings: {"hidden": false},
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
 	},
-	{
-		id: "#pol-reform-50-states__financing-map", 
+	"pol-reform-50-states__financing-map": { 
 		vizType: "topo_json_map",
 		primaryDataSheet: "states",
 		geometryType: "states",
@@ -79,8 +74,7 @@ let vizSettingsList = [
 		filterGroupSettings: {"hidden": false},
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
 	},
-	{
-		id: "#pol-reform-50-states__congressional-primaries", 
+	"pol-reform-50-states__congressional-primaries": { 
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -90,8 +84,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#pol-reform-50-states__presidential-primaries", 
+	"pol-reform-50-states__presidential-primaries": { 
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -101,8 +94,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#pol-reform-50-states__early-voting", 
+	"pol-reform-50-states__early-voting": { 
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -112,8 +104,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#pol-reform-50-states__same-day-registration", 
+	"pol-reform-50-states__same-day-registration": { 
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -123,8 +114,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#pol-reform-50-states__automatic-voter-registration", 
+	"pol-reform-50-states__automatic-voter-registration": { 
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -134,8 +124,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#pol-reform-50-states__online-registration", 
+	"pol-reform-50-states__online-registration": { 
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -145,8 +134,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#pol-reform-50-states__state-redistricting", 
+	"pol-reform-50-states__state-redistricting": { 
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -156,8 +144,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#pol-reform-50-states__congressional-redistricting", 
+	"pol-reform-50-states__congressional-redistricting": { 
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -167,8 +154,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#pol-reform-50-states__no-excuse-absentee", 
+	"pol-reform-50-states__no-excuse-absentee": { 
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -178,8 +164,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#pol-reform-50-states__electronic-filing", 
+	"pol-reform-50-states__electronic-filing": { 
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -189,8 +174,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	{
-		id: "#pol-reform-50-states__public-financing", 
+	"pol-reform-50-states__public-financing": { 
 		vizType: "category_breakdown",
 		primaryDataSheet: "states",
 		dotSettings: { "width": 30, "offset": 5},
@@ -200,16 +184,7 @@ let vizSettingsList = [
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-
-]
-
-let projectSettings = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/polreform/political-reform-fifty-states.json",
-	downloadDataLink: "https://docs.google.com/spreadsheets/d/1_ji_GJZRBMcSiW35vF8PvXzsYIu8z8tjqESDAxKxEm4/",
-	dataSheetNames:["states"],
-	vizSettingsList: vizSettingsList
 }
 
-setupProject(projectSettings);
-
+setupProject(vizSettings);
 	
