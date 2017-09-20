@@ -11,34 +11,49 @@ import { render } from 'react-dom';
 
 import { formatValue } from "./helper_functions/format_value.js";
 
-import { whichChart } from "./utilities.js";
+import { whichChart, defaultClickToProfile } from "./utilities.js";
 
-export const setupProject = (projectSettings) => {
-	let vizControl = new VizController(projectSettings);
+import DefinitionExplorer from "./react_chart_types/definition_explorer/DefinitionExplorer.js";
+import CalloutBox from "./react_chart_types/callout_box/CalloutBox.js";
+import DotChart from "./react_chart_types/dot_chart/DotChart.js";
 
-	vizControl.fetchData();
+export const setupProject = (vizSettings) => {
+	window.vizControl = new VizController(vizSettings);
+
+	window.vizControl.initialize({dataUrl:"https://na-data-projects.s3.amazonaws.com/data/muslimdiaspora/muslim_community_restrictions.json"});
 
 	window.addEventListener('resize', vizControl.resize);
 
-	vizControl.render("muslim-community-restrictions__states-map")
+	// window.addEventListener('click', () => vizControl.render("muslim-community-restrictions__states-map"))
+	window.vizControl.render("muslim-community-restrictions__states-map")
+	window.vizControl.render("muslim-community-restrictions__time-dot-chart")
 }
 
 class VizController {
-	constructor(projectSettings) {
-		Object.assign(this, projectSettings)
+	constructor(vizSettings) {
+		this.vizSettings = vizSettings;
 
 		this.renderQueue = [];
 		this.vizList = [];
+		this.clickToProfileFunction = defaultClickToProfile
 	}
 
-	fetchData() {
-		console.log(this.dataUrl)
-		d3.json(this.dataUrl, (data) => {
+	initialize({dataUrl, clickToProfileFunction}) {
+		this.sendDataRequest(dataUrl)
+		if (clickToProfileFunction) {
+			this.overrideClickToProfileFunction(clickToProfileFunction)
+		}
+	}
+
+	sendDataRequest(dataUrl) {
+		console.log(dataUrl)
+		d3.json(dataUrl, (data) => {
 			console.log("data received")
 			console.log(data);
 			if (!data) { return; }
 	    	if (this.renderQueue.length > 0) { 
 	    		for (let renderFunc of this.renderQueue) {
+	    			console.log("rendering from queue")
 	    			renderFunc(data);
 	    		}
 	    	}
@@ -51,15 +66,24 @@ class VizController {
 	}
 
 	render(dataVizId) {
-		let chart = this.initializeChart(dataVizId)
-		if (!chart) { return; }
-
-		this.vizList.push(chart)
-		
-		if (this.data) { 
-			chart.render(this.data) 
+		let settingsObject = this.vizSettings[dataVizId]
+		if (settingsObject.isReact) {
+			if (this.data) {
+				this.renderReactChart(dataVizId, settingsObject)
+			} else {
+				this.renderQueue.push((data) => { return this.renderReactChart(dataVizId, settingsObject, data); })
+			}
 		} else {
-			this.renderQueue.push(chart.render)
+			let chart = this.initializeChart(dataVizId, settingsObject)
+			if (!chart) { return; }
+
+			this.vizList.push(chart)
+			
+			if (this.data) {
+				chart.render(this.data) 
+			} else {
+				this.renderQueue.push((data) => { return chart.render(data); })
+			}
 		}
 	}
 
@@ -73,208 +97,50 @@ class VizController {
 		})
 	}
 
-	initializeChart(dataVizId) {
-		console.log(whichChart)
-		let settingsObject = this.vizSettings[dataVizId]
-		console.log(settingsObject)
+	initializeChart(dataVizId, settingsObject) {
 		if (!settingsObject) { return null; }
 
-		settingsObject.id = dataVizId
+		settingsObject.id = "#" + dataVizId
+		settingsObject.clickToProfileFunction = this.clickToProfileFunction
 		return new whichChart[settingsObject.vizType](settingsObject)
 	}
+
+	renderReactChart(dataVizId, settingsObject, data) {
+		if ($("#" + dataVizId).length < 1) { return; }
+
+		settingsObject.clickToProfileFunction = this.clickToProfileFunction
+
+		switch (settingsObject.vizType) {
+			case "callout_box":
+				render(
+					<CalloutBox vizSettings={settingsObject} data={data} />,
+					document.getElementById(dataVizId)
+				)
+				break;
+			case "definition_explorer":
+				render(
+					<DefinitionExplorer vizSettings={settingsObject} data={data} />,
+					document.getElementById(dataVizId)
+				)
+				break;
+
+			case "dot_chart":
+				render(
+					<DotChart vizSettings={settingsObject} data={data} />,
+					document.getElementById(dataVizId)
+				)
+				break;
+		}
+	}
+
+	overrideClickToProfileFunction(clickToProfileFunction) {
+		this.clickToProfileFunction = clickToProfileFunction
+	}
+
+	getData() {
+		return this.data;
+	}
 }
-
-	
-
-// 	renderCharts();
-
-// 	function initialize() {
-// 		for (let vizSettingsObject of vizSettingsList) {
-// 			if($(vizSettingsObject.id).length != 0) {
-// 				let viz;
-// 				switch (vizSettingsObject.vizType) {
-// 					case "bar_chart":
-// 						viz = new BarChart(vizSettingsObject, imageFolderId);
-// 						break;
-
-// 					case "bar_line_combo":
-// 						viz = new BarLineCombo(vizSettingsObject);
-// 						break;
-
-// 					case "bipartite":
-// 						viz = new Bipartite(vizSettingsObject, imageFolderId);
-// 						break;
-
-// 					case "category_breakdown":
-// 						viz = new CategoryBreakdown(vizSettingsObject, imageFolderId);
-// 						break;
-
-// 					case "chart_with_fact_box":
-// 						viz = new ChartWithFactBox(vizSettingsObject, imageFolderId);
-// 						break;
-
-// 					case "comparative_dot_histogram":
-// 						viz = new ComparativeDotHistogram(vizSettingsObject, imageFolderId);
-// 						break;
-
-// 					case "dashboard":
-// 						viz = new Dashboard(vizSettingsObject);
-// 						break;
-
-// 					case "dot_matrix":
-// 						viz = new DotMatrix(vizSettingsObject, imageFolderId);
-// 						break;
-
-// 					case "dot_histogram":
-// 						viz = new DotHistogram(vizSettingsObject, imageFolderId);
-// 						break;
-
-// 					case "fact_box":
-// 						viz = new FactBox(vizSettingsObject);
-// 						break;
-
-// 					case "filterable_chart":
-// 						viz = new FilterableChart(vizSettingsObject);
-// 						break;
-
-// 					case "financial_opportunity_map":
-// 						viz = new FinancialOpportunityMap(vizSettingsObject);
-// 						break;
-					
-// 					case "grouped_dot_matrix":
-// 						viz = new GroupedDotMatrix(vizSettingsObject, imageFolderId);
-// 						break;
-
-// 					case "line_chart":
-// 						viz = new LineChart(vizSettingsObject);
-// 						break;
-
-// 					case "mapbox_map":
-// 						viz = new MapboxMap(vizSettingsObject);
-// 						break;
-
-// 					case "percentage_stacked_bar":
-// 						viz = new PercentageStackedBar(vizSettingsObject);
-// 						break;
-
-// 					case "pie_chart":
-// 						viz = new PieChart(vizSettingsObject);
-// 						break;
-
-// 					case "pindrop_map":
-// 						viz = new PinDropMap(vizSettingsObject);
-// 						break;
-
-// 					case "stacked_bar":
-// 						viz = new StackedBar(vizSettingsObject);
-// 						break;
-
-// 					case "step_chart":
-// 						viz = new StepChart(vizSettingsObject);
-// 						break;
-
-// 					case "summary_box":
-// 						viz = new SummaryBox(vizSettingsObject);
-// 						break;
-
-// 					case "tabbed_chart_layout":
-// 						viz = new TabbedChartLayout(vizSettingsObject);
-// 						break;
-
-// 					case "table":
-// 						viz = new Table(vizSettingsObject);
-// 						break;
-
-// 					case "topo_json_map":
-// 						viz = new TopoJsonMap(vizSettingsObject);
-// 						break;
-
-// 					case "vertical_timeline":
-// 						viz = new VerticalTimeline(vizSettingsObject);
-// 						break;
-// 				}
-
-// 				vizList.push(viz);
-// 			} else {
-// 				hideLoadingGif(vizSettingsObject.id);
-// 			}
-// 		}
-// 	}
-
-// 	function renderCharts() {
-// 		console.log(vizList);
-// 		if (!dataUrl) {
-// 			for (let viz of vizList) {
-// 				viz.render();
-// 				hideLoadingGif(viz.id);
-// 			}
-			
-// 			// setDataDownloadLinks(d);
-// 			// setProfileValues(d);
-// 		} else {
-// 			d3.json(dataUrl, (d) => {
-// 				console.log(d)
-// 				for (let viz of vizList) {
-// 					viz.render(d);
-					
-// 					hideLoadingGif(viz.id);
-// 				}
-
-// 				if (reactVizSettingsList) {
-// 					for (let vizSettings of reactVizSettingsList) {
-// 						if($(vizSettings.id).length != 0) {
-// 							renderReact(vizSettings, d);
-						
-// 							hideLoadingGif(vizSettings.id);
-// 						}
-// 					}
-// 				}
-
-// 				setDataDownloadLinks(d, projectSettings);
-				
-// 				setProfileValues(d);
-// 			});
-// 		}
-// 		console.log("finished rendering!")
-// 	}
-
-// 	function renderReact(vizSettings, data) {
-
-// 		switch (vizSettings.vizType) {
-// 			// case "resource_toolkit":
-// 			// 	render(
-// 			// 		<ResourceToolkit vizSettings={vizSettings} data={data} />,
-// 			// 		document.getElementById(vizSettings.id.replace("#", ""))
-// 			// 	)
-// 			// 	break;
-// 			case "callout_box":
-// 				render(
-// 					<CalloutBox vizSettings={vizSettings} data={data} />,
-// 					document.getElementById(vizSettings.id.replace("#", ""))
-// 				)
-// 				break;
-// 			case "definition_explorer":
-// 				render(
-// 					<DefinitionExplorer vizSettings={vizSettings} data={data} />,
-// 					document.getElementById(vizSettings.id.replace("#", ""))
-// 				)
-// 				break;
-
-// 			case "dot_chart":
-// 				render(
-// 					<DotChart vizSettings={vizSettings} data={data} />,
-// 					document.getElementById(vizSettings.id.replace("#", ""))
-// 				)
-// 				break;
-// 		}
-		
-// 	}
-
-// 	function resize() {
-// 		for (let viz of vizList) {
-// 			viz.resize ? viz.resize() : null;
-// 		}
-// 	}
 
 // 	function hideLoadingGif(id) {
 // 		console.log("hiding loading gif");
@@ -282,6 +148,20 @@ class VizController {
 // 		$(id).siblings(".dataviz__loading-gif").hide();
 // 		$(id).css("visibility", "visible").css("min-height","none");
 // 	}
+
+// function setDataDownloadLinks(data, projectSettings) {
+// 	if (projectSettings.customDataDownloadSource) {
+// 		$("#in-depth__download__csv").attr("href", projectSettings.customDataDownloadSource);
+// 	} else {
+// 		let publicDataJson = {};
+// 		for (let sheetName of dataSheetNames) {	
+// 			publicDataJson[sheetName] = data[sheetName];
+// 		}
+
+// 		setCSVZipLink(publicDataJson);
+// 		setJSONZipLink(publicDataJson);
+// 	}
+// }
 
 // 	function setCSVZipLink(dataJson) {
 // 		var zip = new JSZip();

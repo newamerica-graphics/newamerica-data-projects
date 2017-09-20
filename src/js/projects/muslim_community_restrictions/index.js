@@ -1,7 +1,5 @@
 import { setupProject } from "../../viz_controller.js";
-
 import { colors } from "../../helper_functions/colors.js";
-
 
 let variables = {
 	category: {"variable":"category", "displayName":"Category", "format": "string", "scaleType":"categorical", "customDomain":["Anti-Sharia Legislation", "Anti-Refugee Legislation", "Opposition to mosque, cemetery, and Islamic school construction", "Anti-Muslim actions by elected or appointed officials", "Anti-Muslim hate crimes", "Other"], "customRange":[colors.brown.light, colors.purple.light, colors.orange.light, colors.red.light, colors.blue.light, colors.yellow.light]},
@@ -22,9 +20,7 @@ let variables = {
 	incidents_elected_official: {"variable":"incidents_elected_official", "displayName":"Elected Official Incidents", "format": "number", "filterVal": "Anti-Muslim actions by elected or appointed officials","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.red.light, colors.red.dark]},
 	incidents_other: {"variable":"incidents_other", "displayName":"Other Incidents", "format": "number", "filterVal": "Other","scaleType": "quantize", "numBins":2, "customRange":[colors.white, colors.yellow.light, colors.yellow.dark]},
 	incidents_hate: {"variable":"incidents_hate", "displayName":"Hate Incidents", "format": "number", "filterVal": "Anti-Muslim hate crimes","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.blue.light, colors.blue.dark]},
-
 }
-
 
 let vizSettings = {
 	"muslim-community-restrictions__states-map": {
@@ -78,12 +74,9 @@ let vizSettings = {
 				colorScaling: false
 			}
 		]
-	}
-}
-
-const reactVizSettingsList = [
-	{
-		id: "#muslim-community-restrictions__time-dot-chart", 
+	},
+	"muslim-community-restrictions__time-dot-chart": {
+		isReact: true,
 		vizType: "dot_chart",
 		primaryDataSheet: "incidents",
 		colorVar: variables.category,
@@ -101,16 +94,7 @@ const reactVizSettingsList = [
 			}
 		]
 	},		
-]
-
-let projectSettings = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/muslimdiaspora/muslim_community_restrictions.json",
-	downloadDataLink: "https://docs.google.com/spreadsheets/d/1t5lGCzrBMkvkb6zCfXQsQ9Kwqomvj_YzWRvfnS75vTs/",
-	dataSheetNames:["incidents", "states"],
-	vizSettings: vizSettings,
-	reactVizSettingsList: reactVizSettingsList
 }
 
-setupProject(projectSettings);
-
+setupProject(vizSettings);
 	

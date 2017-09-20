@@ -24,11 +24,6 @@ import { BarLineCombo } from "./chart_types/bar_line_combo.js";
 import { PinDropMap } from "./chart_types/pindrop_map.js";
 import { VerticalTimeline } from "./chart_types/vertical_timeline.js";
 
-// import ResourceToolkit from "./react_chart_types/resource_toolkit/ResourceToolkit.js";
-import DefinitionExplorer from "./react_chart_types/definition_explorer/DefinitionExplorer.js";
-import CalloutBox from "./react_chart_types/callout_box/CalloutBox.js";
-import DotChart from "./react_chart_types/dot_chart/DotChart.js";
-
 export const whichChart = {
 	"bar_chart": BarChart,
 	"bar_line_combo": BarLineCombo,
@@ -55,4 +50,12 @@ export const whichChart = {
 	"table": Table,
 	"topo_json_map": TopoJsonMap,
 	"vertical_timeline": VerticalTimeline,
+}
+
+export const defaultClickToProfile = (profileName) => {
+	console.log(window.location)
+	let currPath = window.location.pathname,
+		splitPieces = currPath.splitPieces
+
+	window.location.pathname = "/" + splitPieces[1] + "/" + splitPieces[2] + "/profile/?" + encodeURI(profileName);
 }

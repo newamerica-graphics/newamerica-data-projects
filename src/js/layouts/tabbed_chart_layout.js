@@ -48,7 +48,7 @@ export class TabbedChartLayout {
 	}
 
 	render(data) {
-		console.log(this.vizList);
+		console.log(this);
 		let visibilityToggles = [];
 		for (let viz of this.vizList) {
 			console.log(viz);
