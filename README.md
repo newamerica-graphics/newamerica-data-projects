@@ -33,12 +33,15 @@ Primary repository for New America's data visualization projects
 2. Go to the settings tab for the page you just created and add the name of the script (project_id.js) to the DATA PROJECT EXTERNAL SCRIPT field
 3. Add dataviz blocks to the post, with the corresponding dataviz id for each visualization
 
+## Variables Definition Spec
+(coming soon)
 
+## Viz Settings Definition Spec
+(coming soon)
 
-## Spec for Integration with Wagtail Templating Backend
+## Integration with Wagtail Templating Backend
 
 The bundled script for a given project will instantiate a viz controller class object for the project.  This viz controller has the following public methods:
-
 
 ##### initialize({dataUrl, clickToProfileFunction})
 * initiates data fetch call and optionally overrides click to profile function
