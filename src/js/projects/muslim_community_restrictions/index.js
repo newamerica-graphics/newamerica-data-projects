@@ -97,4 +97,5 @@ let vizSettings = {
 }
 
 setupProject(vizSettings);
-	
+
+module.exports = vizSettings;
