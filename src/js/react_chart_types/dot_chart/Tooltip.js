@@ -44,14 +44,23 @@ export default function Tooltip(props) {
 
 function renderVal(datum, varSettings) {
 	let dataVal = datum[varSettings.variable];
+	let formattedValue;
+
 	if (dataVal) {
+		if (varSettings.format == "link") {
+			console.log(dataVal)
+			formattedValue =  <h3 className="tooltip__category__list-item__value" dangerouslySetInnerHTML={{__html:dataVal}}></h3>
+		} else {
+			formattedValue = <h3 className="tooltip__category__list-item__value">{ formatValue(dataVal, varSettings.format) }</h3>
+		}
+
 		return (
 			<li className="tooltip__category__list-item" key={varSettings.variable}>
 				{/*<svg className="tooltip__color-swatch-container">
 					<circle className="tooltip__color-swatch" cx="4" cy="4" r="4" style={{fill:"green"}}></circle>
 				</svg>*/}
 				<h3 className="tooltip__category__list-item__label">{ varSettings.displayName }:</h3>
-				<h3 className="tooltip__category__list-item__value">{ formatValue(dataVal, varSettings.format) }</h3>
+				{formattedValue}
 			</li>
 		)
 	}

@@ -159,7 +159,7 @@ class DotChart extends React.Component {
     toggleChartVals(newVals) {
         let newData;
         
-        let varName = this.props.vizSettings.colorVar.variable
+        let varName = this.props.vizSettings.colorSettings.colorVar.variable
         newData = this.data.filter((d) => { return newVals.indexOf(d[varName]) > -1 })
         
         this.setState({
