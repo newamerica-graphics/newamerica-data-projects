@@ -11,7 +11,7 @@ export default function Tooltip(props) {
 			top: y + "px"
 		};
 
-		if (x < (renderingAreaWidth - 200)) {
+		if (x < (renderingAreaWidth - 300)) {
 			styleObject.left = (x + 10) + "px";
 		} else {
 			styleObject.right = (renderingAreaWidth - x + 10) + "px";

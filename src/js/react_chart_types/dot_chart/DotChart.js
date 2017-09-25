@@ -25,6 +25,11 @@ class DotChart extends React.Component {
         const {data, vizSettings} = props
 
 		this.data = data[vizSettings.primaryDataSheet];
+        console.log(this.data.length)
+        if (vizSettings.filterInitialDataFunction) {
+            this.data = this.data.filter(vizSettings.filterInitialDataFunction);
+        }
+        console.log(this.data.length)
 
 		this.resizeFunc = this.resize.bind(this);
 
@@ -32,12 +37,17 @@ class DotChart extends React.Component {
 			this.colorScale = getColorScale(this.data, props.vizSettings.colorVar)
 		}
 
+        if (vizSettings.interaction == "click") {
+            window.addEventListener('click', () => { console.log("clicked"); return this.clicked(null); });
+        }
+
 		this.state = {
             currLayoutSettings: vizSettings.layouts[0],
 			currLayout: null,
 			currDataShown: this.data,
 			width: 0,
             currHovered: null,
+            currClicked: null,
             tooltipSettings: null,
             valsShown:[]
 		}
@@ -60,12 +70,13 @@ class DotChart extends React.Component {
     }
 
     getCurrLayout(data, layoutSettings, w) {
+        console.log(this.props.vizSettings.dotSettings)
         switch(layoutSettings.layout) {
             case "histogram":
-                return new HistogramLayout(data, w)
+                return new HistogramLayout(data, w, this.props.vizSettings.dotSettings)
 
             case "category":
-                return new CategoryLayout(data, w, {variable: "state"})
+                return new CategoryLayout(data, w, layoutSettings.categoryVar, this.props.vizSettings.dotSettings)
         }
     }
 
@@ -159,17 +170,18 @@ class DotChart extends React.Component {
     	return this.colorScale(d[colorVar.variable])
     }
 
-    setStrokeWidth(d) {
-    	const {currHovered} = this.state;
+    setStrokeColor(d) {
+    	const {currClicked, currHovered} = this.state;
 
-    	if (currHovered && currHovered == d) {
-    		return "2px"
+    	if ((currClicked && currClicked == d) || (currHovered && currHovered == d)) {
+    		return "black"
     	} 
-    	return "1px"
+    	return "white"
     }
 
 	render() {
 		const { valsShown, currLayout, currLayoutSettings, currDataShown, width, height } = this.state;
+        const { layouts, interaction } = this.props.vizSettings
 
         let axis, layoutAnnotations;
 
@@ -187,7 +199,7 @@ class DotChart extends React.Component {
 		return (
 			<div className="dot-chart" ref="renderingArea">
                 {this.props.vizSettings.layouts.length > 1 && 
-                    <LayoutSelector layouts={this.props.vizSettings.layouts} currSelected={currLayoutSettings} layoutChangeFunc={this.changeLayout.bind(this)} /> }
+                    <LayoutSelector layouts={layouts} currSelected={currLayoutSettings} layoutChangeFunc={this.changeLayout.bind(this)} /> }
                 <LegendCategorical valsShown={valsShown} toggleChartVals={this.toggleChartVals.bind(this)} colorScale={this.colorScale} orientation="horizontal-center"/>
 				{ currLayout &&
                     <div>
@@ -197,15 +209,20 @@ class DotChart extends React.Component {
                                     if (!d.id) return null;
     								let style = currLayout.renderDot(d)
     								let fillColor = this.setFill(d),
-    									strokeWidth = this.setStrokeWidth(d)
+    									strokeColor = this.setStrokeColor(d)
 
-                                    if (d.id === "403") {
-                                        console.log(d);
-                                    }
     								return (
     									<Motion style={style} key={d.id}>
     										{({x, y, r}) => {
-    											return <circle className="dot-chart__dot" cx={x} cy={y} r={r} fill={fillColor} stroke="white" strokeWidth={strokeWidth} onMouseOver={() => { return this.mouseover(d, x, y); }} onMouseOut={() => { return this.mouseout(); }}/>;
+    											return (
+                                                    <circle className={interaction == "click" ? "dot-chart__dot clickable" : "dot-chart__dot"}
+                                                        cx={x} cy={y} r={r} 
+                                                        fill={fillColor} 
+                                                        stroke={strokeColor} 
+                                                        onClick={(e, b) => { console.log(e, b); e.stopPropagation(); return interaction == "click" ? this.clicked(d, x, y) : null; }} 
+                                                        onMouseOver={() => { return this.mouseover(d, x, y); }} 
+                                                        onMouseOut={() => { return this.mouseout(d); }}/>
+                                                )
     										}}
     									</Motion>
     								)
@@ -234,25 +251,60 @@ class DotChart extends React.Component {
         })
     }
 
-    mouseover(d, x, y) {
-    	this.setState({
-            currHovered: d,
-            tooltipSettings: {
-                x: x,
-                y: y - 30,
-                title: d[this.props.vizSettings.tooltipTitleVar.variable],
-                tooltipVars: this.props.vizSettings.tooltipVars,
-                renderingAreaWidth: this.state.width,
-                datum: d
-            }
-        })
+    clicked(d, x, y) {
+        if (!d || (this.state.tooltipSettings && this.state.currClicked == d)) {
+            this.setState({
+                currClicked: null,
+                tooltipSettings: null
+            })
+        } else {
+            this.setState({
+                currClicked: d,
+                tooltipSettings: {
+                    x: x,
+                    y: y - 30,
+                    title: d[this.props.vizSettings.tooltipTitleVar.variable],
+                    tooltipVars: this.props.vizSettings.tooltipVars,
+                    renderingAreaWidth: this.state.width,
+                    datum: d
+                }
+            })
+        }
     }
 
-    mouseout() {
-    	this.setState({
-            currHovered: null,
-            tooltipSettings: null
-        })
+    mouseover(d, x, y) {
+        if (this.props.vizSettings.interaction == "click") {
+        	this.setState({
+                currHovered: d
+            })
+        } else {
+            this.setState({
+                currHovered: d,
+                tooltipSettings: {
+                    x: x,
+                    y: y - 30,
+                    title: d[this.props.vizSettings.tooltipTitleVar.variable],
+                    tooltipVars: this.props.vizSettings.tooltipVars,
+                    renderingAreaWidth: this.state.width,
+                    datum: d
+                }
+            })
+        }
+    }
+
+    mouseout(d) {
+        if (this.props.vizSettings.interaction == "click") {
+            // if (!this.state.tooltipSettings || (this.state.tooltipSettings && this.state.tooltipSettings.datum != d)) {
+            	this.setState({
+                    currHovered: null
+                })
+            // }
+        } else {
+            this.setState({
+                currHovered: null,
+                tooltipSettings: null
+            })
+        }
     }
 }
 

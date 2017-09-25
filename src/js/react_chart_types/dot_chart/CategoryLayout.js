@@ -14,10 +14,11 @@ let dotPadding = .5;
 let leftMargin = 120;
 
 class CategoryLayout {
-	constructor(data, width, categoryVar) {
+	constructor(data, width, categoryVar, dotSettings) {
 		this.categoryVar = categoryVar;
 		this.width = width;
 		this.data = data;
+		this.dotSettings = dotSettings;
 
 		this.yScale = d3.scaleBand();
 		this.xScale = d3.scaleLinear();
@@ -29,8 +30,8 @@ class CategoryLayout {
 
 		this.sortedCategoryVals = categoryNest.sort((a, b) => { return b.values.length - a.values.length})
 
-		this.dotWidth = width/200;
-		this.dotWidth = this.dotWidth > 3.75 ? 3.75 : this.dotWidth;
+		this.dotWidth = width/dotSettings.scaleFactor;
+		this.dotWidth = this.dotWidth > dotSettings.maxRadius ? dotSettings.maxRadius : this.dotWidth;
 
 		this.height = this.sortedCategoryVals.length * (this.dotWidth + dotPadding + 2) * 2
 
@@ -42,8 +43,8 @@ class CategoryLayout {
 	resize(width) {
 		this.width = width;
 
-		this.dotWidth = width/200;
-		this.dotWidth = this.dotWidth > 3.75 ? 3.75 : this.dotWidth;
+		this.dotWidth = width/dotSettings.scaleFactor;
+		this.dotWidth = this.dotWidth > dotSettings.maxRadius ? dotSettings.maxRadius : this.dotWidth;
 
 		this.height = this.sortedCategoryVals.length * (this.dotWidth + dotPadding + 2) * 2
 

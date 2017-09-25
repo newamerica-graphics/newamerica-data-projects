@@ -13,9 +13,10 @@ const getRange = (start, end) => { return Array(end - start + 1).fill().map((_, 
 let dotPadding = .5;
 
 class HistogramLayout {
-	constructor(data, width, height) {
+	constructor(data, width, dotSettings) {
 		this.width = width;
 		this.data = data;
+		this.dotSettings = dotSettings;
 
 		let extents = d3.extent(this.data, (d) => {
 			if (d.date) {
@@ -28,8 +29,10 @@ class HistogramLayout {
 		this.yScale = d3.scaleLinear();
 		this.axisScale = d3.scaleLinear();
 
-		this.dotWidth = width/200;
-		this.dotWidth = this.dotWidth > 3.75 ? 3.75 : this.dotWidth;
+		console.log(dotSettings)
+
+		this.dotWidth = width/dotSettings.scaleFactor;
+		this.dotWidth = this.dotWidth > dotSettings.maxRadius ? dotSettings.maxRadius : this.dotWidth;
 		
 		this.setDataColumns();
 	}
@@ -72,8 +75,8 @@ class HistogramLayout {
 	resize(width) {
 		this.width = width;
 
-		this.dotWidth = width/200;
-		this.dotWidth = this.dotWidth > 3.75 ? 3.75 : this.dotWidth;
+		this.dotWidth = width/this.dotSettings.scaleFactor;
+		this.dotWidth = this.dotWidth > this.dotSettings.maxRadius ? this.dotSettings.maxRadius : this.dotWidth;
 
 		this.setDataColumns();
 	}
