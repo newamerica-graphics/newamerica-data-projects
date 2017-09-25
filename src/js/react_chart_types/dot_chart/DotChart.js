@@ -148,7 +148,7 @@ class DotChart extends React.Component {
                     return (
                         <Motion style={{y:spring(currLayout.yScale(d))}} key={d}>
                             {({y}) => {
-                                return <text className="dot-chart__axis-categorical__text" x={currLayout.leftMargin - 10} y={y}>{d}</text>;
+                                return <text className="dot-chart__axis-categorical__text" x={currLayout.leftMargin - 10} y={y + 1}>{d}</text>;
                             }}
                         </Motion>
                     )
@@ -208,7 +208,7 @@ class DotChart extends React.Component {
                 {layouts.length > 1 && 
                     <LayoutSelector layouts={layouts} currSelected={currLayoutSettings} layoutChangeFunc={this.changeLayout.bind(this)} /> 
                 }
-                {colorSettings.colorVar && 
+                {colorSettings.showLegend && 
                     <LegendCategorical valsShown={valsShown} toggleChartVals={this.toggleChartVals.bind(this)} colorScale={this.colorScale} orientation="horizontal-center"/> 
                 }
 				{ currLayout &&
