@@ -5,6 +5,7 @@ let d3 = require("d3");
 export class SelectBox {
 	constructor(componentSettings) {
 		Object.assign(this, componentSettings);
+		console.log(this)
 		this.selectBoxContainer = d3.select(this.id).append("div")
 			.attr("class", "select-box-container");
 
@@ -21,9 +22,9 @@ export class SelectBox {
 				}
 
 				if (this.passValueName) {
-					this.filterChangeFunction(this.valList[index].key, this);
+					this.dashboardChangeFunc(this.valList[index].key, this);
 				} else {
-					this.filterChangeFunction(index, this);
+					this.dashboardChangeFunc(index, this);
 				}
 			});
 
@@ -36,7 +37,7 @@ export class SelectBox {
 				.style("display", "none")
 				.on("click", () => { 
 					this.changeValue(""); 
-					this.filterChangeFunction(null, this);
+					this.dashboardChangeFunc(null, this);
 				});
 		}
 	}

@@ -70,6 +70,7 @@
 		font-size: 22px;
 		display: table-cell;
 		vertical-align: middle;
+		color: palette-get(na-black);
 
 		&.has-image {
 			padding-left: 15px;
@@ -113,6 +114,9 @@
 		}
 	}
 
+	a {
+		border: none !important;
+	}
 
 
 

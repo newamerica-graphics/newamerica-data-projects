@@ -15,7 +15,7 @@ import HistogramLayout from './HistogramLayout.js';
 import CategoryLayout from './CategoryLayout.js';
 
 import { Motion, spring } from 'react-motion';
-import { Axis, axisPropsFromTickScale, BOTTOM, TOP } from 'react-d3-axis';
+import { Axis, axisPropsFromBandedScale, BOTTOM, TOP } from 'react-d3-axis';
 
 const d3 = require("d3");
 
@@ -25,12 +25,21 @@ class DotChart extends React.Component {
         const {data, vizSettings} = props
 
 		this.data = data[vizSettings.primaryDataSheet];
+        console.log(this.data.length)
+        if (vizSettings.filterInitialDataFunction) {
+            this.data = this.data.filter(vizSettings.filterInitialDataFunction);
+        }
+        console.log(this.data.length)
 
 		this.resizeFunc = this.resize.bind(this);
 
-		if (vizSettings.colorVar) {
-			this.colorScale = getColorScale(this.data, props.vizSettings.colorVar)
+		if (vizSettings.colorSettings.colorVar) {
+			this.colorScale = getColorScale(this.data, vizSettings.colorSettings.colorVar)
 		}
+
+        if (vizSettings.interaction == "click") {
+            window.addEventListener('click', () => { console.log("clicked"); return this.clicked(null); });
+        }
 
 		this.state = {
             currLayoutSettings: vizSettings.layouts[0],
@@ -38,10 +47,21 @@ class DotChart extends React.Component {
 			currDataShown: this.data,
 			width: 0,
             currHovered: null,
+            currClicked: null,
             tooltipSettings: null,
             valsShown:[]
 		}
 	}
+
+    setFill(d) {
+        const {colorVar, defaultColor} = this.props.vizSettings.colorSettings
+
+        if (this.colorScale) {
+           return this.colorScale(d[colorVar.variable])
+        } else {
+            return defaultColor
+        }
+    }
 
 	componentDidMount() {
         $(window).resize(this.resizeFunc);
@@ -60,12 +80,13 @@ class DotChart extends React.Component {
     }
 
     getCurrLayout(data, layoutSettings, w) {
+        console.log(this.props.vizSettings.dotSettings)
         switch(layoutSettings.layout) {
             case "histogram":
-                return new HistogramLayout(data, w)
+                return new HistogramLayout(data, w, layoutSettings, this.props.vizSettings.dotSettings)
 
             case "category":
-                return new CategoryLayout(data, w, {variable: "state"})
+                return new CategoryLayout(data, w, layoutSettings, this.props.vizSettings.dotSettings)
         }
     }
 
@@ -83,18 +104,20 @@ class DotChart extends React.Component {
 
     getHistogramAxis() {
         const { currLayout, currLayoutSettings, width } = this.state;
-        let numTicks = Math.floor(width/150)
+
+        // let numTicks = d3.timeYear.count(currLayout.axisScale.domain()[0], currLayout.axisScale.domain()[1])
+        // console.log(numTicks)
         return (
-            <Motion style={{currTransform: spring(currLayout.height)}} >
+            <Motion style={{currTransform: spring(currLayout.height - 27)}} >
                 {({currTransform}) => {
                     return (
                         <g>
                             <g className="dot-chart__axis-time" style={{transform: "translateY(" + currTransform + "px)"}}>
-                                <Axis {...axisPropsFromTickScale(currLayout.axisScale, numTicks)} format={(d) => { return d3.timeFormat("%B %Y")(d) }} style={{orient: BOTTOM}} />
+                                <Axis {...axisPropsFromBandedScale(currLayout.axisScale)} format={(d) => { return d3.timeFormat("%Y")(d) }} style={{orient: BOTTOM}} />
                             </g>
                             {currLayoutSettings.annotationSheet &&
                                 <g className="dot-chart__axis-time" style={{transform: "translateY(" + (currTransform + 25) + "px)"}}>
-                                    <Axis {...axisPropsFromTickScale(currLayout.axisScale, numTicks)} format={(d) => { return "" }} style={{orient: TOP}} />
+                                    <Axis {...axisPropsFromBandedScale(currLayout.axisScale)} format={(d) => { return "" }} style={{orient: TOP}} />
                                 </g>
                             }
                         </g>
@@ -125,7 +148,7 @@ class DotChart extends React.Component {
                     return (
                         <Motion style={{y:spring(currLayout.yScale(d))}} key={d}>
                             {({y}) => {
-                                return <text className="dot-chart__axis-categorical__text" x="110" y={y}>{d}</text>;
+                                return <text className="dot-chart__axis-categorical__text" x={currLayout.leftMargin - 10} y={y}>{d}</text>;
                             }}
                         </Motion>
                     )
@@ -138,7 +161,7 @@ class DotChart extends React.Component {
     toggleChartVals(newVals) {
         let newData;
         
-        let varName = this.props.vizSettings.colorVar.variable
+        let varName = this.props.vizSettings.colorSettings.colorVar.variable
         newData = this.data.filter((d) => { return newVals.indexOf(d[varName]) > -1 })
         
         this.setState({
@@ -154,22 +177,18 @@ class DotChart extends React.Component {
         })
     }
 
-    setFill(d) {
-    	const {colorVar} = this.props.vizSettings
-    	return this.colorScale(d[colorVar.variable])
-    }
+    setStrokeColor(d) {
+    	const {currClicked, currHovered} = this.state;
 
-    setStrokeWidth(d) {
-    	const {currHovered} = this.state;
-
-    	if (currHovered && currHovered == d) {
-    		return "2px"
+    	if ((currClicked && currClicked == d) || (currHovered && currHovered == d)) {
+    		return "black"
     	} 
-    	return "1px"
+    	return "white"
     }
 
 	render() {
 		const { valsShown, currLayout, currLayoutSettings, currDataShown, width, height } = this.state;
+        const { layouts, interaction, colorSettings } = this.props.vizSettings
 
         let axis, layoutAnnotations;
 
@@ -181,14 +200,17 @@ class DotChart extends React.Component {
             layoutAnnotations = this.getHistogramAnnotations()
         }
 
-        let layoutHeight = currLayout ? currLayout.height + 27 : 0;
+        let layoutHeight = currLayout ? currLayout.height : 0;
         // layoutHeight += currLayoutSettings.annotationSheet ? 50 : 0;
 
 		return (
 			<div className="dot-chart" ref="renderingArea">
-                {this.props.vizSettings.layouts.length > 1 && 
-                    <LayoutSelector layouts={this.props.vizSettings.layouts} currSelected={currLayoutSettings} layoutChangeFunc={this.changeLayout.bind(this)} /> }
-                <LegendCategorical valsShown={valsShown} toggleChartVals={this.toggleChartVals.bind(this)} colorScale={this.colorScale} orientation="horizontal-center"/>
+                {layouts.length > 1 && 
+                    <LayoutSelector layouts={layouts} currSelected={currLayoutSettings} layoutChangeFunc={this.changeLayout.bind(this)} /> 
+                }
+                {colorSettings.colorVar && 
+                    <LegendCategorical valsShown={valsShown} toggleChartVals={this.toggleChartVals.bind(this)} colorScale={this.colorScale} orientation="horizontal-center"/> 
+                }
 				{ currLayout &&
                     <div>
     					<svg className="dot-chart__container" width="100%" height={layoutHeight}>
@@ -196,16 +218,22 @@ class DotChart extends React.Component {
     							{currDataShown.map((d) => {
                                     if (!d.id) return null;
     								let style = currLayout.renderDot(d)
-    								let fillColor = this.setFill(d),
-    									strokeWidth = this.setStrokeWidth(d)
 
-                                    if (d.id === "403") {
-                                        console.log(d);
-                                    }
+    								let fillColor = currLayoutSettings.overrideColorVar ? currLayout.setFill(d) : this.setFill(d),
+    									strokeColor = this.setStrokeColor(d)
+
     								return (
     									<Motion style={style} key={d.id}>
     										{({x, y, r}) => {
-    											return <circle className="dot-chart__dot" cx={x} cy={y} r={r} fill={fillColor} stroke="white" strokeWidth={strokeWidth} onMouseOver={() => { return this.mouseover(d, x, y); }} onMouseOut={() => { return this.mouseout(); }}/>;
+    											return (
+                                                    <circle className={interaction == "click" ? "dot-chart__dot clickable" : "dot-chart__dot"}
+                                                        cx={x} cy={y} r={r} 
+                                                        fill={fillColor} 
+                                                        stroke={strokeColor} 
+                                                        onClick={(e, b) => { console.log(e, b); e.stopPropagation(); return interaction == "click" ? this.clicked(d, x, y) : null; }} 
+                                                        onMouseOver={() => { return this.mouseover(d, x, y); }} 
+                                                        onMouseOut={() => { return this.mouseout(d); }}/>
+                                                )
     										}}
     									</Motion>
     								)
@@ -234,25 +262,60 @@ class DotChart extends React.Component {
         })
     }
 
-    mouseover(d, x, y) {
-    	this.setState({
-            currHovered: d,
-            tooltipSettings: {
-                x: x,
-                y: y - 30,
-                title: d[this.props.vizSettings.tooltipTitleVar.variable],
-                tooltipVars: this.props.vizSettings.tooltipVars,
-                renderingAreaWidth: this.state.width,
-                datum: d
-            }
-        })
+    clicked(d, x, y) {
+        if (!d || (this.state.tooltipSettings && this.state.currClicked == d)) {
+            this.setState({
+                currClicked: null,
+                tooltipSettings: null
+            })
+        } else {
+            this.setState({
+                currClicked: d,
+                tooltipSettings: {
+                    x: x,
+                    y: y - 30,
+                    title: d[this.props.vizSettings.tooltipTitleVar.variable],
+                    tooltipVars: this.props.vizSettings.tooltipVars,
+                    renderingAreaWidth: this.state.width,
+                    datum: d
+                }
+            })
+        }
     }
 
-    mouseout() {
-    	this.setState({
-            currHovered: null,
-            tooltipSettings: null
-        })
+    mouseover(d, x, y) {
+        if (this.props.vizSettings.interaction == "click") {
+        	this.setState({
+                currHovered: d
+            })
+        } else {
+            this.setState({
+                currHovered: d,
+                tooltipSettings: {
+                    x: x,
+                    y: y - 30,
+                    title: d[this.props.vizSettings.tooltipTitleVar.variable],
+                    tooltipVars: this.props.vizSettings.tooltipVars,
+                    renderingAreaWidth: this.state.width,
+                    datum: d
+                }
+            })
+        }
+    }
+
+    mouseout(d) {
+        if (this.props.vizSettings.interaction == "click") {
+            // if (!this.state.tooltipSettings || (this.state.tooltipSettings && this.state.tooltipSettings.datum != d)) {
+            	this.setState({
+                    currHovered: null
+                })
+            // }
+        } else {
+            this.setState({
+                currHovered: null,
+                tooltipSettings: null
+            })
+        }
     }
 }
 
