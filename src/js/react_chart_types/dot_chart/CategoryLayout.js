@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { colors } from "../../helper_functions/colors.js";
+import { getColorScale } from "../../helper_functions/get_color_scale.js";
 
 import { formatValue } from "../../helper_functions/format_value.js";
 
@@ -11,20 +12,21 @@ const d3 = require("d3");
 const getRange = (start, end) => { return Array(end - start + 1).fill().map((_, idx) => start + idx) }
 
 let dotPadding = .5;
-let leftMargin = 120;
 
 class CategoryLayout {
-	constructor(data, width, categoryVar, dotSettings) {
-		this.categoryVar = categoryVar;
+	constructor(data, width, layoutSettings, dotSettings) {
+		this.categoryVar = layoutSettings.categoryVar;
+		this.overrideColorVar = layoutSettings.overrideColorVar;
 		this.width = width;
 		this.data = data;
 		this.dotSettings = dotSettings;
+		this.leftMargin = layoutSettings.leftMargin;
 
 		this.yScale = d3.scaleBand();
 		this.xScale = d3.scaleLinear();
 
 		let categoryNest = d3.nest()
-			.key((d) => { return d[categoryVar.variable]})
+			.key((d) => { return d[this.categoryVar.variable]})
 			.sortValues((a, b) => { return new Date(a.date) - new Date(b.date)})
 			.entries(data)
 
@@ -37,8 +39,11 @@ class CategoryLayout {
 
 		this.yScale.domain(this.sortedCategoryVals.map(d => d.key))
 			.range([this.dotWidth + dotPadding, this.height])
-	}
 
+		if (this.overrideColorVar) {
+			this.overrideColorScale = getColorScale(this.data, this.overrideColorVar)
+		} 
+	}
 
 	resize(width) {
 		this.width = width;
@@ -70,9 +75,13 @@ class CategoryLayout {
 					return;
 				}
 			})
-			xPos = xIndex * (this.dotWidth + dotPadding) * 2 + leftMargin + (this.dotWidth + dotPadding)
+			xPos = xIndex * (this.dotWidth + dotPadding) * 2 + this.leftMargin + (this.dotWidth + dotPadding)
 		}
-		return {x: spring(xPos), y: spring(yPos), r: this.dotWidth }
+		return {x: spring(xPos), y: spring(yPos), r: this.dotWidth}
+	}
+
+	setFill(d) {
+		return this.overrideColorScale(d[this.overrideColorVar.variable])
 	}
 }
 

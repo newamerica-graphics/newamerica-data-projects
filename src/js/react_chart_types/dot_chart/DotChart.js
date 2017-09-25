@@ -33,8 +33,8 @@ class DotChart extends React.Component {
 
 		this.resizeFunc = this.resize.bind(this);
 
-		if (vizSettings.colorVar) {
-			this.colorScale = getColorScale(this.data, props.vizSettings.colorVar)
+		if (vizSettings.colorSettings.colorVar) {
+			this.colorScale = getColorScale(this.data, vizSettings.colorSettings.colorVar)
 		}
 
         if (vizSettings.interaction == "click") {
@@ -52,6 +52,16 @@ class DotChart extends React.Component {
             valsShown:[]
 		}
 	}
+
+    setFill(d) {
+        const {colorVar, defaultColor} = this.props.vizSettings.colorSettings
+
+        if (this.colorScale) {
+           return this.colorScale(d[colorVar.variable])
+        } else {
+            return defaultColor
+        }
+    }
 
 	componentDidMount() {
         $(window).resize(this.resizeFunc);
@@ -73,10 +83,10 @@ class DotChart extends React.Component {
         console.log(this.props.vizSettings.dotSettings)
         switch(layoutSettings.layout) {
             case "histogram":
-                return new HistogramLayout(data, w, this.props.vizSettings.dotSettings)
+                return new HistogramLayout(data, w, layoutSettings, this.props.vizSettings.dotSettings)
 
             case "category":
-                return new CategoryLayout(data, w, layoutSettings.categoryVar, this.props.vizSettings.dotSettings)
+                return new CategoryLayout(data, w, layoutSettings, this.props.vizSettings.dotSettings)
         }
     }
 
@@ -136,7 +146,7 @@ class DotChart extends React.Component {
                     return (
                         <Motion style={{y:spring(currLayout.yScale(d))}} key={d}>
                             {({y}) => {
-                                return <text className="dot-chart__axis-categorical__text" x="110" y={y}>{d}</text>;
+                                return <text className="dot-chart__axis-categorical__text" x={currLayout.leftMargin - 10} y={y}>{d}</text>;
                             }}
                         </Motion>
                     )
@@ -165,11 +175,6 @@ class DotChart extends React.Component {
         })
     }
 
-    setFill(d) {
-    	const {colorVar} = this.props.vizSettings
-    	return this.colorScale(d[colorVar.variable])
-    }
-
     setStrokeColor(d) {
     	const {currClicked, currHovered} = this.state;
 
@@ -181,7 +186,7 @@ class DotChart extends React.Component {
 
 	render() {
 		const { valsShown, currLayout, currLayoutSettings, currDataShown, width, height } = this.state;
-        const { layouts, interaction } = this.props.vizSettings
+        const { layouts, interaction, colorSettings } = this.props.vizSettings
 
         let axis, layoutAnnotations;
 
@@ -198,9 +203,12 @@ class DotChart extends React.Component {
 
 		return (
 			<div className="dot-chart" ref="renderingArea">
-                {this.props.vizSettings.layouts.length > 1 && 
-                    <LayoutSelector layouts={layouts} currSelected={currLayoutSettings} layoutChangeFunc={this.changeLayout.bind(this)} /> }
-                <LegendCategorical valsShown={valsShown} toggleChartVals={this.toggleChartVals.bind(this)} colorScale={this.colorScale} orientation="horizontal-center"/>
+                {layouts.length > 1 && 
+                    <LayoutSelector layouts={layouts} currSelected={currLayoutSettings} layoutChangeFunc={this.changeLayout.bind(this)} /> 
+                }
+                {colorSettings.colorVar && 
+                    <LegendCategorical valsShown={valsShown} toggleChartVals={this.toggleChartVals.bind(this)} colorScale={this.colorScale} orientation="horizontal-center"/> 
+                }
 				{ currLayout &&
                     <div>
     					<svg className="dot-chart__container" width="100%" height={layoutHeight}>
@@ -208,7 +216,8 @@ class DotChart extends React.Component {
     							{currDataShown.map((d) => {
                                     if (!d.id) return null;
     								let style = currLayout.renderDot(d)
-    								let fillColor = this.setFill(d),
+
+    								let fillColor = currLayoutSettings.overrideColorVar ? currLayout.setFill(d) : this.setFill(d),
     									strokeColor = this.setStrokeColor(d)
 
     								return (

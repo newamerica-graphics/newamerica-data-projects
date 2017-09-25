@@ -7,6 +7,7 @@ let d3 = require("d3");
 let variables = {
 	id: {"variable": "id", "displayName":"ID", "format":"number"},
 	macro_category: {"variable": "macro_category", "displayName":"Macro Category", "format":"string", "scaleType":"categorical", "customDomain":["Collection Violation", "Communications Access and Retention Violation", "Other Minimization and Unknown Violation"], "customRange":[colors.blue.light, colors.turquoise.light, colors.purple.light]},
+	primary_category_all: {"variable": "primary_category", "displayName":"Category", "format":"string", "scaleType":"categorical", "customDomain": ["Tasking Violation", "Reverse Targeting Violation", "Post-Tasking Review Violation", "Detasking Violation", "Overcollection Violation", "Unauthorized Access Violation", "Attorney-Client Privilege Violation", "Query Violation", "Dissemination Violation", "Data Retention Violation", "Documentation Violation", "Notification Violation", "General Minimization Violation", "Unknown Violation"], "customRange": [colors.blue.very_light, colors.blue.very_light_2, colors.blue.light, colors.blue.medium, colors.blue.dark, colors.turquoise.very_light, colors.turquoise.very_light_2, colors.turquoise.light, colors.turquoise.medium, colors.turquoise.dark, colors.purple.very_light, colors.purple.light, colors.purple.medium, colors.purple.dark]},
 	primary_category__collection: {"variable": "primary_category", "displayName":"Category", "format":"string", "scaleType":"categorical", "customDomain":["Tasking Violation", "Reverse Targeting Violation", "Post-Tasking Review Violation", "Detasking Violation", "Overcollection Violation"], "customRange":[colors.blue.very_light, colors.blue.very_light_2, colors.blue.light, colors.blue.medium, colors.blue.dark]},
 	primary_category__communications_access: {"variable": "primary_category", "displayName":"Category", "format":"string", "scaleType":"categorical", "customDomain":["Unauthorized Access Violation", "Attorney-Client Privilege Violation", "Query Violation", "Dissemination Violation", "Data Retention Violation"], "customRange":[colors.turquoise.very_light, colors.turquoise.very_light_2, colors.turquoise.light, colors.turquoise.medium, colors.turquoise.dark]},
 	primary_category__other: {"variable": "primary_category", "displayName":"Category", "format":"string", "scaleType":"categorical", "customDomain":["Documentation Violation", "Notification Violation", "General Minimization Violation", "Unknown Violation"], "customRange":[colors.purple.very_light, colors.purple.light, colors.purple.medium, colors.purple.dark]},
@@ -42,8 +43,8 @@ const reactVizSettingsList = [
 		id: "#compliance-violations__all",
 		vizType: "dot_chart",
 		primaryDataSheet: "violations",
-		colorVar: variables.macro_category,
-		tooltipTitleVar: variables.macro_category,
+		colorSettings: {colorVar: null, defaultColor: colors.grey.medium },
+		tooltipTitleVar: variables.primary_category__collection,
 		tooltipVars: [variables.primary_category__collection, variables.date, variables.description, variables.remedy],
 		dotSettings: {scaleFactor: 150, maxRadius: 5, spacing: 1},
 		interaction: "click",
@@ -55,7 +56,9 @@ const reactVizSettingsList = [
 			{
 				label: "Incidents by Type",
 				layout: "category",
-				categoryVar: variables.macro_category
+				categoryVar: variables.primary_category_all,
+				overrideColorVar: variables.primary_category_all,
+				leftMargin: 220
 			}
 		]
 	},
