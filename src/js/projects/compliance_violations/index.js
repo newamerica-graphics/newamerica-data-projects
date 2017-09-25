@@ -51,11 +51,11 @@ const reactVizSettingsList = [
 		interaction: "click",
 		layouts: [
 			{
-				label: "Incidents Over Time",
+				label: "Violations Over Time",
 				layout: "histogram",
 			},
 			{
-				label: "Incidents by Type",
+				label: "Violations by Type",
 				layout: "category",
 				categoryVar: variables.primary_category_all,
 				overrideColorVar: variables.primary_category_all,
@@ -75,7 +75,7 @@ const reactVizSettingsList = [
 		interaction: "click",
 		layouts: [
 			{
-				label: "Incidents Over Time",
+				label: "Violations Over Time",
 				layout: "histogram",
 			}
 		]
@@ -92,7 +92,7 @@ const reactVizSettingsList = [
 		interaction: "click",
 		layouts: [
 			{
-				label: "Incidents Over Time",
+				label: "Violations Over Time",
 				layout: "histogram",
 			}
 		]
@@ -109,7 +109,7 @@ const reactVizSettingsList = [
 		interaction: "click",
 		layouts: [
 			{
-				label: "Incidents Over Time",
+				label: "Violations Over Time",
 				layout: "histogram",
 			}
 		]

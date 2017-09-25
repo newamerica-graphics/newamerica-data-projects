@@ -24,10 +24,27 @@ class HistogramLayout {
 			}
 		})
 
+		let startRounded = d3.timeYear.floor(extents[0]),
+			endRounded = d3.timeYear.ceil(extents[1]);
+
+		console.log(extents)
+		console.log(startRounded, endRounded)
+		console.log(new Date(startRounded.setMonth(startRounded.getMonth() - 6)), new Date(endRounded.setMonth(endRounded.getMonth() + 6)))
+
 		this.xScale = d3.scaleLinear();
-		this.binScale = d3.scaleQuantize().domain(extents)
+		this.binScale = d3.scaleQuantize().domain([startRounded, endRounded])
 		this.yScale = d3.scaleLinear();
-		this.axisScale = d3.scaleLinear();
+
+		// let axisScaleDomain = d3.timeYear.range(binScaleStart.setFullYear(binScaleStart.getFullYear() + 1), binScaleEnd.setFullYear(binScaleEnd.getFullYear() - 1))
+		let axisScaleDomain = d3.timeYear.range(startRounded, endRounded)
+		console.log(axisScaleDomain)
+		// console.log(axisScaleDomain.map((d) => {
+		// 	console.log(d.getMonth())
+		// 	return d.setMonth(d.getMonth() + 6)
+		// }))
+		console.log([startRounded.setMonth(startRounded.getMonth() - 6), endRounded.setMonth(endRounded.getMonth() + 6)])
+
+		this.axisScale = d3.scaleBand().domain(axisScaleDomain);
 
 		this.dotWidth = width/dotSettings.scaleFactor;
 		this.dotWidth = this.dotWidth > dotSettings.maxRadius ? dotSettings.maxRadius : this.dotWidth;
@@ -46,9 +63,7 @@ class HistogramLayout {
 			.range([this.dotWidth + dotPadding, this.width - this.dotWidth - dotPadding])
 
 		this.axisScale 
-			.domain(this.binScale.domain())
-			.range(this.xScale.range())
-
+			.range([this.dotWidth + dotPadding, this.width - this.dotWidth - dotPadding])
 
 		this.dataNest = d3.nest()
 			.key((d) => { return d.date ? this.binScale(new Date(d.date)) : null })

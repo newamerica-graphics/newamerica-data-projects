@@ -15,7 +15,7 @@ import HistogramLayout from './HistogramLayout.js';
 import CategoryLayout from './CategoryLayout.js';
 
 import { Motion, spring } from 'react-motion';
-import { Axis, axisPropsFromTickScale, BOTTOM, TOP } from 'react-d3-axis';
+import { Axis, axisPropsFromBandedScale, BOTTOM, TOP } from 'react-d3-axis';
 
 const d3 = require("d3");
 
@@ -104,18 +104,20 @@ class DotChart extends React.Component {
 
     getHistogramAxis() {
         const { currLayout, currLayoutSettings, width } = this.state;
-        let numTicks = Math.floor(width/150)
+
+        // let numTicks = d3.timeYear.count(currLayout.axisScale.domain()[0], currLayout.axisScale.domain()[1])
+        // console.log(numTicks)
         return (
             <Motion style={{currTransform: spring(currLayout.height - 27)}} >
                 {({currTransform}) => {
                     return (
                         <g>
                             <g className="dot-chart__axis-time" style={{transform: "translateY(" + currTransform + "px)"}}>
-                                <Axis {...axisPropsFromTickScale(currLayout.axisScale, numTicks)} format={(d) => { return d3.timeFormat("%B %Y")(d) }} style={{orient: BOTTOM}} />
+                                <Axis {...axisPropsFromBandedScale(currLayout.axisScale)} format={(d) => { return d3.timeFormat("%Y")(d) }} style={{orient: BOTTOM}} />
                             </g>
                             {currLayoutSettings.annotationSheet &&
                                 <g className="dot-chart__axis-time" style={{transform: "translateY(" + (currTransform + 25) + "px)"}}>
-                                    <Axis {...axisPropsFromTickScale(currLayout.axisScale, numTicks)} format={(d) => { return "" }} style={{orient: TOP}} />
+                                    <Axis {...axisPropsFromBandedScale(currLayout.axisScale)} format={(d) => { return "" }} style={{orient: TOP}} />
                                 </g>
                             }
                         </g>
