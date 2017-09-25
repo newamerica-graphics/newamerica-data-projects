@@ -106,7 +106,7 @@ class DotChart extends React.Component {
         const { currLayout, currLayoutSettings, width } = this.state;
         let numTicks = Math.floor(width/150)
         return (
-            <Motion style={{currTransform: spring(currLayout.height)}} >
+            <Motion style={{currTransform: spring(currLayout.height - 27)}} >
                 {({currTransform}) => {
                     return (
                         <g>
@@ -198,7 +198,7 @@ class DotChart extends React.Component {
             layoutAnnotations = this.getHistogramAnnotations()
         }
 
-        let layoutHeight = currLayout ? currLayout.height + 27 : 0;
+        let layoutHeight = currLayout ? currLayout.height : 0;
         // layoutHeight += currLayoutSettings.annotationSheet ? 50 : 0;
 
 		return (

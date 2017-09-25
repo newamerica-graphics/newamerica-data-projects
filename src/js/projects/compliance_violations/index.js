@@ -11,14 +11,13 @@ let variables = {
 	primary_category__collection: {"variable": "primary_category", "displayName":"Category", "format":"string", "scaleType":"categorical", "customDomain":["Tasking Violation", "Reverse Targeting Violation", "Post-Tasking Review Violation", "Detasking Violation", "Overcollection Violation"], "customRange":[colors.blue.very_light, colors.blue.very_light_2, colors.blue.light, colors.blue.medium, colors.blue.dark]},
 	primary_category__communications_access: {"variable": "primary_category", "displayName":"Category", "format":"string", "scaleType":"categorical", "customDomain":["Unauthorized Access Violation", "Attorney-Client Privilege Violation", "Query Violation", "Dissemination Violation", "Data Retention Violation"], "customRange":[colors.turquoise.very_light, colors.turquoise.very_light_2, colors.turquoise.light, colors.turquoise.medium, colors.turquoise.dark]},
 	primary_category__other: {"variable": "primary_category", "displayName":"Category", "format":"string", "scaleType":"categorical", "customDomain":["Documentation Violation", "Notification Violation", "General Minimization Violation", "Unknown Violation"], "customRange":[colors.purple.very_light, colors.purple.light, colors.purple.medium, colors.purple.dark]},
-	description: {"variable":"description", "displayName":"Description", "format": "string"},
-	remedy: {"variable":"remedy", "displayName":"Remedy", "format": "string"},
+	description: {"variable":"description", "displayName":"Description", "format": "string", "disableTableOrdering": true},
+	remedy: {"variable":"remedy", "displayName":"Remedy", "format": "string", "disableTableOrdering": true},
 	date: {"variable":"date", "displayName":"Date", "format": "date"},
 	year: {"variable":"year", "displayName":"Year", "format": "year"},
-	sources_combined: {"variable":"sources_combined", "displayName":"Source(s)", "format": "link"},
+	sources_combined: {"variable":"sources_combined", "displayName":"Source(s)", "format": "link", "disableTableOrdering": true},
 
 	title: {"variable":"title", "displayName":"Title", "format":"string"},
-	description: {"variable":"description", "displayName":"Description", "format":"string"},
 	category: {"variable":"category", "displayName":"Cateogry", "format":"string"},
 }
 

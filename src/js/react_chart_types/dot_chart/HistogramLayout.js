@@ -64,7 +64,7 @@ class HistogramLayout {
 		console.log(this.dataNest)
 
 		this.maxColCount = d3.max(this.dataNest, (d) => { return d.values.length});
-		this.height = (this.maxColCount + 1)*((this.dotWidth + dotPadding)*2)
+		this.height = (this.maxColCount + 1)*((this.dotWidth + dotPadding)*2) + 27
 
 		// console.log(this.maxColCount);
 	}

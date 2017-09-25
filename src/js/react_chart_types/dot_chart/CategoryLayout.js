@@ -35,7 +35,7 @@ class CategoryLayout {
 		this.dotWidth = width/dotSettings.scaleFactor;
 		this.dotWidth = this.dotWidth > dotSettings.maxRadius ? dotSettings.maxRadius : this.dotWidth;
 
-		this.height = this.sortedCategoryVals.length * (this.dotWidth + dotPadding + 2) * 2
+		this.height = this.sortedCategoryVals.length * (this.dotWidth + dotPadding + 3) * 2
 
 		this.yScale.domain(this.sortedCategoryVals.map(d => d.key))
 			.range([this.dotWidth + dotPadding, this.height])
