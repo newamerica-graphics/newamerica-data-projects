@@ -111,7 +111,9 @@ const reactVizSettingsList = [
 			},
 			{
 				label: "Incidents by State",
-				layout: "category"
+				layout: "category",
+				categoryVar: varaibles.state,
+				leftMargin: 120
 			}
 		]
 	},		
