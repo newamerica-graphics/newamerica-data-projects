@@ -1,6 +1,5 @@
-import { setupProject } from "../../viz_controller.js";
-import { colors } from "../../helper_functions/colors.js";
-import $ from 'jquery';
+let { colors } = require("../../helper_functions/colors.js")
+let $ =require('jquery');
 
 $.getScript('https://na-data-projects.s3.amazonaws.com/projects/varying_degrees-submodule.js', (d, err) => {
 	console.log(err);
@@ -129,4 +128,7 @@ let vizSettings = {
 	},
 }
 
-setupProject(vizSettings);
+module.exports = {
+	vizSettings: vizSettings,
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/bll/care_index.json"
+}

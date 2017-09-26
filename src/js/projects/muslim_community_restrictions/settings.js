@@ -1,5 +1,4 @@
-import { setupProject } from "../../viz_controller.js";
-import { colors } from "../../helper_functions/colors.js";
+let { colors } = require("../../helper_functions/colors.js")
 
 let variables = {
 	category: {"variable":"category", "displayName":"Category", "format": "string", "scaleType":"categorical", "customDomain":["Anti-Sharia Legislation", "Anti-Refugee Legislation", "Opposition to mosque, cemetery, and Islamic school construction", "Anti-Muslim actions by elected or appointed officials", "Anti-Muslim hate crimes", "Other"], "customRange":[colors.brown.light, colors.purple.light, colors.orange.light, colors.red.light, colors.blue.light, colors.yellow.light]},
@@ -98,6 +97,7 @@ let vizSettings = {
 	},		
 }
 
-setupProject(vizSettings);
-
-module.exports = vizSettings;
+module.exports = {
+	vizSettings: vizSettings,
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/bll/care_index.json"
+}

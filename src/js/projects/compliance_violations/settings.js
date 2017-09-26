@@ -1,8 +1,4 @@
-import { setupProject } from "../../viz_controller.js";
-
-import { colors } from "../../helper_functions/colors.js";
-
-let d3 = require("d3");
+let { colors } = require("../../helper_functions/colors.js")
 
 let variables = {
 	id: {"variable": "id", "displayName":"ID", "format":"number"},
@@ -26,9 +22,8 @@ const getDataFilterFunction = (filterVar) => {
 	return (d) => { return varDomain.indexOf(d.primary_category) > -1; }
 }
 
-let vizSettingsList = [
-	{
-		id: "#compliance-violations__list",
+let vizSettings = {
+	"compliance-violations__list": {
 		vizType: "table",
 		primaryDataSheet: "violations",
 		tableVars: [ variables.primary_category__collection, variables.year, variables.description, variables.remedy, variables.sources_combined],
@@ -36,13 +31,10 @@ let vizSettingsList = [
 		pagination: true,
 		numPerPage: 15,
 		colorScaling: false
-	}
-]
-
-const reactVizSettingsList = [
-	{
-		id: "#compliance-violations__all",
+	},
+	"compliance-violations__all": {
 		vizType: "dot_chart",
+		isReact: true,
 		primaryDataSheet: "violations",
 		colorSettings: {colorVar: null, defaultColor: colors.grey.medium },
 		tooltipTitleVar: variables.primary_category__collection,
@@ -63,9 +55,9 @@ const reactVizSettingsList = [
 			}
 		]
 	},
-	{
-		id: "#compliance-violations__collection",
+	"compliance-violations__collection": {
 		vizType: "dot_chart",
+		isReact: true,
 		primaryDataSheet: "violations",
 		filterInitialDataFunction: getDataFilterFunction(variables.primary_category__collection),
 		colorSettings: { colorVar: variables.primary_category__collection },
@@ -80,9 +72,9 @@ const reactVizSettingsList = [
 			}
 		]
 	},
-	{
-		id: "#compliance-violations__communications-access",
+	"compliance-violations__communications-access": {
 		vizType: "dot_chart",
+		isReact: true,
 		primaryDataSheet: "violations",
 		filterInitialDataFunction: getDataFilterFunction(variables.primary_category__communications_access),
 		colorSettings: { colorVar: variables.primary_category__communications_access },
@@ -97,9 +89,9 @@ const reactVizSettingsList = [
 			}
 		]
 	},
-	{
-		id: "#compliance-violations__other",
+	"compliance-violations__other": {
 		vizType: "dot_chart",
+		isReact: true,
 		primaryDataSheet: "violations",
 		filterInitialDataFunction: getDataFilterFunction(variables.primary_category__other),
 		colorSettings: { colorVar: variables.primary_category__other },
@@ -122,14 +114,9 @@ const reactVizSettingsList = [
 	// 	descriptionVar: variables.description,
 	// 	categoryVar: variables.category,
 	// },
-]
-
-let projectSettings = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/oti/compliance-violations.json",
-	downloadDataLink: "https://docs.google.com/spreadsheets/d/1keuLHJGjXaLAwsZSEMwAv_XhdxkbF0X1w2--aEHlt0U/",
-	dataSheetNames:["violations"],
-	vizSettingsList: vizSettingsList,
-	reactVizSettingsList: reactVizSettingsList
 }
 
-setupProject(projectSettings);
+module.exports = {
+	vizSettings: vizSettings,
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/oti/compliance-violations.json"
+}

@@ -1,3 +1,5 @@
+var {vizSettings, dataUrl} = require("./src/js/projects/" + process.env.npm_config_project + "/settings.js")
+
 var webpack = require('webpack');
 var path = require('path');
 var S3Plugin = require('webpack-s3-plugin');
@@ -10,6 +12,7 @@ var PROJECT_DIR = path.resolve(__dirname, 'src');
 var AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
 var AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
 var DATA_PROJECTS_S3_BUCKET_NAME = process.env.DATA_PROJECTS_S3_BUCKET_NAME;
+
 
 function getProjectEntryPoints() {
 	var entryPoints = {};
@@ -29,10 +32,10 @@ function getProjectEntryPoints() {
 }
 
 var config = {
-  entry: getProjectEntryPoints(),
+  entry: PROJECT_DIR + "/js/index-dev.js",
   output: {
     path: BUILD_DIR,
-    filename: '[name].js'
+    filename: process.env.npm_config_project + '.js'
   },
   resolve: {
     extensions: ['', '.js'],
@@ -79,9 +82,14 @@ var config = {
     [
       new HtmlWebpackPlugin({
         title: process.env.npm_config_project,
-        // otherData: "fifteen",
-        // template: './index_dev.ejs',
+        vizIdList: Object.keys(vizSettings),
+        template: './index_dev.ejs',
         filename: '../index-dev.html'
+      }),
+      new webpack.DefinePlugin({
+        VIZ_SETTINGS:JSON.stringify(vizSettings),
+        DATA_URL:JSON.stringify(dataUrl)
+
       })
     ] : [
       new S3Plugin({

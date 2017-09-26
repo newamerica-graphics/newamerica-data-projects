@@ -1,5 +1,4 @@
-import { setupProject } from "../../viz_controller.js";
-import { colors } from "../../helper_functions/colors.js";
+let { colors } = require("../../helper_functions/colors.js")
 
 let variables = {
 	week: {"variable":"week", "displayName":"Week", "format": "string"},
@@ -20,4 +19,7 @@ let vizSettings = {
 	},
 }
 
-setupProject(vizSettings);
+module.exports = {
+	vizSettings: vizSettings,
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/bll/care_index.json"
+}

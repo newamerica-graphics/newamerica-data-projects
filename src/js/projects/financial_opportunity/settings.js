@@ -1,7 +1,6 @@
 import $ from 'jquery';
 
-import { colors } from "../../helper_functions/colors.js";
-import { setupProject } from "../../viz_controller.js";
+let { colors } = require("../../helper_functions/colors.js")
 import { formatValue } from "../../helper_functions/format_value.js";
 
 let variables = {
@@ -161,7 +160,10 @@ let vizSettings = {
     },
 }
 
-setupProject(vizSettings);
+module.exports = {
+    vizSettings: vizSettings,
+    dataUrl: "https://na-data-projects.s3.amazonaws.com/data/bll/care_index.json"
+}
 
 function censusTractMapSetPopupContent(feature) {
     console.log(this);

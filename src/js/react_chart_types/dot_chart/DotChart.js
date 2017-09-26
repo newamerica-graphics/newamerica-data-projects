@@ -1,4 +1,5 @@
 import React from 'react';
+import $ from 'jquery';
 
 import { colors } from "../../helper_functions/colors.js";
 
