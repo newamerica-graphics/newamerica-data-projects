@@ -897,5 +897,5 @@ let vizSettings = {
 
 module.exports = {
 	vizSettings: vizSettings,
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/bll/care_index.json"
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/drone-strikes-all.json"
 }
