@@ -22,13 +22,32 @@
 		padding-bottom: 20px;
 		&__option {
 			color: palette-get(na-black-40);
+			text-align: center;
 			font-size: 16px;
-			padding-right: 15px;
+			padding: 10px;
+			border: 1px solid palette-get(na-black-10);
 			cursor: pointer;
 
 			&.active {
 				font-weight: bold;
+				color: palette-get(na-black) !important;
+				border: 1px solid palette-get(na-black) !important;
+			}
+
+			&:hover {
 				color: palette-get(na-black);
+				border-color: palette-get(na-black-30);
+			}
+
+			&::after {
+			    display:block;
+			    content:attr(title);
+			    font-weight:bold;
+			    height:1px;
+			    color:transparent;
+			    overflow:hidden;
+			    visibility:hidden;
+			    margin-bottom:-1px;
 			}
 		}
 	}

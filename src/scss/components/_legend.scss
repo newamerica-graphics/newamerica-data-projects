@@ -158,6 +158,10 @@
 			padding-left: 10px;
 			margin-bottom: 5px;
 			@include chart-secondary-text;
+
+			&:hover {
+				color: palette-get(na-black);
+			}
 		}
 
 		&__val-count {
