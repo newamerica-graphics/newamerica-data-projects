@@ -3,6 +3,7 @@ var path = require('path');
 var S3Plugin = require('webpack-s3-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 var BUILD_DIR = path.resolve(__dirname, 'build/');
 var PROJECT_DIR = path.resolve(__dirname, 'src');
@@ -13,6 +14,7 @@ var AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
 var DATA_PROJECTS_S3_BUCKET_NAME = process.env.DATA_PROJECTS_S3_BUCKET_NAME;
 
 const config = env => {
+  console.log(env)
   var {vizSettings, dataUrl} = require("./src/js/projects/" + env.project + "/settings.js")
 
   return {
@@ -28,7 +30,10 @@ const config = env => {
         'mapbox-gl-geocoder': path.resolve('./node_modules/mapbox-gl/plugins/src/mapbox-gl-geocoder/v2.0.1/'),
       }
     },
-    devtool: env.NODE_ENV === "development" ? 'inline-source-map' : '',
+    devtool: env.NODE_ENV === "development" ? 'cheap-module-eval-source-map' : '',
+    devServer: {
+      contentBase: "./"
+    },
     module: {
       rules : [
         {
@@ -68,10 +73,8 @@ const config = env => {
           DATA_URL:JSON.stringify(dataUrl)
         })
       ] : [
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            }
+        new UglifyJSPlugin({
+          sourceMap: true
         }),
         // new S3Plugin({
         //   // Only upload css and js 
@@ -85,7 +88,7 @@ const config = env => {
         //     Bucket: DATA_PROJECTS_S3_BUCKET_NAME
         //   }
         // }),
-        // new webpack.optimize.ModuleConcatenationPlugin()
+        new webpack.optimize.ModuleConcatenationPlugin()
       ],
     node: {
       fs: "empty",
