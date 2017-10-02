@@ -29,7 +29,7 @@ export class Legend {
 
 		this.legend = d3.select(this.id)
 			.append("div")
-			.attr("class", "legend " + this.orientation);
+			.attr("class", "legend " + this.orientation + " " + this.scaleType);
 
 		if (this.showTitle) {
 			let titleContainer = this.legend.append("div")
@@ -188,7 +188,6 @@ export class Legend {
 		let svg = cell.append("svg")
 			.attr("height", size)
 			.attr("width", size)
-			.style("margin-top", 10 - size/2)
 			.attr("class", "legend__cell__color-swatch-container");
 
 		let marker = svg.append(shape)

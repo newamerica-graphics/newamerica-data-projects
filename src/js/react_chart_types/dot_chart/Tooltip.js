@@ -48,7 +48,6 @@ function renderVal(datum, varSettings) {
 
 	if (dataVal) {
 		if (varSettings.format == "link") {
-			console.log(dataVal)
 			formattedValue =  <h3 className="tooltip__category__list-item__value" dangerouslySetInnerHTML={{__html:dataVal}}></h3>
 		} else {
 			formattedValue = <h3 className="tooltip__category__list-item__value">{ formatValue(dataVal, varSettings.format) }</h3>

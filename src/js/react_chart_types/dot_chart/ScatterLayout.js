@@ -9,9 +9,6 @@ const d3 = require("d3");
 
 class ScatterLayout {
 	constructor(width, height) {
-		console.log(height, width)
-		console.log("in constructor");
-
 		this.width = width;
 		this.height = height;
 	}
@@ -22,7 +19,6 @@ class ScatterLayout {
 	}
 
 	renderDot(d, i) {
-		console.log(this.width, this.height)
 		return {x: spring(Math.random()*this.width), y: spring(Math.random()*this.height), r:5 }
 	}
 }

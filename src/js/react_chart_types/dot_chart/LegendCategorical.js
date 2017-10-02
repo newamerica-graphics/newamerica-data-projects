@@ -45,7 +45,7 @@ export default class LegendCategorical extends React.Component {
 
 	render() {
 		return (
-			<div className={"legend " + this.props.orientation}>
+			<div className={"legend " + this.props.orientation + " categorical"}>
 				<ul className="legend__cell-list">
 					{this.fullValList.map(variable => {
 						let classes = "legend__cell";

@@ -25,11 +25,9 @@ class DotChart extends React.Component {
         const {data, vizSettings} = props
 
 		this.data = data[vizSettings.primaryDataSheet];
-        console.log(this.data.length)
         if (vizSettings.filterInitialDataFunction) {
             this.data = this.data.filter(vizSettings.filterInitialDataFunction);
         }
-        console.log(this.data.length)
 
 		this.resizeFunc = this.resize.bind(this);
 
@@ -38,7 +36,7 @@ class DotChart extends React.Component {
 		}
 
         if (vizSettings.interaction == "click") {
-            window.addEventListener('click', () => { console.log("clicked"); return this.clicked(null); });
+            window.addEventListener('click', () => { return this.clicked(null); });
         }
 
 		this.state = {
@@ -80,7 +78,6 @@ class DotChart extends React.Component {
     }
 
     getCurrLayout(data, layoutSettings, w) {
-        console.log(this.props.vizSettings.dotSettings)
         switch(layoutSettings.layout) {
             case "histogram":
                 return new HistogramLayout(data, w, layoutSettings, this.props.vizSettings.dotSettings)
@@ -106,7 +103,6 @@ class DotChart extends React.Component {
         const { currLayout, currLayoutSettings, width } = this.state;
 
         // let numTicks = d3.timeYear.count(currLayout.axisScale.domain()[0], currLayout.axisScale.domain()[1])
-        // console.log(numTicks)
         return (
             <Motion style={{currTransform: spring(currLayout.height - 27)}} >
                 {({currTransform}) => {
@@ -230,7 +226,7 @@ class DotChart extends React.Component {
                                                         cx={x} cy={y} r={r} 
                                                         fill={fillColor} 
                                                         stroke={strokeColor} 
-                                                        onClick={(e, b) => { console.log(e, b); e.stopPropagation(); return interaction == "click" ? this.clicked(d, x, y) : null; }} 
+                                                        onClick={(e, b) => { e.stopPropagation(); return interaction == "click" ? this.clicked(d, x, y) : null; }} 
                                                         onMouseOver={() => { return this.mouseover(d, x, y); }} 
                                                         onMouseOut={() => { return this.mouseout(d); }}/>
                                                 )

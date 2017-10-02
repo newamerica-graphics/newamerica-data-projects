@@ -66,6 +66,8 @@ export class Table {
 		// hide "showing _ of _ results footer if no searching and pagination"
 		this.disableSearching && !this.pagination ? $(this.id + " .dataTables_info").hide() : null;
 		this.attachPopup();
+
+		setTableWidth();
 	}
 
 	getColumnNames() {
@@ -157,9 +159,19 @@ export class Table {
 		}
 	}
 
-	applyColorScale() {
-		console.log($(".sorting_1"));
-	}
 }
 
+function setTableWidth() {
+	var $contentContainer = $(".content-container");
+	var $body = $("body")
+	var bodyWidth = $body.width();
+
+	if ($contentContainer.hasClass("has-sidemenu") && (bodyWidth > 965)) {
+		$(".block-table").width(bodyWidth - 300);
+	} else if ($body.hasClass("template-indepthsection") || $body.hasClass("template-indepthproject")) {
+		$(".block-table").width(bodyWidth - 100);
+	} else {
+		$(".block-table").width(bodyWidth - 50);
+	}
+}
 
