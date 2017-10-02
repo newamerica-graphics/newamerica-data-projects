@@ -21,7 +21,7 @@
 	&__layout-selector {
 		padding-bottom: 20px;
 		&__option {
-			color: palette-get(na-black-40);
+			color: palette-get(na-black-30);
 			text-align: center;
 			font-size: 16px;
 			padding: 10px;
@@ -35,7 +35,7 @@
 			}
 
 			&:hover {
-				color: palette-get(na-black);
+				color: palette-get(na-black-40);
 				border-color: palette-get(na-black-30);
 			}
 

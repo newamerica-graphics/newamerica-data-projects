@@ -254,7 +254,7 @@ class DotChart extends React.Component {
 	resize() {
         let w = this.getCurrWidth();
 
-        this.state.currLayout.resize(w, w/2)
+        this.state.currLayout.resize(w)
 
         this.setState({
           width: w,

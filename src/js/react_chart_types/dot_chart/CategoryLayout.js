@@ -38,7 +38,7 @@ class CategoryLayout {
 		this.height = this.sortedCategoryVals.length * (this.dotWidth + dotPadding + 3) * 2
 
 		this.yScale.domain(this.sortedCategoryVals.map(d => d.key))
-			.range([this.dotWidth + dotPadding, this.height])
+			.range([this.dotWidth + dotPadding + 5, this.height])
 
 		if (this.overrideColorVar) {
 			this.overrideColorScale = getColorScale(this.data, this.overrideColorVar)
@@ -46,10 +46,11 @@ class CategoryLayout {
 	}
 
 	resize(width) {
+		console.log("in category chart resizing")
 		this.width = width;
 
-		this.dotWidth = width/dotSettings.scaleFactor;
-		this.dotWidth = this.dotWidth > dotSettings.maxRadius ? dotSettings.maxRadius : this.dotWidth;
+		this.dotWidth = width/this.dotSettings.scaleFactor;
+		this.dotWidth = this.dotWidth > this.dotSettings.maxRadius ? this.dotSettings.maxRadius : this.dotWidth;
 
 		this.height = this.sortedCategoryVals.length * (this.dotWidth + dotPadding + 2) * 2
 
