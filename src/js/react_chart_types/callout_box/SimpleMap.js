@@ -8,10 +8,12 @@ const topojson = require("topojson");
 // import { worldGeom } from '../../../geometry/world.js';
 import { pakistan } from '../../../geometry/pakistan.js';
 import { yemen } from '../../../geometry/yemen.js';
+import { somalia } from '../../../geometry/somalia.js';
 import $ from 'jquery';
 
 import { getValue } from "./utilities.js";
 
+const mapPadding = 15;
 
 class SimpleMap extends React.Component {
 	constructor(props) {
@@ -29,7 +31,11 @@ class SimpleMap extends React.Component {
 			this.geometry = pakistan;
 		} else if (props.country == "yemen") {
 			this.geometry = yemen;
+		} else if (props.country == "somalia") {
+			this.geometry = somalia;
 		}
+
+		console.log(this.geometry)
 
 		this.resizeFunc = this.resize.bind(this);
 
@@ -40,7 +46,7 @@ class SimpleMap extends React.Component {
 
 	projection() {
 	    return d3.geoMercator()
-	      .fitExtent([[0,0], [this.state.width, this.state.width]], this.geometry)
+	      .fitExtent([[mapPadding, mapPadding], [this.state.width - mapPadding, this.state.width - mapPadding]], this.geometry)
 	 }
 
 	componentDidMount() {

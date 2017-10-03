@@ -93,7 +93,8 @@ export class Table {
 		// hide "showing _ of _ results footer if no searching and pagination"
 		this.disableSearching && !this.pagination ? $(this.id + " .dataTables_info").hide() : null;
 		this.attachPopup();
-	
+
+		setTableWidth();
 	}
 
 	getColumnNames() {
@@ -111,11 +112,15 @@ export class Table {
 						return formatValue(data, tableVar.format);
 					}
         			
-        		}
+        		},
         	};
 
-        	tableVar.format == "date" ? varObject["type"] = "date" : null;
-
+        	if (tableVar.format == "date" || tableVar.format == "date_simple") {
+        		varObject["type"] = "date";
+        	} else if (tableVar.format == "number") {
+        		varObject["type"] = "num";
+        	}
+        	console.log(varObject);
 			columnNames.push(varObject);
 		}
 
@@ -180,27 +185,19 @@ export class Table {
 				.style("left", (e.pageX - 150) + "px");
 		}
 	}
-
-	applyColorScale() {
-		console.log($(".sorting_1"));
-	}
-
-	setTableWidth() {
-		var $contentContainer = $(".content-container");
-		var $body = $("body")
-		var bodyWidth = $body.width();
-
-		console.log("setting table width!")
-		console.log(bodyWidth)
-
-		if ($contentContainer.hasClass("has-sidemenu") && (bodyWidth > 965)) {
-			$("#dataTable_wrapper").width(bodyWidth - 300);
-		} else if ($body.hasClass("template-indepthsection") || $body.hasClass("template-indepthproject")) {
-			$("#dataTable_wrapper").width(bodyWidth - 100);
-		} else {
-			$("#dataTable_wrapper").width(bodyWidth - 50);
-		}
-	}
 }
 
+function setTableWidth() {
+	var $contentContainer = $(".content-container");
+	var $body = $("body")
+	var bodyWidth = $body.width();
+
+	if ($contentContainer.hasClass("has-sidemenu") && (bodyWidth > 965)) {
+		$(".block-table").width(bodyWidth - 300);
+	} else if ($body.hasClass("template-indepthsection") || $body.hasClass("template-indepthproject")) {
+		$(".block-table").width(bodyWidth - 100);
+	} else {
+		$(".block-table").width(bodyWidth - 50);
+	}
+}
 

@@ -74,6 +74,7 @@ export class FilterGroup {
 			this.valDivs[i] = valListDiv.append("li")
 				.classed("filter-group__variable", true)
 				.classed("active", () => { return i == 0 ? true : false; })
+				.attr("title", variable.displayName)
 				.attr("value", i)
 				.on("click", function() {
 					self.toggleVariable($(this).val());

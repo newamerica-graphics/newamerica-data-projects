@@ -1,0 +1,18 @@
+.bar-chart {
+	&__info-text {
+		max-width: 800px;
+		margin: auto;
+
+		&__icon, &__text {
+			display: inline-block;
+		}
+
+		&__text {
+			font-size: 14px;
+			color: palette-get(na-black-40);
+			vertical-align: middle;
+			padding-left: 7px;
+			margin-bottom: .35rem;
+		}
+	}
+}

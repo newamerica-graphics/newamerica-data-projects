@@ -14,6 +14,15 @@ class CalloutBox extends React.Component {
 		console.log(props);
 
 		this.data = props.data[props.vizSettings.primaryDataSheet];
+		console.log(this.data)
+		if (props.vizSettings.secondaryDataSheets) {
+			props.vizSettings.secondaryDataSheets.forEach((d) => {
+				console.log(d)
+				this.data = [...this.data, ...props.data[d]];
+			})
+		}
+		console.log(this.data)
+
 	}
 
 	render() {

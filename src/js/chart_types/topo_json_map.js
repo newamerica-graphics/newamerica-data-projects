@@ -143,12 +143,18 @@ export class TopoJsonMap {
 		if (!this.hideFilterGroup) {
 			this.filterGroup ? this.setFilterGroup() : null;
 		}
-		// super.render();
 	}
 
 	setScale() {
 		this.colorScale = getColorScale(this.data, this.filterVars[this.currFilterIndex]);
-		console.log(this.colorScale.range());
+
+		console.log(this.colorScale.domain())
+
+		if (this.colorScale.domain()[0] == 0) {
+			this.colorScale.domain([1, this.colorScale.domain()[1]])
+		}
+
+		console.log(this.colorScale.domain())
 	}
 
 	bindDataToGeom() {
@@ -177,8 +183,8 @@ export class TopoJsonMap {
 		    .style("stroke-width", this.stroke.width || "1")
 		    .style("stroke-opacity", this.stroke.opacity || "1")
 		    .style("cursor", this.zoomable || this.interaction == "click" || this.clickToProfile ? "pointer" : "auto")
-		    .on("mouseover", (d, index, paths) => { return this.interaction != "click" ? this.mouseover(d, paths[index], d3.event) : null })
-		    .on("mouseout", (d, index, paths) => { return this.interaction != "click" ? this.mouseout(paths[index]) : null })
+		    .on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event) })
+		    .on("mouseout", (d, index, paths) => { return this.mouseout(paths[index]) })
 		    .on("click", (d, index, paths) => {
 		    	if (this.zoomable) {
 		    		return this.zoom(d, paths[index], d3.event);
@@ -206,6 +212,9 @@ export class TopoJsonMap {
 	setFill(d) {
 		if (d.data && d.data[this.currFilterVar]) {
 	   		var value = d.data[this.currFilterVar];
+
+	   		console.log(value, value == 0, this.defaultFill)
+	   		if (value == 0) { return this.defaultFill }
 	   		if (this.filterVars[this.currFilterIndex].canSplitCategory) {
 	   			let splitVals = value.split(";");
 	   			if (splitVals.length > 1) {
@@ -260,6 +269,11 @@ export class TopoJsonMap {
 		this.setScale();
 		this.legendSettings ? this.setLegend() : null;
 		this.paths.style("fill", (d) => { return this.setFill(d); })
+			.style("stroke-width", this.stroke.width || "1")
+
+		this.currClicked ? this.mouseout(this.currClicked) : null;
+		this.dashboardChangeFunc ? this.dashboardChangeFunc({currFilter: this.filterVars[this.currFilterIndex]}, this) : null;
+
 	}
 
 	changeValue(newVal) {
@@ -308,7 +322,7 @@ export class TopoJsonMap {
 			   				return fillColor2;
 			   			}
 		   			} else {
-		   				let fillColor = this.colorScale(splitVals[0].trim())
+		   				let fillColor = this.setFill(d)
 		   				let binIndex = this.colorScale.range().indexOf(fillColor);
 		   				if (valsShown.indexOf(binIndex) > -1) {
 			   				return fillColor;
@@ -326,38 +340,55 @@ export class TopoJsonMap {
 				return;
 			}
 		} 
+		if (this.currClicked != path) {
+			d3.select(path)
+				.style("stroke", this.stroke.hoverColor || "white")
+				.style("stroke-width", this.stroke.hoverWidth || "3")
+				.style("fill-opacity", this.stroke.hoverOpacity || "1");
+		}
 
-		d3.select(path)
-			.style("stroke", this.stroke.hoverColor || "white")
-			.style("stroke-width", this.stroke.hoverWidth || "3")
-			.style("fill-opacity", this.stroke.hoverOpacity || "1");
-
-		let mousePos = [];
-		mousePos[0] = eventObject.pageX;
-		mousePos[1] = eventObject.pageY;
-		this.dashboardChangeFunc ? this.dashboardChangeFunc(datum.id, this) : null;
-		
-		this.tooltip ? this.tooltip.show(datum.data, mousePos, this.filterVars[this.currFilterIndex], d3.select(path).style("fill")) : null;
+		if (this.interaction != "click") {
+			let mousePos = [];
+			mousePos[0] = eventObject.pageX;
+			mousePos[1] = eventObject.pageY;
+			this.dashboardChangeFunc ? this.dashboardChangeFunc({dataPoint: datum.data, color: d3.select(path).style("fill"), currFilter: this.filterVars[this.currFilterIndex]}, this) : null;
+			
+			this.tooltip ? this.tooltip.show(datum.data, mousePos, this.filterVars[this.currFilterIndex], d3.select(path).style("fill")) : null;
+		}
 	}
 
 	mouseout(path) {
-		d3.select(path)
-			.style("stroke", this.stroke.color || "white")
-		    .style("stroke-width", this.stroke.width || "1")
-		    .style("fill-opacity", this.stroke.opacity || "1")
-	    this.tooltip ? this.tooltip.hide() : null;
+		if (this.currClicked != path) {
+			d3.select(path)
+				.style("stroke", this.stroke.color || "white")
+			    .style("stroke-width", this.stroke.width || "1")
+			    .style("fill-opacity", this.stroke.opacity || "1")
+		}
+
+		if (this.interaction != "click") {
+	    	this.tooltip ? this.tooltip.hide() : null;
+	    }
 	}
 
 	clicked(datum, path, eventObject) {
 		console.log(this.currClicked);
 		if (this.currClicked) {
-			this.mouseout(this.currClicked);
+			d3.select(this.currClicked)
+				.style("stroke", this.stroke.color || "white")
+			    .style("stroke-width", this.stroke.width || "1")
+			    .style("fill-opacity", this.stroke.opacity || "1")
 			this.currClicked = null;
 		}
-
-		if (datum && datum[this.currFilterVar] != 0) {
-			this.mouseover(datum, path, eventObject);
+		console.log(datum, this.currFilterVar)
+		if (datum && datum.data && datum.data[this.currFilterVar] != 0 && datum.data[this.currFilterVar] != "None") {
+			console.log("has data")
+			d3.select(path)
+				.style("stroke", "white")
+			    .style("stroke-width", "3");
+			this.dashboardChangeFunc ? this.dashboardChangeFunc({dataPoint: datum.data, color: d3.select(path).style("fill"), currFilter: this.filterVars[this.currFilterIndex]}, this) : null;
 			this.currClicked = path
+		} else {
+			this.dashboardChangeFunc ? this.dashboardChangeFunc({currFilter: this.filterVars[this.currFilterIndex]}, this) : null;
 		}
 	}
 

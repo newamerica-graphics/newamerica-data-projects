@@ -32,7 +32,7 @@ let vizSettingsList = [
 		tooltipVars: [ variables.name, variables.primary_technological_tool, variables.tech_tool],
 		quantityLabel: "programs",
 		idVar: variables.name,
-		clickToProfile: { "variable": variables.name.variable, "url": "https://www.newamerica.org/in-depth/integrating-technology-early-literacy/program-profile/?" }	
+		clickToProfile: { "variable": variables.name.variable, "url": "https://www.newamerica.org/in-depth/family-engagement-digital-age/program-profile/?" }	
 	},
 	{
 		id: "#intel__start-year",
@@ -42,7 +42,7 @@ let vizSettingsList = [
 		titleVar: variables.name,
 		legendSettings: {"orientation": "horizontal-center", "showTitle": false},
 		annotationSplits: [ {"value": "2011", "textSpans": ["Tablet invented and", "first introduced to schools"] }],
-		clickToProfile: { "variable": variables.name.variable, "url": "https://www.newamerica.org/in-depth/integrating-technology-early-literacy/program-profile/?" }
+		clickToProfile: { "variable": variables.name.variable, "url": "https://www.newamerica.org/in-depth/family-engagement-digital-age/program-profile/?" }
 	},
 	// {
 	// 	id: "#intel__start-year1",
@@ -65,11 +65,11 @@ let vizSettingsList = [
 		geometryType: "states",
 		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
 		pinRadius: 5.5,
-		filterVars: [ variables.program_affiliation, variables.program_type, variables.languages_summarized, variables.number_served, variables.age_served ],
-		tooltipVars: [ variables.name, variables.program_affiliation, variables.program_type, variables.languages_summarized, variables.number_served, variables.age_served ],
+		filterVars: [ variables.program_type, variables.program_affiliation, variables.languages_summarized, variables.number_served, variables.age_served ],
+		tooltipVars: [ variables.name, variables.program_type, variables.program_affiliation, variables.languages_summarized, variables.number_served, variables.age_served ],
 		filterGroupSettings: {"hidden": false},
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
-		clickToProfile: { "variable": variables.name.variable, "url": "https://www.newamerica.org/in-depth/integrating-technology-early-literacy/program-profile/?" }
+		clickToProfile: { "variable": variables.name.variable, "url": "https://www.newamerica.org/in-depth/family-engagement-digital-age/program-profile/?" }
 
 	},
 	{
@@ -105,7 +105,7 @@ let vizSettingsList = [
 					filterGroupSettings: {"hidden": false},
 					legendSettings: {"orientation": "vertical-right", "showTitle": true},
 					zoomable: true,
-					clickToProfile: { "variable": variables.program.variable, "url": "https://www.newamerica.org/in-depth/integrating-technology-early-literacy/program-profile/?" }
+					clickToProfile: { "variable": variables.program.variable, "url": "https://www.newamerica.org/in-depth/family-engagement-digital-age/program-profile/?" }
 				}
 			]
 		]

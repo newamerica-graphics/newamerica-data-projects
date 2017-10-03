@@ -71,8 +71,6 @@ export class Tooltip {
 			.key((d) => { return d.category; })
 			.entries(this.tooltipVars);
 
-		console.log(categoryNest);
-
 		this.categoryContainers = this.contentContainer.selectAll("g.tooltip__category")
 			.data(categoryNest)
 			.enter().append("g")
@@ -181,7 +179,7 @@ export class Tooltip {
 
 	setMultiColorBorder(inputColor) { 
 		let retVal = "linear-gradient(to right, ";
-		let patternId = inputColor.replace('url("', '').replace('")', '');
+		let patternId = inputColor.replace('url(', '').replace(')', '');
 
 		if ($(patternId).is("linearGradient")) {
 			let colors = $(patternId).children("stop");
@@ -197,15 +195,11 @@ export class Tooltip {
 
 		retVal += ") 5";
 
-		console.log(retVal);
-
 		return retVal;
-	
 	}
 
 	mouseleave() {
 		this.isHovered = false;
 		this.hide();
 	}
-
 }

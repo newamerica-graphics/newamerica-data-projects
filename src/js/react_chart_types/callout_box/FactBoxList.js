@@ -9,7 +9,6 @@ import FactBox from './FactBox.js';
 const d3 = require("d3");
 
 const FactBoxList = ({variables, format, data}) => {
-	console.log("in fact box list", variables)
 	return (
 		<div className={"callout-box__fact-box-list " + format + " " + variables.length + "-children"}>
 			{ variables.map((variable, i) => {

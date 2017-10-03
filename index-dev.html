@@ -1,17 +1,16 @@
 <!doctype html>
 <html lang="">
     <head>
+        <meta charset="utf-8" /> 
       <script type="text/javascript" src="https://na-staging-static.s3.amazonaws.com/static/js/mysite.js"></script>
       <!-- <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v1.3.1/mapbox-gl-geocoder.css' type='text/css' /> -->
-        <meta charset="utf-8" /> 
       <style>
 
-
-        </style>
+</style>
         
     </head>
     <body>
-       <!-- <select class="in-depth__profile__other-value-selector" onchange="document.location = '?' + this.value;" placeholder="Select Another Value">
+        <!-- <select class="in-depth__profile__other-value-selector" onchange="document.location = '?' + this.value;" placeholder="Select Another Value">
             <option value="" disabled selected>Select Another Value</option>
         </select>
         <div class="in-depth__profile__body post-body" data-sheet-name="state_data" data-lookup-field="state">
@@ -20,11 +19,9 @@
             </div>
         </div> -->
         <div class="block-dataviz">
-          <div class="dataviz">
-            <div class="dataviz__chart-container" style="max-width: 800px; overflow:scroll;">
-                <a id="in-depth__download__json" download="data.json">Download JSON</a>
-                <a id="in-depth__download__csv" download="data.zip">Download CSV</a>
-                <!-- <a class="dataviz__download-link" id="care-index__explore-the-index__download-link">{% include 'ui_elements/svg/download.html' %}</a> -->
+          <div class="dataviz" id="target-div">
+            <div class="dataviz__loading-gif"></div>
+            <div class="dataviz__chart-area" id="care-index__explore-the-index"></div>
                 <div class="dataviz__chart-area" id="care-index__explore-the-index"></div>
                 <div class="dataviz__chart-area" id="care-index__explore-the-index__availability"></div>
                 <div class="dataviz__chart-area" id="care-index__child-care-accredidation"></div>
@@ -66,32 +63,13 @@
                 <div class="dataviz__chart-area" id="financial-opportunity__county-map"></div>
                 <div class="dataviz__chart-area" id="financial-opportunity__census-tract-map-other-services"></div>
 
-                <div class="dataviz__chart-area" id="drone-strikes__pakistan__by-president"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__pakistan__by-casualty-type"></div>
+                <div class="dataviz__chart-area" id="drone-strikes__pakistan__casualties"></div>
+                <div class="dataviz__chart-area" id="drone-strikes__pakistan__strikes-by-president"></div>
                 <div class="dataviz__chart-area" id="drone-strikes__pakistan__targets"></div>
                 <div class="dataviz__chart-area" id="drone-strikes__pakistan__strike-list"></div>
                 <div class="dataviz__chart-area" id="drone-strikes__pakistan__strike-totals-by-president"></div>
                 <div class="dataviz__chart-area" id="drone-strikes__pakistan__strike-map"></div>
                 <div class="dataviz__chart-area" id="drone-strikes__pakistan__leaders-map"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__pakistan__call-out-data"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__yemen__by-casualty-type"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__yemen__by-president"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__yemen__by-strike-type"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__yemen__targets"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__yemen__strike-list"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__yemen__strike-totals-by-president"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__yemen__strike-map"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__yemen__leaders-map"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__yemen__call-out-data"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__somalia__by-casualty-type"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__somalia__by-president"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__somalia__by-strike-type"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__somalia__targets"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__somalia__strike-list"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__somalia__strike-totals-by-president"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__somalia__strike-map"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__somalia__leaders-map"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__somalia__call-out-data"></div>
 
                 <div class="dataviz__chart-area" id="dll-work-group__map"></div>
 
@@ -163,6 +141,5 @@
           </div>
         </div>
         <script type="text/javascript" src="/build/bretton_woods_asset_allocator.js"></script>
-
     </body>
 </html>

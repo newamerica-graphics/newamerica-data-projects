@@ -48,7 +48,8 @@
 
 table.dataTable {
 	border-bottom: none !important;
-	font-size: 14px;
+	font-size: 14px !important;
+
 	td {
 		color: palette-get(na-black-40);
 		
@@ -87,6 +88,10 @@ table.dataTable {
 
     tbody tr:nth-of-type(even) {
       background-color: white !important;
+    }
+
+    a {
+    	border-bottom: none !important;
     }
 }
 

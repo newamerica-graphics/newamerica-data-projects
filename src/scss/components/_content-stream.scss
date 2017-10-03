@@ -1,5 +1,5 @@
 .content-stream {
-	max-height: 500px;
+	max-height: 365px;
 	overflow-y: scroll;
 	margin-right: 20px;
 
@@ -21,7 +21,9 @@
 	}
 
 	&__container {
-		padding-left: 25px;
+		padding-left: 20px;
+		padding-top: 20px;
+		padding-bottom: 15px;
 		max-height: 550px;
 		min-height: 300px;
 		position: relative;
@@ -32,13 +34,32 @@
 	}
 
 	&__title-container {
-		height: 50px;
+		/*height: 50px;*/
+		padding-bottom: 10px;
 	}
 
 	&__title {
 		font-weight: bold;
 		font-size: 23px;
 		color: palette-get(na-black);
+	}
+
+	&__filter-val, &__additional-data {
+		
+		&__label, &__value {
+			display: inline-block;
+			font-size: 14px;
+			margin-bottom: 0px;
+		}
+
+		&__label {
+			color: palette-get(na-black-40);
+		}
+
+		&__value {
+			padding-left: 5px;
+			font-weight: bold;
+		}
 	}
 
 	&__default-text {
@@ -67,7 +88,7 @@
 		display: table;
 		padding: 10px 20px 10px 0px;
 
-		&:hover {
+		&__link-wrapper:hover {
 			.content-stream__entry__title {
 				color: palette-get(na-turquoise);
 			}
@@ -88,8 +109,9 @@
 		}
 
 		&__date {
-			font-size: 12px;
+			font-size: 14px;
 			color: palette-get(na-black-40);
+			margin-bottom: 5px;
 		}
 
 		&__title {
@@ -104,8 +126,14 @@
 			color: palette-get(na-black);
 		}
 
-		a {
-			border-bottom: none !important;
+		&__source > a {
+			border-bottom: 1px solid palette-get(na-black-70) !important;
+			font-size: 16px !important;
+			font-weight: normal !important;
 		}
+
+		/*a {
+			border-bottom: none !important;
+		}*/
 	}
 }

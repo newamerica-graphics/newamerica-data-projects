@@ -1,6 +1,4 @@
 .legend {
-	
-
 	&__title {
 		font-size: 17px;
 		color: palette-get(na-black);
@@ -55,6 +53,31 @@
 		margin: auto;
 		text-align: center;
 		padding-top: 15px;
+
+		&.categorical {
+			.legend__cell {
+				display: block !important;
+				@include breakpoint(medium) {
+					display: inline-block !important;
+				}
+			}
+
+			.legend__cell-list {
+				text-align: left;
+				@include breakpoint(medium) {
+					text-align: center;
+				}
+			}
+
+			.legend__cell__label {
+				max-width: calc(100% - 10px);
+
+				@include breakpoint(medium) {
+					max-width: none;
+				}
+			}
+		}
+
 		.legend__cell-container {
 			margin: auto;
 			width: 100%;
@@ -147,17 +170,23 @@
 		padding-right: 23px;
 
 		&__color-swatch-container, &__label, &__val-count {
-			float: left;
+			display: inline-block;
+			float: none;
 		}
 
 		&__color-swatch-container {
-			margin-top: 5px;
+			margin-top: 8px;
+			vertical-align: top;
 		}
 
 		&__label {
-			padding-left: 10px;
+			padding-left: 9px;
 			margin-bottom: 5px;
 			@include chart-secondary-text;
+
+			&:hover {
+				color: palette-get(na-black) !important;
+			}
 		}
 
 		&__val-count {

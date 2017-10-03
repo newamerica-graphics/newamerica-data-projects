@@ -9,7 +9,6 @@ export const getValue = (variableSettings, data) => {
 				if (query.operation == "max") {
 					let sortedData = data.sort((a, b) => {return Date.parse(b[query.varName]) - Date.parse(a[query.varName]); });
 					
-					console.log(sortedData[0])
 					return sortedData[0][variable.variable];
 				}
 			} else {
@@ -36,11 +35,9 @@ export const getValue = (variableSettings, data) => {
 }
 
 const getFilterFunc = ({varName, operation, compareValue}) => {
-	console.log(varName)
 	switch (operation) {
 		case ">":
 			return (value) => {
-				console.log(value[varName], compareValue);
 				return Date.parse(value[varName]) > compareValue;
 			}
 	}

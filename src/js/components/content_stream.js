@@ -1,23 +1,26 @@
 import $ from 'jquery';
 
+import { colors } from "../helper_functions/colors.js";
+
 let d3 = require("d3");
 
 export class ContentStream {
 	constructor(vizSettings) {
 		Object.assign(this, vizSettings);
 
-		let contentStreamContainer = d3.select(this.id)
+		this.contentStreamContainer = d3.select(this.id)
 			.append("div")
 			.attr("class", "content-stream__container");
 
-		console.log(vizSettings);
-		this.defaultText = contentStreamContainer
-			.append("div")
-			.append("h5")
-			.attr("class", "content-stream__default-text")
-			.text(this.defaultText);
+		if (this.defaultText) {
+			this.defaultTextDiv = this.contentStreamContainer
+				.append("div")
+				.append("h5")
+				.attr("class", "content-stream__default-text")
+				.text(this.defaultText);
+		} 
 
-		let contentStreamTitleContainer = contentStreamContainer
+		let contentStreamTitleContainer = this.contentStreamContainer
 			.append("div")
 			.attr("class", "content-stream__title-container");
 
@@ -25,19 +28,50 @@ export class ContentStream {
 			.append("div")
 			.attr("class", "content-stream__title");
 
-		this.contentStream = contentStreamContainer
+		if (this.additionalDataVars) {
+			this.additionalDataContainers = contentStreamTitleContainer
+				.selectAll("div.content-stream__additional-data")
+				.data(this.additionalDataVars)
+				.enter()
+				.append("div")
+				.attr("class", "content-stream__additional-data")
+
+			this.additionalDataContainers.append("h5")
+				.attr("class", "content-stream__additional-data__label")
+				.text((varSettings) => { return varSettings.displayName + ":"})
+
+			this.additionalDataValues = this.additionalDataContainers.append("h5")
+				.attr("class", "content-stream__additional-data__value")
+
+		}
+
+		if (this.showCurrFilterVal) {
+			let filterValContainer = contentStreamTitleContainer
+				.append("div")
+				.attr("class", "content-stream__filter-val");
+
+			this.filterValLabel = filterValContainer
+				.append("h5")
+				.attr("class", "content-stream__filter-val__label");
+
+			this.filterValValue = filterValContainer
+				.append("h5")
+				.attr("class", "content-stream__filter-val__value");
+		}
+
+		this.contentStream = this.contentStreamContainer
 			.append("ul")
 			.attr("class", "content-stream");
 	}
 
 	render(data) {
-		console.log(data);
-		console.log(data[this.primaryDataSheet]);
+		this.data = data[this.primaryDataSheet]
 		this.dataNest = d3.nest()
-			.key((d) => { return d.state_id; })
-			.map(data[this.primaryDataSheet]);
-
-		console.log(this.dataNest);
+			.key((d) => { return d.state; })
+			.map(this.data);
+		if (!this.defaultText) {
+			this.setStreamContent({color: colors.grey.medium, dataPoint: "all", currFilter: this.defaultFilter});
+		}
 	}
 
 	hide() {
@@ -46,39 +80,103 @@ export class ContentStream {
 		this.contentStreamTitle
 			.text("");
 
-		this.defaultText.classed("hidden", false);
+		this.defaultText ? this.defaultTextDiv.classed("hidden", false) : null;
 	}
 
-	changeValue(value) {
-		if (!value) { return; }
-		let valueList = this.dataNest.get(String(value));
-		if (!valueList) { this.hide(); return; }
-		this.defaultText.classed("hidden", true);
+	changeValue(params) {
+		if (this.entries) { this.entries.remove(); }
+
+		if (params.dataPoint) {
+			this.defaultText ? this.defaultTextDiv.classed("hidden", true) : null;
+			this.setStreamContent(params);
+		} else {
+			if (this.defaultText) {
+				this.defaultTextDiv.classed("hidden", false);
+				this.contentStreamContainer.style("border", "none")
+				this.contentStreamTitle.text("")
+
+				if (this.showCurrFilterVal) {
+					this.filterValLabel.text("")
+					this.filterValValue.text("")
+				}
+				return;
+			} else {
+				this.setStreamContent({color: colors.grey.medium, dataPoint: "all", currFilter: params.currFilter});
+			}
+		}
+	}
+
+	setStreamContent({color, dataPoint, currFilter}) {
+		let valueList, filterVal;
+
+		console.log(dataPoint)
+
+		if (dataPoint == "all" || !dataPoint.state || !this.dataNest.get(String(dataPoint.state))) {
+			valueList = this.data;
+			this.contentStreamTitle
+				.text("All States");
+
+			if (this.additionalDataContainers) {
+				this.additionalDataContainers.style("display", "none")
+			}
+
+		} else {
+			let value = dataPoint.state;
+			valueList = this.dataNest.get(String(value));
+			
+			this.contentStreamTitle
+				.text(value);
+
+			if (this.additionalDataContainers) {
+				this.additionalDataContainers.style("display", "block")
+			}
+		}
+
+		valueList = currFilter && currFilter.filterVal && this.filterVar ? valueList.filter((d) => { return d[this.filterVar.variable] == currFilter.filterVal}) : valueList
 		let sortedList = valueList.sort((a, b) => { return new Date(b.date) - new Date(a.date); });
 
-		if (this.entries) { this.entries.remove(); }
-		if (this.fadeout) { this.fadeout.remove(); }
+		if (color) {
+			this.contentStreamContainer
+				.style("border", "2px solid " + color)
+		}
 
-		this.contentStreamTitle
-			.text(sortedList[0].state);
+		if (this.additionalDataVars) {
+			this.additionalDataValues
+				.text((varSettings) => { return dataPoint[varSettings.variable]})
+		}
+		
+		if (this.showCurrFilterVal && currFilter) {
+			this.filterValLabel
+				.text(currFilter.displayName + ":")
+
+			this.filterValValue
+				.text(sortedList.length)
+				.style("color", color)
+		}
 
 		this.entries = this.contentStream.selectAll("li")
 			.data(sortedList)
 		   .enter().append("li")
 		   	.attr("class", "content-stream__entry");
 
-		let entriesLinks = this.entries.append("a")
-		   	.attr("href", (d) => { return d.url; });
+		let entryContainer;
+		if (this.clickable) {
+			entryContainer = this.entries.append("a")
+				.attr("class", "content-stream__entry__link-wrapper")
+			   	.attr("href", (d) => { return d.url; });
+		} else {
+			entryContainer = this.entries;
+		}
 
-		entriesLinks.selectAll("div.content-stream__entry__image-container")
-			.data((d) => { console.log(d); return d.image_url ? [d] : []})
+		entryContainer.selectAll("div.content-stream__entry__image-container")
+			.data((d) => { return d.image_url ? [d] : []})
 		  .enter().append("div")
 			.attr("class", "content-stream__entry__image-container")
 		  .append("img")
 			.attr("class", "content-stream__entry__image")
 			.attr("src", (d) => { return d.image_url });
 
-		let entryTextContainers = entriesLinks.append("div")
+		let entryTextContainers = entryContainer.append("div")
 			.attr("class", "content-stream__entry__text-container");
 
 		entryTextContainers.append("h5")
@@ -91,14 +189,10 @@ export class ContentStream {
 
 		entryTextContainers.append("h5")
 			.attr("class", "content-stream__entry__description")
-			.text((d) => { return d.description; });
+			.text((d) => { return d.description; });   	
 
-
-		this.fadeout = this.contentStream
-			.append("div")
-			.attr("class", "content-stream__fadeout");
-		   	
+		entryTextContainers.append("div")
+			.attr("class", "content-stream__entry__source")
+			.html((d) => { return d.sources_combined; });
 	}
-
-
 }
