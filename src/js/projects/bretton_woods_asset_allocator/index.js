@@ -52,16 +52,16 @@ let vizSettingsList = [
 		applyForce: true
 		// clickToProfile: { "variable": variables.program.variable, "url": "https://www.newamerica.org/in-depth/integrating-technology-early-literacy/program-profile/?" }
 	},
-	// {
-	// 	id: "#asset-allocator__top-twenty-list",
-	// 	primaryDataSheet: "funds",
-	// 	vizType: "table",
-	// 	tableVars: [ variables.fund_name, variables.country, variables.aum_bn, variables.type, variables.cumulative_score, variables.disclosure, variables.intention, variables.clarity, variables.integration, variables.implementation_1, variables.implementation_2, variables.commitment, variables.accountability, variables.partnership, variables.standards, variables.development_1, variables.development_2 ],
-	// 	defaultOrdering: [4, "desc"],
-	// 	pagination: true,
-	// 	numPerPage: 20,
-	// 	freezeColumn: {leftColumns: 1},
-	// },
+	{
+		id: "#asset-allocator__top-twenty-list",
+		primaryDataSheet: "funds",
+		vizType: "table",
+		tableVars: [ variables.fund_name, variables.country, variables.aum_bn, variables.type, variables.cumulative_score, variables.disclosure, variables.intention, variables.clarity, variables.integration, variables.implementation_1, variables.implementation_2, variables.commitment, variables.accountability, variables.partnership, variables.standards, variables.development_1, variables.development_2 ],
+		defaultOrdering: [4, "desc"],
+		pagination: true,
+		numPerPage: 20,
+		freezeColumn: {leftColumns: 1},
+	},
 	// {
 	// 	id: "#asset-allocator__disclosure", 
 	// 	vizType: "category_breakdown",
@@ -86,15 +86,15 @@ let vizSettingsList = [
 ]
 
 let reactVizSettingsList = [
-	// {
-	// 	id: "#asset-allocator__metric-definitions",
-	// 	vizType: "definition_explorer",
-	// 	primaryDataSheet: "metric_definitions",
-	// 	titleVar: variables.title,
-	// 	descriptionVars: [variables.criteria, variables.criteria_description],
-	// 	categoryVar: variables.category,
-	// 	sorting: "numerical"
-	// },
+	{
+		id: "#asset-allocator__metric-definitions",
+		vizType: "definition_explorer",
+		primaryDataSheet: "metric_definitions",
+		titleVar: variables.title,
+		descriptionVars: [variables.criteria, variables.criteria_description],
+		categoryVar: variables.category,
+		sorting: "numerical"
+	},
 ]
 
 let projectSettings = {

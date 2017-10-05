@@ -144,7 +144,6 @@ export class PinDropMap {
 
 			let extents = d3.extent(this.data, (d) => { return +d[this.radiusVar.variable]; });
 
-			console.log(extents)
 			this.radiusScale.domain(extents);
 		}
 	}
@@ -177,7 +176,6 @@ export class PinDropMap {
 			.on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event)})
 		    .on("mouseout", () => { return this.mouseout(); })
 		    .on("click", (d) => {
-		    	console.log(d);
 		    	if (this.clickToProfile) {
 		    		window.location.href = this.clickToProfile.url + encodeURI(d[this.clickToProfile.variable].toLowerCase());
 		    	}
@@ -263,8 +261,7 @@ export class PinDropMap {
 		let mousePos = [];
 		mousePos[0] = eventObject.pageX;
 		mousePos[1] = eventObject.pageY;
-		
-		console.log(datum)
+
 		this.points
 			.attr("stroke-width", (d) => { return datum == d ? 2/this.zoomRatio : 1/this.zoomRatio})
 		
@@ -367,7 +364,6 @@ export class PinDropMap {
 
 	// dashboard function
 	changeValue(value) {
-		console.log(value);
 		this.points
 			.style("display", (d) => {
 		   		return !value || d[this.idVar.variable] === value ? "block" : "none";

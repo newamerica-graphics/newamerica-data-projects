@@ -22,7 +22,7 @@ export class Table {
 		this.popup = d3.select("body").append("div")
 			.attr("class", "table__popup hidden");
 
-		$(window).resize(this.setTableWidth);
+		$(window).resize(setTableWidth);
 	}
 
 	render(data) {
@@ -39,7 +39,7 @@ export class Table {
 			}
 			
         }
-        console.log(this.filterInitialDataFunction)
+
         if (this.filterInitialDataFunction) { 
         	this.data = this.data.filter((d) => { return this.filterInitialDataFunction(d); });
         }
@@ -47,14 +47,11 @@ export class Table {
         if (this.colorVals) {
 			this.colorScales = {};
 			this.tableVars.forEach((varObject, i) => {
-				console.log(varObject)
 				if (varObject.colorTable) {
 					this.colorScales[i] = getColorScale(this.data, varObject)
 				} else {
 					this.colorScales[i] = null;
 				}
-				
-				
 			})
 		}
 
@@ -108,7 +105,7 @@ export class Table {
 		this.disableSearching && !this.pagination ? $(this.id + " .dataTables_info").hide() : null;
 		this.attachPopup();
 
-		this.setTableWidth();
+		setTableWidth();
 	}
 
 	getColumnNames() {
@@ -194,7 +191,6 @@ export class Table {
 		let shownText = $(e.target).children(".table__content__shown")[0].innerText,
 			hiddenText = $(e.target).children(".table__content__hidden")[0].innerText;
 
-		console.log(shownText);
 		let text = shownText.replace("...", "") + hiddenText;
 
 		if (text.length > 150) {
@@ -206,18 +202,24 @@ export class Table {
 		}
 	}
 
-	setTableWidth() {
-		var $contentContainer = $(".content-container");
-		var $body = $("body")
-		var bodyWidth = $body.width();
 
-		if ($contentContainer.hasClass("has-sidemenu") && (bodyWidth > 965)) {
-			$(".block-table").width(bodyWidth - 300);
-		} else if ($body.hasClass("template-indepthsection") || $body.hasClass("template-indepthproject")) {
-			$(".block-table").width(bodyWidth - 100);
-		} else {
-			$(".block-table").width(bodyWidth - 50);
-		}
+}
+
+function setTableWidth() {
+	console.log("setting table width")
+	var $contentContainer = $(".content-container");
+	var $body = $("body")
+	var bodyWidth = $body.width();
+
+	if ($contentContainer.hasClass("has-sidemenu") && (bodyWidth > 965)) {
+		$(".block-table").width(bodyWidth - 300);
+		$(".dataTables_wrapper").width(bodyWidth - 300);
+	} else if ($body.hasClass("template-indepthsection") || $body.hasClass("template-indepthproject")) {
+		$(".block-table").width(bodyWidth - 100);
+		$(".dataTables_wrapper").width(bodyWidth - 100);
+	} else {
+		$(".block-table").width(bodyWidth - 50);
+		$(".dataTables_wrapper").width(bodyWidth - 50);
 	}
 }
 
