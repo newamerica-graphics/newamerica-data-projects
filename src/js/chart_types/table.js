@@ -213,13 +213,13 @@ function setTableWidth() {
 
 	if ($contentContainer.hasClass("has-sidemenu") && (bodyWidth > 965)) {
 		$(".block-table").width(bodyWidth - 300);
-		$(".dataTables_wrapper").width(bodyWidth - 300);
+		$(".dataTables_wrapper").css("max-width", bodyWidth - 300);
 	} else if ($body.hasClass("template-indepthsection") || $body.hasClass("template-indepthproject")) {
 		$(".block-table").width(bodyWidth - 100);
-		$(".dataTables_wrapper").width(bodyWidth - 100);
+		$(".dataTables_wrapper").css("max-width", bodyWidth - 100);
 	} else {
 		$(".block-table").width(bodyWidth - 50);
-		$(".dataTables_wrapper").width(bodyWidth - 50);
+		$(".dataTables_wrapper").css("max-width", bodyWidth - 50);
 	}
 }
 
