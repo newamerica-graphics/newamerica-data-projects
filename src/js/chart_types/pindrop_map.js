@@ -201,11 +201,8 @@ export class PinDropMap {
 			.force("collide", d3.forceCollide((d) => {
 				return this.radiusScale ? this.radiusScale(d[this.radiusVar.variable]) : this.pinRadius; 
 			}).strength(.5))
-			.alphaDecay(.05)
-
 
 		this.forceLayout.on("tick", (a, b, c) => {
-			console.log("ticking", this.forceLayout.alpha())
 			this.points
 		        .attr("cx", function(d) { return d.x; })
 		        .attr("cy", function(d) { return d.y; });
@@ -233,16 +230,6 @@ export class PinDropMap {
 		this.paths.attr("d", (d) => { return this.pathGenerator(d) });
 
 		if (this.applyForce) {
-			console.log("resizing!!")
-			this.forceLayout
-				.force("force-x", null)
-				.force("force-y", null)
-
-			console.log(this.forceLayout.force("force-x"))
-			console.log(this.forceLayout.alpha())
-
-			this.forceLayout.alpha(1)
-			console.log(this.forceLayout.alpha())
 			this.forceLayout
 				.force("force-x", d3.forceX((d) => {
 					return this.projection([d.long, d.lat])[0];
@@ -250,6 +237,10 @@ export class PinDropMap {
 				.force("force-y", d3.forceY((d) => {
 					return this.projection([d.long, d.lat])[1];
 				}))
+
+			this.forceLayout.restart()
+			this.forceLayout.alpha(1)
+			
 		} else {
 			this.points
 				.attr("cx", (d) => { return this.projection([d.long, d.lat])[0]; })

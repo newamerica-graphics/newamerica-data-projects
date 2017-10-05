@@ -55,6 +55,11 @@
 		padding-top: 15px;
 
 		&.categorical {
+			text-align: left !important;
+			@include breakpoint(medium) {
+				text-align: center !important;
+			}
+
 			.legend__cell {
 				display: block !important;
 				@include breakpoint(medium) {
