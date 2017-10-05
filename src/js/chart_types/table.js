@@ -3,36 +3,32 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 let dt = require('datatables.net');
+let dtFixed = require('datatables.net-fixedcolumns');
 
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { formatValue } from "../helper_functions/format_value.js";
 
+let checkMark = '<svg class="passfailcheck" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17.33 13.75"><defs><style>.check-mark{fill:none;stroke:#2dbbb3;stroke-linecap:square;stroke-width:4px;}</style></defs><title>check-mark</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><polyline class="check-mark" points="3.53 6.9 7.07 10.26 13.79 3.54"/></g></g></svg>';
+let xMark = '<svg class="passfailcheck" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.32 13.32"><defs><style>.x-mark{fill:none;stroke:#e65c64;stroke-linecap:square;stroke-width:3px;}</style></defs><title>x-mark</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><line class="x-mark" x1="3.54" y1="3.54" x2="9.78" y2="9.78"/><line class="x-mark" x1="9.78" y1="3.54" x2="3.54" y2="9.78"/></g></g></svg>';
 
 export class Table {
 	constructor(vizSettings) {
-		let {id, tableVars, colorScaling, primaryDataSheet, pagination, numPerPage, defaultOrdering, disableSearching, disableOrdering, filterInitialDataBy} = vizSettings;
+		Object.assign(this, vizSettings)
 
-		this.id = id;
-		this.tableVars = tableVars;
-		this.colorScaling = colorScaling;
-		this.pagination = pagination;
-		this.numPerPage = numPerPage;
-		this.defaultOrdering = defaultOrdering;
-		this.primaryDataSheet = primaryDataSheet;
-		this.disableSearching = disableSearching;
-		this.disableOrdering = disableOrdering;
-		this.filterInitialDataBy = filterInitialDataBy;
-
-		d3.select(id).append("table")
+		d3.select(this.id).append("table")
 			.attr("id", "dataTable")
 			.attr("class", "table");
 
 		this.popup = d3.select("body").append("div")
 			.attr("class", "table__popup hidden");
+
+		$(window).resize(setTableWidth);
 	}
 
 	render(data) {
 		this.data = data[this.primaryDataSheet];
+
+		// should phase this one out in favor of the filter function below
 		if (this.filterInitialDataBy) {
 			for (let filter of this.filterInitialDataBy) {
 				if (filter.value) {
@@ -43,17 +39,59 @@ export class Table {
 			}
 			
         }
+
+        if (this.filterInitialDataFunction) { 
+        	this.data = this.data.filter((d) => { return this.filterInitialDataFunction(d); });
+        }
+
+        if (this.colorVals) {
+			this.colorScales = {};
+			this.tableVars.forEach((varObject, i) => {
+				if (varObject.colorTable) {
+					this.colorScales[i] = getColorScale(this.data, varObject)
+				} else {
+					this.colorScales[i] = null;
+				}
+			})
+		}
+
 		this.table = $(this.id + " #dataTable").DataTable({
 			data: this.data,
 			columns: this.getColumnNames(),
 		    lengthChange: false,
 		    paging: this.pagination ? true : false,
 		    pageLength: this.numPerPage,
-		    scrollX: false,
-		    ordering: this.disableOrdering ? false : true,
+		    scrollX: this.freezeColumn ? true : false,
+		    ordering: this.disableOrdering? false : true,
 		    order: this.defaultOrdering ? this.defaultOrdering : ["0", "asc"],
-		    searching: this.disableSearching ? false : true
+		    searching: this.disableSearching ? false : true,
+		    fixedColumns: this.freezeColumn ? this.freezeColumn : {}
 		});
+
+		if (this.colorVals) {
+			d3.selectAll("tr")
+				.selectAll("td")
+				.style("color", (d, i, paths) => { 
+					if (this.colorScales[i]) {
+						return this.colorScales[i]($(paths[i]).text().trim())
+					}
+					
+					return "black"; 
+				})
+				.style("font-weight", (d, i) => { return this.colorScales[i] ? "bold" : "normal"; });
+		}
+
+		// if (this.passFailChecks) {
+		// 	d3.selectAll("tr")
+		// 		.selectAll("td")
+		// 		.html((d, i, paths) => { 
+		// 			if (this.tableVars[i].passFailChecks) {
+		// 				return "test!!!!"
+		// 			} else {
+		// 				return "default"
+		// 			}
+		// 		})
+		// }
 
 		if (this.colorScaling) {
 			this.table.on('order.dt', this.orderChanged.bind(this));
@@ -61,7 +99,7 @@ export class Table {
 
 		$(this.id + ' input').addClass("search-box__input").attr("placeholder", "Search");
 
-		$(this.id + " #dataTable").wrap( "<div class='block-table'></div>" );
+		// $(this.id + " #dataTable").wrap( "<div class='block-table'></div>" );
 
 		// hide "showing _ of _ results footer if no searching and pagination"
 		this.disableSearching && !this.pagination ? $(this.id + " .dataTables_info").hide() : null;
@@ -81,6 +119,12 @@ export class Table {
 				"render": function ( data, type, row ) {
 					if (tableVar.format == "long_text" && data && data.length > 100) {
 						return "<div class='table__content'><span class='table__content__shown'>" + data.slice(0, 100) + "...</span><span class='table__content__hidden'>" + data.slice(100, data.length) + "</span></div>";
+					} else if (tableVar.passFailChecks) {
+						if (data == "Passed") {
+							return checkMark
+						} else {
+							return xMark
+						}
 					} else {
 						return formatValue(data, tableVar.format);
 					}
@@ -93,7 +137,7 @@ export class Table {
         	} else if (tableVar.format == "number") {
         		varObject["type"] = "num";
         	}
-        	console.log(varObject);
+
 			columnNames.push(varObject);
 		}
 
@@ -147,7 +191,6 @@ export class Table {
 		let shownText = $(e.target).children(".table__content__shown")[0].innerText,
 			hiddenText = $(e.target).children(".table__content__hidden")[0].innerText;
 
-		console.log(shownText);
 		let text = shownText.replace("...", "") + hiddenText;
 
 		if (text.length > 150) {
@@ -159,19 +202,26 @@ export class Table {
 		}
 	}
 
+
 }
 
 function setTableWidth() {
+	console.log("setting table width")
 	var $contentContainer = $(".content-container");
 	var $body = $("body")
 	var bodyWidth = $body.width();
 
 	if ($contentContainer.hasClass("has-sidemenu") && (bodyWidth > 965)) {
 		$(".block-table").width(bodyWidth - 300);
+		$(".dataTables_wrapper").width(bodyWidth - 300);
 	} else if ($body.hasClass("template-indepthsection") || $body.hasClass("template-indepthproject")) {
 		$(".block-table").width(bodyWidth - 100);
+		$(".dataTables_wrapper").width(bodyWidth - 100);
 	} else {
 		$(".block-table").width(bodyWidth - 50);
+		$(".dataTables_wrapper").width(bodyWidth - 50);
 	}
 }
+
+
 

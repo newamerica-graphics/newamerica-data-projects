@@ -1,12 +1,12 @@
 .definition-explorer {
 	padding-top: 15px;
-	&__category-container {
+	&__entry-container {
 		display: table;
 		border-collapse: collapse;
 		width: 100%;
 	}
 
-	&__category {
+	&__entry {
 		border: 1px solid palette-get(na-black-10);
 		display: table-row;
 		cursor: pointer;
@@ -26,7 +26,7 @@
 		}
 
 		&__content {
-			margin: 0px 10px;
+			margin: 0px 10px 0px 10px;
 		}
 		
 		&__title {
@@ -36,16 +36,22 @@
 			margin-bottom: 0px;
 			padding: 10px;
 		}
-		&__description {
-			margin-bottom: 10px;
-			vertical-align: top;
-			font-size: 16px !important;
-
-			
-			@include breakpoint(medium) {
-				display: table-cell;
-				width: 35%;
-				padding-right: 10px;
+		&__description-section {
+			&__label {
+				font-size: 14px;
+				color: palette-get(na-black);
+			}
+			&__value {
+				margin-bottom: 10px;
+				vertical-align: top;
+				font-size: 14px;
+				color: palette-get(na-black-40);
+				
+				/*@include breakpoint(medium) {
+					display: table-cell;
+					width: 35%;
+					padding-right: 10px;
+				}*/
 			}
 		}
 
@@ -58,38 +64,34 @@
 		}
 	}
 
-	&__definition {
-		padding: 3px 10px;
-		display: block;
-		border-left: 1px solid palette-get(na-black-10);
+	&__sub-entry {
 		&__title {
 			color: palette-get(na-turquoise);
+			font-size: 15px;
 			font-weight: bold;
-			font-size: 14px !important;
-			text-transform: uppercase;
-			padding-right: 5px;
-			display: block;
-		}
-		&__text {
-			color: palette-get(na-black-70) !important;
-			font-size: 14px !important;
-			line-height: 1.4 !important;
+			padding-left: 5px;
 		}
 
-		&:last-child > * {
-			margin-bottom: 0px;
+		&__description {
+			margin-left: 10px;
+		}
+
+		&:not(:first-child) {
+			margin-top: 10px;
+			padding-top: 10px;
+			border-top: 1px solid palette-get(na-black-10);
 		}
 	}
 }
 
-.category-block-content-enter {
+.entry-content-enter {
   opacity: 0.01;
   max-height: 0px;
   overflow: hidden;
   
 }
 
-.category-block-content-enter.category-block-content-enter-active {
+.entry-content-enter.entry-content-enter-active {
   opacity: 1;
   max-height: 1000px;
   transition: 1000ms ease-in-out;
@@ -97,13 +99,13 @@
 
 }
 
-.category-block-content-leave {
+.entry-content-leave {
   opacity: 1;
   height: 100px;
   overflow: hidden;
 }
 
-.category-block-content-leave.category-block-content-leave-active {
+.entry-content-leave.entry-content-leave-active {
   opacity: 0.01;
   height: 0px;
   overflow: hidden;

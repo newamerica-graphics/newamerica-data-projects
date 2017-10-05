@@ -78,8 +78,6 @@ export class PinDropMap {
 
 	setDimensions() {
 		let containerWidth = $(this.id).width();
-		console.log(containerWidth);
-		console.log(global.showLegendBreakpoint);
 		this.w = containerWidth;
 
 		this.h = this.geometryType == "world" ? 2*this.w/5 : 3*this.w/5;
@@ -128,19 +126,29 @@ export class PinDropMap {
 		this.data = data[this.primaryDataSheet];
 		this.varDescriptionData = this.varDescriptionSheet ? data[this.varDescriptionSheet] : null;
 
-		this.setScale();
+		this.setScales();
 
 		this.buildGraph();
+
+		this.applyForce ? this.setupForceLayout() : null;
 		this.legendSettings ? this.setLegend() : null;
 		this.filterGroup ? this.setFilterGroup() : null;
 	}
 
-	setScale() {
+	setScales() {
 		this.colorScale = getColorScale(this.data, this.filterVars[this.currFilterIndex]);
+		if (this.radiusVar) {
+			this.radiusScale = d3.scaleLinear().range([3, 15]);
+
+			this.data = this.data.filter((d) => { return !isNaN(d[this.radiusVar.variable])})
+
+			let extents = d3.extent(this.data, (d) => { return +d[this.radiusVar.variable]; });
+
+			this.radiusScale.domain(extents);
+		}
 	}
 
 	buildGraph() {
-
 		this.paths = this.g.selectAll("path")
 		   .data(this.geometry)
 		   .enter()
@@ -160,21 +168,43 @@ export class PinDropMap {
 		this.points = this.g.selectAll("circle")
 			.data(this.data.filter((d) => { return d.long && d.lat; }))
 			.enter().append("circle")
-			.attr("cx", (d) => { return this.projection([d.long, d.lat])[0]; })
-			.attr("cy", (d) => { return this.projection([d.long, d.lat])[1]; })
-			.attr("r", this.pinRadius)
 			.attr("fill", (d) => { return this.setFill(d); })
 			.attr("stroke", "white")
 			.attr("stroke-width", "1px")
+			.attr("r", (d) => { return this.radiusScale ? this.radiusScale(d[this.radiusVar.variable]) : this.pinRadius; })
 			.style("cursor", this.clickToProfile ? "pointer" : "auto")
 			.on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event)})
 		    .on("mouseout", () => { return this.mouseout(); })
 		    .on("click", (d) => {
-		    	console.log(d);
 		    	if (this.clickToProfile) {
 		    		window.location.href = this.clickToProfile.url + encodeURI(d[this.clickToProfile.variable].toLowerCase());
 		    	}
 		    });
+
+		if (!this.applyForce) {
+			this.points
+				.attr("cx", (d) => { return this.projection([d.long, d.lat])[0]; })
+				.attr("cy", (d) => { return this.projection([d.long, d.lat])[1]; })
+		}
+	}
+
+	setupForceLayout() {
+		this.forceLayout = d3.forceSimulation(this.data)
+			.force("force-x", d3.forceX((d) => {
+				return this.projection([d.long, d.lat])[0];
+			}))
+			.force("force-y", d3.forceY((d) => {
+				return this.projection([d.long, d.lat])[1];
+			}))
+			.force("collide", d3.forceCollide((d) => {
+				return this.radiusScale ? this.radiusScale(d[this.radiusVar.variable]) : this.pinRadius; 
+			}).strength(.5))
+
+		this.forceLayout.on("tick", (a, b, c) => {
+			this.points
+		        .attr("cx", function(d) { return d.x; })
+		        .attr("cy", function(d) { return d.y; });
+		});
 	}
 
 	setLegend() {
@@ -197,9 +227,23 @@ export class PinDropMap {
 		this.setDimensions();
 		this.paths.attr("d", (d) => { return this.pathGenerator(d) });
 
-		this.points
-			.attr("cx", (d) => { return this.projection([d.long, d.lat])[0]; })
-			.attr("cy", (d) => { return this.projection([d.long, d.lat])[1]; });
+		if (this.applyForce) {
+			this.forceLayout
+				.force("force-x", d3.forceX((d) => {
+					return this.projection([d.long, d.lat])[0];
+				}))
+				.force("force-y", d3.forceY((d) => {
+					return this.projection([d.long, d.lat])[1];
+				}))
+
+			this.forceLayout.restart()
+			this.forceLayout.alpha(1)
+			
+		} else {
+			this.points
+				.attr("cx", (d) => { return this.projection([d.long, d.lat])[0]; })
+				.attr("cy", (d) => { return this.projection([d.long, d.lat])[1]; });
+		}
 
 		this.legendSettings ? this.legend.resize() : null;
 	}
@@ -208,7 +252,7 @@ export class PinDropMap {
 		this.currFilterIndex = variableIndex;
 		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
 
-		this.setScale();
+		this.setScales();
 		this.legendSettings ? this.setLegend() : null;
 		this.points.attr("fill", (d) => { return this.setFill(d); })
 	}
@@ -217,8 +261,7 @@ export class PinDropMap {
 		let mousePos = [];
 		mousePos[0] = eventObject.pageX;
 		mousePos[1] = eventObject.pageY;
-		
-		console.log(datum)
+
 		this.points
 			.attr("stroke-width", (d) => { return datum == d ? 2/this.zoomRatio : 1/this.zoomRatio})
 		
@@ -313,14 +356,14 @@ export class PinDropMap {
 		this.points
 			.transition()
 		  	.duration(750)
-			.attr("r", this.pinRadius/this.zoomRatio)
+			.attr("r", (d) => { return this.radiusScale ? this.radiusScale(d[this.radiusVar.variable])/this.zoomRatio : this.pinRadius/this.zoomRatio; })
+
 			.attr("stroke-width", 1/this.zoomRatio)
 
 	}
 
 	// dashboard function
 	changeValue(value) {
-		console.log(value);
 		this.points
 			.style("display", (d) => {
 		   		return !value || d[this.idVar.variable] === value ? "block" : "none";

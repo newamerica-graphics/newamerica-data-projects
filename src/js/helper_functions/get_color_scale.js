@@ -42,7 +42,11 @@ export function getColorScale(data, filterVar) {
 		console.log(customDomain, customRange);
 		// if both are not custom, get unique values
 		let uniqueVals = getUniqueVals(data, filterVar);
-		[customDomain, customRange] = customDomain ? filterUnusedVals(uniqueVals, customDomain, customRange, canSplitCategory) : [customDomain, customRange];
+		console.log(uniqueVals)
+		if (customDomain) {
+			let newVals = filterUnusedVals(uniqueVals, customDomain, customRange, canSplitCategory)
+			[customDomain, customRange] = newVals
+		}
 
 		console.log(customDomain, customRange);
 		domain = setCategoricalDomain(uniqueVals, customDomain);
@@ -88,6 +92,9 @@ function filterUnusedVals(uniqueVals, customDomain, customRange, canSplitCategor
 			retRange.push(customRange[i]);
 		}
 	}
+
+	console.log(retDomain)
+	console.log(retRange)
 
 	return [retDomain, retRange];
 }
