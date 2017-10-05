@@ -8,6 +8,8 @@ let dtFixed = require('datatables.net-fixedcolumns');
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 import { formatValue } from "../helper_functions/format_value.js";
 
+let checkMark = '<svg class="passfailcheck" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17.33 13.75"><defs><style>.check-mark{fill:none;stroke:#2dbbb3;stroke-linecap:square;stroke-width:4px;}</style></defs><title>check-mark</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><polyline class="check-mark" points="3.53 6.9 7.07 10.26 13.79 3.54"/></g></g></svg>';
+let xMark = '<svg class="passfailcheck" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.32 13.32"><defs><style>.x-mark{fill:none;stroke:#e65c64;stroke-linecap:square;stroke-width:3px;}</style></defs><title>x-mark</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><line class="x-mark" x1="3.54" y1="3.54" x2="9.78" y2="9.78"/><line class="x-mark" x1="9.78" y1="3.54" x2="3.54" y2="9.78"/></g></g></svg>';
 
 export class Table {
 	constructor(vizSettings) {
@@ -74,13 +76,25 @@ export class Table {
 				.selectAll("td")
 				.style("color", (d, i, paths) => { 
 					if (this.colorScales[i]) {
-						console.log(d, i , paths[i], $(paths[i]).text(), this.colorScales[i].domain(), this.colorScales[i].range(), this.colorScales[i]($(paths[i]).text())); 
 						return this.colorScales[i]($(paths[i]).text().trim())
 					}
+					
 					return "black"; 
 				})
-				.style("font-weight", (d, i) => { return this.colorScales[i] ? "bold" : "normal"; })
+				.style("font-weight", (d, i) => { return this.colorScales[i] ? "bold" : "normal"; });
 		}
+
+		// if (this.passFailChecks) {
+		// 	d3.selectAll("tr")
+		// 		.selectAll("td")
+		// 		.html((d, i, paths) => { 
+		// 			if (this.tableVars[i].passFailChecks) {
+		// 				return "test!!!!"
+		// 			} else {
+		// 				return "default"
+		// 			}
+		// 		})
+		// }
 
 		if (this.colorScaling) {
 			this.table.on('order.dt', this.orderChanged.bind(this));
@@ -94,7 +108,7 @@ export class Table {
 		this.disableSearching && !this.pagination ? $(this.id + " .dataTables_info").hide() : null;
 		this.attachPopup();
 
-		setTableWidth();
+		this.setTableWidth();
 	}
 
 	getColumnNames() {
@@ -108,6 +122,12 @@ export class Table {
 				"render": function ( data, type, row ) {
 					if (tableVar.format == "long_text" && data && data.length > 100) {
 						return "<div class='table__content'><span class='table__content__shown'>" + data.slice(0, 100) + "...</span><span class='table__content__hidden'>" + data.slice(100, data.length) + "</span></div>";
+					} else if (tableVar.passFailChecks) {
+						if (data == "Passed") {
+							return checkMark
+						} else {
+							return xMark
+						}
 					} else {
 						return formatValue(data, tableVar.format);
 					}
@@ -120,7 +140,7 @@ export class Table {
         	} else if (tableVar.format == "number") {
         		varObject["type"] = "num";
         	}
-        	console.log(varObject);
+
 			columnNames.push(varObject);
 		}
 
@@ -185,19 +205,21 @@ export class Table {
 				.style("left", (e.pageX - 150) + "px");
 		}
 	}
-}
 
-function setTableWidth() {
-	var $contentContainer = $(".content-container");
-	var $body = $("body")
-	var bodyWidth = $body.width();
+	setTableWidth() {
+		var $contentContainer = $(".content-container");
+		var $body = $("body")
+		var bodyWidth = $body.width();
 
-	if ($contentContainer.hasClass("has-sidemenu") && (bodyWidth > 965)) {
-		$(".block-table").width(bodyWidth - 300);
-	} else if ($body.hasClass("template-indepthsection") || $body.hasClass("template-indepthproject")) {
-		$(".block-table").width(bodyWidth - 100);
-	} else {
-		$(".block-table").width(bodyWidth - 50);
+		if ($contentContainer.hasClass("has-sidemenu") && (bodyWidth > 965)) {
+			$(".block-table").width(bodyWidth - 300);
+		} else if ($body.hasClass("template-indepthsection") || $body.hasClass("template-indepthproject")) {
+			$(".block-table").width(bodyWidth - 100);
+		} else {
+			$(".block-table").width(bodyWidth - 50);
+		}
 	}
 }
+
+
 

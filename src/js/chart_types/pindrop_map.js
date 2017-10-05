@@ -78,8 +78,6 @@ export class PinDropMap {
 
 	setDimensions() {
 		let containerWidth = $(this.id).width();
-		console.log(containerWidth);
-		console.log(global.showLegendBreakpoint);
 		this.w = containerWidth;
 
 		this.h = this.geometryType == "world" ? 2*this.w/5 : 3*this.w/5;
@@ -131,6 +129,8 @@ export class PinDropMap {
 		this.setScales();
 
 		this.buildGraph();
+
+		this.applyForce ? this.setupForceLayout() : null;
 		this.legendSettings ? this.setLegend() : null;
 		this.filterGroup ? this.setFilterGroup() : null;
 	}
@@ -138,11 +138,11 @@ export class PinDropMap {
 	setScales() {
 		this.colorScale = getColorScale(this.data, this.filterVars[this.currFilterIndex]);
 		if (this.radiusVar) {
-			this.radiusScale = d3.scaleLinear().range([3.5, 4.5]);
+			this.radiusScale = d3.scaleLinear().range([3, 15]);
 
 			this.data = this.data.filter((d) => { return !isNaN(d[this.radiusVar.variable])})
 
-			let extents = d3.extent(this.data, (d) => { return d[this.radiusVar.variable]; });
+			let extents = d3.extent(this.data, (d) => { return +d[this.radiusVar.variable]; });
 
 			console.log(extents)
 			this.radiusScale.domain(extents);
@@ -150,7 +150,6 @@ export class PinDropMap {
 	}
 
 	buildGraph() {
-
 		this.paths = this.g.selectAll("path")
 		   .data(this.geometry)
 		   .enter()
@@ -170,12 +169,10 @@ export class PinDropMap {
 		this.points = this.g.selectAll("circle")
 			.data(this.data.filter((d) => { return d.long && d.lat; }))
 			.enter().append("circle")
-			.attr("cx", (d) => { return this.projection([d.long, d.lat])[0]; })
-			.attr("cy", (d) => { return this.projection([d.long, d.lat])[1]; })
-			.attr("r", (d) => { return this.radiusScale ? this.radiusScale(d[this.radiusVar.variable]) : this.pinRadius; })
 			.attr("fill", (d) => { return this.setFill(d); })
 			.attr("stroke", "white")
 			.attr("stroke-width", "1px")
+			.attr("r", (d) => { return this.radiusScale ? this.radiusScale(d[this.radiusVar.variable]) : this.pinRadius; })
 			.style("cursor", this.clickToProfile ? "pointer" : "auto")
 			.on("mouseover", (d, index, paths) => { return this.mouseover(d, paths[index], d3.event)})
 		    .on("mouseout", () => { return this.mouseout(); })
@@ -185,6 +182,34 @@ export class PinDropMap {
 		    		window.location.href = this.clickToProfile.url + encodeURI(d[this.clickToProfile.variable].toLowerCase());
 		    	}
 		    });
+
+		if (!this.applyForce) {
+			this.points
+				.attr("cx", (d) => { return this.projection([d.long, d.lat])[0]; })
+				.attr("cy", (d) => { return this.projection([d.long, d.lat])[1]; })
+		}
+	}
+
+	setupForceLayout() {
+		this.forceLayout = d3.forceSimulation(this.data)
+			.force("force-x", d3.forceX((d) => {
+				return this.projection([d.long, d.lat])[0];
+			}))
+			.force("force-y", d3.forceY((d) => {
+				return this.projection([d.long, d.lat])[1];
+			}))
+			.force("collide", d3.forceCollide((d) => {
+				return this.radiusScale ? this.radiusScale(d[this.radiusVar.variable]) : this.pinRadius; 
+			}).strength(.5))
+			.alphaDecay(.05)
+
+
+		this.forceLayout.on("tick", (a, b, c) => {
+			console.log("ticking", this.forceLayout.alpha())
+			this.points
+		        .attr("cx", function(d) { return d.x; })
+		        .attr("cy", function(d) { return d.y; });
+		});
 	}
 
 	setLegend() {
@@ -207,9 +232,29 @@ export class PinDropMap {
 		this.setDimensions();
 		this.paths.attr("d", (d) => { return this.pathGenerator(d) });
 
-		this.points
-			.attr("cx", (d) => { return this.projection([d.long, d.lat])[0]; })
-			.attr("cy", (d) => { return this.projection([d.long, d.lat])[1]; });
+		if (this.applyForce) {
+			console.log("resizing!!")
+			this.forceLayout
+				.force("force-x", null)
+				.force("force-y", null)
+
+			console.log(this.forceLayout.force("force-x"))
+			console.log(this.forceLayout.alpha())
+
+			this.forceLayout.alpha(1)
+			console.log(this.forceLayout.alpha())
+			this.forceLayout
+				.force("force-x", d3.forceX((d) => {
+					return this.projection([d.long, d.lat])[0];
+				}))
+				.force("force-y", d3.forceY((d) => {
+					return this.projection([d.long, d.lat])[1];
+				}))
+		} else {
+			this.points
+				.attr("cx", (d) => { return this.projection([d.long, d.lat])[0]; })
+				.attr("cy", (d) => { return this.projection([d.long, d.lat])[1]; });
+		}
 
 		this.legendSettings ? this.legend.resize() : null;
 	}

@@ -6,23 +6,24 @@ import { colors } from "../../helper_functions/colors.js";
 let variables = {
 	fund_name: {"variable":"fund_name", "displayName":"Fund Name", "format":"string"},
 	country: {"variable":"country", "displayName":"Country", "format":"string", "category":"Basic Info"},
-	aum_bn: {"variable":"aum_bn", "displayName":"AUM (Billions)", "format":"price", "scaleType":"linear", "customDomain": []},
+	aum_bn: {"variable":"aum_bn", "displayName":"AUM (Billions)", "format":"price", "scaleType":"linear", "customDomain": [], "disableTableOrdering": true},
+	aum_date: {"variable":"aum_date", "displayName":"AUM Last Updated", "format":"year"},
 	type: {"variable":"type", "displayName":"Type", "format":"string"},
 	top_twenty: {"variable":"top_twenty", "displayName":"Fund Type", "format":"string", "category":"Top Twenty Funds", "scaleType": "categorical", "customDomain":["Top Twenty Fund", "Other Fund"], "customRange":[colors.turquoise.light, colors.black]},
 	cumulative_score: {"variable":"cumulative_score", "displayName":"Cumulative Score", "format":"number", "scaleType": "quantize", "numBins":5, "customDomain": [0, 100], "customRange": [colors.white, colors.turquoise.light, colors.turquoise.dark]},	
 
-	disclosure: {"variable":"disclosure", "displayName":"Disclosure", "format":"number", "scaleType": "categorical", "colorTable": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
-	intention: {"variable":"intention", "displayName":"Intention", "format":"number", "scaleType": "categorical", "colorTable": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
-	clarity: {"variable":"clarity", "displayName":"Clarity", "format":"number", "scaleType": "categorical", "colorTable": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
-	integration: {"variable":"integration", "displayName":"Integration", "format":"number", "scaleType": "categorical", "colorTable": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
-	implementation: {"variable":"implementation", "displayName":"Implementation", "format":"number", "scaleType": "categorical", "colorTable": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
-	implementation_2: {"variable":"implementation_2", "displayName":"Implementation 2", "format":"number", "scaleType": "categorical", "colorTable": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
-	commitment: {"variable":"commitment", "displayName":"Commitment", "format":"number", "scaleType": "categorical", "colorTable": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
-	accountability: {"variable":"accountability", "displayName":"Accountability", "format":"number", "scaleType": "categorical", "colorTable": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
-	partnership: {"variable":"partnership", "displayName":"Partnership", "format":"number", "scaleType": "categorical", "colorTable": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
-	standards: {"variable":"standards", "displayName":"Standards", "format":"number", "scaleType": "categorical", "colorTable": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
-	development: {"variable":"development", "displayName":"Development", "format":"number", "scaleType": "categorical", "colorTable": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
-	development_2: {"variable":"development_2", "displayName":"Development 2", "format":"number", "scaleType": "categorical", "colorTable": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
+	disclosure: {"variable":"disclosure", "displayName":"1. Disclosure", "format":"number", "scaleType": "categorical", "disableTableOrdering":true, "passFailChecks": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
+	intention: {"variable":"intention", "displayName":"2. Intention", "format":"number", "scaleType": "categorical", "disableTableOrdering":true, "passFailChecks": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
+	clarity: {"variable":"clarity", "displayName":"3. Clarity", "format":"number", "scaleType": "categorical", "disableTableOrdering":true, "passFailChecks": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
+	integration: {"variable":"integration", "displayName":"4. Integration", "format":"number", "scaleType": "categorical", "disableTableOrdering":true, "passFailChecks": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
+	implementation_1: {"variable":"implementation_1", "displayName":"5a. Implementation", "format":"number", "scaleType": "categorical", "disableTableOrdering":true, "passFailChecks": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
+	implementation_2: {"variable":"implementation_2", "displayName":"5b. Implementation", "format":"number", "scaleType": "categorical", "disableTableOrdering":true, "passFailChecks": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
+	commitment: {"variable":"commitment", "displayName":"6. Commitment", "format":"number", "scaleType": "categorical", "disableTableOrdering":true, "passFailChecks": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
+	accountability: {"variable":"accountability", "displayName":"7. Accountability", "format":"number", "scaleType": "categorical", "disableTableOrdering":true, "passFailChecks": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
+	partnership: {"variable":"partnership", "displayName":"8. Partnership", "format":"number", "scaleType": "categorical", "disableTableOrdering":true, "passFailChecks": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
+	standards: {"variable":"standards", "displayName":"9. Standards", "format":"number", "scaleType": "categorical", "disableTableOrdering":true, "passFailChecks": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
+	development_1: {"variable":"development_1", "displayName":"10a. Development", "format":"number", "scaleType": "categorical", "disableTableOrdering":true, "passFailChecks": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
+	development_2: {"variable":"development_2", "displayName":"10b. Development", "format":"number", "scaleType": "categorical", "disableTableOrdering":true, "passFailChecks": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
 
 	title: {"variable":"title", "displayName":"Title", "format":"string"},
 	criteria: {"variable":"criteria", "displayName":"Criteria", "format":"string"},
@@ -32,34 +33,34 @@ let variables = {
 }
 
 let vizSettingsList = [
-	// {
-	// 	id: "#asset-allocator__world-map",
-	// 	vizType: "pindrop_map",
-	// 	primaryDataSheet: "funds",
-	// 	// isMessagePasser: true,
-	// 	// messageHandlerType: "change_value",
-	// 	geometryType: "world",
-	// 	stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
-	// 	pinRadius: 5,
-	// 	idVar: variables.fund_name,
-	// 	filterVars: [ variables.top_twenty],
-	// 	radiusVar: variables.aum_bn,
-	// 	tooltipVars: [ variables.fund_name, variables.country, variables.aum_bn, variables.type, variables.cumulative_score ],
-	// 	filterGroupSettings: {"hidden": false},
-	// 	legendSettings: {"orientation": "horizontal-center", "showTitle": true},
-	// 	zoomable: true,
-	// 	// clickToProfile: { "variable": variables.program.variable, "url": "https://www.newamerica.org/in-depth/integrating-technology-early-literacy/program-profile/?" }
-	// },
+	{
+		id: "#asset-allocator__world-map",
+		vizType: "pindrop_map",
+		primaryDataSheet: "funds",
+		// isMessagePasser: true,
+		// messageHandlerType: "change_value",
+		geometryType: "world",
+		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
+		pinRadius: 5,
+		idVar: variables.fund_name,
+		filterVars: [ variables.top_twenty],
+		radiusVar: variables.aum_bn,
+		tooltipVars: [ variables.fund_name, variables.country, variables.aum_bn, variables.aum_date, variables.type, variables.cumulative_score ],
+		filterGroupSettings: {"hidden": false},
+		legendSettings: {"orientation": "horizontal-center", "showTitle": true},
+		zoomable: false,
+		applyForce: true
+		// clickToProfile: { "variable": variables.program.variable, "url": "https://www.newamerica.org/in-depth/integrating-technology-early-literacy/program-profile/?" }
+	},
 	// {
 	// 	id: "#asset-allocator__top-twenty-list",
 	// 	primaryDataSheet: "funds",
 	// 	vizType: "table",
-	// 	tableVars: [ variables.fund_name, variables.country, variables.aum_bn, variables.type, variables.disclosure, variables.intention, variables.clarity, variables.integration, variables.implementation, variables.implementation_2, variables.commitment, variables.accountability, variables.partnership, variables.standards, variables.development, variables.development_2, variables.cumulative_score ],
-	// 	defaultOrdering: [16, "desc"],
-	// 	pagination: false,
+	// 	tableVars: [ variables.fund_name, variables.country, variables.aum_bn, variables.type, variables.cumulative_score, variables.disclosure, variables.intention, variables.clarity, variables.integration, variables.implementation_1, variables.implementation_2, variables.commitment, variables.accountability, variables.partnership, variables.standards, variables.development_1, variables.development_2 ],
+	// 	defaultOrdering: [4, "desc"],
+	// 	pagination: true,
 	// 	numPerPage: 20,
 	// 	freezeColumn: {leftColumns: 1},
-	// 	colorVals: true
 	// },
 	// {
 	// 	id: "#asset-allocator__disclosure", 
@@ -85,15 +86,15 @@ let vizSettingsList = [
 ]
 
 let reactVizSettingsList = [
-	{
-		id: "#asset-allocator__metric-definitions",
-		vizType: "definition_explorer",
-		primaryDataSheet: "metric_definitions",
-		titleVar: variables.title,
-		descriptionVars: [variables.criteria, variables.criteria_description],
-		categoryVar: variables.category,
-		sorting: "numerical"
-	},
+	// {
+	// 	id: "#asset-allocator__metric-definitions",
+	// 	vizType: "definition_explorer",
+	// 	primaryDataSheet: "metric_definitions",
+	// 	titleVar: variables.title,
+	// 	descriptionVars: [variables.criteria, variables.criteria_description],
+	// 	categoryVar: variables.category,
+	// 	sorting: "numerical"
+	// },
 ]
 
 let projectSettings = {

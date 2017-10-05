@@ -194,9 +194,9 @@ export const setupProject = (projectSettings) => {
 					}
 				}
 
-				setDataDownloadLinks(d, projectSettings);
+				// setDataDownloadLinks(d, projectSettings);
 				
-				setProfileValues(d);
+				// setProfileValues(d);
 			});
 		}
 		console.log("finished rendering!")
