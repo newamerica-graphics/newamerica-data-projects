@@ -31,8 +31,11 @@ export class Legend {
 			.append("div")
 			.attr("class", "legend " + this.orientation + " " + this.scaleType);
 
+		this.colorLegend = this.legend.append("div")
+			.attr("class", "legend__color-legend-container")
+
 		if (this.showTitle) {
-			let titleContainer = this.legend.append("div")
+			let titleContainer = this.colorLegend.append("div")
 				.attr("class", "legend__title-container");
 
 			let title;
@@ -63,13 +66,17 @@ export class Legend {
 
 		}
 
-		this.cellContainer = this.legend.append("div")
+		this.cellContainer = this.colorLegend.append("div")
 			.attr("class", "legend__cell-container");
 
 		if (this.scaleType == "linear" || this.scaleType == "logarithmic") {
 			this.renderContinuous();
 		} else {
 			this.renderDiscrete();
+		}
+
+		if (this.radiusScale) {
+			this.renderPropCircleLegend()
 		}
 	}
 
@@ -248,8 +255,48 @@ export class Legend {
 		}
 	}
 
+	renderPropCircleLegend() {
+		this.propCircleContainer = this.legend.append("div")
+			.attr("class", "legend__proportional-circle-legend-container");
+
+        this.propCircleContainer.append("h5")
+            .attr("class", "legend__title")
+            .text(this.radiusVar.displayName);
+
+        let width = this.radiusScale.range()[1] * 2 + 2,
+            height = width + 15;
+        
+        let svg = this.propCircleContainer
+            .append("div")
+            .attr("class", "legend__proportional-circle__wrapper")
+            .style("width", width + "px")
+            .style("margin", "auto")
+            .append("svg")
+            .attr("height", height)
+            .attr("width", width);
+
+        svg.selectAll("circle")
+            .data(this.radiusScale.range())
+          .enter().append("circle")
+            .attr("fill", "none")
+            .attr("stroke", "#6b6d71")
+            .attr("stroke-width", 1)
+            .attr("cx", width/2)
+            .attr("cy", height/2 - 5)
+            .attr("r", (d) => { console.log(d); return d; });
+
+        svg.selectAll("text")
+            .data(this.radiusScale.range())
+          .enter().append("text")
+            .attr("x", width/2)
+            .attr("y", (d) => { console.log(d); return height/2 + d + 7; })
+            .style("font-size", "12px")
+            .attr("fill", "#6b6d71")
+            .style("text-anchor", "middle")
+            .text((d, i) => { console.log(d); return formatValue(Math.ceil(this.radiusScale.domain()[i]), this.radiusVar.format); });
+	}
+
 	appendVarDescription(varDescriptionText) {
-		console.log("appending again!");
 		this.titleDiv.append("div")
 			.classed("legend__description-icon", true)
 			.append("svg")

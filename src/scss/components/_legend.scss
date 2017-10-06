@@ -4,7 +4,8 @@
 		color: palette-get(na-black);
 		font-weight: bold;
 		padding-bottom: 5px;
-		display: inline-block
+		display: inline-block;
+		margin-bottom: 0px;
 	}
 
 	&__annotation {
@@ -53,6 +54,7 @@
 		margin: auto;
 		text-align: center;
 		padding-top: 15px;
+		display: table;
 
 		&.categorical {
 			text-align: left !important;
@@ -81,6 +83,15 @@
 					max-width: none;
 				}
 			}
+		}
+
+		.legend__color-legend-container, .legend__proportional-circle-legend-container {
+			display: table-cell;
+		}
+
+		.legend__proportional-circle-legend-container {
+			padding-left: 15px;
+			border-left: 1px solid palette-get(na-black-30);
 		}
 
 		.legend__cell-container {

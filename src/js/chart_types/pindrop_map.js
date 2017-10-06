@@ -138,7 +138,7 @@ export class PinDropMap {
 	setScales() {
 		this.colorScale = getColorScale(this.data, this.filterVars[this.currFilterIndex]);
 		if (this.radiusVar) {
-			this.radiusScale = d3.scaleLinear().range([3, 15]);
+			this.radiusScale = d3.scaleLinear().range([3, 20]);
 
 			this.data = this.data.filter((d) => { return !isNaN(d[this.radiusVar.variable])})
 
@@ -215,6 +215,8 @@ export class PinDropMap {
 		this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
 		this.legendSettings.varDescriptionData = this.varDescriptionData;
 		this.legendSettings.varDescriptionVariable = this.filterVars[this.currFilterIndex].variable;
+		this.legendSettings.radiusScale = this.radiusScale
+		this.legendSettings.radiusVar = this.radiusVar
 
 		this.legend.render(this.legendSettings);
 	}
