@@ -30,9 +30,29 @@ let variables = {
 	criteria_description: {"variable":"criteria_description", "displayName":"Description", "format":"string"},
 	example: {"variable":"example", "displayName":"Example", "format":"string"},
 	category: {"variable":"category", "displayName":"Category", "format":"string"},
+	leaders_score_avg: {"variable":"leaders_score_avg", "displayName":" Average Score for Leaders", "format":"number", "color": colors.turquoise.light},
+	rest_score_avg: {"variable":"rest_score_avg", "displayName":"Average Score for Rest of Funds", "format":"number", "color": colors.blue.light},
 }
 
 let vizSettingsList = [
+	{
+		id: "#asset-allocator__bar-chart",
+		vizType: "bar_chart",
+		primaryDataSheet: "aggregate_scores",
+		orientation: "horizontal",
+		groupingVar: variables.category, 
+		filterVars: [variables.leaders_score_avg, variables.rest_score_avg],
+		filtersUseSameScale: true,
+		tooltipVars: [variables.category, variables.leaders_score_avg, variables.rest_score_avg],
+		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
+		groupingAxisLabelInterval: {"small": 1, "medium": 1, "large": 1},
+		labelValues: false,
+		eventSettings: {
+			"mouseover":{ "tooltip": true, "stroke": false }
+		},
+		customLeftMargin: 200,
+		showValueAxis: true
+	},
 	{
 		id: "#asset-allocator__world-map",
 		vizType: "pindrop_map",
@@ -53,7 +73,7 @@ let vizSettingsList = [
 		// clickToProfile: { "variable": variables.program.variable, "url": "https://www.newamerica.org/in-depth/integrating-technology-early-literacy/program-profile/?" }
 	},
 	{
-		id: "#asset-allocator__top-twenty-list",
+		id: "#asset-allocator__table",
 		primaryDataSheet: "funds",
 		vizType: "table",
 		tableVars: [ variables.fund_name, variables.country, variables.aum_bn, variables.type, variables.cumulative_score, variables.disclosure, variables.intention, variables.clarity, variables.integration, variables.implementation_1, variables.implementation_2, variables.commitment, variables.accountability, variables.partnership, variables.standards, variables.development_1, variables.development_2 ],
