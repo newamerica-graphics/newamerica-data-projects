@@ -116,6 +116,9 @@ const strikesNestDataFunction = (data, filterVar) => {
 	return nestedVals;
 }
 
+const leadersFilterFunction = (d) => {
+	return d.leaders_killed && d.leaders_killed > 0;
+}
 
 
 let vizSettingsList = [
@@ -260,6 +263,7 @@ let vizSettingsList = [
 		chartSettingsList: [
 		    {
 				vizType: "table",
+				filterInitialDataFunction: leadersFilterFunction,
 				tableVars: [ variables.date, variables.leader_names, variables.leader_description, variables.village, variables.region, variables.sources_combined],
 				defaultOrdering: [0, "desc"],
 				pagination: true,
@@ -485,6 +489,7 @@ let vizSettingsList = [
 		    {
 				vizType: "table",
 				tableVars: [ variables.date, variables.leader_names, variables.leader_description, variables.village, variables.region, variables.sources_combined],
+				filterInitialDataFunction: leadersFilterFunction,
 				defaultOrdering: [0, "desc"],
 				pagination: true,
 				numPerPage: 10,
@@ -706,6 +711,7 @@ let vizSettingsList = [
 		    {
 				vizType: "table",
 				tableVars: [ variables.date, variables.leader_names, variables.leader_description, variables.village, variables.region, variables.sources_combined],
+				filterInitialDataFunction: leadersFilterFunction,
 				defaultOrdering: [0, "desc"],
 				pagination: true,
 				numPerPage: 10,
