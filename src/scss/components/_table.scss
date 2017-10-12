@@ -126,11 +126,9 @@ table.dataTable {
 	}
 }
 
-/*.dataTables_wrapper {
-	.block-table {
-		overflow-x: scroll;
-	}
-}*/
+.dataTables_wrapper {
+	overflow-x: scroll !important;
+}
 
 table.dataTable thead th {
 /*	padding: 10px 25px 10px 10px !important;

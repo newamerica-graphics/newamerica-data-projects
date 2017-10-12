@@ -14,7 +14,7 @@ export class FilterableChart {
 
 		let selectBoxSettings = {
 			id: this.id,
-			filterChangeFunction: this.changeTopic.bind(this),
+			dashboardChangeFunc: this.changeTopic.bind(this),
 			customValList: this.filterValList,
 			variable: vizSettings.topicFilterVar,
 		};
