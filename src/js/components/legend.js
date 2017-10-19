@@ -235,6 +235,9 @@ export class Legend {
 			if (this.format == "percent") {
 				start = formatValue(Math.ceil(100*this.calcBinVal(i, this.dataMin, this.binInterval))/100, this.format);
 				end = formatValue(Math.floor(100*this.calcBinVal(i+1, this.dataMin, this.binInterval))/100, this.format);
+			} else if (this.format == "number_with_decimal_2") { 
+				start = formatValue(this.calcBinVal(i, this.dataMin, this.binInterval), this.format);
+				end = formatValue(this.calcBinVal(i+1, this.dataMin, this.binInterval), this.format);
 			} else {
 				start = formatValue(Math.ceil(this.calcBinVal(i, this.dataMin, this.binInterval)), this.format);
 				end = formatValue(Math.floor(this.calcBinVal(i+1, this.dataMin, this.binInterval)), this.format);

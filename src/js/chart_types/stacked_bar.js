@@ -126,12 +126,18 @@ export class StackedBar {
 
 		this.nestedVals = this.dataNestFunction(this.data, this.filterVar);
 
-		this.nestedVals.forEach((yearObject) => {
-			yearList.push(yearObject.key);
-			let valArray = yearObject.values || yearObject.value;
-			let localSum = d3.sum(valArray, (d) => { return d.value; })
-			maxTotalYearVal = Math.max(maxTotalYearVal, localSum);
+		console.log(this.nestedVals)
 
+		this.nestedVals.forEach((yearObject, i) => {
+			if (isNaN(yearObject.key)) {
+				console.log(yearObject)
+				this.nestedVals.splice(i, 1)
+			} else {
+				yearList.push(yearObject.key);
+				let valArray = yearObject.values || yearObject.value;
+				let localSum = d3.sum(valArray, (d) => { return d.value; })
+				maxTotalYearVal = Math.max(maxTotalYearVal, localSum);
+			}
 		})
 		
 		let yearExtents = d3.extent(yearList);
@@ -140,7 +146,6 @@ export class StackedBar {
 		
 		this.yScale.domain([0, maxTotalYearVal]);
 		this.xScale.domain(range(+yearExtents[0], +yearExtents[1]));
-
 	}
 
 	setColorScale() {

@@ -8,6 +8,8 @@ let d3 = require("d3");
 import domtoimage from 'dom-to-image';
 import React from 'react';
 import { render } from 'react-dom';
+let mapboxgl = require('mapbox-gl');
+
 
 import { BarChart } from "./chart_types/bar_chart.js";
 import { StackedBar } from "./chart_types/stacked_bar.js";
@@ -35,6 +37,7 @@ import { BarLineCombo } from "./chart_types/bar_line_combo.js";
 import { PinDropMap } from "./chart_types/pindrop_map.js";
 import { VerticalTimeline } from "./chart_types/vertical_timeline.js";
 
+
 // import ResourceToolkit from "./react_chart_types/resource_toolkit/ResourceToolkit.js";
 import DefinitionExplorer from "./react_chart_types/definition_explorer/DefinitionExplorer.js";
 import CalloutBox from "./react_chart_types/callout_box/CalloutBox.js";
@@ -49,7 +52,7 @@ export const setupProject = (projectSettings) => {
 	initialize();
 
 	window.addEventListener('resize', resize);
-
+	console.log("CHANGEdddddd!!!!!!!!!!!")
 	renderCharts();
 
 	function initialize() {
@@ -114,7 +117,10 @@ export const setupProject = (projectSettings) => {
 						break;
 
 					case "mapbox_map":
-						viz = new MapboxMap(vizSettingsObject);
+						if (mapboxgl.supported()) {
+				           viz = new MapboxMap(vizSettingsObject);
+				        }
+						
 						break;
 
 					case "percentage_stacked_bar":
@@ -173,11 +179,12 @@ export const setupProject = (projectSettings) => {
 				hideLoadingGif(viz.id);
 			}
 			
-			// setDataDownloadLinks(d);
-			// setProfileValues(d);
+			setDataDownloadLinks(d);
+			setProfileValues(d);
 		} else {
 			d3.json(dataUrl, (d) => {
 				console.log(d)
+				setDataDownloadLinks(d, projectSettings);
 				for (let viz of vizList) {
 					viz.render(d);
 					
@@ -194,9 +201,9 @@ export const setupProject = (projectSettings) => {
 					}
 				}
 
-				// setDataDownloadLinks(d, projectSettings);
 				
-				// setProfileValues(d);
+				
+				setProfileValues(d);
 			});
 		}
 		console.log("finished rendering!")

@@ -150,7 +150,7 @@ export class TopoJsonMap {
 
 		console.log(this.colorScale.domain())
 
-		if (this.colorScale.domain()[0] == 0) {
+		if (this.filterVars[this.currFilterIndex].format == "number" && this.colorScale.domain()[0] == 0) {
 			this.colorScale.domain([1, this.colorScale.domain()[1]])
 		}
 
@@ -213,7 +213,6 @@ export class TopoJsonMap {
 		if (d.data && d.data[this.currFilterVar]) {
 	   		var value = d.data[this.currFilterVar];
 
-	   		console.log(value, value == 0, this.defaultFill)
 	   		if (value == 0) { return this.defaultFill }
 	   		if (this.filterVars[this.currFilterIndex].canSplitCategory) {
 	   			let splitVals = value.split(";");

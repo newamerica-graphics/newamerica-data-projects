@@ -24,10 +24,10 @@ mapboxgl.config.ACCESS_TOKEN = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmd
 
 export class MapboxMap {
     constructor(vizSettings, imageFolderId) {
-        if (!mapboxgl.supported()) {
-            alert('Your browser does not support Mapbox GL');
-            return;
-        }
+        // if (!mapboxgl.supported()) {
+        //     alert('Your browser does not support Mapbox GL');
+        //     return;
+        // }
         
         Object.assign(this, vizSettings);
 
