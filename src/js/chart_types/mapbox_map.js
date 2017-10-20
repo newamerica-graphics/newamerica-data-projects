@@ -90,7 +90,7 @@ export class MapboxMap {
         this.addLegend();
 
         this.processData(this.data);
-        this.map.on('load', () => {
+        // this.map.on('load', () => {
             this.map.addSource("dataSource", this.source);
             this.map.addLayer({
                 "id": "points",
@@ -130,7 +130,7 @@ export class MapboxMap {
                 },
                 "filter": ["==", "id", ""]
             });
-        });
+        // });
 
     }
 

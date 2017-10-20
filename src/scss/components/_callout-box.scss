@@ -156,6 +156,10 @@
 		}
 	}
 
+	&__fact-box__val-container {
+		overflow: hidden;
+	}
+
 	&__simple-map {
 		&__path {
 			fill: palette-get(na-black);

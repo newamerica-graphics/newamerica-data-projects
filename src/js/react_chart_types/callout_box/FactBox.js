@@ -25,8 +25,10 @@ const FactBox = ({variableSettings, data, format}) => {
 	} else {
 		return (
 			<div className="callout-box__fact-box">
-				<h5 className="callout-box__fact-box__label">{ variableSettings.label }</h5>
-				<h1 className="callout-box__fact-box__value">{ value }</h1>
+				<div className="callout-box__fact-box__val-container">
+					<h5 className="callout-box__fact-box__label">{ variableSettings.label }</h5>
+					<h1 className="callout-box__fact-box__value">{ value }</h1>
+				</div>
 				{variableSettings.subVars && 
 					<ul className="callout-box__fact-box__sub-list">
 						{variableSettings.subVars.map((currVar) => {
