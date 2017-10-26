@@ -131,7 +131,6 @@ const reactVizSettingsList = [
 			{
 				label: "Incidents Over Time",
 				layout: "histogram",
-				annotationSheet:"timeline_annotations"
 			},
 			{
 				label: "Incidents by State",
