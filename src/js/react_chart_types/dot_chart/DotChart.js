@@ -12,6 +12,7 @@ import LegendCategorical from './LegendCategorical.js';
 import HistogramAnnotations from './HistogramAnnotations.js';
 import ScatterLayout from './ScatterLayout.js';
 import HistogramLayout from './HistogramLayout.js';
+import HistogramFixedIntervalLayout from './HistogramFixedIntervalLayout.js';
 import CategoryLayout from './CategoryLayout.js';
 
 import { Motion, spring } from 'react-motion';
@@ -82,6 +83,9 @@ class DotChart extends React.Component {
             case "histogram":
                 return new HistogramLayout(data, w, layoutSettings, this.props.vizSettings.dotSettings)
 
+            case "histogram_fixed_interval":
+                return new HistogramFixedIntervalLayout(data, w, layoutSettings, this.props.vizSettings.dotSettings)
+
             case "category":
                 return new CategoryLayout(data, w, layoutSettings, this.props.vizSettings.dotSettings)
         }
@@ -93,6 +97,9 @@ class DotChart extends React.Component {
         switch(currLayoutSettings.layout) {
             case "histogram":
                 return this.getHistogramAxis()
+
+            case "histogram_fixed_interval":
+                return this.getHistogramFixedIntervalAxis()
 
             case "category":
                 return this.getCategoryAxis()
@@ -116,6 +123,28 @@ class DotChart extends React.Component {
                                     <Axis {...axisPropsFromBandedScale(currLayout.axisScale)} format={(d) => { return "" }} style={{orient: TOP}} />
                                 </g>
                             }
+                        </g>
+                    )
+                }}
+            </Motion>
+        )
+    }
+
+    getHistogramFixedIntervalAxis() {
+        const { currLayout, currLayoutSettings, width } = this.state;
+        let domainExtent = currLayout.xScale.domain()[1] - currLayout.xScale.domain()[0]
+        console.log((domainExtent * 2000)/width)
+        let tickInterval = Math.ceil((domainExtent * 2000)/width)
+        console.log(tickInterval)
+        // let numTicks = d3.timeYear.count(currLayout.axisScale.domain()[0], currLayout.axisScale.domain()[1])
+        return (
+            <Motion style={{currTransform: spring(currLayout.height - 30)}} >
+                {({currTransform}) => {
+                    return (
+                        <g>
+                            <g className="dot-chart__axis-time" style={{transform: "translateY(" + currTransform + "px)"}}>
+                                <Axis {...axisPropsFromBandedScale(currLayout.xScale)} position={(d) => { return d%tickInterval == 0 ? currLayout.xScale(d) + currLayout.xScale.bandwidth()/2 : -100 }} style={{orient: BOTTOM}} />
+                            </g>
                         </g>
                     )
                 }}

@@ -17,10 +17,11 @@ class HistogramLayout {
 		this.width = width;
 		this.data = data;
 		this.dotSettings = dotSettings;
+		this.dataVariable = layoutSettings.dateVar.variable;
 
 		let extents = d3.extent(this.data, (d) => {
-			if (d.date) {
-				return new Date(d.date);
+			if (d[this.dataVariable]) {
+				return new Date(d[this.dataVariable]);
 			}
 		})
 
@@ -66,13 +67,13 @@ class HistogramLayout {
 			.range([this.dotWidth + dotPadding, this.width - this.dotWidth - dotPadding])
 
 		this.dataNest = d3.nest()
-			.key((d) => { return d.date ? this.binScale(new Date(d.date)) : null })
+			.key((d) => { return d[this.dataVariable] ? this.binScale(new Date(d[this.dataVariable])) : null })
 			.sortKeys(d3.ascending)
 			.sortValues((a, b) => {
-				if (!a.date) return b;
-				if (!b.date) return a;
+				if (!a[this.dataVariable]) return b;
+				if (!b[this.dataVariable]) return a;
 
-				return new Date(a.date) - new Date(b.date)
+				return new Date(a[this.dataVariable]) - new Date(b[this.dataVariable])
 			})
 			.entries(this.data)
 
@@ -98,8 +99,8 @@ class HistogramLayout {
 		// console.log(this.width, this.height)
 		let xPos = 0,
 			yPos = 0;
-		if (d.date) {
-			let bin = this.binScale(new Date(d.date));
+		if (d[this.dataVariable]) {
+			let bin = this.binScale(new Date(d[this.dataVariable]));
 			yPos = this.getYPos(bin, d, i);
 			
 			// console.log(yPos)
