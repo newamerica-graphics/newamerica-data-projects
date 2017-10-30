@@ -43,6 +43,8 @@ class QuoteScroller extends React.Component {
     }
 
     renderCategory(category, index) {
+        const {vizSettings} = this.props
+
         let categoryDescription
         if (this.categoryDescriptions) {
             this.categoryDescriptions.forEach(d => {
@@ -53,7 +55,7 @@ class QuoteScroller extends React.Component {
         }
         return (
             <div className="quote-scroller__category" key={index}>
-                <h3 className="quote-scroller__category__title">{category.key}</h3>
+                {vizSettings.showCategoryTitle && <h3 className="quote-scroller__category__title">{category.key}</h3>}
                 {categoryDescription && <p className="quote-scroller__category__description">{categoryDescription}</p>}
                 <div className="quote-scroller__category__quotes">
                     {category.values.map((d, i) => {

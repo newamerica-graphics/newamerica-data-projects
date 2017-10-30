@@ -51,12 +51,94 @@ const reactVizSettingsList = [
 		]
 	},
 	{
-		id: "#weather-eye__findings", 
+		id: "#weather-eye__findings__complacency", 
 		vizType: "quote_scroller",
 		primaryDataSheet: "storm_quotes",
+		filterInitialDataFunction: d => d.category === "Complacency and fatigue are two major barriers to resilience",
 		categoryDescriptionSheet: "storm_quotes_category_descriptions",
-		categoryVar: variables.category
-	},			
+		categoryVar: variables.category,
+		showCategoryTitle: false
+	},
+	{
+		id: "#weather-eye__findings__press", 
+		vizType: "quote_scroller",
+		primaryDataSheet: "storm_quotes",
+		filterInitialDataFunction: d => d.category === "The local press serves an important role in resilience, and it’s not one that can be replaced by social media",
+		categoryVar: variables.category,
+		showCategoryTitle: false
+	},
+	{
+		id: "#weather-eye__findings__emergency", 
+		vizType: "quote_scroller",
+		primaryDataSheet: "storm_quotes",
+		filterInitialDataFunction: d => d.category === "Emergency management is changing, and it is trying to become a profession",
+		categoryDescriptionSheet: "storm_quotes_category_descriptions",
+		categoryVar: variables.category,
+		showCategoryTitle: false
+	},
+	{
+		id: "#weather-eye__findings__relationships", 
+		vizType: "quote_scroller",
+		primaryDataSheet: "storm_quotes",
+		filterInitialDataFunction: d => d.category === "Relationships are key to good emergency management",
+		categoryDescriptionSheet: "storm_quotes_category_descriptions",
+		categoryVar: variables.category,
+		showCategoryTitle: false
+	},
+	{
+		id: "#weather-eye__findings__rural", 
+		vizType: "quote_scroller",
+		primaryDataSheet: "storm_quotes",
+		filterInitialDataFunction: d => d.category === "Rural areas have a different type of do-it-yourself resilience",
+		categoryDescriptionSheet: "storm_quotes_category_descriptions",
+		categoryVar: variables.category,
+		showCategoryTitle: false
+	},
+	{
+		id: "#weather-eye__findings__systemic", 
+		vizType: "quote_scroller",
+		primaryDataSheet: "storm_quotes",
+		filterInitialDataFunction: d => d.category === "Systemic social issues can inhibit action on weather resiliency",
+		categoryDescriptionSheet: "storm_quotes_category_descriptions",
+		categoryVar: variables.category,
+		showCategoryTitle: false
+	},
+	{
+		id: "#weather-eye__findings__vulnerable", 
+		vizType: "quote_scroller",
+		primaryDataSheet: "storm_quotes",
+		filterInitialDataFunction: d => d.category === "Many vulnerable and low-income populations do not know the resources available to them after a storm",
+		categoryDescriptionSheet: "storm_quotes_category_descriptions",
+		categoryVar: variables.category,
+		showCategoryTitle: false
+	},		
+	{
+		id: "#weather-eye__findings__flooding", 
+		vizType: "quote_scroller",
+		primaryDataSheet: "storm_quotes",
+		filterInitialDataFunction: d => d.category === "Flooding is a problem in every location we visited",
+		categoryDescriptionSheet: "storm_quotes_category_descriptions",
+		categoryVar: variables.category,
+		showCategoryTitle: false
+	},
+	{
+		id: "#weather-eye__findings__resilience", 
+		vizType: "quote_scroller",
+		primaryDataSheet: "storm_quotes",
+		filterInitialDataFunction: d => d.category === "Resilience can prepare a community for multiple kinds of disasters",
+		categoryDescriptionSheet: "storm_quotes_category_descriptions",
+		categoryVar: variables.category,
+		showCategoryTitle: false
+	},
+	{
+		id: "#weather-eye__findings__low-income", 
+		vizType: "quote_scroller",
+		primaryDataSheet: "storm_quotes",
+		filterInitialDataFunction: d => d.category === "Low-income populations can’t bounce back as easily",
+		categoryDescriptionSheet: "storm_quotes_category_descriptions",
+		categoryVar: variables.category,
+		showCategoryTitle: false
+	},
 ]
 
 let projectSettings = {
