@@ -12,19 +12,22 @@ const getRange = (start, end) => { return Array(end - start + 1).fill().map((_, 
 
 
 class HistogramFixedIntervalLayout {
-	constructor(data, width, layoutSettings, dotSettings) {
+	constructor(data, width, layoutSettings, dotSettings, fullDataExtent) {
 		this.width = width;
 		this.data = data;
 		this.dotSettings = dotSettings;
 		this.xVariable = layoutSettings.xVar.variable;
 		this.sortingVariable = layoutSettings.sortingVar.variable;
 
-		let extents = d3.extent(this.data, d => +d[this.xVariable] )
+		let filledOutExtents = getRange(fullDataExtent[0], fullDataExtent[1])
+		filledOutExtents = layoutSettings.isYearMonth ? filledOutExtents.filter(d => {
+			return Number(d.toString().slice(-2)) <= 12 && Number(d.toString().slice(-2)) > 0
+		}) : filledOutExtents
 
-		this.xScale = d3.scaleBand().domain(getRange(extents[0], extents[1])).padding(.2);
+
+		this.paddingScale = d3.scaleLinear().domain([350, 1050]).range([.1, .45])
+		this.xScale = d3.scaleBand().domain(filledOutExtents).paddingInner(this.paddingScale(width)).paddingOuter(1);
 		this.yScale = d3.scaleLinear();
-
-		console.log(this.xScale.domain())
 
 		this.setDataColumns();
 	}
@@ -44,14 +47,14 @@ class HistogramFixedIntervalLayout {
 			})
 			.entries(this.data)
 
-		console.log(this.dataNest)
-
 		this.maxColCount = d3.max(this.dataNest, (d) => { return d.values.length});
 		this.height = (this.maxColCount + 1)*(this.xScale.bandwidth()) + 27
 	}
 
 	resize(width) {
 		this.width = width;
+
+		this.xScale.paddingInner(this.paddingScale(width))
 
 		this.setDataColumns();
 	}
@@ -61,7 +64,6 @@ class HistogramFixedIntervalLayout {
 			yPos = 0;
 		if (d[this.xVariable]) {
 			yPos = this.getYPos(d[this.xVariable], d, i);
-			
 			xPos = this.xScale(d[this.xVariable]) + this.xScale.bandwidth()/2
 		}
 		return {x: spring(xPos), y: spring(yPos), r: this.xScale.bandwidth()/2 }

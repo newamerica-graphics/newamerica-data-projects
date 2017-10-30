@@ -18,6 +18,8 @@ import CategoryLayout from './CategoryLayout.js';
 import { Motion, spring } from 'react-motion';
 import { Axis, axisPropsFromBandedScale, BOTTOM, TOP } from 'react-d3-axis';
 
+const getRange = (start, end) => { return Array(end - start + 1).fill().map((_, idx) => start + idx) }
+
 const d3 = require("d3");
 
 class DotChart extends React.Component {
@@ -84,7 +86,7 @@ class DotChart extends React.Component {
                 return new HistogramLayout(data, w, layoutSettings, this.props.vizSettings.dotSettings)
 
             case "histogram_fixed_interval":
-                return new HistogramFixedIntervalLayout(data, w, layoutSettings, this.props.vizSettings.dotSettings)
+                return new HistogramFixedIntervalLayout(data, w, layoutSettings, this.props.vizSettings.dotSettings, d3.extent(this.data, d => +d[layoutSettings.xVar.variable]))
 
             case "category":
                 return new CategoryLayout(data, w, layoutSettings, this.props.vizSettings.dotSettings)
@@ -132,24 +134,44 @@ class DotChart extends React.Component {
 
     getHistogramFixedIntervalAxis() {
         const { currLayout, currLayoutSettings, width } = this.state;
-        let domainExtent = currLayout.xScale.domain()[1] - currLayout.xScale.domain()[0]
-        console.log((domainExtent * 2000)/width)
-        let tickInterval = Math.ceil((domainExtent * 2000)/width)
-        console.log(tickInterval)
-        // let numTicks = d3.timeYear.count(currLayout.axisScale.domain()[0], currLayout.axisScale.domain()[1])
-        return (
-            <Motion style={{currTransform: spring(currLayout.height - 30)}} >
-                {({currTransform}) => {
-                    return (
-                        <g>
-                            <g className="dot-chart__axis-time" style={{transform: "translateY(" + currTransform + "px)"}}>
-                                <Axis {...axisPropsFromBandedScale(currLayout.xScale)} position={(d) => { return d%tickInterval == 0 ? currLayout.xScale(d) + currLayout.xScale.bandwidth()/2 : -100 }} style={{orient: BOTTOM}} />
+        
+        if (currLayoutSettings.isYearMonth) {
+            let extents = d3.extent(this.state.currDataShown, d => d.year_month).map(d => Number(d.toString().slice(0,4)))
+
+            let range = getRange(extents[0], extents[1])
+            range = range.map(d => d + "01")
+
+            return (
+                <Motion style={{currTransform: spring(currLayout.height - 30)}} >
+                    {({currTransform}) => {
+                        return (
+                            <g>
+                                <g className="dot-chart__axis-time" style={{transform: "translateY(" + currTransform + "px)"}}>
+                                    <Axis {...axisPropsFromBandedScale(currLayout.xScale)} values={range} format={d => d.slice(0,4)} style={{orient: BOTTOM}} />
+                                </g>
                             </g>
-                        </g>
-                    )
-                }}
-            </Motion>
-        )
+                        )
+                    }}
+                </Motion>
+            )
+        } else {
+            let domainExtent = currLayout.xScale.domain()[1] - currLayout.xScale.domain()[0]
+            let tickInterval = Math.ceil((domainExtent * 2000)/width)
+
+            return (
+                <Motion style={{currTransform: spring(currLayout.height - 30)}} >
+                    {({currTransform}) => {
+                        return (
+                            <g>
+                                <g className="dot-chart__axis-time" style={{transform: "translateY(" + currTransform + "px)"}}>
+                                    <Axis {...axisPropsFromBandedScale(currLayout.xScale)} position={(d) => { return d%tickInterval == 0 ? currLayout.xScale(d) + currLayout.xScale.bandwidth()/2 : -100 }} style={{orient: BOTTOM}} />
+                                </g>
+                            </g>
+                        )
+                    }}
+                </Motion>
+            )
+        }
     }
 
     getHistogramAnnotations() {
