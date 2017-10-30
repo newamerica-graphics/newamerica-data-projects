@@ -30,7 +30,6 @@ class QuoteScroller extends React.Component {
             .key(d => d[vizSettings.categoryVar.variable])
             .entries(this.data)
 
-        console.log(TextFocus)
 
 		this.resizeFunc = this.resize.bind(this);
 
@@ -76,8 +75,8 @@ class QuoteScroller extends React.Component {
 
         return (
             <div className="quote-scroller__quote" key={index} >
-                <ScrollAnimation animateIn={animationType} offset={50} duration={.75} animateOnce="true">
-                    <h5 className="quote-scroller__quote__text">{quote.quote}</h5>
+                <ScrollAnimation animateIn={animationType} offset={50} duration={.75} animateOnce={true}>
+                    <p className="quote-scroller__quote__text" dangerouslySetInnerHTML={{__html: formatValue(quote.quote, "markdown")}}></p>
                     <h5 className="quote-scroller__quote__source">{"- " + quote.source + ", " + quote.source_location}</h5>
                 </ScrollAnimation>
             </div>

@@ -34,7 +34,11 @@
 		}
 
 		&__text {
-			color: palette-get(na-black-70);
+			& > * {
+				color: palette-get(na-black-70) !important;
+				line-height: 1.4 !important;
+				font-size: 15px !important;
+			}
 			
 		}
 		&__source {
