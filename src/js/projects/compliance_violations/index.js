@@ -58,7 +58,6 @@ const reactVizSettingsList = [
 				label: "Violations by Type",
 				layout: "category",
 				categoryVar: variables.primary_category_all,
-				// overrideColorVar: variables.primary_category_all,
 				leftMargin: 220
 			}
 		]

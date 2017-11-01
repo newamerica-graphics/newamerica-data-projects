@@ -10,32 +10,32 @@ const d3 = require("d3");
 
 const getRange = (start, end) => { return Array(end - start + 1).fill().map((_, idx) => start + idx) }
 
+const verticalPadding = 3;
 
 class HistogramFixedIntervalLayout {
-	constructor(data, width, layoutSettings, dotSettings, fullDataExtent) {
-		this.width = width;
-		this.data = data;
-		this.dotSettings = dotSettings;
-		this.xVariable = layoutSettings.xVar.variable;
-		this.sortingVariable = layoutSettings.sortingVar.variable;
+	constructor(params) {
+		Object.assign(this, params)
+		console.log(params)
+		this.xScale = d3.scalePoint()
+		this.setWidth(this.width)
+		
+		this.xVariable = this.layoutSettings.xVar.variable;
+		this.sortingVariable = this.layoutSettings.sortingVar.variable;
 
-		let filledOutExtents = getRange(fullDataExtent[0], fullDataExtent[1])
-		filledOutExtents = layoutSettings.isYearMonth ? filledOutExtents.filter(d => {
+		let filledOutExtents = getRange(this.extents[0], this.extents[1])
+
+		console.log(filledOutExtents)
+		filledOutExtents = this.layoutSettings.isYearMonth ? filledOutExtents.filter(d => {
+			console.log(d)
 			return Number(d.toString().slice(-2)) <= 12 && Number(d.toString().slice(-2)) > 0
 		}) : filledOutExtents
 
-
-		this.paddingScale = d3.scaleLinear().domain([350, 1050]).range([.1, .45])
-		this.xScale = d3.scaleBand().domain(filledOutExtents).paddingInner(this.paddingScale(width)).paddingOuter(1);
-		this.yScale = d3.scaleLinear();
+		this.xScale.domain(filledOutExtents);
 
 		this.setDataColumns();
 	}
 
 	setDataColumns() {
-		this.xScale
-			.range([0, this.width])
-
 		this.dataNest = d3.nest()
 			.key((d) => { return d[this.xVariable] })
 			.sortKeys(d3.ascending)
@@ -48,15 +48,35 @@ class HistogramFixedIntervalLayout {
 			.entries(this.data)
 
 		this.maxColCount = d3.max(this.dataNest, (d) => { return d.values.length});
-		this.height = (this.maxColCount + 1)*(this.xScale.bandwidth()) + 27
+		console.log(this.maxColCount)
+		this.height = (this.maxColCount)*(this.dotRadius*2 + verticalPadding) + verticalPadding
+		console.log(this.height)
 	}
 
-	resize(width) {
-		this.width = width;
-
-		this.xScale.paddingInner(this.paddingScale(width))
+	resize(width, dotRadius) {
+		this.setWidth(width);
+		this.dotRadius = dotRadius;
 
 		this.setDataColumns();
+	}
+
+	setWidth(width) {
+		if (this.layoutSettings.maxWidth) {
+			if (width > this.layoutSettings.maxWidth) {
+				this.width = this.layoutSettings.maxWidth
+				let offset = (width - this.layoutSettings.maxWidth)/2
+
+				this.xScale.range([this.dotRadius*4 + offset, this.width - (this.dotRadius*4) + offset])
+			} else {
+				this.width = width
+				this.xScale.range([this.dotRadius*4, this.width - (this.dotRadius*4)])
+			}
+		} else {
+			this.width = width
+			this.xScale.range([this.dotRadius*4, this.width - (this.dotRadius*4)])
+		}
+
+		
 	}
 
 	renderDot(d, i) {
@@ -64,9 +84,9 @@ class HistogramFixedIntervalLayout {
 			yPos = 0;
 		if (d[this.xVariable]) {
 			yPos = this.getYPos(d[this.xVariable], d, i);
-			xPos = this.xScale(d[this.xVariable]) + this.xScale.bandwidth()/2
+			xPos = this.xScale(d[this.xVariable])
 		}
-		return {x: spring(xPos), y: spring(yPos), r: this.xScale.bandwidth()/2 }
+		return {x: spring(xPos), y: spring(yPos)}
 	}
 
 	getYPos(whichBin, d, i) {
@@ -90,7 +110,7 @@ class HistogramFixedIntervalLayout {
 			})
 		}
 
-		return (this.maxColCount - retVal) * this.xScale.bandwidth();
+		return (this.maxColCount - retVal - 1) * (this.dotRadius*2 + verticalPadding) + this.dotRadius + verticalPadding;
 	}
 }
 

@@ -72,6 +72,8 @@
 	}
 
 	&__dot {
+		fill-opacity: .8;
+		stroke-width: 1.7px;
 		&.clickable {
 			cursor: pointer;
 		}

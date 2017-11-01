@@ -30,7 +30,6 @@ class QuoteScroller extends React.Component {
             .key(d => d[vizSettings.categoryVar.variable])
             .entries(this.data)
 
-
 		this.resizeFunc = this.resize.bind(this);
 
 		this.state = {
@@ -62,7 +61,7 @@ class QuoteScroller extends React.Component {
                         return this.renderQuote(d, i);
                     })}
                 </div>
-                <hr></hr>
+                {this.dataNest.length > 1 && <hr></hr>}
             </div>
         )
     }
