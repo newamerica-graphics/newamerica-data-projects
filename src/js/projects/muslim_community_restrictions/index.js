@@ -9,6 +9,7 @@ let variables = {
 	title: {"variable":"title", "displayName":"Title", "format": "string"},
 	description: {"variable":"description", "displayName":"Description", "format": "string"},
 	date: {"variable":"date", "displayName":"Date", "format": "date"},
+	year_month: {"variable":"year_month", "displayName":"Date", "format": "string"},
 	processed_date: {"variable":"processed_date", "displayName":"Date", "format": "date_simple"},
 	sources_combined: {"variable":"sources_combined", "displayName":"Sources", "format": "link"},
 
@@ -131,6 +132,32 @@ const reactVizSettingsList = [
 			{
 				label: "Incidents Over Time",
 				layout: "histogram",
+				dateVar: variables.date
+			},
+			{
+				label: "Incidents by State",
+				layout: "category",
+				categoryVar: variables.state,
+				leftMargin: 120
+			}
+		]
+	},
+	{
+		id: "#muslim-community-restrictions__dot-chart", 
+		vizType: "dot_chart",
+		primaryDataSheet: "incidents",
+		colorSettings: { colorVar: variables.category, showLegend: true },
+		tooltipTitleVar: variables.title,
+		tooltipVars: [variables.state, variables.category, variables.date, variables.description],
+		dotSettings: {scaleFactor: 150, maxRadius: 3.75, spacing: 1},
+		interaction: "mouseover",
+		layouts: [
+			{
+				label: "Incidents Over Time",
+				layout: "histogram_fixed_interval",
+				xVar: variables.year_month,
+				sortingVar: variables.date,
+				isYearMonth: true
 			},
 			{
 				label: "Incidents by State",

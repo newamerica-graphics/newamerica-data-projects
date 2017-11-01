@@ -12,10 +12,13 @@ import LegendCategorical from './LegendCategorical.js';
 import HistogramAnnotations from './HistogramAnnotations.js';
 import ScatterLayout from './ScatterLayout.js';
 import HistogramLayout from './HistogramLayout.js';
+import HistogramFixedIntervalLayout from './HistogramFixedIntervalLayout.js';
 import CategoryLayout from './CategoryLayout.js';
 
 import { Motion, spring } from 'react-motion';
 import { Axis, axisPropsFromBandedScale, BOTTOM, TOP } from 'react-d3-axis';
+
+const getRange = (start, end) => { return Array(end - start + 1).fill().map((_, idx) => start + idx) }
 
 const d3 = require("d3");
 
@@ -39,6 +42,9 @@ class DotChart extends React.Component {
             window.addEventListener('click', () => { return this.clicked(null); });
         }
 
+        this.dotRadiusScale = d3.scaleLinear().domain([350, 1050]).range(vizSettings.dotScaleRange)
+
+        console.log("initialized")
 		this.state = {
             currLayoutSettings: vizSettings.layouts[0],
 			currLayout: null,
@@ -51,21 +57,14 @@ class DotChart extends React.Component {
 		}
 	}
 
-    setFill(d) {
-        const {colorVar, defaultColor} = this.props.vizSettings.colorSettings
-
-        if (this.colorScale) {
-           return this.colorScale(d[colorVar.variable])
-        } else {
-            return defaultColor
-        }
-    }
-
 	componentDidMount() {
         $(window).resize(this.resizeFunc);
 
-        let w = this.getCurrWidth(),
-            currLayout = this.getCurrLayout(this.state.currDataShown, this.state.currLayoutSettings, w)
+        let w = this.getCurrWidth();
+
+        this.dotRadius = this.dotRadiusScale(w);
+
+        let currLayout = this.getCurrLayout(this.state.currDataShown, this.state.currLayoutSettings, w)
 
         this.setState({
             currLayout: currLayout,
@@ -82,8 +81,15 @@ class DotChart extends React.Component {
             case "histogram":
                 return new HistogramLayout(data, w, layoutSettings, this.props.vizSettings.dotSettings)
 
+            case "histogram_fixed_interval":
+                let extents = d3.extent(this.data, d => +d[layoutSettings.xVar.variable])
+
+                extents = layoutSettings.fixedStartVal ? [layoutSettings.fixedStartVal, extents[1]] : extents
+
+                return new HistogramFixedIntervalLayout({data:data, width:w, layoutSettings:layoutSettings, dotRadius:this.dotRadius, extents:extents})
+
             case "category":
-                return new CategoryLayout(data, w, layoutSettings, this.props.vizSettings.dotSettings)
+                return new CategoryLayout({data:data, width:w, layoutSettings:layoutSettings, dotRadius:this.dotRadius})
         }
     }
 
@@ -93,6 +99,9 @@ class DotChart extends React.Component {
         switch(currLayoutSettings.layout) {
             case "histogram":
                 return this.getHistogramAxis()
+
+            case "histogram_fixed_interval":
+                return this.getHistogramFixedIntervalAxis()
 
             case "category":
                 return this.getCategoryAxis()
@@ -123,6 +132,58 @@ class DotChart extends React.Component {
         )
     }
 
+    getHistogramFixedIntervalAxis() {
+        const { currLayout, currLayoutSettings, width } = this.state;
+        
+        if (currLayoutSettings.isYearMonth) {
+            let extents = d3.extent(this.state.currDataShown, d => d.year_month)
+            extents = layoutSettings.fixedStartVal ? [currLayoutSettings.fixedStartVal, extents[1]] : extents
+
+            console.log(extents)
+
+            extents = extents.map(d => Number(d.toString().slice(0,4)))
+
+            console.log(extents)
+
+            let range = getRange(extents[0], extents[1])
+            range = range.map(d => d + "01")
+
+            return (
+                <Motion style={{currTransform: spring(currLayout.height)}} >
+                    {({currTransform}) => {
+                        return (
+                            <g>
+                                <g className="dot-chart__axis-time" style={{transform: "translateY(" + currTransform + "px)"}}>
+                                    <Axis {...axisPropsFromBandedScale(currLayout.xScale)} values={range} format={d => d.slice(0,4)} style={{orient: BOTTOM}} />
+                                </g>
+                            </g>
+                        )
+                    }}
+                </Motion>
+            )
+        } else {
+            let extents = d3.extent(this.state.currDataShown, d => +d[currLayoutSettings.xVar.variable])
+            let domainExtent = extents[1] - extents[0]
+            let tickInterval = Math.ceil((domainExtent * 80)/width)
+
+            console.log(domainExtent, tickInterval, width)
+
+            return (
+                <Motion style={{currTransform: spring(currLayout.height)}} >
+                    {({currTransform}) => {
+                        return (
+                            <g>
+                                <g className="dot-chart__axis-time" style={{transform: "translateY(" + currTransform + "px)"}}>
+                                    <Axis {...axisPropsFromBandedScale(currLayout.xScale)} format={d => currLayoutSettings.axisLabelOverrideFunc ? currLayoutSettings.axisLabelOverrideFunc(d) : d} position={(d) => { return (d - 1)%tickInterval == 0 ? currLayout.xScale(d) + currLayout.xScale.bandwidth()/2 : -100 }} style={{orient: BOTTOM}} />
+                                </g>
+                            </g>
+                        )
+                    }}
+                </Motion>
+            )
+        }
+    }
+
     getHistogramAnnotations() {
         const { currLayout, currLayoutSettings } = this.state;
         return (
@@ -137,14 +198,14 @@ class DotChart extends React.Component {
     }
 
     getCategoryAxis() {
-        const { currLayout } = this.state;
+        const { currLayout, currLayoutSettings } = this.state;
         return (
             <g>
                 {currLayout.yScale.domain().map((d) => {
                     return (
                         <Motion style={{y:spring(currLayout.yScale(d))}} key={d}>
                             {({y}) => {
-                                return <text className="dot-chart__axis-categorical__text" x={currLayout.leftMargin - 10} y={y + 1}>{d}</text>;
+                                return <text className="dot-chart__axis-categorical__text" x={currLayoutSettings.leftMargin - 15} y={y + 1}>{d}</text>;
                             }}
                         </Motion>
                     )
@@ -173,13 +234,29 @@ class DotChart extends React.Component {
         })
     }
 
+    setFillColor(d) {
+        const { currLayout, currLayoutSettings } = this.state;
+
+        if (currLayoutSettings.overrideColorVar) {
+            return currLayout.setFill(d)
+        } else {
+            const {colorVar, defaultColor} = this.props.vizSettings.colorSettings
+
+            if (this.colorScale) {
+                return this.colorScale(d[colorVar.variable])
+            } else {
+                return defaultColor
+            }
+        }
+    }
+
     setStrokeColor(d) {
     	const {currClicked, currHovered} = this.state;
 
     	if ((currClicked && currClicked == d) || (currHovered && currHovered == d)) {
     		return "black"
     	} 
-    	return "white"
+    	return this.setFillColor(d)
     }
 
 	render() {
@@ -209,21 +286,22 @@ class DotChart extends React.Component {
                 }
 				{ currLayout &&
                     <div>
-    					<svg className="dot-chart__container" width="100%" height={layoutHeight}>
+    					<svg className="dot-chart__container" width="100%" height={layoutHeight + 30}>
     						<g className="dot-chart__rendering-area" width={width} >
     							{currDataShown.map((d) => {
                                     if (!d.id) return null;
     								let style = currLayout.renderDot(d)
 
-    								let fillColor = currLayoutSettings.overrideColorVar ? currLayout.setFill(d) : this.setFill(d),
+    								let fillColor = this.setFillColor(d),
     									strokeColor = this.setStrokeColor(d)
 
     								return (
     									<Motion style={style} key={d.id}>
-    										{({x, y, r}) => {
+    										{({x, y}) => {
     											return (
                                                     <circle className={interaction == "click" ? "dot-chart__dot clickable" : "dot-chart__dot"}
-                                                        cx={x} cy={y} r={r} 
+                                                        cx={x} cy={y}
+                                                        r={this.dotRadius}
                                                         fill={fillColor} 
                                                         stroke={strokeColor} 
                                                         onClick={(e, b) => { e.stopPropagation(); return interaction == "click" ? this.clicked(d, x, y) : null; }} 
@@ -249,8 +327,9 @@ class DotChart extends React.Component {
 
 	resize() {
         let w = this.getCurrWidth();
+        this.dotRadius = this.dotRadiusScale(w)
 
-        this.state.currLayout.resize(w)
+        this.state.currLayout.resize(w, this.dotRadius)
 
         this.setState({
           width: w,

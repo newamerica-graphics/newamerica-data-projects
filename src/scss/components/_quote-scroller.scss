@@ -1,0 +1,66 @@
+.quote-scroller {
+	&__category {
+		padding-bottom: 15px 0px;
+		
+		&__title, &__description {
+			max-width: 900px;
+			text-align: center;
+			margin: auto;
+		}
+
+		&__title {
+			font-family: "Platform" !important;
+			color: palette-get(na-black);
+			line-height: 1.4;
+			padding-bottom: 15px;
+		}
+
+		&__description, &__description > * {
+			line-height: 1.4 !important;
+			font-size: 15px !important;
+			color: palette-get(na-black) !important;
+		}
+
+		&__quotes {
+			padding-top: 20px;
+		}
+	}
+
+	&__quote {
+		margin: 12px 0px;
+		@include breakpoint(medium) {
+			width: 60%;
+			
+			&:nth-child(even) {
+				text-align: right;
+				margin-left: auto;
+			}
+		}
+		&__text, &__source {
+			line-height: 1.4;
+			font-size: 15px;
+		}
+
+		&__text {
+			padding: 15px;
+			background-color: rgba(46, 188, 179, .5);
+			margin-bottom: 0px;
+			
+			& > * {
+				color: palette-get(na-black) !important;
+				line-height: 1.4 !important;
+				font-size: 15px !important;
+				margin-bottom: 0px !important;
+			}
+		}
+		&__source {
+			display: inline-block;
+			text-transform: uppercase;
+			color: white;
+			font-weight: bold;
+			padding: 12px;
+			background-color: palette-get(na-turquoise);
+			letter-spacing: .5px
+		}
+	}
+}

@@ -5,7 +5,7 @@ export default function LayoutSelector({ layouts, currSelected, layoutChangeFunc
 		<ul className="dot-chart__layout-selector">
 			{ layouts.map((layoutSettings) => {
 				let classList = "dot-chart__layout-selector__option";
-				classList += layoutSettings.layout == currSelected.layout ? " active" : ""
+				classList += layoutSettings.label == currSelected.label ? " active" : ""
 
 				return <li className={classList} title={layoutSettings.label} onClick={() => { return layoutChangeFunc(layoutSettings) }}>{layoutSettings.label}</li>
 			})}

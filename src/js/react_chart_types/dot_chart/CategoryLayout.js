@@ -11,51 +11,41 @@ const d3 = require("d3");
 
 const getRange = (start, end) => { return Array(end - start + 1).fill().map((_, idx) => start + idx) }
 
-let dotPadding = .5;
+const dotPadding = 2;
 
 class CategoryLayout {
-	constructor(data, width, layoutSettings, dotSettings) {
-		this.categoryVar = layoutSettings.categoryVar;
-		this.overrideColorVar = layoutSettings.overrideColorVar;
-		this.width = width;
-		this.data = data;
-		this.dotSettings = dotSettings;
-		this.leftMargin = layoutSettings.leftMargin;
+	constructor(params) {
+		Object.assign(this, params)
+		this.categoryVariable = this.layoutSettings.categoryVar.variable;
 
 		this.yScale = d3.scaleBand();
 		this.xScale = d3.scaleLinear();
 
 		let categoryNest = d3.nest()
-			.key((d) => { return d[this.categoryVar.variable]})
+			.key((d) => { return d[this.categoryVariable]})
 			.sortValues((a, b) => { return new Date(a.date) - new Date(b.date)})
-			.entries(data)
+			.entries(this.data)
 
 		this.sortedCategoryVals = categoryNest.sort((a, b) => { return b.values.length - a.values.length})
 
-		this.dotWidth = width/dotSettings.scaleFactor;
-		this.dotWidth = this.dotWidth > dotSettings.maxRadius ? dotSettings.maxRadius : this.dotWidth;
-
-		this.height = this.sortedCategoryVals.length * (this.dotWidth + dotPadding + 3) * 2
-
 		this.yScale.domain(this.sortedCategoryVals.map(d => d.key))
-			.range([this.dotWidth + dotPadding + 5, this.height])
-
-		if (this.overrideColorVar) {
-			this.overrideColorScale = getColorScale(this.data, this.overrideColorVar)
-		} 
+		this.setYScale()
 	}
 
-	resize(width) {
-		console.log("in category chart resizing")
+	resize(width, dotRadius) {
 		this.width = width;
 
-		this.dotWidth = width/this.dotSettings.scaleFactor;
-		this.dotWidth = this.dotWidth > this.dotSettings.maxRadius ? this.dotSettings.maxRadius : this.dotWidth;
+		this.dotRadius = dotRadius
 
-		this.height = this.sortedCategoryVals.length * (this.dotWidth + dotPadding + 2) * 2
+		this.setYScale();
+	}
 
-		this.yScale.range([this.dotWidth + dotPadding, this.height])
+	setYScale() {
+		this.height = this.sortedCategoryVals.length * 25
 
+		console.log(this.height)
+
+		this.yScale.range([10, this.height])
 	}
 
 	renderDot(d) {
@@ -63,9 +53,9 @@ class CategoryLayout {
 			yPos = 0,
 			index;
 
-		if (d[this.categoryVar.variable]) {
-			yPos = this.yScale(d[this.categoryVar.variable])
-			index = this.yScale.domain().indexOf(d[this.categoryVar.variable])
+		if (d[this.categoryVariable]) {
+			yPos = this.yScale(d[this.categoryVariable])
+			index = this.yScale.domain().indexOf(d[this.categoryVariable])
 
 			let categoryList = this.sortedCategoryVals[index].values
 
@@ -76,13 +66,9 @@ class CategoryLayout {
 					return;
 				}
 			})
-			xPos = xIndex * (this.dotWidth + dotPadding) * 2 + this.leftMargin + (this.dotWidth + dotPadding)
+			xPos = this.layoutSettings.leftMargin + xIndex * (this.dotRadius + dotPadding) * 2
 		}
-		return {x: spring(xPos), y: spring(yPos), r: this.dotWidth}
-	}
-
-	setFill(d) {
-		return this.overrideColorScale(d[this.overrideColorVar.variable])
+		return {x: spring(xPos), y: spring(yPos)}
 	}
 }
 
