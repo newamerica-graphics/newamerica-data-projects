@@ -40,12 +40,16 @@ export function getColorScale(data, filterVar) {
 	if (scaleType == "categorical") {
 		scale = d3.scaleOrdinal();
 		console.log(customDomain, customRange);
-		// if both are not custom, get unique values
+
 		let uniqueVals = getUniqueVals(data, filterVar);
 		console.log(uniqueVals)
 		if (customDomain) {
 			let newVals = filterUnusedVals(uniqueVals, customDomain, customRange, canSplitCategory)
-			[customDomain, customRange] = newVals
+			
+			// [customDomain, customRange] = newVals
+			console.log("heres!", newVals)
+			customDomain = newVals.domain
+			customRange = newVals.range
 		}
 
 		console.log(customDomain, customRange);
@@ -93,10 +97,11 @@ function filterUnusedVals(uniqueVals, customDomain, customRange, canSplitCategor
 		}
 	}
 
+	console.log("in filter unused vals")
 	console.log(retDomain)
 	console.log(retRange)
 
-	return [retDomain, retRange];
+	return {"domain": retDomain, "range":retRange};
 }
 
 function setCategoricalDomain(uniqueVals, customDomain) {
@@ -130,8 +135,6 @@ function getUniqueVals(data, filterVar) {
 
 function setQuantizeDomain(filterVar, data) {
 	let filterName = filterVar.variable;
-	console.log(data);
-	console.log(filterVar);
 	let dataMin = Number(d3.min(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; })); 
 	let dataMax = Number(d3.max(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; }));
 
