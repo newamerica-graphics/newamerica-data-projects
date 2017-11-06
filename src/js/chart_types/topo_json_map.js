@@ -21,9 +21,8 @@ let topojson = require("topojson");
 export class TopoJsonMap {
 	constructor(vizSettings) {
 		Object.assign(this, vizSettings);
-		
-		this.currFilterIndex = 0;
-		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
+
+		this.currFilter = this.filterVars[0];
 		
 		if (this.interaction == "click") { this.currClicked == null}; 
 
@@ -146,11 +145,11 @@ export class TopoJsonMap {
 	}
 
 	setScale() {
-		this.colorScale = getColorScale(this.data, this.filterVars[this.currFilterIndex]);
+		this.colorScale = getColorScale(this.data, this.currFilter);
 
 		console.log(this.colorScale.domain())
 
-		if (this.filterVars[this.currFilterIndex].format == "number" && this.colorScale.domain()[0] == 0) {
+		if (this.currFilter.format == "number" && this.colorScale.domain()[0] == 0) {
 			this.colorScale.domain([1, this.colorScale.domain()[1]])
 		}
 
@@ -210,11 +209,11 @@ export class TopoJsonMap {
 	}
 
 	setFill(d) {
-		if (d.data && d.data[this.currFilterVar]) {
-	   		var value = d.data[this.currFilterVar];
+		if (d.data && d.data[this.currFilter.variable]) {
+	   		var value = d.data[this.currFilter.variable];
 
 	   		if (value == 0) { return this.defaultFill }
-	   		if (this.filterVars[this.currFilterIndex].canSplitCategory) {
+	   		if (this.currFilter.canSplitCategory) {
 	   			let splitVals = value.split(";");
 	   			if (splitVals.length > 1) {
 	   				console.log(this.colorScale.domain())
@@ -224,7 +223,7 @@ export class TopoJsonMap {
 	   				return "url(#pattern" + id + ")";
 	   			}
 	   		}
-	   		if (this.filterVars[this.currFilterIndex].scaleType == "quantize" || this.filterVars[this.currFilterIndex].scaleType == "linear") {
+	   		if (this.currFilter.scaleType == "quantize" || this.currFilter.scaleType == "linear") {
 	   			if (isNaN(value)) {
 	   				return this.defaultFill;
 	   			}
@@ -237,15 +236,13 @@ export class TopoJsonMap {
 
 	setLegend() {
 		console.log(this.data)
-		this.legendSettings.title = this.filterVars[this.currFilterIndex].displayName;
-		this.legendSettings.format = this.filterVars[this.currFilterIndex].format;
-		this.legendSettings.scaleType = this.filterVars[this.currFilterIndex].scaleType;
+		this.legendSettings.title = this.currFilter.displayName;
+		this.legendSettings.format = this.currFilter.format;
+		this.legendSettings.scaleType = this.currFilter.scaleType;
 		this.legendSettings.colorScale = this.colorScale;
 		this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
 		this.legendSettings.varDescriptionData = this.varDescriptionData;
-		this.legendSettings.varDescriptionVariable = this.filterVars[this.currFilterIndex].variable;
-
-		console.log(this.varDescriptionData);
+		this.legendSettings.varDescriptionVariable = this.currFilter.variable;
 
 		this.legend.render(this.legendSettings);
 	}
@@ -261,17 +258,17 @@ export class TopoJsonMap {
 		this.legendSettings ? this.legend.resize() : null;
 	}
 
-	changeFilter(variableIndex) {
-		this.currFilterIndex = variableIndex;
-		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
+	changeFilter(newFilter) {
+		console.log(newFilter)
+		this.currFilter = newFilter;
 
 		this.setScale();
 		this.legendSettings ? this.setLegend() : null;
-		this.paths.style("fill", (d) => { return this.setFill(d); })
+		this.paths.transition().duration(400).style("fill", (d) => { return this.setFill(d); })
 			.style("stroke-width", this.stroke.width || "1")
 
 		this.currClicked ? this.mouseout(this.currClicked) : null;
-		this.dashboardChangeFunc ? this.dashboardChangeFunc({currFilter: this.filterVars[this.currFilterIndex]}, this) : null;
+		this.dashboardChangeFunc ? this.dashboardChangeFunc({currFilter: this.currFilter}, this) : null;
 
 	}
 
@@ -280,7 +277,7 @@ export class TopoJsonMap {
 		let newRange = [];
 		for (let value of this.colorScale.domain()) {
 			if (Number(value) <= newVal) {
-				newRange[i] = this.filterVars[this.currFilterIndex].customRange[0];
+				newRange[i] = this.currFilter.customRange[0];
 			} else {
 				newRange[i] = "#ccc";
 			}
@@ -291,7 +288,7 @@ export class TopoJsonMap {
 		this.paths
 			.style("fill", (d) => {
 				if (d.data) {
-					let value = Number(d.data[this.currFilterVar]);
+					let value = Number(d.data[this.currFilter.variable]);
 					if (value) {
 			   			return this.colorScale(value);
 			   		}
@@ -302,8 +299,9 @@ export class TopoJsonMap {
 
 	changeVariableValsShown(valsShown) {
 		this.paths
+			.transition().duration(500)
 			.style("fill", (d) => {
-		   		var value = d.data ? d.data[this.currFilterVar] : null;
+		   		var value = d.data ? d.data[this.currFilter.variable] : null;
 		   		if (value) {
 		   			// to account for cases where values can be split across multiple categories
 		   			let splitVals = value.split(";");
@@ -335,7 +333,7 @@ export class TopoJsonMap {
 	mouseover(datum, path, eventObject) {
 		console.log(datum, path, eventObject);
 		if (this.mouseoverOnlyIfValue) {
-			if (!datum.data || !datum.data[this.currFilterVar]) {
+			if (!datum.data || !datum.data[this.currFilter.variable]) {
 				return;
 			}
 		} 
@@ -350,9 +348,9 @@ export class TopoJsonMap {
 			let mousePos = [];
 			mousePos[0] = eventObject.pageX;
 			mousePos[1] = eventObject.pageY;
-			this.dashboardChangeFunc ? this.dashboardChangeFunc({dataPoint: datum.data, color: d3.select(path).style("fill"), currFilter: this.filterVars[this.currFilterIndex]}, this) : null;
+			this.dashboardChangeFunc ? this.dashboardChangeFunc({dataPoint: datum.data, color: d3.select(path).style("fill"), currFilter: this.currFilter}, this) : null;
 			
-			this.tooltip ? this.tooltip.show(datum.data, mousePos, this.filterVars[this.currFilterIndex], d3.select(path).style("fill")) : null;
+			this.tooltip ? this.tooltip.show(datum.data, mousePos, this.currFilter, d3.select(path).style("fill")) : null;
 		}
 	}
 
@@ -378,16 +376,16 @@ export class TopoJsonMap {
 			    .style("fill-opacity", this.stroke.opacity || "1")
 			this.currClicked = null;
 		}
-		console.log(datum, this.currFilterVar)
-		if (datum && datum.data && datum.data[this.currFilterVar] != 0 && datum.data[this.currFilterVar] != "None") {
+		console.log(datum, this.currFilter.variable)
+		if (datum && datum.data && datum.data[this.currFilter.variable] != 0 && datum.data[this.currFilter.variable] != "None") {
 			console.log("has data")
 			d3.select(path)
 				.style("stroke", "white")
 			    .style("stroke-width", "3");
-			this.dashboardChangeFunc ? this.dashboardChangeFunc({dataPoint: datum.data, color: d3.select(path).style("fill"), currFilter: this.filterVars[this.currFilterIndex]}, this) : null;
+			this.dashboardChangeFunc ? this.dashboardChangeFunc({dataPoint: datum.data, color: d3.select(path).style("fill"), currFilter: this.currFilter}, this) : null;
 			this.currClicked = path
 		} else {
-			this.dashboardChangeFunc ? this.dashboardChangeFunc({currFilter: this.filterVars[this.currFilterIndex]}, this) : null;
+			this.dashboardChangeFunc ? this.dashboardChangeFunc({currFilter: this.currFilter}, this) : null;
 		}
 	}
 

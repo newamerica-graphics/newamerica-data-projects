@@ -3,126 +3,87 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 export class FilterGroup {
-
 	constructor(vizSettings) {
-		let {id, filterVars, filterGroupSettings} = vizSettings;
+		Object.assign(this, vizSettings)
 
-		this.id = id;
-		this.filterVars = filterVars;
+		this.activeCategoryIndex = 0;
+		this.activeFilterIndex = 0;
 
-		let filterContainer = d3.select(id)
+		let parentContainer = d3.select(this.id)
 			.append("div")
 			.attr("class", "filter-group");
 
 		if (this.hasCategories()) {
-			this.filterCategoryContainer = filterContainer.append("ul")
+			this.categoryContainer = parentContainer.append("ul")
 				.attr("class", "filter-group__category-container");
+
+			this.categoryNest = d3.nest()
+				.key(d => d.category)
+				.entries(this.filterVars)
+
+			console.log(this.categoryNest)
 		}
 
-		this.filterVariableContainer = filterContainer.append("ul")
+		this.filterContainer = parentContainer.append("ul")
 			.attr("class", "filter-group__variable-container");
 
-		if (filterGroupSettings && filterGroupSettings.mobileSelectBox) {
+		if (this.filterGroupSettings && this.filterGroupSettings.mobileSelectBox) {
 			filterContainer.classed("has-mobile-select", true);
-			this.mobileSelectBox = d3.select(id)
+			this.mobileSelectBox = d3.select(this.id)
 				.append("select")
 				.attr("class", "select-box filter-group__mobile-select-box");
 		}
-		
 	}
 
 	render(listenerFunc) {
-		this.categoryDivs = {};
-		this.valDivs = [];
-		let i = 0;
-		let self = this;
-		let valListDiv;
-
+		this.listenerFunc = listenerFunc
 		this.mobileSelectBox ? this.renderMobileSelectBox(listenerFunc) : null;
 
-		if (!this.hasCategories()) {
-			valListDiv = this.filterVariableContainer.append("ul")
-				.classed("filter-group__variable-list", true);
-		}
+		this.categoryDivs = this.categoryContainer.selectAll("p")
+			.data(this.categoryNest)
+			.enter().append("p")
+			.classed("filter-group__category", true)
+			.classed("active", (d, i) => i === 0)
+			.text(d => d.key)
+			.on("click", (d, i) => this.changeCategory(d, i));
 
-		for (let variable of this.filterVars) {
-			if (this.hasCategories()) {
-				let category = variable.category;
-				i == 0 ? this.currCategory = category : null;
+		this.filterLists = this.filterContainer.selectAll("ul")
+			.data(this.categoryNest)
+			.enter().append("ul")
+			.classed("filter-group__variable-list", true)
+			.classed("active", (d, i) => i === 0)
+			.attr("id", d => d.key);
 
-				if (!this.categoryDivs.hasOwnProperty(category)) {
-					this.categoryDivs[category] = {};
-					this.categoryDivs[category].label = this.filterCategoryContainer.append("p")
-						.classed("filter-group__category", true)
-						.classed("active", () => { return i == 0 ? true : false; })
-						.attr("id", category)
-						.text(category)
-						.on("click", function() { 
-							let firstVar = self.showList(category);
-							listenerFunc(firstVar); 
-						});
-
-					this.categoryDivs[category].valueListDiv = this.filterVariableContainer.append("ul")
-						.classed("filter-group__variable-list", true)
-						.attr("id", category);
-					
-				}
-
-				valListDiv = this.categoryDivs[category].valueListDiv;
-			}
-
-			this.valDivs[i] = valListDiv.append("li")
-				.classed("filter-group__variable", true)
-				.classed("active", () => { return i == 0 ? true : false; })
-				.attr("title", variable.displayName)
-				.attr("value", i)
-				.on("click", function() {
-					self.toggleVariable($(this).val());
-					listenerFunc($(this).val());
-				})
-				.text(variable.displayName);
-
-			i++;
-		}
-
-		this.currCategory ? this.showList(this.currCategory) : null;
+		this.filterDivs = this.filterLists.selectAll("li")
+			.data(d => d.values)
+			.enter().append("li")
+			.classed("filter-group__variable", true)
+			.classed("active", (d, i) => i === 0)
+			.text(d => d.displayName)
+			.on("click", (d, i) => this.changeFilter(d, i))
 	}
 
-	showList(newCategory) {
-		console.log(this.categoryDivs);
-		console.log(this.currCategory);
-		// remove active class from currently category and clear its variables
-		this.categoryDivs[this.currCategory].label.classed("active", false);
-		this.categoryDivs[this.currCategory].valueListDiv.style("display", "none");
+	changeCategory(newCategory, newCategoryIndex) {
+		console.log("changing category to", newCategory, newCategoryIndex)
+		this.activeCategoryIndex = newCategoryIndex;
 
-		this.categoryDivs[newCategory].label
-			.classed("active", true);
+		this.categoryDivs.classed("active", (d, i) => i === this.activeCategoryIndex)
+		this.filterLists.classed("active", (d, i) => i === this.activeCategoryIndex)
 
-		// only display var list if more than one variable in category
-		if ($(this.categoryDivs[newCategory].valueListDiv._groups[0]).children().length > 1) {
-			this.categoryDivs[newCategory].valueListDiv
-				.style("display", "inline-block");
-		}
+		let newFilterIndex = this.sameFilterIndexWhenCategoryChanged ? this.activeFilterIndex : 0;
 
-		let firstVar = this.categoryDivs[newCategory].valueListDiv.select("li")._groups[0];
-		let firstVarIndex = $(firstVar).val();
+		let newFilter = this.categoryNest[newCategoryIndex].values[newFilterIndex] || this.categoryNest[newCategoryIndex].values[0]
 
-		this.toggleVariable(firstVarIndex);
-
-		this.currCategory = newCategory;
-
-		return firstVarIndex;
+		this.changeFilter(newFilter, newFilterIndex)
 	}
 
-	toggleVariable(index) {
-		// remove active class from currently active variable
-		this.valDivs.map(function(elem) {
-			elem.classed("active", false);
-		});
+	changeFilter(newFilter, newFilterIndex) {
+		console.log("changing filter to", newFilter, newFilterIndex)
+		this.activeFilterIndex = newFilterIndex;
 
-		this.valDivs[index]
-			.classed("active", true);
+		this.filterDivs.classed("active", (d, i) => i === this.activeFilterIndex)
 
+		this.listenerFunc(newFilter)
 	}
 
 	hasCategories() {
@@ -146,6 +107,4 @@ export class FilterGroup {
 			listenerFunc(index);
 		});
 	}
-
-
 }
