@@ -3,22 +3,17 @@
 	margin: auto;
 	&__category {
 		display: inline-block;
-		padding: 11px;
+		padding: 10px 12px;
 		border: 2px solid palette-get(na-black-10);
 		&:not(:first-child) {
 			border-left: none;
 		}
 		color: palette-get(na-black-40);
 		cursor: pointer;
-		font-size: 1rem;
-
-		@include breakpoint(medium) {
-			font-size: 16px;
-		}
+		font-size: 16px !important;
 
 		&:hover {
-			background-color: palette-get(na-black-05);
-			border-color: palette-get(na-black-05);
+			background-color: palette-get(na-black-10);
 		}
 
 		&.active {

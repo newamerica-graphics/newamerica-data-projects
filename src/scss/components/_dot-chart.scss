@@ -21,22 +21,23 @@
 	&__layout-selector {
 		padding-bottom: 20px;
 		&__option {
-			color: palette-get(na-black-30);
 			text-align: center;
 			font-size: 16px;
 			padding: 10px;
-			border: 1px solid palette-get(na-black-10);
+			color: palette-get(na-black);
+			border: 1px solid palette-get(na-black-70);
 			cursor: pointer;
+			opacity: .7;
 
 			&.active {
 				font-weight: bold;
-				color: palette-get(na-black) !important;
-				border: 1px solid palette-get(na-black) !important;
+				border-color: palette-get(na-black);
+				opacity: 1;
 			}
 
 			&:hover {
-				color: palette-get(na-black-40);
-				border-color: palette-get(na-black-30);
+				opacity: 1;
+				
 			}
 
 			&::after {
