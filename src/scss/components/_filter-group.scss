@@ -16,10 +16,16 @@
 			font-size: 16px;
 		}
 
+		&:hover {
+			background-color: palette-get(na-black-05);
+			border-color: palette-get(na-black-05);
+		}
+
 		&.active {
-			background-color: palette-get(na-black);
-			color: white;
-			border-color: palette-get(na-black);
+			background-color: palette-get(na-black) !important;
+			color: white !important;
+			border-color: palette-get(na-black) !important;
+			cursor: auto !important;
 		}
 	}
 	&__variable-list {
