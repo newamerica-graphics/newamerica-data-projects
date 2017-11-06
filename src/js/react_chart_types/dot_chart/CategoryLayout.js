@@ -41,7 +41,7 @@ class CategoryLayout {
 	}
 
 	setYScale() {
-		this.height = this.sortedCategoryVals.length * 25
+		this.height = this.sortedCategoryVals.length * this.layoutSettings.catRowHeight
 
 		console.log(this.height)
 

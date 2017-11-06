@@ -127,7 +127,7 @@ const reactVizSettingsList = [
 		colorSettings: { colorVar: variables.category, showLegend: true },
 		tooltipTitleVar: variables.title,
 		tooltipVars: [variables.state, variables.category, variables.date, variables.description],
-		dotSettings: {scaleFactor: 150, maxRadius: 3.75, spacing: 1},
+		dotScaleRange: [1, 4],
 		interaction: "mouseover",
 		layouts: [
 			{
@@ -141,7 +141,8 @@ const reactVizSettingsList = [
 				label: "Incidents by State",
 				layout: "category",
 				categoryVar: variables.state,
-				leftMargin: 120
+				leftMargin: 120,
+				catRowHeight: 15
 			}
 		]
 	},

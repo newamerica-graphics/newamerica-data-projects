@@ -42,7 +42,7 @@ class DotChart extends React.Component {
             window.addEventListener('click', () => { return this.clicked(null); });
         }
 
-        this.dotRadiusScale = d3.scaleLinear().domain([350, 1050]).range(vizSettings.dotScaleRange)
+        this.dotRadiusScale = d3.scaleLinear().domain([350, 1050]).range(vizSettings.dotScaleRange).clamp(true)
 
         console.log("initialized")
 		this.state = {
@@ -137,7 +137,7 @@ class DotChart extends React.Component {
         
         if (currLayoutSettings.isYearMonth) {
             let extents = d3.extent(this.state.currDataShown, d => d.year_month)
-            extents = layoutSettings.fixedStartVal ? [currLayoutSettings.fixedStartVal, extents[1]] : extents
+            extents = currLayoutSettings.fixedStartVal ? [currLayoutSettings.fixedStartVal, extents[1]] : extents
 
             console.log(extents)
 

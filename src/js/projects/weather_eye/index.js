@@ -50,7 +50,8 @@ const reactVizSettingsList = [
 				label: "Storm Events by Type",
 				layout: "category",
 				categoryVar: variables.type,
-				leftMargin: 130
+				leftMargin: 130,
+				catRowHeight: 25
 			}
 		]
 	},
@@ -83,7 +84,8 @@ const reactVizSettingsList = [
 				label: "Storm Events by Type",
 				layout: "category",
 				categoryVar: variables.type,
-				leftMargin: 130
+				leftMargin: 130,
+				catRowHeight: 25
 			}
 		]
 	},
@@ -116,7 +118,8 @@ const reactVizSettingsList = [
 				label: "Storm Events by Type",
 				layout: "category",
 				categoryVar: variables.type,
-				leftMargin: 130
+				leftMargin: 130,
+				catRowHeight: 25
 			}
 		]
 	},
@@ -149,7 +152,8 @@ const reactVizSettingsList = [
 				label: "Storm Events by Type",
 				layout: "category",
 				categoryVar: variables.type,
-				leftMargin: 130
+				leftMargin: 130,
+				catRowHeight: 25
 			}
 		]
 	},
@@ -182,7 +186,8 @@ const reactVizSettingsList = [
 				label: "Storm Events by Type",
 				layout: "category",
 				categoryVar: variables.type,
-				leftMargin: 130
+				leftMargin: 130,
+				catRowHeight: 25
 			}
 		]
 	},
@@ -215,7 +220,8 @@ const reactVizSettingsList = [
 				label: "Storm Events by Type",
 				layout: "category",
 				categoryVar: variables.type,
-				leftMargin: 130
+				leftMargin: 130,
+				catRowHeight: 25
 			}
 		]
 	},
