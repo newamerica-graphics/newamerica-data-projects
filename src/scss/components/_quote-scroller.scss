@@ -1,6 +1,6 @@
 .quote-scroller {
 	&__category {
-		padding-bottom: 15px 0px;
+		padding-bottom: 15px;
 		
 		&__title, &__description {
 			max-width: 900px;
@@ -9,7 +9,7 @@
 		}
 
 		&__title {
-			font-family: "Platform" !important;
+			font-weight: bold;
 			color: palette-get(na-black);
 			line-height: 1.4;
 			padding-bottom: 15px;
@@ -22,7 +22,7 @@
 		}
 
 		&__quotes {
-			padding-top: 20px;
+			padding-top: 30px;
 		}
 	}
 
@@ -43,7 +43,7 @@
 
 		&__text {
 			padding: 15px;
-			background-color: rgba(46, 188, 179, .5);
+			border: 2px solid rgba(46, 188, 179, .5);
 			margin-bottom: 0px;
 			
 			& > * {

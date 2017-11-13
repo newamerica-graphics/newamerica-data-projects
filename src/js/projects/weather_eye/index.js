@@ -314,14 +314,15 @@ const reactVizSettingsList = [
 	// 	categoryVar: variables.category,
 	// 	showCategoryTitle: false
 	// },
-	// {
-	// 	id: "#weather-eye__findings__all", 
-	// 	vizType: "quote_scroller",
-	// 	primaryDataSheet: "storm_quotes",
-	// 	categoryDescriptionSheet: "storm_quotes_category_descriptions",
-	// 	categoryVar: variables.category,
-	// 	showCategoryTitle: true
-	// },
+	{
+		id: "#weather-eye__findings__all", 
+		vizType: "quote_scroller",
+		primaryDataSheet: "storm_quotes",
+		categoryDescriptionSheet: "storm_quotes_category_descriptions",
+		categoryVar: variables.category,
+		showCategoryTitle: true,
+		expandable: true
+	},
 ]
 
 let projectSettings = {
