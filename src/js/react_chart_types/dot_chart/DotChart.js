@@ -164,9 +164,21 @@ class DotChart extends React.Component {
         } else {
             let extents = d3.extent(this.state.currDataShown, d => +d[currLayoutSettings.xVar.variable])
             let domainExtent = extents[1] - extents[0]
-            let tickInterval = Math.ceil((domainExtent * 80)/width)
+            let tickInterval = Math.ceil((domainExtent * 90)/width)
 
-            console.log(domainExtent, tickInterval, width)
+            let nicedInterval = tickInterval;
+
+            if (tickInterval > 4 && tickInterval <= 8) {
+                nicedInterval = 5;
+            } else if (tickInterval > 8 && tickInterval <= 13) {
+                nicedInterval = 10;
+            } else if (tickInterval > 13 && tickInterval <= 18) {
+                nicedInterval = 15;
+            } else if (tickInterval > 18 && tickInterval <= 23) {
+                nicedInterval = 20;
+            }
+
+            console.log(domainExtent, tickInterval, nicedInterval, width)
 
             return (
                 <Motion style={{currTransform: spring(currLayout.height)}} >
@@ -174,7 +186,7 @@ class DotChart extends React.Component {
                         return (
                             <g>
                                 <g className="dot-chart__axis-time" style={{transform: "translateY(" + currTransform + "px)"}}>
-                                    <Axis {...axisPropsFromBandedScale(currLayout.xScale)} format={d => currLayoutSettings.axisLabelOverrideFunc ? currLayoutSettings.axisLabelOverrideFunc(d) : d} position={(d) => { return (d - 1)%tickInterval == 0 ? currLayout.xScale(d) + currLayout.xScale.bandwidth()/2 : -100 }} style={{orient: BOTTOM}} />
+                                    <Axis {...axisPropsFromBandedScale(currLayout.xScale)} format={d => currLayoutSettings.axisLabelOverrideFunc ? currLayoutSettings.axisLabelOverrideFunc(d) : d} position={(d) => { return +d%nicedInterval == 0 ? currLayout.xScale(d) + currLayout.xScale.bandwidth()/2 : -100 }} style={{orient: BOTTOM}} />
                                 </g>
                             </g>
                         )
@@ -255,13 +267,18 @@ class DotChart extends React.Component {
 
     	if ((currClicked && currClicked == d) || (currHovered && currHovered == d)) {
     		return "black"
-    	} 
-    	return this.setFillColor(d)
+    	}
+
+        if (this.props.vizSettings.dotShape === "rect") {
+            return "none"
+        } else {
+            return this.setFillColor(d)
+        }
     }
 
 	render() {
 		const { valsShown, currLayout, currLayoutSettings, currDataShown, width, height } = this.state;
-        const { layouts, interaction, colorSettings } = this.props.vizSettings
+        const { layouts, interaction, colorSettings, dotShape } = this.props.vizSettings
 
         let axis, layoutAnnotations;
 
@@ -295,22 +312,43 @@ class DotChart extends React.Component {
     								let fillColor = this.setFillColor(d),
     									strokeColor = this.setStrokeColor(d)
 
-    								return (
-    									<Motion style={style} key={d.id}>
-    										{({x, y}) => {
-    											return (
-                                                    <circle className={interaction == "click" ? "dot-chart__dot clickable" : "dot-chart__dot"}
-                                                        cx={x} cy={y}
-                                                        r={this.dotRadius}
-                                                        fill={fillColor} 
-                                                        stroke={strokeColor} 
-                                                        onClick={(e, b) => { e.stopPropagation(); return interaction == "click" ? this.clicked(d, x, y) : null; }} 
-                                                        onMouseOver={() => { return this.mouseover(d, x, y); }} 
-                                                        onMouseOut={() => { return this.mouseout(d); }}/>
-                                                )
-    										}}
-    									</Motion>
-    								)
+                                    if (dotShape === "rect") {
+                                        return (
+                                            <Motion style={style} key={d.id}>
+                                                {({x, y}) => {
+                                                    return (
+                                                        <rect className={interaction == "click" ? "dot-chart__dot clickable" : "dot-chart__dot"}
+                                                            x={x - this.dotRadius} 
+                                                            y={y - this.dotRadius}
+                                                            height={this.dotRadius*2}
+                                                            width={this.dotRadius*2}
+                                                            fill={fillColor} 
+                                                            stroke={strokeColor} 
+                                                            onClick={(e, b) => { e.stopPropagation(); return interaction == "click" ? this.clicked(d, x, y) : null; }} 
+                                                            onMouseOver={() => { return this.mouseover(d, x, y); }} 
+                                                            onMouseOut={() => { return this.mouseout(d); }}/>
+                                                    )
+                                                }}
+                                            </Motion>
+                                        )
+                                    } else {
+        								return (
+        									<Motion style={style} key={d.id}>
+        										{({x, y}) => {
+        											return (
+                                                        <circle className={interaction == "click" ? "dot-chart__dot clickable" : "dot-chart__dot"}
+                                                            cx={x} cy={y}
+                                                            r={this.dotRadius}
+                                                            fill={fillColor} 
+                                                            stroke={strokeColor} 
+                                                            onClick={(e, b) => { e.stopPropagation(); return interaction == "click" ? this.clicked(d, x, y) : null; }} 
+                                                            onMouseOver={() => { return this.mouseover(d, x, y); }} 
+                                                            onMouseOut={() => { return this.mouseout(d); }}/>
+                                                    )
+        										}}
+        									</Motion>
+        								)
+                                    }
     							})}
                             </g>
                             {axis}

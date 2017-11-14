@@ -31,107 +31,107 @@ let variables = {
 }
 
 let vizSettingsList = [
-	{
-		id: "#homegrown__outcome-for-extremist", 
-		vizType: "chart_with_fact_box",
-		primaryDataSheet: "people_protected",
-		chartSettings: {
-			vizType: "grouped_dot_matrix",
-			dotSettings: { "width": 10, "offset": 3, "dotsPerRow": 5},
-			distanceBetweenGroups: 15,
-			groupingVars: [ variables.year_charged_or_deceased ],
-			filterVars: [ variables.charged_or_deceased ],
-			tooltipVars: [ variables.full_name, variables.charged_or_deceased, variables.date_charged, variables.terror_plot],
-			tooltipImageVar: variables.headshot,
-			labelSettings: { interval: 1, showNumVals: true},
-			legendSettings: {"orientation": "horizontal-center"},
-			eventSettings: {
-				"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
-			}
-		},
-		factBoxSettings: {
-			alignment: "left-aligned",
-			factBoxVals: [ 
-				{ variable: variables.charged_or_deceased, value: "Charged", type:"count", text: "Charged"},
-				{ variable: variables.charged_or_deceased, value: "Charged outside U.S.", type:"count", text: "Charged outside U.S."},
-				{ variable: variables.charged_or_deceased, value: "Deceased", type:"count", text: "Deceased"},
-			],
-		},
+	// {
+	// 	id: "#homegrown__outcome-for-extremist", 
+	// 	vizType: "chart_with_fact_box",
+	// 	primaryDataSheet: "people_protected",
+	// 	chartSettings: {
+	// 		vizType: "grouped_dot_matrix",
+	// 		dotSettings: { "width": 10, "offset": 3, "dotsPerRow": 5},
+	// 		distanceBetweenGroups: 15,
+	// 		groupingVars: [ variables.year_charged_or_deceased ],
+	// 		filterVars: [ variables.charged_or_deceased ],
+	// 		tooltipVars: [ variables.full_name, variables.charged_or_deceased, variables.date_charged, variables.terror_plot],
+	// 		tooltipImageVar: variables.headshot,
+	// 		labelSettings: { interval: 1, showNumVals: true},
+	// 		legendSettings: {"orientation": "horizontal-center"},
+	// 		eventSettings: {
+	// 			"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
+	// 		}
+	// 	},
+	// 	factBoxSettings: {
+	// 		alignment: "left-aligned",
+	// 		factBoxVals: [ 
+	// 			{ variable: variables.charged_or_deceased, value: "Charged", type:"count", text: "Charged"},
+	// 			{ variable: variables.charged_or_deceased, value: "Charged outside U.S.", type:"count", text: "Charged outside U.S."},
+	// 			{ variable: variables.charged_or_deceased, value: "Deceased", type:"count", text: "Deceased"},
+	// 		],
+	// 	},
 
-	},
-	{
-		id: "#homegrown__awlaki-over-time", 
-		vizType: "grouped_dot_matrix",
-		primaryDataSheet: "people_protected",
-		distanceBetweenGroups: 15,
-		dotSettings: { "width": 10, "offset": 3, "dotsPerRow": 5},
-		groupingVars: [ variables.year_charged_or_deceased ],
-		dividingLine: { value: "2011", title: "Post al-Awlaki", descriptionLines: ["Anwar al-Awlaki killed in drone strike on", "September 30, 2011"]},
-		filterVars: [ variables.char_awlaki ],
-		tooltipVars: [ variables.full_name, variables.char_awlaki, variables.terror_plot],
-		tooltipImageVar: variables.headshot,
-		labelSettings: { interval: 1, showNumVals: true},
-		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "showValCounts": true },
-		eventSettings: {
-			"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
-		}
-	},
-	{
-		id: "#homegrown__gender-of-extremists", 
-		vizType: "chart_with_fact_box",
-		primaryDataSheet: "people_protected",
-		chartSettings: {
-			vizType: "grouped_dot_matrix",
-			dotSettings: { "width": 10, "offset": 3, "dotsPerRow": 5},
-			distanceBetweenGroups: 15,
-			groupingVars: [ variables.year_charged_or_deceased ],
-			filterVars: [ variables.gender ],
-			tooltipVars: [ variables.full_name, variables.charged_or_deceased, variables.gender, variables.date_charged, variables.terror_plot],
-			tooltipImageVar: variables.headshot,
-			labelSettings: { interval: 1, showNumVals: true},
-			legendSettings: {"orientation": "horizontal-center"},
-			eventSettings: {
-				"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
-			}
-		},
-		factBoxSettings: {
-			alignment: "left-aligned",
-			factBoxVals: [ 
-				{ variable: variables.gender, value: "Male", type:"percent", text: "Male"},
-				{ variable: variables.gender, value: "Female", type:"percent", text:"Female"},
-			],
-		},
-	},
-	{
-		id: "#homegrown__citizenship-status", 
-		vizType: "dot_matrix",
-		primaryDataSheet: "people_protected",
-		orientation: "horizontal",
-		dotSettings: { "width": 10, "offset": 3},
-		filterVars: [ variables.citizenship_status ],
-		tooltipVars: [ variables.full_name, variables.citizenship_status ],
-		tooltipImageVar: variables.headshot,
-		split: { splitFilterVar:variables.citizenship_status, splitVal: "Permanent Resident", leftLabel: "Citizens and Permanent Residents", rightLabel: "Non-residents and Unknown", splitAggregate: "percent"},
-		legendSettings: {"orientation": "horizontal-center", "showValCounts": true  },
-		eventSettings: {
-			"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
-		}
-	},
-	{
-		id: "#homegrown__convert-status", 
-		vizType: "dot_matrix",
-		primaryDataSheet: "people_protected",
-		orientation: "horizontal",
-		dotSettings: { "width": 10, "offset": 3},
-		filterVars: [ variables.field_convert ],
-		tooltipVars: [ variables.full_name, variables.field_convert ],
-		tooltipImageVar: variables.headshot,
-		split: { splitFilterVar:variables.field_convert, splitVal: "Muslim Non-Convert", leftLabel: "Muslims", rightLabel: "Non-Muslims and Unknown", splitAggregate: "count"},
-		legendSettings: {"orientation": "horizontal-center", "showValCounts": true, "valCountType": "both"  },
-		eventSettings: {
-			"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
-		}
-	},
+	// },
+	// {
+	// 	id: "#homegrown__awlaki-over-time", 
+	// 	vizType: "grouped_dot_matrix",
+	// 	primaryDataSheet: "people_protected",
+	// 	distanceBetweenGroups: 15,
+	// 	dotSettings: { "width": 10, "offset": 3, "dotsPerRow": 5},
+	// 	groupingVars: [ variables.year_charged_or_deceased ],
+	// 	dividingLine: { value: "2011", title: "Post al-Awlaki", descriptionLines: ["Anwar al-Awlaki killed in drone strike on", "September 30, 2011"]},
+	// 	filterVars: [ variables.char_awlaki ],
+	// 	tooltipVars: [ variables.full_name, variables.char_awlaki, variables.terror_plot],
+	// 	tooltipImageVar: variables.headshot,
+	// 	labelSettings: { interval: 1, showNumVals: true},
+	// 	legendSettings: {"orientation": "horizontal-center", "showTitle": false, "showValCounts": true },
+	// 	eventSettings: {
+	// 		"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
+	// 	}
+	// },
+	// {
+	// 	id: "#homegrown__gender-of-extremists", 
+	// 	vizType: "chart_with_fact_box",
+	// 	primaryDataSheet: "people_protected",
+	// 	chartSettings: {
+	// 		vizType: "grouped_dot_matrix",
+	// 		dotSettings: { "width": 10, "offset": 3, "dotsPerRow": 5},
+	// 		distanceBetweenGroups: 15,
+	// 		groupingVars: [ variables.year_charged_or_deceased ],
+	// 		filterVars: [ variables.gender ],
+	// 		tooltipVars: [ variables.full_name, variables.charged_or_deceased, variables.gender, variables.date_charged, variables.terror_plot],
+	// 		tooltipImageVar: variables.headshot,
+	// 		labelSettings: { interval: 1, showNumVals: true},
+	// 		legendSettings: {"orientation": "horizontal-center"},
+	// 		eventSettings: {
+	// 			"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
+	// 		}
+	// 	},
+	// 	factBoxSettings: {
+	// 		alignment: "left-aligned",
+	// 		factBoxVals: [ 
+	// 			{ variable: variables.gender, value: "Male", type:"percent", text: "Male"},
+	// 			{ variable: variables.gender, value: "Female", type:"percent", text:"Female"},
+	// 		],
+	// 	},
+	// },
+	// {
+	// 	id: "#homegrown__citizenship-status", 
+	// 	vizType: "dot_matrix",
+	// 	primaryDataSheet: "people_protected",
+	// 	orientation: "horizontal",
+	// 	dotSettings: { "width": 10, "offset": 3},
+	// 	filterVars: [ variables.citizenship_status ],
+	// 	tooltipVars: [ variables.full_name, variables.citizenship_status ],
+	// 	tooltipImageVar: variables.headshot,
+	// 	split: { splitFilterVar:variables.citizenship_status, splitVal: "Permanent Resident", leftLabel: "Citizens and Permanent Residents", rightLabel: "Non-residents and Unknown", splitAggregate: "percent"},
+	// 	legendSettings: {"orientation": "horizontal-center", "showValCounts": true  },
+	// 	eventSettings: {
+	// 		"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
+	// 	}
+	// },
+	// {
+	// 	id: "#homegrown__convert-status", 
+	// 	vizType: "dot_matrix",
+	// 	primaryDataSheet: "people_protected",
+	// 	orientation: "horizontal",
+	// 	dotSettings: { "width": 10, "offset": 3},
+	// 	filterVars: [ variables.field_convert ],
+	// 	tooltipVars: [ variables.full_name, variables.field_convert ],
+	// 	tooltipImageVar: variables.headshot,
+	// 	split: { splitFilterVar:variables.field_convert, splitVal: "Muslim Non-Convert", leftLabel: "Muslims", rightLabel: "Non-Muslims and Unknown", splitAggregate: "count"},
+	// 	legendSettings: {"orientation": "horizontal-center", "showValCounts": true, "valCountType": "both"  },
+	// 	eventSettings: {
+	// 		"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
+	// 	}
+	// },
 	{
 		id: "#homegrown__age-of-extremists",
 		vizType: "chart_with_fact_box",
@@ -159,65 +159,133 @@ let vizSettingsList = [
 		},
 	},
 	{
-		id: "#homegrown__fact-box__method-of-radicalization", 
+		id: "#homegrown__age-of-extremists-just-fact-box",
 		vizType: "fact_box",
 		primaryDataSheet: "people_protected",
-		factBoxType: "colored_boxes",
-		factBoxVals: [ 
-			{ variable: variables.online_radicalization, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Maintained a social media profile with jihadist material or utilized encryption for plotting"},
+		alignment: "right-aligned",
+		factBoxType: "simple",
+		factBoxVals: [
+			{ variable: variables.age, type:"median", text: "Median Age"},
+			{ variable: variables.age, type:"average", text: "Average Age"},
+			{ variable: variables.marital_status, value: "Married", type:"percent", text:"Married"},
 		],
 	},
+	// {
+	// 	id: "#homegrown__fact-box__method-of-radicalization", 
+	// 	vizType: "fact_box",
+	// 	primaryDataSheet: "people_protected",
+	// 	factBoxType: "colored_boxes",
+	// 	factBoxVals: [ 
+	// 		{ variable: variables.online_radicalization, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Maintained a social media profile with jihadist material or utilized encryption for plotting"},
+	// 	],
+	// },
+	// {
+	// 	id: "#homegrown__deadly-attacks",
+	// 	vizType: "step_chart",
+	// 	yScaleType: "cumulative",
+	// 	primaryDataSheet: "terror_plots",
+	// 	timeFormat: "%B %d, %Y",
+	// 	xVars: [ variables.deadly_attack_date ],
+	// 	yVars: [ variables.victims_killed ],
+	// 	colorVars: [ variables.ideology ],
+	// 	tooltipVars: [ variables.attack_name, variables.ideology, variables.victims_wounded, variables.victims_killed, variables.attack_description ],
+	// 	tooltipScrollable: true,
+	// 	interpolation: "step",
+	// 	dotSettings: { shape: "rect", width: "7"}
+	// },
+	// {
+	// 	id: "#homegrown__fact-box__prevention-method", 
+	// 	vizType: "fact_box",
+	// 	primaryDataSheet: "people_protected",
+	//  	factBoxType: "colored_boxes",
+	// 	factBoxVals: [ 
+	// 		{ variable: variables.inv_informant, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Percent of jihadists monitored by an informant"},
+	// 		{ variable: variables.inv_community_or_family_tip, value: "Yes", type:"percent", color:colors.blue.light, text:"Percent of jihadists implicated by a tip from family members or the community"},
+	// 		{ variable: variables.inv_public_tip, value: "Yes", type:"percent", color:colors.purple.light, text:"Percent of jihadists implicated by a tip from the general public"},
+	// 	],
+	// },
+	// {
+	// 	id: "#homegrown__online-radicalization",
+	// 	vizType: "chart_with_fact_box",
+	// 	primaryDataSheet: "people_protected",
+	// 	chartSettings: {
+	// 		vizType: "bar_chart",
+	// 		dataNest: { 
+	// 			value: "Yes", 
+	// 			type: "percent" 
+	// 		},
+	// 		groupingVar: variables.year_charged_or_deceased, 
+	// 		filterVars: [variables.online_radicalization],
+	// 		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
+	// 		xAxisLabelInterval: {"small": 2, "medium": 2, "large": 1},
+	// 		labelValues: false,
+	// 		eventSettings: {
+	// 			"mouseover":{ "tooltip": true, "fill": colors.blue.medium, "stroke": false }
+	// 		},
+	// 		showYAxis: true
+	// 	},
+	// 	factBoxSettings: {
+	// 		alignment: "left-aligned overlap-chart",
+	// 		factBoxVals: [ 
+	// 			{ variable: variables.online_radicalization, value: "Yes", type:"percent", text: "Total Percent Radicalized Online"},
+	// 		],
+	// 	},
+	// },
+]
+
+const reactVizSettingsList = [
+	// {
+	// 	id: "#weather-eye__st-louis", 
+	// 	vizType: "dot_chart",
+	// 	primaryDataSheet: "st_louis",
+	// 	colorSettings: { colorVar: variables.type, showLegend: true },
+	// 	tooltipTitleVar: variables.type,
+	// 	tooltipVars: [variables.fema_description, variables.start_date, variables.end_date],
+	// 	dotScaleRange: [2, 6],
+	// 	interaction: "mouseover",
+	// 	layouts: [
+	// 		{
+	// 			label: "Storm Events by Year",
+	// 			layout: "histogram_fixed_interval",
+	// 			xVar: variables.year,
+	// 			sortingVar: variables.start_date,
+	// 			fixedStartVal: 1965
+	// 		},
+	// 		{
+	// 			label: "Storm Events by Month",
+	// 			layout: "histogram_fixed_interval",
+	// 			xVar: variables.month,
+	// 			sortingVar: variables.start_date,
+	// 			maxWidth: 600,
+	// 			axisLabelOverrideFunc: d => months[+d]
+	// 		},
+	// 		{
+	// 			label: "Storm Events by Type",
+	// 			layout: "category",
+	// 			categoryVar: variables.type,
+	// 			leftMargin: 130
+	// 		}
+	// 	]
+	// },
 	{
-		id: "#homegrown__deadly-attacks",
-		vizType: "step_chart",
-		yScaleType: "cumulative",
-		primaryDataSheet: "terror_plots",
-		timeFormat: "%B %d, %Y",
-		xVars: [ variables.deadly_attack_date ],
-		yVars: [ variables.victims_killed ],
-		colorVars: [ variables.ideology ],
-		tooltipVars: [ variables.attack_name, variables.ideology, variables.victims_wounded, variables.victims_killed, variables.attack_description ],
-		tooltipScrollable: true,
-		interpolation: "step",
-		dotSettings: { shape: "rect", width: "7"}
-	},
-	{
-		id: "#homegrown__fact-box__prevention-method", 
-		vizType: "fact_box",
+		id: "#homegrown__updated-age-of-extremist", 
+		vizType: "dot_chart",
 		primaryDataSheet: "people_protected",
-	 	factBoxType: "colored_boxes",
-		factBoxVals: [ 
-			{ variable: variables.inv_informant, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Percent of jihadists monitored by an informant"},
-			{ variable: variables.inv_community_or_family_tip, value: "Yes", type:"percent", color:colors.blue.light, text:"Percent of jihadists implicated by a tip from family members or the community"},
-			{ variable: variables.inv_public_tip, value: "Yes", type:"percent", color:colors.purple.light, text:"Percent of jihadists implicated by a tip from the general public"},
-		],
-	},
-	{
-		id: "#homegrown__online-radicalization",
-		vizType: "chart_with_fact_box",
-		primaryDataSheet: "people_protected",
-		chartSettings: {
-			vizType: "bar_chart",
-			dataNest: { 
-				value: "Yes", 
-				type: "percent" 
+		colorSettings: { colorVar: variables.marital_status, showLegend: true },
+		tooltipTitleVar: variables.full_name,
+		tooltipVars: [variables.age, variables.marital_status, variables.terror_plot],
+		dotShape: "rect",
+		dotScaleRange: [2, 5],
+		interaction: "mouseover",
+		layouts: [
+			{
+				label: "Incidents Over Time",
+				layout: "histogram_fixed_interval",
+				xVar: variables.age,
+				sortingVar: variables.marital_status,
+				fixedStartVal: 15
 			},
-			groupingVar: variables.year_charged_or_deceased, 
-			filterVars: [variables.online_radicalization],
-			legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
-			xAxisLabelInterval: {"small": 2, "medium": 2, "large": 1},
-			labelValues: false,
-			eventSettings: {
-				"mouseover":{ "tooltip": true, "fill": colors.blue.medium, "stroke": false }
-			},
-			showYAxis: true
-		},
-		factBoxSettings: {
-			alignment: "left-aligned overlap-chart",
-			factBoxVals: [ 
-				{ variable: variables.online_radicalization, value: "Yes", type:"percent", text: "Total Percent Radicalized Online"},
-			],
-		},
+		]
 	},
 ]
 
@@ -226,7 +294,8 @@ let projectSettings = {
 	downloadDataLink: "https://docs.google.com/spreadsheets/d/1UHVsknlx8sWPNg6nYBg2_WdXTp2RwnWwe7BdInWncdg/",
 	dataSheetNames:["people_protected", "people_variables", "terror_plots", "terror_plots_variables"],
 	imageFolderId: "0B2KbJlQb9jlgeG5hOXZqbURpRUE",
-	vizSettingsList: vizSettingsList
+	vizSettingsList: vizSettingsList,
+	reactVizSettingsList: reactVizSettingsList
 }
 
 setupProject(projectSettings);

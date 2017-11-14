@@ -42,8 +42,11 @@ class HistogramFixedIntervalLayout {
 			.sortValues((a, b) => {
 				if (!a[this.sortingVariable]) return b;
 				if (!b[this.sortingVariable]) return a;
-
-				return new Date(a[this.sortingVariable]) - new Date(b[this.sortingVariable])
+				if (this.layoutSettings.sortingVar.scaleType === "categorical") {
+					return this.sortCategorical(a[this.sortingVariable], b[this.sortingVariable])
+				} else {
+					return new Date(a[this.sortingVariable]) - new Date(b[this.sortingVariable])
+				}
 			})
 			.entries(this.data)
 
@@ -51,6 +54,11 @@ class HistogramFixedIntervalLayout {
 		console.log(this.maxColCount)
 		this.height = (this.maxColCount)*(this.dotRadius*2 + verticalPadding) + verticalPadding
 		console.log(this.height)
+	}
+
+	sortCategorical(a, b) {
+		let catOrder = this.layoutSettings.sortingVar.customDomain;
+		return catOrder.indexOf(a) - catOrder.indexOf(b)
 	}
 
 	resize(width, dotRadius) {
