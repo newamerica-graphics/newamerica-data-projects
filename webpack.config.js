@@ -58,6 +58,10 @@ var config = {
         loader: "url-loader?limit=100000" 
       },
       { 
+        test: /\.svg$/, 
+        loader: "svg-inline-loader" 
+      },
+      { 
         test: /\.json$/, 
         loader: "json-loader" 
       },
