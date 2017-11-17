@@ -28,6 +28,7 @@ import { StepChart } from "./chart_types/step_chart.js";
 import { MapboxMap } from "./chart_types/mapbox_map.js";
 import { FinancialOpportunityMap } from "./chart_types/financial_opportunity_map.js";
 import { SummaryBox } from "./chart_types/summary_box.js";
+import { InteractiveSvg } from "./chart_types/interactive_svg.js";
 import { PieChart } from "./chart_types/pie_chart.js";
 import { Bipartite } from "./chart_types/bipartite.js";
 import { CategoryBreakdown } from "./chart_types/category_breakdown.js";
@@ -53,7 +54,7 @@ export const setupProject = (projectSettings) => {
 	initialize();
 
 	window.addEventListener('resize', resize);
-	console.log("CHANGEdddddd!!!!!!!!!!!")
+
 	renderCharts();
 
 	function initialize() {
@@ -111,6 +112,10 @@ export const setupProject = (projectSettings) => {
 					
 					case "grouped_dot_matrix":
 						viz = new GroupedDotMatrix(vizSettingsObject, imageFolderId);
+						break;
+
+					case "interactive_svg":
+						viz = new InteractiveSvg(vizSettingsObject);
 						break;
 
 					case "line_chart":
@@ -179,9 +184,6 @@ export const setupProject = (projectSettings) => {
 				viz.render();
 				hideLoadingGif(viz.id);
 			}
-			
-			setDataDownloadLinks(d);
-			setProfileValues(d);
 		} else {
 			d3.json(dataUrl, (d) => {
 				console.log(d)
