@@ -14,14 +14,14 @@ let variables = {
 
 	name: {"variable":"name", "displayName":"County", "format": "string"},
 	state: {"variable":"state", "displayName":"State", "format": "string"},
-	county_population: {"variable":"county_population", "displayName":"County Population", "format": "number"},
+	county_population: {"variable":"county_population", "displayName":"Population", "format": "number"},
 	white_perc: {"variable":"white_perc", "displayName":"% White", "format": "percent"},
 	black_perc: {"variable":"black_perc", "displayName":"% Black", "format": "percent"},
 	hisp_perc: {"variable":"hisp_perc", "displayName":"% Hispanic", "format": "percent"},
 	amin_perc: {"variable":"amin_perc", "displayName":"% American Indian", "format": "percent"},
 	asian_perc: {"variable":"asian_perc", "displayName":"% Asian", "format": "percent"},
-	unemployment: {"variable":"unemployment", "displayName":"Unemployment", "format": "percent"},
-	poverty_line: {"variable":"poverty_line", "displayName":"% Below Poverty Line", "format": "percent"},
+	unemployment: {"variable":"unemployment", "displayName":"Unemployment Rate", "format": "percent"},
+	poverty_line: {"variable":"poverty_line", "displayName":"Living in Poverty", "format": "percent"},
 	total_disaster_count: {"variable":"total_disaster_count", "displayName":"Total", "format": "number"},
 	flood: {"variable":"flood", "displayName":"Floods", "format": "number"},
 	tornado: {"variable":"tornado", "displayName":"Tornadoes", "format": "number"},
@@ -37,40 +37,44 @@ const months = ["", "January", "February", "March", "April", "May", "June", "Jul
 
 
 let vizSettingsList = [
-	// {
-	// 	id:"#weather-eye__county-map",
-	// 	vizType: "mapbox_map",
-	// 	primaryDataSheet: "county_overview",
- //        mapboxSettings: {
- //        	style: "mapbox://styles/newamericamapbox/cja4e4wen2ise2socuy99l5lc",
- //        	center: [-101, 35.1056],
- //        	zoom: 0,
- //        	scrollZoom: false,
- //        },
- //        defaultColor: colors.turquoise.light,
- //        defaultRadius: 10,
- //        showLegend: false,
- //        hasHover: true,
- //        fitBounds: [
- //        	[-124.7844079, 24.7433195],
- //        	[-66.9513812, 49.3457868]
- //        ],
- //        widthHeightConversionFunc: w => { return w > 500 ? (3*w)/5 : 500} ,
- //        dataBoxVars: {
- //        	title: variables.name,
- //        	subtitle: [variables.state],
- //        	categories: [
- //        		{ 
-	//         		label: "County Demographics",
-	//         		fields: [variables.county_population, variables.unemployment, variables.poverty_line, variables.white_perc, variables.black_perc, variables.hisp_perc, variables.amin_perc, variables.asian_perc] 
-	//         	},
-	//         	{ 
-	//         		label: "Weather Profile",
-	//         		fields: [variables.flood, variables.tornado, variables.snow_ice_storm, variables.severe_weather, variables.drought, variables.tropical_storm, variables.wildfire, variables.hurricane, variables.total_disaster_count] 
-	//         	}
- //        	]
- //        }
- //    },
+	{
+		id:"#weather-eye__county-map",
+		vizType: "mapbox_map",
+		primaryDataSheet: "county_overview",
+        mapboxSettings: {
+        	style: "mapbox://styles/newamericamapbox/cja4e4wen2ise2socuy99l5lc",
+        	center: [-101, 35.1056],
+        	zoom: 0,
+        	scrollZoom: false,
+        },
+        defaultColor: colors.turquoise.light,
+        defaultRadius: 10,
+        showLegend: false,
+        hasHover: true,
+        fitBounds: [
+        	[-124.7844079, 24.7433195],
+        	[-66.9513812, 49.3457868]
+        ],
+        widthHeightConversionFunc: w => { return w > 500 ? (3*w)/5 : 500} ,
+        dataBoxBackgroundColor: "#e6e6e6",
+        dataBoxVars: {
+        	title: variables.name,
+        	subtitle: [variables.state],
+        	categories: [
+        		{ 
+	        		fields: [variables.county_population, variables.unemployment, variables.poverty_line] 
+	        	},
+        		{ 
+	        		label: "Population by Race",
+	        		fields: [variables.white_perc, variables.black_perc, variables.hisp_perc, variables.amin_perc, variables.asian_perc] 
+	        	},
+	        	{ 
+	        		label: "Weather Profile",
+	        		fields: [variables.flood, variables.tornado, variables.snow_ice_storm, variables.severe_weather, variables.drought, variables.tropical_storm, variables.wildfire, variables.hurricane, variables.total_disaster_count] 
+	        	}
+        	]
+        }
+    },
 ]
 
 const reactVizSettingsList = [
@@ -148,210 +152,168 @@ const reactVizSettingsList = [
 	// 		}
 	// 	]
 	// },
-	// {
-	// 	id: "#weather-eye__st-louis", 
-	// 	vizType: "dot_chart",
-	// 	primaryDataSheet: "st_louis",
-	// 	colorSettings: { colorVar: variables.type, showLegend: true },
-	// 	tooltipTitleVar: variables.type,
-	// 	tooltipVars: [variables.fema_description, variables.start_date, variables.end_date],
-	// 	dotScaleRange: [2, 6],
-	// 	interaction: "mouseover",
-	// 	layouts: [
-	// 		// {
-	// 		// 	label: "Storm Events by Year",
-	// 		// 	layout: "histogram_fixed_interval",
-	// 		// 	xVar: variables.year,
-	// 		// 	sortingVar: variables.start_date,
-	// 		// 	fixedStartVal: 1965
-	// 		// },
-	// 		// {
-	// 		// 	label: "Storm Events by Month",
-	// 		// 	layout: "histogram_fixed_interval",
-	// 		// 	xVar: variables.month,
-	// 		// 	sortingVar: variables.start_date,
-	// 		// 	maxWidth: 600,
-	// 		// 	axisLabelOverrideFunc: d => months[+d]
-	// 		// },
-	// 		{
-	// 			label: "Storm Events by Type",
-	// 			layout: "category",
-	// 			categoryVar: variables.type,
-	// 			leftMargin: 130,
-	// 			catRowHeight: 25
-	// 		}
-	// 	]
-	// },
-	// {
-	// 	id: "#weather-eye__caddo", 
-	// 	vizType: "dot_chart",
-	// 	primaryDataSheet: "caddo",
-	// 	colorSettings: { colorVar: variables.type, showLegend: true },
-	// 	tooltipTitleVar: variables.type,
-	// 	tooltipVars: [variables.fema_description, variables.start_date, variables.end_date],
-	// 	dotScaleRange: [2, 5],
-	// 	interaction: "mouseover",
-	// 	layouts: [
-	// 		{
-	// 			label: "Storm Events by Year",
-	// 			layout: "histogram_fixed_interval",
-	// 			xVar: variables.year,
-	// 			sortingVar: variables.start_date,
-	// 			fixedStartVal: 1965
-	// 		},
-	// 		{
-	// 			label: "Storm Events by Month",
-	// 			layout: "histogram_fixed_interval",
-	// 			xVar: variables.month,
-	// 			sortingVar: variables.start_date,
-	// 			maxWidth: 600,
-	// 			axisLabelOverrideFunc: d => months[+d]
-	// 		},
-	// 		{
-	// 			label: "Storm Events by Type",
-	// 			layout: "category",
-	// 			categoryVar: variables.type,
-	// 			leftMargin: 130,
-	// 			catRowHeight: 25
-	// 		}
-	// 	]
-	// },
-	// {
-	// 	id: "#weather-eye__walsh", 
-	// 	vizType: "dot_chart",
-	// 	primaryDataSheet: "walsh",
-	// 	colorSettings: { colorVar: variables.type, showLegend: true },
-	// 	tooltipTitleVar: variables.type,
-	// 	tooltipVars: [variables.fema_description, variables.start_date, variables.end_date],
-	// 	dotScaleRange: [2, 6],
-	// 	interaction: "mouseover",
-	// 	layouts: [
-	// 		{
-	// 			label: "Storm Events by Year",
-	// 			layout: "histogram_fixed_interval",
-	// 			xVar: variables.year,
-	// 			sortingVar: variables.start_date,
-	// 			fixedStartVal: 1965
-	// 		},
-	// 		{
-	// 			label: "Storm Events by Month",
-	// 			layout: "histogram_fixed_interval",
-	// 			xVar: variables.month,
-	// 			sortingVar: variables.start_date,
-	// 			maxWidth: 600,
-	// 			axisLabelOverrideFunc: d => months[+d]
-	// 		},
-	// 		{
-	// 			label: "Storm Events by Type",
-	// 			layout: "category",
-	// 			categoryVar: variables.type,
-	// 			leftMargin: 130,
-	// 			catRowHeight: 25
-	// 		}
-	// 	]
-	// },
-	// {
-	// 	id: "#weather-eye__essex", 
-	// 	vizType: "dot_chart",
-	// 	primaryDataSheet: "essex",
-	// 	colorSettings: { colorVar: variables.type, showLegend: true },
-	// 	tooltipTitleVar: variables.type,
-	// 	tooltipVars: [variables.fema_description, variables.start_date, variables.end_date],
-	// 	dotScaleRange: [2, 6],
-	// 	interaction: "mouseover",
-	// 	layouts: [
-	// 		{
-	// 			label: "Storm Events by Year",
-	// 			layout: "histogram_fixed_interval",
-	// 			xVar: variables.year,
-	// 			sortingVar: variables.start_date,
-	// 			fixedStartVal: 1965
-	// 		},
-	// 		{
-	// 			label: "Storm Events by Month",
-	// 			layout: "histogram_fixed_interval",
-	// 			xVar: variables.month,
-	// 			sortingVar: variables.start_date,
-	// 			maxWidth: 600,
-	// 			axisLabelOverrideFunc: d => months[+d]
-	// 		},
-	// 		{
-	// 			label: "Storm Events by Type",
-	// 			layout: "category",
-	// 			categoryVar: variables.type,
-	// 			leftMargin: 130,
-	// 			catRowHeight: 25
-	// 		}
-	// 	]
-	// },
-	// {
-	// 	id: "#weather-eye__tulsa", 
-	// 	vizType: "dot_chart",
-	// 	primaryDataSheet: "tulsa",
-	// 	colorSettings: { colorVar: variables.type, showLegend: true },
-	// 	tooltipTitleVar: variables.type,
-	// 	tooltipVars: [variables.fema_description, variables.start_date, variables.end_date],
-	// 	dotScaleRange: [2, 6],
-	// 	interaction: "mouseover",
-	// 	layouts: [
-	// 		{
-	// 			label: "Storm Events by Year",
-	// 			layout: "histogram_fixed_interval",
-	// 			xVar: variables.year,
-	// 			sortingVar: variables.start_date,
-	// 			fixedStartVal: 1965
-	// 		},
-	// 		{
-	// 			label: "Storm Events by Month",
-	// 			layout: "histogram_fixed_interval",
-	// 			xVar: variables.month,
-	// 			sortingVar: variables.start_date,
-	// 			maxWidth: 600,
-	// 			axisLabelOverrideFunc: d => months[+d]
-	// 		},
-	// 		{
-	// 			label: "Storm Events by Type",
-	// 			layout: "category",
-	// 			categoryVar: variables.type,
-	// 			leftMargin: 130,
-	// 			catRowHeight: 25
-	// 		}
-	// 	]
-	// },
-	// {
-	// 	id: "#weather-eye__cumberland", 
-	// 	vizType: "dot_chart",
-	// 	primaryDataSheet: "cumberland",
-	// 	colorSettings: { colorVar: variables.type, showLegend: true },
-	// 	tooltipTitleVar: variables.type,
-	// 	tooltipVars: [variables.fema_description, variables.start_date, variables.end_date],
-	// 	dotScaleRange: [2, 6],
-	// 	interaction: "mouseover",
-	// 	layouts: [
-	// 		{
-	// 			label: "Storm Events by Year",
-	// 			layout: "histogram_fixed_interval",
-	// 			xVar: variables.year,
-	// 			sortingVar: variables.start_date,
-	// 			fixedStartVal: 1965
-	// 		},
-	// 		{
-	// 			label: "Storm Events by Month",
-	// 			layout: "histogram_fixed_interval",
-	// 			xVar: variables.month,
-	// 			sortingVar: variables.start_date,
-	// 			maxWidth: 600,
-	// 			axisLabelOverrideFunc: d => months[+d]
-	// 		},
-	// 		{
-	// 			label: "Storm Events by Type",
-	// 			layout: "category",
-	// 			categoryVar: variables.type,
-	// 			leftMargin: 130,
-	// 			catRowHeight: 25
-	// 		}
-	// 	]
-	// },
+	{
+		id: "#weather-eye__st-louis__dot-chart", 
+		vizType: "dot_chart",
+		primaryDataSheet: "st_louis",
+		colorSettings: { colorVar: variables.type, showLegend: true },
+		tooltipTitleVar: variables.type,
+		tooltipVars: [variables.fema_description, variables.start_date, variables.end_date],
+		dotScaleRange: [2, 6],
+		interaction: "mouseover",
+		layouts: [
+			{
+				label: "Storm Events by Year",
+				layout: "histogram_fixed_interval",
+				xVar: variables.year,
+				sortingVar: variables.start_date,
+				fixedStartVal: 1965
+			},
+			{
+				label: "Storm Events by Month",
+				layout: "histogram_fixed_interval",
+				xVar: variables.month,
+				sortingVar: variables.start_date,
+				maxWidth: 600,
+				axisLabelOverrideFunc: d => months[+d]
+			},
+		]
+	},
+	{
+		id: "#weather-eye__caddo__dot-chart", 
+		vizType: "dot_chart",
+		primaryDataSheet: "caddo",
+		colorSettings: { colorVar: variables.type, showLegend: true },
+		tooltipTitleVar: variables.type,
+		tooltipVars: [variables.fema_description, variables.start_date, variables.end_date],
+		dotScaleRange: [2, 5],
+		interaction: "mouseover",
+		layouts: [
+			{
+				label: "Storm Events by Year",
+				layout: "histogram_fixed_interval",
+				xVar: variables.year,
+				sortingVar: variables.start_date,
+				fixedStartVal: 1965
+			},
+			{
+				label: "Storm Events by Month",
+				layout: "histogram_fixed_interval",
+				xVar: variables.month,
+				sortingVar: variables.start_date,
+				maxWidth: 600,
+				axisLabelOverrideFunc: d => months[+d]
+			}
+		]
+	},
+	{
+		id: "#weather-eye__walsh__dot-chart", 
+		vizType: "dot_chart",
+		primaryDataSheet: "walsh",
+		colorSettings: { colorVar: variables.type, showLegend: true },
+		tooltipTitleVar: variables.type,
+		tooltipVars: [variables.fema_description, variables.start_date, variables.end_date],
+		dotScaleRange: [2, 6],
+		interaction: "mouseover",
+		layouts: [
+			{
+				label: "Storm Events by Year",
+				layout: "histogram_fixed_interval",
+				xVar: variables.year,
+				sortingVar: variables.start_date,
+				fixedStartVal: 1965
+			},
+			{
+				label: "Storm Events by Month",
+				layout: "histogram_fixed_interval",
+				xVar: variables.month,
+				sortingVar: variables.start_date,
+				maxWidth: 600,
+				axisLabelOverrideFunc: d => months[+d]
+			}
+		]
+	},
+	{
+		id: "#weather-eye__essex__dot-chart", 
+		vizType: "dot_chart",
+		primaryDataSheet: "essex",
+		colorSettings: { colorVar: variables.type, showLegend: true },
+		tooltipTitleVar: variables.type,
+		tooltipVars: [variables.fema_description, variables.start_date, variables.end_date],
+		dotScaleRange: [2, 6],
+		interaction: "mouseover",
+		layouts: [
+			{
+				label: "Storm Events by Year",
+				layout: "histogram_fixed_interval",
+				xVar: variables.year,
+				sortingVar: variables.start_date,
+				fixedStartVal: 1965
+			},
+			{
+				label: "Storm Events by Month",
+				layout: "histogram_fixed_interval",
+				xVar: variables.month,
+				sortingVar: variables.start_date,
+				maxWidth: 600,
+				axisLabelOverrideFunc: d => months[+d]
+			}
+		]
+	},
+	{
+		id: "#weather-eye__tulsa__dot-chart", 
+		vizType: "dot_chart",
+		primaryDataSheet: "tulsa",
+		colorSettings: { colorVar: variables.type, showLegend: true },
+		tooltipTitleVar: variables.type,
+		tooltipVars: [variables.fema_description, variables.start_date, variables.end_date],
+		dotScaleRange: [2, 6],
+		interaction: "mouseover",
+		layouts: [
+			{
+				label: "Storm Events by Year",
+				layout: "histogram_fixed_interval",
+				xVar: variables.year,
+				sortingVar: variables.start_date,
+				fixedStartVal: 1965
+			},
+			{
+				label: "Storm Events by Month",
+				layout: "histogram_fixed_interval",
+				xVar: variables.month,
+				sortingVar: variables.start_date,
+				maxWidth: 600,
+				axisLabelOverrideFunc: d => months[+d]
+			}
+		]
+	},
+	{
+		id: "#weather-eye__cumberland__dot-chart", 
+		vizType: "dot_chart",
+		primaryDataSheet: "cumberland",
+		colorSettings: { colorVar: variables.type, showLegend: true },
+		tooltipTitleVar: variables.type,
+		tooltipVars: [variables.fema_description, variables.start_date, variables.end_date],
+		dotScaleRange: [2, 6],
+		interaction: "mouseover",
+		layouts: [
+			{
+				label: "Storm Events by Year",
+				layout: "histogram_fixed_interval",
+				xVar: variables.year,
+				sortingVar: variables.start_date,
+				fixedStartVal: 1965
+			},
+			{
+				label: "Storm Events by Month",
+				layout: "histogram_fixed_interval",
+				xVar: variables.month,
+				sortingVar: variables.start_date,
+				maxWidth: 600,
+				axisLabelOverrideFunc: d => months[+d]
+			}
+		]
+	},
 	// // {
 	// // 	id: "#weather-eye__findings__complacency", 
 	// // 	vizType: "quote_scroller",
@@ -447,8 +409,7 @@ const reactVizSettingsList = [
 		primaryDataSheet: "storm_quotes",
 		categoryDescriptionSheet: "storm_quotes_category_descriptions",
 		categoryVar: variables.category,
-		showCategoryTitle: true,
-		expandable: true
+		showCategoryTitle: true
 	},
 ]
 

@@ -221,6 +221,7 @@ export class MapboxMap {
     setPopupDataBox() {
         this.dataBox = new PopupDataBox({
             id: this.id,
+            dataBoxBackgroundColor: this.dataBoxBackgroundColor,
             dataBoxVars: this.dataBoxVars
         });
     }

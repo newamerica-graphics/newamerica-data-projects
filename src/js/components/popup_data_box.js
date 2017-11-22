@@ -3,6 +3,8 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 import { formatValue } from "../helper_functions/format_value.js";
+import { colors } from "../helper_functions/colors.js";
+
 
 export class PopupDataBox {
 	constructor(componentSettings) {
@@ -11,6 +13,8 @@ export class PopupDataBox {
 		this.dataBox = d3.select(this.id)
 			.append("div")
 			.attr("class", "data-box")
+			.style("background-color", this.dataBoxBackgroundColor || "white")
+			.style("border-color", this.dataBoxBackgroundColor ? "white" : colors.grey.light)
 			.classed("hidden", true);
 
 		this.title = this.dataBox.append("h3")
