@@ -6,7 +6,7 @@
 	padding: 20px;
 	background-color: white;
     border: 1px solid palette-get(na-black-10);
-    min-width: 300px;
+    min-width: 230px;
     max-width: 40%;
 /*    max-height: 400px;*/
     overflow-y: scroll;
@@ -24,15 +24,15 @@
 
 	&__subtitle {
 		color: palette-get(na-black-40);
-        font-size: 14px;
+        font-size: 12px;
         padding-bottom: 10px;
         margin-bottom: 0px;
 	}
 
 	&__category-label {
 		font-weight: bold;
-        font-size: 14px;
-        padding: 10px 0px;
+        font-size: 12px;
+        padding: 7px 0px;
         margin-bottom: 0px;
         color: palette-get(na-black);
 	}
@@ -43,7 +43,8 @@
 	}
 
 	&__value-container {
-		padding-left: 5px;
+		padding: 4px 0px;
+		max-height: 20px;
 		&.hidden {
 			display: none;
 		}
@@ -51,8 +52,9 @@
 
 	&__value-label, &__value {
 		display: inline-block;
-		font-size: 14px;
+		font-size: 12px;
 		vertical-align: top;
+		margin-bottom: 0px;
 	}
 
 	&__value-label {

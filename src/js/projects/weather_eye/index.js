@@ -14,6 +14,7 @@ let variables = {
 
 	name: {"variable":"name", "displayName":"County", "format": "string"},
 	state: {"variable":"state", "displayName":"State", "format": "string"},
+	profile_link: {"variable":"profile_link", "displayName":"Profile Link", "format": "string"},
 	county_population: {"variable":"county_population", "displayName":"Population", "format": "number"},
 	white_perc: {"variable":"white_perc", "displayName":"% White", "format": "percent"},
 	black_perc: {"variable":"black_perc", "displayName":"% Black", "format": "percent"},
@@ -55,7 +56,13 @@ let vizSettingsList = [
         	[-124.7844079, 24.7433195],
         	[-66.9513812, 49.3457868]
         ],
-        widthHeightConversionFunc: w => { return w > 500 ? (3*w)/5 : 500} ,
+        widthHeightConversionFunc: w => { return w > 500 ? (3*w)/5 : 500},
+        overrideClickFunction: d => {
+        	console.log(d);
+        	if (d.profile_link) {
+        		window.location.href = d.profile_link
+        	}
+        },
         dataBoxBackgroundColor: "#e6e6e6",
         dataBoxVars: {
         	title: variables.name,
