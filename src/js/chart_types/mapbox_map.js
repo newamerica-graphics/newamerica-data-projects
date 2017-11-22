@@ -31,10 +31,12 @@ export class MapboxMap {
         
         Object.assign(this, vizSettings);
 
-        let mapContainer = d3.select(this.id).append("div")
+        this.mapContainer = d3.select(this.id).append("div")
             .attr("id", this.id.replace("#", "") + '-map-container')
             .style("width", "100%")
             .style("height", "700px");
+
+        this.setDimensions();
 
         Object.assign(this.mapboxSettings, {
             container: this.id.replace("#", "") + '-map-container',
@@ -47,12 +49,25 @@ export class MapboxMap {
 
         this.addControls();
 
+        if (this.hasHover) {
+            this.map.on('mousemove', (e) => {
+                let features = this.map.queryRenderedFeatures(e.point, { layers: ['points'] });
+                
+                if (!features.length) {
+                    this.map.setFilter("points-selected", ["==", "id", ""]);
+                    this.dataBox.hide();
+                    return;
+                }
+
+                this.map.setFilter("points-selected", ["==", "id", features[0].properties.id]);
+
+                this.dataBox.show(features[0].properties);
+            });
+        }
+
         this.map.on('click', (e) => {
-            console.log(e.point);
-            console.log(e);
             let features = this.map.queryRenderedFeatures(e.point, { layers: ['points'] });
             
-            console.log(features);
             if (!features.length) {
                 this.map.setFilter("points-selected", ["==", "id", ""]);
                 this.dataBox.hide();
@@ -72,40 +87,55 @@ export class MapboxMap {
 
     }
 
+    setDimensions() {
+        // let w = $(this.id).width();
+        // let h = this.widthHeightConversionFunc ? this.widthHeightConversionFunc() : 500;
+
+        // this.mapContainer.style("height", h + "px")
+    }
+
     render(data) {
+        this.data = data[this.primaryDataSheet]
         if (this.filterInitialDataBy) {
-            this.data = data[this.primaryDataSheet].filter((d) => { return d[this.filterInitialDataBy.field] == this.filterInitialDataBy.value; })
+            this.data = this.data.filter((d) => { return d[this.filterInitialDataBy.field] == this.filterInitialDataBy.value; })
         }
 
-        this.data = data[this.primaryDataSheet].filter((d) => { return d[this.radiusVar.variable] && Number(d[this.radiusVar.variable]) > 0 });
+        if (this.radiusVar) {
+            this.data = this.data.filter((d) => { return d[this.radiusVar.variable] && Number(d[this.radiusVar.variable]) > 0 });
+            this.setRadiusScale(this.data);
+        }
 
         console.log(this.data)
         this.setPopupDataBox();
-        this.setColorScale(this.data);
-        this.setRadiusScale(this.data);
 
-        this.addSlider();
-        this.slider.render(this.data);
+        if (this.colorVar) {
+            this.setColorScale(this.data);
+        }
 
-        this.addLegend();
+        if (this.sliderSettings) {
+            this.addSlider()
+            this.slider.render(this.data);
+        }
+
+        if (this.showLegend) {this.addLegend();}
 
         this.processData(this.data);
-        // this.map.on('load', () => {
+        this.map.on('load', () => {
             this.map.addSource("dataSource", this.source);
             this.map.addLayer({
                 "id": "points",
                 "type": "circle",
                 "source": "dataSource",
                 "paint": {
-                    'circle-color': {
+                    'circle-color': this.colorVar ? {
                         property: this.colorVar.variable,
                         type: 'categorical',
                         stops: this.colorStops
-                    },
-                    'circle-radius': {
+                    } : this.defaultColor,
+                    'circle-radius': this.radiusVar ? {
                         property: this.radiusVar.variable,
                         stops: this.radiusStops
-                    },
+                    } : this.defaultRadius,
                     'circle-stroke-color': "#ffffff",
                     'circle-stroke-width': 1,
                 }
@@ -116,21 +146,25 @@ export class MapboxMap {
                 "type": "circle",
                 "source": "dataSource",
                 "paint": {
-                    'circle-color': {
+                    'circle-color': this.colorVar ? {
                         property: this.colorVar.variable,
                         type: 'categorical',
                         stops: this.colorStops
-                    },
-                    'circle-radius': {
+                    } : this.defaultColor,
+                    'circle-radius': this.radiusVar ? {
                         property: this.radiusVar.variable,
                         stops: this.radiusStops
-                    },
+                    } : this.defaultRadius,
                     'circle-stroke-color': "#ffffff",
                     'circle-stroke-width': 5,
                 },
                 "filter": ["==", "id", ""]
             });
-        // });
+
+            if (this.fitBounds) {
+                this.map.fitBounds(this.fitBounds)
+            }
+        });
 
     }
 
@@ -272,7 +306,14 @@ export class MapboxMap {
     }
 
     resize() {
-        this.slider.resize();
+        this.setDimensions()
+        if (this.sliderSettings) {
+            this.slider.resize();
+        }
+
+        if (this.fitBounds) {
+            this.map.fitBounds(this.fitBounds)
+        }
     }
 
     changeValue(value) {

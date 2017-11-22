@@ -205,7 +205,7 @@ class DotChart extends React.Component {
                     return (
                         <Motion style={{y:spring(currLayout.yScale(d))}} key={d}>
                             {({y}) => {
-                                return <text className="dot-chart__axis-categorical__text" x={currLayoutSettings.leftMargin - 15} y={y + 1}>{d}</text>;
+                                return <text className="dot-chart__axis-categorical__text" x={0} y={y + 1}>{d}</text>;
                             }}
                         </Motion>
                     )

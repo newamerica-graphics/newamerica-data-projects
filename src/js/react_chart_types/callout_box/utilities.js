@@ -3,6 +3,9 @@ const d3 = require("d3");
 export const getValue = (variableSettings, data) => {
 	const { type, query, variable } = variableSettings;
 
+	console.log("in get value!")
+	console.log(data, variable)
+
 	switch (type) {
 		case "value":
 			if (query) {

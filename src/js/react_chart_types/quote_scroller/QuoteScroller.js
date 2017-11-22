@@ -7,6 +7,7 @@ import { colors } from "../../helper_functions/colors.js";
 import { formatValue } from "../../helper_functions/format_value.js";
 import { getColorScale } from "../../helper_functions/get_color_scale.js";
 
+import QuoteScrollerCategory from './QuoteScrollerCategory.js';
 import { Motion, spring } from 'react-motion';
 import { Axis, axisPropsFromBandedScale, BOTTOM, TOP } from 'react-d3-axis';
 
@@ -29,82 +30,27 @@ class QuoteScroller extends React.Component {
         this.dataNest = d3.nest()
             .key(d => d[vizSettings.categoryVar.variable])
             .entries(this.data)
-
-		this.resizeFunc = this.resize.bind(this);
-
-		this.state = {
-			width: 0,
-		}
 	}
 
-    getCurrWidth() {
-        return $(this.refs.renderingArea).width();
-    }
-
-    renderCategory(category, index) {
-        const {vizSettings} = this.props
-
-        let categoryDescription
-        if (this.categoryDescriptions) {
-            this.categoryDescriptions.forEach(d => {
-                if (d.category === category.key) {
-                    categoryDescription = d.description
-                }
-            })
-        }
-        return (
-            <div className="quote-scroller__category" key={index}>
-                {vizSettings.showCategoryTitle && <h3 className="quote-scroller__category__title">{category.key}</h3>}
-                {categoryDescription && <p className="quote-scroller__category__description">{categoryDescription}</p>}
-                <div className="quote-scroller__category__quotes">
-                    {category.values.map((d, i) => {
-                        return this.renderQuote(d, i);
-                    })}
-                </div>
-                {this.dataNest.length > 1 && <hr></hr>}
-            </div>
-        )
-    }
-
-    renderQuote(quote, index) {
-        let animationType;
-        if (index % 2 == 0) {
-            animationType = "fadeInLeft"
-        } else {
-            animationType = "fadeInRight"
-        }
-
-        return (
-            <div className="quote-scroller__quote" key={index} >
-                <ScrollAnimation animateIn={animationType} offset={50} duration={.75} animateOnce={true}>
-                    <p className="quote-scroller__quote__text" dangerouslySetInnerHTML={{__html: formatValue(quote.quote, "markdown")}}></p>
-                    <h5 className="quote-scroller__quote__source">{"- " + quote.source + ", " + quote.source_location}</h5>
-                </ScrollAnimation>
-            </div>
-        )
-    }
-
 	render() {
-
 		return (
 			<div className="quote-scroller">
-                {this.dataNest.map((category, i) => {
-                    return this.renderCategory(category, i);
+                {this.dataNest.map((categoryData, i) => {
+                    let categoryDescription
+                    
+                    if (this.categoryDescriptions) {
+                        this.categoryDescriptions.forEach(d => {
+                            if (d.category === categoryData.key) {
+                                categoryDescription = d.description
+                            }
+                        })
+                    }
+
+                    return <QuoteScrollerCategory categoryData={categoryData} categoryDescription={categoryDescription} key={i}/>
                 })}
             </div>
 		)
 	}
-
-	resize() {
-        let w = this.getCurrWidth();
-
-        this.state.currLayout.resize(w)
-
-        this.setState({
-          width: w,
-          height: w/2
-        })
-    }
 }
 
 export default QuoteScroller;

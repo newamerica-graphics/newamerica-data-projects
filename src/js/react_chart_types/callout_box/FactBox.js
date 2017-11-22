@@ -7,6 +7,8 @@ import { getValue } from "./utilities.js";
 
 const FactBox = ({variableSettings, data, format}) => {
 	let currDate = new Date();
+
+	console.log("in fact box")
 	
 	let value = getValue(variableSettings, data);
 
@@ -33,7 +35,6 @@ const FactBox = ({variableSettings, data, format}) => {
 					<ul className="callout-box__fact-box__sub-list">
 						{variableSettings.subVars.map((currVar) => {
 							let subValue = getValue(currVar, data);
-
 							return (
 								<li className="callout-box__fact-box__sub-list__item">
 									<h5 className="callout-box__fact-box__sub-label">{ currVar.label }</h5>

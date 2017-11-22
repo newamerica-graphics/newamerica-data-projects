@@ -1,6 +1,29 @@
 .quote-scroller {
 	&__category {
-		padding-bottom: 15px;
+		/*$transition: background-color 500ms ease-in-out;*/
+		padding: 0px 35px 0px 35px;
+		border-top: 1px solid palette-get(na-black-10);
+		cursor: pointer;
+		/*background-color: rgba(46, 188, 179, 0.05);*/
+
+		/*-webkit-transition: $transition;
+	    -moz-transition: $transition;
+	    -o-transition: $transition;
+	    transition: $transition;*/
+
+		&:last-child {
+			border-bottom: 1px solid palette-get(na-black-10);
+		}
+
+		&.hidden {
+			background-color: white;
+			&:hover  {
+				.quote-scroller__category__title {
+					color: palette-get(na-turquoise) !important;
+				}
+				/*background-color: rgba(46, 188, 179, 0.05);*/
+			}
+		}
 		
 		&__title, &__description {
 			max-width: 900px;
@@ -8,26 +31,95 @@
 			margin: auto;
 		}
 
+		@keyframes title-shrink {
+		    to {transform: scale(.90, .90);}
+		}
+		@keyframes title-expand {
+		    to {transform: scale(1.07, 1.07);}
+		}
+
 		&__title {
+			$transition: padding 100ms ease-in-out;
 			font-weight: bold;
-			color: palette-get(na-black);
+			color: palette-get(na-turquoise);
 			line-height: 1.4;
-			padding-bottom: 15px;
+			font-size: 22px;
+			padding: 35px 0px;
+
+			animation-name: title-expand;
+		    animation-duration: 0.22s;
+		    animation-fill-mode: both;
+
+			-webkit-transition: $transition;
+		    -moz-transition: $transition;
+		    -o-transition: $transition;
+		    transition: $transition;
+
+			.hidden & {
+				padding: 20px 0px;
+				line-height: 1.3;
+				color: palette-get(na-black);
+				animation-name: title-shrink;
+			    animation-duration: 0.2s;
+			    animation-fill-mode: both;
+			}
+		}
+
+		&__content {
+			$transition: max-height 750ms ease-in-out;
+			max-height: 10000px;
+			overflow: hidden;
+
+			-webkit-transition: $transition;
+		    -moz-transition: $transition;
+		    -o-transition: $transition;
+		    transition: $transition;
+
+			.hidden & {
+				padding-top: 0px;
+				max-height: 0;
+			}
 		}
 
 		&__description, &__description > * {
+			$transition: opacity 500ms ease-in-out 0ms;
 			line-height: 1.4 !important;
 			font-size: 15px !important;
 			color: palette-get(na-black) !important;
+			opacity: 1;
+
+			-webkit-transition: $transition;
+		    -moz-transition: $transition;
+		    -o-transition: $transition;
+		    transition: $transition;
+
+			.hidden & {
+				opacity: 0;
+			}
 		}
 
 		&__quotes {
-			padding-top: 30px;
+			padding: 30px 0px;
 		}
 	}
 
 	&__quote {
+		$transition: opacity 100ms ease-in-out 1s;
+		$transition-delay-offset: 200ms;
 		margin: 12px 0px;
+		opacity: 1;
+		animation-duration: 1s;
+  		
+
+		.hidden & {
+			opacity: 0;
+		}
+
+		-webkit-transition: $transition;
+	    -moz-transition: $transition;
+	    -o-transition: $transition;
+	    transition: $transition;
+
 		@include breakpoint(medium) {
 			width: 60%;
 			
@@ -62,5 +154,14 @@
 			background-color: palette-get(na-turquoise);
 			letter-spacing: .5px
 		}
+
+		&:nth-child(1) { animation-delay: $transition-delay-offset;}
+		&:nth-child(2) { animation-delay: 2*$transition-delay-offset;}
+		&:nth-child(3) { animation-delay: 3*$transition-delay-offset;}
+		&:nth-child(4) { animation-delay: 4*$transition-delay-offset;}
+		&:nth-child(5) { animation-delay: 5*$transition-delay-offset;}
+		&:nth-child(6) { animation-delay: 6*$transition-delay-offset;}
+		&:nth-child(7) { animation-delay: 7*$transition-delay-offset;}
+		&:nth-child(8) { animation-delay: 8*$transition-delay-offset;}
 	}
 }

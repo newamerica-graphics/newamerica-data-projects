@@ -205,13 +205,14 @@ let vizSettingsList = [
 		        	style: "mapbox://styles/newamericamapbox/ciynaplyx001k2sqepxshx05u",
 		        	center: [69.3451, 32.3753],
 		        	zoom: 5,
-		        	maxBounds: [
-		        		[55.00301398655583, 21.96600122382982],
-		        		[83.30379523654886, 39.012806004755106]
-		        	],
+		        	// maxBounds: [
+		        	// 	[55.00301398655583, 21.96600122382982],
+		        	// 	[83.30379523654886, 39.012806004755106]
+		        	// ],
 		        },
 		        colorVar: variables.president,
 		        radiusVar: variables.total_avg,
+		        showLegend: true,
 		        sliderSettings: {
 					sliderVar: variables.year,
 					showAllButton: true,
@@ -284,6 +285,7 @@ let vizSettingsList = [
 		        },
 		        colorVar: variables.president,
 		        radiusVar: variables.leaders_killed,
+		        showLegend: true,
 		        sliderSettings: {
 					sliderVar: variables.year,
 					showAllButton: true,
@@ -442,6 +444,7 @@ let vizSettingsList = [
 		        },
 		        colorVar: variables.strike_type,
 		        radiusVar: variables.total_avg,
+		        showLegend: true,
 		        sliderSettings: {
 					sliderVar: variables.year,
 					showAllButton: true,
@@ -509,6 +512,7 @@ let vizSettingsList = [
 		        },
 		        colorVar: variables.strike_type,
 		        radiusVar: variables.leaders_killed,
+		        showLegend: true,
 		        sliderSettings: {
 					sliderVar: variables.year,
 					showAllButton: true,
@@ -664,6 +668,7 @@ let vizSettingsList = [
 		        },
 		        colorVar: variables.strike_type,
 		        radiusVar: variables.total_avg,
+		        showLegend: true,
 		        sliderSettings: {
 					sliderVar: variables.year,
 					showAllButton: true,
@@ -731,6 +736,7 @@ let vizSettingsList = [
 		        },
 		        colorVar: variables.strike_type,
 		        radiusVar: variables.leaders_killed,
+		        showLegend: true,
 		        sliderSettings: {
 					sliderVar: variables.year,
 					showAllButton: true,
