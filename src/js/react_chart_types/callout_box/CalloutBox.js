@@ -23,24 +23,36 @@ class CalloutBox extends React.Component {
 		}
 		console.log(this.data)
 
+		if (props.vizSettings.filterInitialDataFunction) {
+			this.data = this.data.filter(props.vizSettings.filterInitialDataFunction)[0]
+			console.log(this.data)
+		}
+
+	}
+
+	renderSection(sectionSettings, i) {
+		return (
+			<div className="callout-box__section" key={i}>
+				{sectionSettings.title && <h3 className="callout-box__section__title">{sectionSettings.title}</h3>}
+				<div className={"callout-box__section__content children-" + sectionSettings.dataElements.length }>
+					{ sectionSettings.dataElements.map((dataElementSettings, i) => {
+						console.log(dataElementSettings)
+						return <CalloutBoxDataElement settings={dataElementSettings} data={this.data} fullDataObject={this.props.data} key={i} />
+					})}
+				</div>
+			</div>
+		)
 	}
 
 	render() {
-		const { sections } = this.props.vizSettings;
+		const {vizSettings} = this.props
 
 		return (
-			<div className="callout-box">
-				{ sections.map((sectionSettings) => {
-					console.log(sectionSettings)
+			<div className={"callout-box " + vizSettings.backgroundColor}>
+				{vizSettings.columns.map(columnSettings => {
 					return (
-						<div className="callout-box__section" key={sectionSettings.title}>
-							<h3 className="callout-box__section__title">{sectionSettings.title}</h3>
-							<div className={"callout-box__section__content children-" + sectionSettings.dataElements.length }>
-								{ sectionSettings.dataElements.map((dataElementSettings, i) => {
-									console.log(dataElementSettings)
-									return <CalloutBoxDataElement settings={dataElementSettings} data={this.data} key={i} />
-								})}
-							</div>
+						<div className="callout-box__column" style={{width: columnSettings.width}}>
+							{ columnSettings.sections.map((sectionSettings, i) => this.renderSection(sectionSettings, i)) }
 						</div>
 					)
 				})}

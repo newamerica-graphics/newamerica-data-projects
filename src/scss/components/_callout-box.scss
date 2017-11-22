@@ -1,8 +1,17 @@
 .callout-box {
-	background-color: palette-get(na-black);
-	color: palette-get(na-black-30);
+	&.black {
+		background-color: palette-get(na-black);
+		color: palette-get(na-black-30);
+	}
+
+	&.white {
+		background-color: white;
+		color: palette-get(na-black);
+	}
+
 	padding: 0px 0px;
 	font-size: 18px;
+	display: table;
 	@media all and (min-width: 900px) {
 		font-size: 2vw;
 		padding: 0px 0px;
@@ -11,13 +20,22 @@
 		font-size: 24px;
 	}
 
+	&__column {
+		display: table-cell;
+		vertical-align: top;
+		padding: 0px 20px;
+	}
+
 	&__section {
 		padding: .7em 0px;
 		&__title {
 			font-weight: bold;
 			text-decoration: underline;
 			font-size: .8em;
-			color: white;
+
+			.black & {
+				color: white;
+			}
 		}
 
 		&__content {
@@ -71,7 +89,7 @@
 			flex-flow: row wrap;
 			align-content: flex-start;
 
-			 .callout-box__fact-box {
+			.callout-box__fact-box {
 				display: inline-block;
 				padding: .1em .6em;
 				
@@ -80,11 +98,21 @@
 				&__value {
 					font-size: 2.2em;
 					font-family: 'Platform';
-					color: palette-get(na-black-30);
+					.black & {
+						color: white;
+						-webkit-text-fill-color: palette-get(na-black); /* Will override color (regardless of order) */
+					    -webkit-text-stroke-width: 1px;
+					    -webkit-text-stroke-color: palette-get(na-black-30);
+					}
+
+					.white & {
+						color: palette-get(na-black);
+						-webkit-text-fill-color: white; /* Will override color (regardless of order) */
+					    -webkit-text-stroke-width: 1px;
+					    -webkit-text-stroke-color: palette-get(na-black-40);
+					}
 					margin-bottom: 0px;
-				   -webkit-text-fill-color: palette-get(na-black); /* Will override color (regardless of order) */
-				   -webkit-text-stroke-width: 1px;
-				   -webkit-text-stroke-color: palette-get(na-black-30);
+				  
 				}
 
 				&__label {
@@ -108,10 +136,13 @@
 				&__value {
 					font-size: 1em;
 					font-family: 'Platform';
-					color: white;
+					
 					font-weight: bold;
 				   	float: right;
 				   	margin-top: .4em;
+				   	.black & {
+				   		color: white;
+				   	}
 				}
 
 				&__sub-list {
@@ -142,6 +173,32 @@
 				&__sub-label {
 					color: palette-get(na-black-40);
 					
+				}
+			}
+		}
+
+		&.vertical-outline {
+			.callout-box__fact-box {
+				display: block;
+				padding: .1em .6em;
+
+				&__value {
+					font-size: 2.2em;
+					font-family: 'Platform';
+					.black & {
+						color: white;
+						-webkit-text-fill-color: palette-get(na-black); /* Will override color (regardless of order) */
+					    -webkit-text-stroke-width: 1px;
+					    -webkit-text-stroke-color: palette-get(na-black-30);
+					}
+
+					.white & {
+						color: palette-get(na-black);
+						-webkit-text-fill-color: white; /* Will override color (regardless of order) */
+					    -webkit-text-stroke-width: 1px;
+					    -webkit-text-stroke-color: palette-get(na-black-40);
+					}
+					margin-bottom: 0px;
 				}
 			}
 		}
