@@ -11,14 +11,12 @@ const d3 = require("d3");
 
 const getRange = (start, end) => { return Array(end - start + 1).fill().map((_, idx) => start + idx) }
 
-const dotPadding = 2;
-
 class CategoryLayout {
 	constructor(params) {
 		Object.assign(this, params)
 		this.categoryVariable = this.layoutSettings.categoryVar.variable;
 
-		this.yScale = d3.scaleBand();
+		this.yScale = d3.scaleOrdinal();
 		this.xScale = d3.scaleLinear();
 
 		let categoryNest = d3.nest()
@@ -34,20 +32,27 @@ class CategoryLayout {
 
 	resize(width, dotRadius) {
 		this.dotRadius = dotRadius;
+		this.horizontalPadding = Math.max(2, dotRadius/6);
 
-		this.maxDotsPerRow = Math.floor((width - this.layoutSettings.leftMargin)/((this.dotRadius + dotPadding) * 2))
-
-		console.log(this.maxDotsPerRow)
+		this.maxDotsPerRow = Math.floor((width - this.layoutSettings.leftMargin)/((this.dotRadius + this.horizontalPadding) * 2))
+		this.maxDotsPerRow = this.maxDotsPerRow == 0 ? 1 : this.maxDotsPerRow
 
 		this.setYScale();
 	}
 
 	setYScale() {
-		this.height = this.sortedCategoryVals.length * this.layoutSettings.catRowHeight
+		let runningYTotal = this.dotRadius + this.horizontalPadding;
+		let currY = runningYTotal;
 
-		console.log(this.height)
+		this.yScale.range(this.sortedCategoryVals.map((d, i) => {
+			currY = runningYTotal
+			let numRows = Math.ceil(d.values.length/this.maxDotsPerRow)
+			runningYTotal += numRows * ((this.dotRadius + this.horizontalPadding) * 2) + this.layoutSettings.verticalPadding
 
-		this.yScale.range([10, this.height])
+			return currY;
+		}))
+
+		this.height = currY
 	}
 
 	renderDot(d) {
@@ -69,16 +74,14 @@ class CategoryLayout {
 				}
 			})
 
-			if (xIndex > this.maxDotsPerRow) {
+			if (xIndex >= (this.maxDotsPerRow - 1)) {
 				let whichAdditionalRow = Math.floor(xIndex/this.maxDotsPerRow);
 
-				console.log(whichAdditionalRow);
-				yPos += whichAdditionalRow*((this.dotRadius + dotPadding) * 2)
-				xIndex = (xIndex % this.maxDotsPerRow) - 1
-				console.log(xIndex)
+				yPos += whichAdditionalRow*((this.dotRadius + this.horizontalPadding) * 2)
+				xIndex = xIndex % this.maxDotsPerRow
 			} 
 			
-			xPos = this.layoutSettings.leftMargin + xIndex * (this.dotRadius + dotPadding) * 2
+			xPos = this.layoutSettings.leftMargin + xIndex * (this.dotRadius + this.horizontalPadding) * 2
 		}
 		return {x: spring(xPos), y: spring(yPos)}
 	}

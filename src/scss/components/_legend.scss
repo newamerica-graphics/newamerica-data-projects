@@ -57,31 +57,31 @@
 		display: table;
 
 		&.categorical {
-			text-align: left !important;
-			@include breakpoint(medium) {
+			/*text-align: left !important;*/
+			/*@include breakpoint(medium) {*/
 				text-align: center !important;
-			}
+			/*}*/
 
 			.legend__cell {
-				display: block !important;
-				@include breakpoint(medium) {
+				/*display: block !important;*/
+				/*@include breakpoint(medium) {*/
 					display: inline-block !important;
-				}
+				/*}*/
 			}
 
 			.legend__cell-list {
-				text-align: left;
-				@include breakpoint(medium) {
+				/*text-align: left;*/
+				/*@include breakpoint(medium) {*/
 					text-align: center;
-				}
+				/*}*/
 			}
 
 			.legend__cell__label {
-				max-width: calc(100% - 10px);
+				/*max-width: calc(100% - 10px);*/
 
-				@include breakpoint(medium) {
+				/*@include breakpoint(medium) {*/
 					max-width: none;
-				}
+				/*}*/
 			}
 		}
 
@@ -191,7 +191,7 @@
 		}
 
 		&__color-swatch-container {
-			margin-top: 8px;
+			margin-top: 11px;
 			vertical-align: top;
 		}
 
@@ -215,6 +215,7 @@
 		&.disabled {
 			.legend__cell__color-swatch {
 				fill: palette-get(na-black-10);
+				stroke: none !important;
 			}
 			.legend__cell__label, .legend__cell__val-count {
 				color: palette-get(na-black-10) !important;

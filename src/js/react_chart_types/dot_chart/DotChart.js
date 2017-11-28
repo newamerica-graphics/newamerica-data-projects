@@ -45,7 +45,6 @@ class DotChart extends React.Component {
 
         this.dotRadiusScale = d3.scaleLinear().domain([350, 1050]).range(vizSettings.dotScaleRange).clamp(true)
 
-        console.log("initialized")
 		this.state = {
             currLayoutSettings: vizSettings.layouts[0],
 			currLayout: null,
@@ -140,11 +139,7 @@ class DotChart extends React.Component {
             let extents = d3.extent(this.state.currDataShown, d => d.year_month)
             extents = currLayoutSettings.fixedStartVal ? [currLayoutSettings.fixedStartVal, extents[1]] : extents
 
-            console.log(extents)
-
             extents = extents.map(d => Number(d.toString().slice(0,4)))
-
-            console.log(extents)
 
             let range = getRange(extents[0], extents[1])
             range = range.map(d => d + "01")
@@ -166,8 +161,6 @@ class DotChart extends React.Component {
             let extents = d3.extent(this.state.currDataShown, d => +d[currLayoutSettings.xVar.variable])
             let domainExtent = extents[1] - extents[0]
             let tickInterval = Math.ceil((domainExtent * 80)/width)
-
-            console.log(domainExtent, tickInterval, width)
 
             return (
                 <Motion style={{currTransform: spring(currLayout.height)}} >
@@ -329,7 +322,6 @@ class DotChart extends React.Component {
 	resize() {
         let w = this.getCurrWidth();
 
-        console.log(w)
         this.dotRadius = this.dotRadiusScale(w)
 
         this.state.currLayout.resize(w, this.dotRadius)

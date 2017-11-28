@@ -1,4 +1,5 @@
 .callout-box {
+	width: 100%;
 	&.black {
 		background-color: palette-get(na-black);
 		color: palette-get(na-black-30);
@@ -12,12 +13,12 @@
 	padding: 0px 0px;
 	font-size: 18px;
 	display: table;
-	@media all and (min-width: 900px) {
+	@media all and (min-width: 850px) {
 		font-size: 2vw;
 		padding: 0px 0px;
 	}
-	@media all and (min-width: 1250px) {
-		font-size: 24px;
+	@media all and (min-width: 1050px) {
+		font-size: 21px;
 	}
 
 	&__column {
@@ -27,6 +28,7 @@
 
 		&.full-width {
 			display: table-row !important;
+			width: 100% !important;
 		}
 	}
 
@@ -154,6 +156,12 @@
 				   	}
 				}
 
+				&__label {
+					.white & {
+						color: palette-get(na-black-40);
+					}
+				}
+
 				&__sub-list {
 					margin-bottom: 10px;
 					&__item {
@@ -191,8 +199,12 @@
 				display: block;
 				padding: .1em .6em;
 
+				.full-width & {
+					padding-left: 0px;
+				}
+
 				&__value {
-					font-size: 1.4em;
+					font-size: 1.8em;
 					font-family: 'Platform';
 
 					@media all and (min-width: 800px) {
@@ -209,9 +221,15 @@
 						color: palette-get(na-black);
 						-webkit-text-fill-color: white; /* Will override color (regardless of order) */
 					    -webkit-text-stroke-width: 1px;
-					    -webkit-text-stroke-color: palette-get(na-black-40);
+					    -webkit-text-stroke-color: palette-get(na-black);
 					}
 					margin-bottom: 0px;
+				}
+
+				&__label {
+					.white & {
+						color: palette-get(na-black-40);
+					}
 				}
 			}
 		}
@@ -256,5 +274,12 @@
 		&__label {
 			border-bottom: 1px solid palette-get(na-black-40);
 		}
+	}
+
+	.dot-chart__axis-categorical__text {
+		font-size: .6em !important;
+	    text-transform: uppercase !important;
+	    letter-spacing: 1px !important;
+	    fill: palette-get(na-black-40) !important;
 	}
 }
