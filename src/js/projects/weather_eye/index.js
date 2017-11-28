@@ -670,7 +670,7 @@ const reactVizSettingsList = [
 		categoryDescriptionSheet: "storm_quotes_category_descriptions",
 		categoryVar: variables.category,
 		showCategoryTitle: true
-	},
+	}
 ]
 
 let projectSettings = {
