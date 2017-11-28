@@ -17,6 +17,7 @@ import CategoryLayout from './CategoryLayout.js';
 
 import { Motion, spring } from 'react-motion';
 import { Axis, axisPropsFromBandedScale, BOTTOM, TOP } from 'react-d3-axis';
+import $ from 'jquery';
 
 const getRange = (start, end) => { return Array(end - start + 1).fill().map((_, idx) => start + idx) }
 
@@ -327,6 +328,8 @@ class DotChart extends React.Component {
 
 	resize() {
         let w = this.getCurrWidth();
+
+        console.log(w)
         this.dotRadius = this.dotRadiusScale(w)
 
         this.state.currLayout.resize(w, this.dotRadius)

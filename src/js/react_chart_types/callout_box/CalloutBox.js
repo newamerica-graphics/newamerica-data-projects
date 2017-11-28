@@ -7,6 +7,7 @@ import { formatValue } from "../../helper_functions/format_value.js";
 import CalloutBoxDataElement from './CalloutBoxDataElement.js';
 
 const d3 = require("d3");
+import $ from 'jquery';
 
 class CalloutBox extends React.Component {
 	constructor(props) {
@@ -22,13 +23,28 @@ class CalloutBox extends React.Component {
 			})
 		}
 		console.log(this.data)
+		this.resizeFunc = this.resize.bind(this);
 
 		if (props.vizSettings.filterInitialDataFunction) {
 			this.data = this.data.filter(props.vizSettings.filterInitialDataFunction)[0]
 			console.log(this.data)
 		}
 
+		this.state = {
+			width: 1000
+		}
+
 	}
+
+	componentDidMount() {
+		$(window).resize(this.resizeFunc);
+
+		this.resize()
+	}
+
+	getCurrWidth() {
+        return $(this.refs.renderingArea).width();
+    }
 
 	renderSection(sectionSettings, i) {
 		return (
@@ -48,10 +64,15 @@ class CalloutBox extends React.Component {
 		const {vizSettings} = this.props
 
 		return (
-			<div className={"callout-box " + vizSettings.backgroundColor}>
+			<div className={"callout-box " + vizSettings.backgroundColor} ref="renderingArea">
 				{vizSettings.columns.map(columnSettings => {
+					console.log(columnSettings.fullWidthBreakpoint, this.state.width)
+					let classList = "callout-box__column"
+					if (columnSettings.fullWidthBreakpoint && this.state.width <= columnSettings.fullWidthBreakpoint) {
+						classList += " full-width";
+					}
 					return (
-						<div className="callout-box__column" style={{width: columnSettings.width}}>
+						<div className={classList} style={{width: columnSettings.width}}>
 							{ columnSettings.sections.map((sectionSettings, i) => this.renderSection(sectionSettings, i)) }
 						</div>
 					)
@@ -59,6 +80,16 @@ class CalloutBox extends React.Component {
 			</div>
 		)
 	}
+
+	resize() {
+        let w = this.getCurrWidth();
+
+        console.log(w)
+
+        this.setState({
+          width: w,
+        })
+    }
 }
 
 export default CalloutBox;

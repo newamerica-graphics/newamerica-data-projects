@@ -23,19 +23,21 @@ class CategoryLayout {
 
 		let categoryNest = d3.nest()
 			.key((d) => { return d[this.categoryVariable]})
-			.sortValues((a, b) => { return new Date(a.date) - new Date(b.date)})
+			.sortValues(this.layoutSettings.sortCategoryValsFunction)
 			.entries(this.data)
 
 		this.sortedCategoryVals = categoryNest.sort((a, b) => { return b.values.length - a.values.length})
 
 		this.yScale.domain(this.sortedCategoryVals.map(d => d.key))
-		this.setYScale()
+		this.resize(this.width, this.dotRadius)
 	}
 
 	resize(width, dotRadius) {
-		this.width = width;
+		this.dotRadius = dotRadius;
 
-		this.dotRadius = dotRadius
+		this.maxDotsPerRow = Math.floor((width - this.layoutSettings.leftMargin)/((this.dotRadius + dotPadding) * 2))
+
+		console.log(this.maxDotsPerRow)
 
 		this.setYScale();
 	}
@@ -66,6 +68,16 @@ class CategoryLayout {
 					return;
 				}
 			})
+
+			if (xIndex > this.maxDotsPerRow) {
+				let whichAdditionalRow = Math.floor(xIndex/this.maxDotsPerRow);
+
+				console.log(whichAdditionalRow);
+				yPos += whichAdditionalRow*((this.dotRadius + dotPadding) * 2)
+				xIndex = (xIndex % this.maxDotsPerRow) - 1
+				console.log(xIndex)
+			} 
+			
 			xPos = this.layoutSettings.leftMargin + xIndex * (this.dotRadius + dotPadding) * 2
 		}
 		return {x: spring(xPos), y: spring(yPos)}
