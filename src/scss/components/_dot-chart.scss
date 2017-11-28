@@ -1,4 +1,5 @@
 .dot-chart {
+	position: relative;
 	&__axis-categorical__text {
 		fill: palette-get(na-black-40);
 		font-size: 14px;

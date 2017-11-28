@@ -34,7 +34,6 @@ export class MapboxMap {
         this.mapContainer = d3.select(this.id).append("div")
             .attr("id", this.id.replace("#", "") + '-map-container')
             .style("width", "100%")
-            .style("height", "700px");
 
         this.setDimensions();
 
@@ -48,50 +47,13 @@ export class MapboxMap {
         this.map = new mapboxgl.Map(this.mapboxSettings);
 
         this.addControls();
-
-        if (this.hasHover) {
-            this.map.on('mousemove', (e) => {
-                let features = this.map.queryRenderedFeatures(e.point, { layers: ['points'] });
-                
-                if (!features.length) {
-                    this.map.setFilter("points-selected", ["==", "id", ""]);
-                    this.dataBox.hide();
-                    return;
-                }
-
-                this.map.setFilter("points-selected", ["==", "id", features[0].properties.id]);
-
-                this.dataBox.show(features[0].properties);
-            });
-        }
-
-        this.map.on('click', (e) => {
-            let features = this.map.queryRenderedFeatures(e.point, { layers: ['points'] });
-            
-            if (!features.length) {
-                this.map.setFilter("points-selected", ["==", "id", ""]);
-                this.dataBox.hide();
-                return;
-            }
-
-            this.map.setFilter("points-selected", ["==", "id", features[0].properties.id]);
-
-            this.dataBox.show(features[0].properties);
-            
-            let newZoom = this.map.getZoom() < 7 ? 7 : this.map.getZoom();
-            this.map.flyTo({
-                center: e.lngLat,
-                zoom: newZoom
-            });
-        });
-
     }
 
     setDimensions() {
-        // let w = $(this.id).width();
-        // let h = this.widthHeightConversionFunc ? this.widthHeightConversionFunc() : 500;
+        this.w = $(this.id).width();
+        this.h = this.widthHeightConversionFunc ? this.widthHeightConversionFunc(this.w) : 500;
 
-        // this.mapContainer.style("height", h + "px")
+        this.mapContainer.style("height", this.h + "px")
     }
 
     render(data) {
@@ -118,6 +80,12 @@ export class MapboxMap {
         }
 
         if (this.showLegend) {this.addLegend();}
+
+        if (this.overrideClickFunction) {
+            this.clickPrompt = this.mapContainer.append("h3")
+                .attr("class", "mapbox-map__click-prompt hidden")
+                .text("Click to Visit County Profile");
+        }
 
         this.processData(this.data);
         this.map.on('load', () => {
@@ -161,9 +129,59 @@ export class MapboxMap {
                 "filter": ["==", "id", ""]
             });
 
-            if (this.fitBounds) {
+            if (this.fitBounds && this.w > 600) {
                 this.map.fitBounds(this.fitBounds)
             }
+
+            if (this.hasHover) {
+                this.map.on('mousemove', (e) => {
+                    let features = this.map.queryRenderedFeatures(e.point, { layers: ['points'] });
+                    
+                    console.log(this.clickPrompt)
+
+                    if (!features.length) {
+                        this.map.setFilter("points-selected", ["==", "id", ""]);
+                        this.dataBox.hide();
+                        if (this.clickPrompt) { this.clickPrompt.classed("hidden", true); }
+                        return;
+                    }
+
+                    this.map.setFilter("points-selected", ["==", "id", features[0].properties.id]);
+
+                    this.dataBox.show(features[0].properties, this.h);
+
+                    if (this.overrideClickFunction) {
+                        this.clickPrompt
+                            .classed("hidden", false)
+                            .style("top", (e.point.y + 20) + "px")
+                            .style("left", (e.point.x - 55) + "px")
+                    }
+                });
+            }
+
+            this.map.on('click', (e) => {
+                let features = this.map.queryRenderedFeatures(e.point, { layers: ['points'] });
+                
+                if (!features.length) {
+                    this.map.setFilter("points-selected", ["==", "id", ""]);
+                    this.dataBox.hide();
+                    return;
+                }
+
+                this.map.setFilter("points-selected", ["==", "id", features[0].properties.id]);
+
+                if (this.overrideClickFunction) {
+                    this.overrideClickFunction(features[0].properties)
+                } else {
+                    this.dataBox.show(features[0].properties, this.h);
+                    
+                    let newZoom = this.map.getZoom() < 7 ? 7 : this.map.getZoom();
+                    this.map.flyTo({
+                        center: e.lngLat,
+                        zoom: newZoom
+                    });
+                }
+            });
         });
 
     }
@@ -221,6 +239,7 @@ export class MapboxMap {
     setPopupDataBox() {
         this.dataBox = new PopupDataBox({
             id: this.id,
+            dataBoxBackgroundColor: this.dataBoxBackgroundColor,
             dataBoxVars: this.dataBoxVars
         });
     }
@@ -311,7 +330,7 @@ export class MapboxMap {
             this.slider.resize();
         }
 
-        if (this.fitBounds) {
+        if (this.fitBounds && this.w > 600) {
             this.map.fitBounds(this.fitBounds)
         }
     }

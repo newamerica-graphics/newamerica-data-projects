@@ -1,10 +1,15 @@
 const d3 = require("d3");
 
+import { formatValue } from "../../helper_functions/format_value.js";
+
+
 export const getValue = (variableSettings, data) => {
 	const { type, query, variable } = variableSettings;
 
 	console.log("in get value!")
 	console.log(data, variable)
+
+	let retVal;
 
 	switch (type) {
 		case "value":
@@ -12,13 +17,13 @@ export const getValue = (variableSettings, data) => {
 				if (query.operation == "max") {
 					let sortedData = data.sort((a, b) => {return Date.parse(b[query.varName]) - Date.parse(a[query.varName]); });
 					
-					return sortedData[0][variable.variable];
+					return formatValue(sortedData[0][variable.variable], variable.format);
 				}
 			} else {
-				return data[variable.variable];
+				return formatValue(data[variable.variable], variable.format);
 			}
 		case "sum":
-			return d3.sum(data, (d) => { return d[variable.variable]; });
+			return formatValue(d3.sum(data, (d) => { return d[variable.variable]; }), variable.format);
 
 		case "count":
 			if (query) {

@@ -39,15 +39,15 @@
 		}
 
 		&__title {
-			$transition: padding 100ms ease-in-out;
+			$transition: padding 100ms linear;
 			font-weight: bold;
 			color: palette-get(na-turquoise);
 			line-height: 1.4;
-			font-size: 22px;
+			font-size: 20px;
 			padding: 35px 0px;
 
 			animation-name: title-expand;
-		    animation-duration: 0.22s;
+		    animation-duration: 0.17s;
 		    animation-fill-mode: both;
 
 			-webkit-transition: $transition;

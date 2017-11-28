@@ -135,7 +135,18 @@
 		        background: palette-get(na-dark-turquoise);
 		    }
 		}
+
+
 	}
+
+    &__click-prompt {
+        font-size: 10px;
+        color: white;
+        position: absolute;
+        &.hidden {
+            display: none;
+        }
+    }
 
 	&__inset-container {
         margin-top: 7px;

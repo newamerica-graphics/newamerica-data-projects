@@ -3,6 +3,8 @@ import $ from 'jquery';
 let d3 = require("d3");
 
 import { formatValue } from "../helper_functions/format_value.js";
+import { colors } from "../helper_functions/colors.js";
+
 
 export class PopupDataBox {
 	constructor(componentSettings) {
@@ -11,6 +13,8 @@ export class PopupDataBox {
 		this.dataBox = d3.select(this.id)
 			.append("div")
 			.attr("class", "data-box")
+			.style("background-color", this.dataBoxBackgroundColor || "white")
+			.style("border-color", this.dataBoxBackgroundColor ? "white" : colors.grey.light)
 			.classed("hidden", true);
 
 		this.title = this.dataBox.append("h3")
@@ -25,9 +29,11 @@ export class PopupDataBox {
 		for (let category of this.dataBoxVars.categories) {
 			console.log(category);
 
-			this.categoryLabels[category.label] = this.dataBox.append("h5")
-				.attr("class", "data-box__category-label")
-				.text(category.label);
+			if (category.label) {
+				this.categoryLabels[category.label] = this.dataBox.append("h5")
+					.attr("class", "data-box__category-label")
+					.text(category.label);
+			}
 
 			let categoryContainer = this.dataBox.append("div")
 				.attr("class", "data-box__category-container");
@@ -48,11 +54,15 @@ export class PopupDataBox {
 		}
 	}
 
-	show(featureProps) {
+	show(featureProps, maxHeight) {
 		console.log("showing data box");
-		console.log(featureProps);
+		console.log(maxHeight);
 
-		this.dataBox.classed("hidden", false);
+		this.dataBox.classed("hidden", false)
+
+		if (maxHeight) {
+			this.dataBox.style("max-height", (maxHeight - 25) + "px")
+		}
 
 		this.title
 			.text(formatValue(featureProps[this.dataBoxVars.title.variable], this.dataBoxVars.title.format));
@@ -95,14 +105,15 @@ export class PopupDataBox {
 				}
 				
 			}
-			console.log(this.categoryContainers);
-			console.log("has vals?", hasVals, category);
-			if (!hasVals) {
-				this.categoryLabels[category.label]
-					.style("display", "none");
-			} else {
-				this.categoryLabels[category.label]
-					.style("display", "block");
+
+			if (category.label) {
+				if (!hasVals) {
+					this.categoryLabels[category.label]
+						.style("display", "none");
+				} else {
+					this.categoryLabels[category.label]
+						.style("display", "block");
+				}
 			}
 		}
 

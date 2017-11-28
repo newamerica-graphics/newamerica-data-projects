@@ -15,7 +15,6 @@ const verticalPadding = 3;
 class HistogramFixedIntervalLayout {
 	constructor(params) {
 		Object.assign(this, params)
-		console.log(params)
 		this.xScale = d3.scalePoint()
 		this.setWidth(this.width)
 		
@@ -24,9 +23,7 @@ class HistogramFixedIntervalLayout {
 
 		let filledOutExtents = getRange(this.extents[0], this.extents[1])
 
-		console.log(filledOutExtents)
 		filledOutExtents = this.layoutSettings.isYearMonth ? filledOutExtents.filter(d => {
-			console.log(d)
 			return Number(d.toString().slice(-2)) <= 12 && Number(d.toString().slice(-2)) > 0
 		}) : filledOutExtents
 
@@ -48,9 +45,7 @@ class HistogramFixedIntervalLayout {
 			.entries(this.data)
 
 		this.maxColCount = d3.max(this.dataNest, (d) => { return d.values.length});
-		console.log(this.maxColCount)
 		this.height = (this.maxColCount)*(this.dotRadius*2 + verticalPadding) + verticalPadding
-		console.log(this.height)
 	}
 
 	resize(width, dotRadius) {
