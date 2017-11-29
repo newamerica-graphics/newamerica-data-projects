@@ -154,6 +154,9 @@ class DotChart extends React.Component {
                                 <g className="dot-chart__axis-time" style={{transform: "translateY(" + currTransform + "px)"}}>
                                     <Axis {...axisPropsFromBandedScale(currLayout.xScale)} values={range} format={d => d.slice(0,4)} style={{orient: BOTTOM}} />
                                 </g>
+                                <g className="dot-chart__axis-time" style={{transform: "translateY(" + (currTransform + 27) + "px)"}}>
+                                    <Axis {...axisPropsFromBandedScale(currLayout.xScale)} values={range} format={d => ""} style={{orient: TOP}} />
+                                </g>
                             </g>
                         )
                     }}
@@ -186,7 +189,7 @@ class DotChart extends React.Component {
             <Motion style={{currTransform: spring(currLayout.height + 40)}} >
                 {({currTransform}) => {
                     return (
-                        <HistogramAnnotations data={this.props.data[currLayoutSettings.annotationSheet]} scale={currLayout.axisScale} width={this.state.width} />
+                        <HistogramAnnotations data={this.props.data[currLayoutSettings.annotationSheet]} scale={currLayout.xScale} isYearMonth={currLayoutSettings.isYearMonth} width={this.state.width} />
                     )
                 }}
             </Motion>

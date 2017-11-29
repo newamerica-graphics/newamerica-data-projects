@@ -8,6 +8,9 @@ let Select = require('react-select');
 
 const d3 = require("d3");
 
+const innerPadding = 5,
+	outerPadding = 2;
+
 class HistogramAnnotations extends React.Component {
 	constructor(props) {
 		super(props)
@@ -36,33 +39,45 @@ class HistogramAnnotations extends React.Component {
 		this.rows = [];
 		this.rows[0] = [];
 
+		console.log(scale.domain(), scale.range())
+
 		this.sortedData.map((d, i) => {
 			let textElem = this.refs[i];
 			let textBounds = textElem.getBBox();
-			console.log(textBounds)
-			scaledXVal = scale(new Date(d.date))
-
-			if (scaledXVal < 0 || scaledXVal > scale.range()[1]) {
-				return d;
+			if (this.props.isYearMonth) {
+				scaledXVal = scale(d.year_month)
+			} else {
+				scaledXVal = scale(new Date(d.date))
 			}
 
-			startXPos = scaledXVal - textBounds.width/2
-			endXPos = startXPos + textBounds.width;
+			// if (scaledXVal < 0 || scaledXVal > scale.range()[1]) {
+			// 	return d;
+			// }
 
-			console.log(startXPos, endXPos)
+			startXPos = scaledXVal - textBounds.width/2 - innerPadding
+			endXPos = startXPos + textBounds.width + 2*innerPadding;
 
 			if (endXPos > width) {
 				startXPos = width - textBounds.width;
 				endXPos = width;
 			}
 
-			d.yPos = 20 * this.calcYIndex(startXPos, endXPos) + 10;
+			console.log(d)
+			console.log(this.rows)
+			console.log(startXPos, endXPos)
+
+			let yIndex = this.calcYIndex(startXPos, endXPos)
+
+			console.log(yIndex)
+
+			d.yPos = 25 * yIndex + 10;
 			d.startXPos = startXPos;
+			d.endXPos = endXPos;
 
 			return d;
 		})
 
-		this.height = this.rows.length * 20 + 10;
+		this.height = this.rows.length * 25 + 10;
 	}
 
 	calcYIndex(startXPos, endXPos) {	
@@ -74,7 +89,8 @@ class HistogramAnnotations extends React.Component {
 			for (let rowInterval of row) {
 				// check if start or end position overlaps with interval
 				if ((startXPos >= rowInterval.start && startXPos <= rowInterval.end) || 
-					(endXPos >= rowInterval.start && endXPos <= rowInterval.end)) {
+					(endXPos >= rowInterval.start && endXPos <= rowInterval.end) ||
+					(startXPos <= rowInterval.start)) {
 					// if overlap, breaks loop, moves to next row
 					foundOverlap = true;
 					break;
@@ -89,30 +105,41 @@ class HistogramAnnotations extends React.Component {
 		}
 		// could not place in current rows, adding new row
 		this.rows.push([{start:startXPos, end:endXPos}]);
+
 		return i;
 	}
 
+
 	renderAnnotationText(d, i) {
-		if (!d.startXPos || !d.yPos) { 
-			return <text className="dot-chart__histogram-annotation__text" ref={i}></text>; 
-		}
+		// if (!d.startXPos || !d.yPos) { 
+		// 	return <text className="dot-chart__histogram-annotation__text" ref={i}></text>; 
+		// }
 		let xPos = d.startXPos || 0,
-			yPos = d.yPos + 10 || 0
+			yPos = d.yPos || 0
 		console.log(d)
 
 		return (
-			<text className="dot-chart__histogram-annotation__text" ref={i} x={xPos} y={yPos}>{d.text}</text>
+			<g>
+				<rect className="dot-chart__histogram-annotation__box" x={xPos} width={d.endXPos - xPos} y={yPos} height={20} />
+				<text className="dot-chart__histogram-annotation__text" ref={i} x={xPos + innerPadding} y={yPos + 14}>{d.text}</text>
+			</g>
 		)
 	}
 
 	renderAnnotationLine(d) {
-		if (!d.startXPos || !d.yPos) { 
-			return <line className="dot-chart__histogram-annotation__line" />; 
-		}
+		// if (!d.startXPos || !d.yPos) { 
+		// 	return <line className="dot-chart__histogram-annotation__line" />; 
+		// }
 		const { scale } = this.props;
 
-		let xPos = scale(new Date(d.date)),
+		let xPos,
 			yPos = d.yPos || 0
+
+		if (this.props.isYearMonth) {
+			xPos = scale(d.year_month)
+		} else {
+			xPos = scale(new Date(d.date))
+		}
 		console.log(d)
 
 		return (
@@ -126,8 +153,8 @@ class HistogramAnnotations extends React.Component {
 		
 		return (
 			<svg width="100%" height={this.height} transform="translate(0, -10)">
-				{this.sortedData.map((d, i) => this.renderAnnotationText(d, i))}
 				{this.sortedData.map((d, i) => this.renderAnnotationLine(d, i))}
+				{this.sortedData.map((d, i) => this.renderAnnotationText(d, i))}
 			</svg>
 		)
 	}

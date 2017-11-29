@@ -60,8 +60,13 @@
 			fill: palette-get(na-black-70);
 		}
 
+		&__box {
+			fill: white;
+			stroke: palette-get(na-black-40);
+		}
+
 		&__line {
-			stroke: palette-get(na-black);
+			stroke: palette-get(na-black-40);
 			stroke-width: 1px;
 		}
 	}
