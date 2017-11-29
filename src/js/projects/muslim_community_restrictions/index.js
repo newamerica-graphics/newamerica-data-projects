@@ -4,7 +4,7 @@ import { colors } from "../../helper_functions/colors.js";
 
 
 let variables = {
-	category: {"variable":"category", "displayName":"Category", "format": "string", "scaleType":"categorical", "customDomain":["Anti-Sharia Legislation", "Anti-Refugee Legislation and Actions", "Opposition to Mosques, Muslim Cemeteries, and Islamic Schools", "Anti-Muslim Actions by Elected or Appointed Officials", "Anti-Muslim Hate Incidents"], "customRange":[colors.brown.light, colors.purple.light, colors.orange.light, colors.red.light, colors.blue.light]},
+	category: {"variable":"category", "displayName":"Category", "format": "string", "scaleType":"categorical", "customDomain":["Anti-Sharia Legislation", "Opposition to Refugee Resettlement", "Opposition to Mosques, Muslim Cemeteries & Schools", "Anti-Muslim Actions & Statements by Elected & Appointed Officials", "Media Reports of Anti-Muslim Violence & Crimes"], "customRange":[colors.brown.light, colors.purple.light, colors.orange.light, colors.red.light, colors.blue.light]},
 	state: {"variable":"state", "displayName":"State", "format": "string"},
 	title: {"variable":"title", "displayName":"Title", "format": "string"},
 	description: {"variable":"description", "displayName":"Description", "format": "string"},
@@ -18,22 +18,22 @@ let variables = {
 	population_muslim: {"variable":"population_muslim", "displayName":"Estimated Muslim Population", "format": "number"},
 	incidents_total: {"variable":"incidents_total", "displayName":"All Incidents", "category": "Total Incident Counts", "format": "number", "filterVal": null, "scaleType": "quantize", "numBins":4, "customRange":[colors.white, colors.turquoise.light, colors.turquoise.dark]},
 	incidents_anti_sharia: {"variable":"incidents_anti_sharia", "displayName":"Anti-Sharia Legislation", "category": "Total Incident Counts", "format": "number", "filterVal": "Anti-Sharia Legislation","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.orange.light, colors.orange.dark]},
-	incidents_anti_refugee: {"variable":"incidents_anti_refugee", "displayName":"Anti-Refugee Legislation and Actions", "category": "Total Incident Counts", "format": "number", "filterVal": "Anti-Refugee Legislation and Actions","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.purple.light, colors.purple.dark]},
-	incidents_anti_construction: {"variable":"incidents_anti_construction", "displayName":"Opposition to Mosques, Muslim Cemeteries, and Islamic Schools", "category": "Total Incident Counts", "format": "number", "filterVal": "Opposition to Mosques, Muslim Cemeteries, and Islamic Schools","scaleType": "quantize", "numBins":2, "customRange":[colors.white, colors.brown.light, colors.brown.dark]},
-	incidents_elected_official: {"variable":"incidents_elected_official", "displayName":"Anti-Muslim Actions by Elected or Appointed Officials", "category": "Total Incident Counts", "format": "number", "filterVal": "Anti-Muslim Actions by Elected or Appointed Officials","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.red.light, colors.red.dark]},
-	incidents_hate: {"variable":"incidents_hate", "displayName":"Anti-Muslim Hate Incidents", "category": "Total Incident Counts", "format": "number", "filterVal": "Anti-Muslim Hate Incidents","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.blue.light, colors.blue.dark]},
-	per_capita_total: {"variable":"per_capita_total", "displayName":"All Incidents", "category": "Per 100,000 People", "format": "number_with_decimal_2", "filterVal": null, "scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.turquoise.light, colors.turquoise.dark]},
-	per_capita_anti_sharia: {"variable":"per_capita_anti_sharia", "displayName":"Anti-Sharia Legislation", "category": "Per 100,000 People", "format": "number_with_decimal_2", "filterVal": "Anti-Sharia Legislation","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.orange.light, colors.orange.dark]},
-	per_capita_anti_refugee: {"variable":"per_capita_anti_refugee", "displayName":"Anti-Refugee Legislation and Actions", "category": "Per 100,000 People", "format": "number_with_decimal_2", "filterVal": "Anti-Refugee Legislation and Actions","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.purple.light, colors.purple.dark]},
-	per_capita_anti_construction: {"variable":"per_capita_anti_construction", "displayName":"Opposition to Mosques, Muslim Cemeteries, and Islamic Schools", "category": "Per 100,000 People", "format": "number_with_decimal_2", "filterVal": "Opposition to Mosques, Muslim Cemeteries, and Islamic Schools","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.brown.light, colors.brown.dark]},
-	per_capita_elected_official: {"variable":"per_capita_elected_official", "displayName":"Anti-Muslim Actions by Elected or Appointed Officials", "category": "Per 100,000 People", "format": "number_with_decimal_2", "filterVal": "Anti-Muslim Actions by Elected or Appointed Officials","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.red.light, colors.red.dark]},
-	per_capita_hate: {"variable":"per_capita_hate", "displayName":"Anti-Muslim Hate Incidents", "category": "Per 100,000 People", "format": "number_with_decimal_2", "filterVal": "Anti-Muslim Hate Incidents","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.blue.light, colors.blue.dark]},
+	incidents_anti_refugee: {"variable":"incidents_anti_refugee", "displayName":"Opposition to Refugee Resettlement", "category": "Total Incident Counts", "format": "number", "filterVal": "Opposition to Refugee Resettlement","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.purple.light, colors.purple.dark]},
+	incidents_anti_construction: {"variable":"incidents_anti_construction", "displayName":"Opposition to Mosques, Muslim Cemeteries & Schools", "category": "Total Incident Counts", "format": "number", "filterVal": "Opposition to Mosques, Muslim Cemeteries & Schools","scaleType": "quantize", "numBins":2, "customRange":[colors.white, colors.brown.light, colors.brown.dark]},
+	incidents_elected_official: {"variable":"incidents_elected_official", "displayName":"Anti-Muslim Actions & Statements by Elected & Appointed Officials", "category": "Total Incident Counts", "format": "number", "filterVal": "Anti-Muslim Actions & Statements by Elected & Appointed Officials","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.red.light, colors.red.dark]},
+	incidents_hate: {"variable":"incidents_hate", "displayName":"Media Reports of Anti-Muslim Violence & Crimes", "category": "Total Incident Counts", "format": "number", "filterVal": "Media Reports of Anti-Muslim Violence & Crimes","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.blue.light, colors.blue.dark]},
+	per_capita_total: {"variable":"per_capita_total", "displayName":"All Incidents", "category": "Per Capita", "format": "number_with_decimal_2", "filterVal": null, "scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.turquoise.light, colors.turquoise.dark]},
+	per_capita_anti_sharia: {"variable":"per_capita_anti_sharia", "displayName":"Anti-Sharia Legislation", "category": "Per Capita", "format": "number_with_decimal_2", "filterVal": "Anti-Sharia Legislation","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.orange.light, colors.orange.dark]},
+	per_capita_anti_refugee: {"variable":"per_capita_anti_refugee", "displayName":"Opposition to Refugee Resettlement", "category": "Per Capita", "format": "number_with_decimal_2", "filterVal": "Opposition to Refugee Resettlement","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.purple.light, colors.purple.dark]},
+	per_capita_anti_construction: {"variable":"per_capita_anti_construction", "displayName":"Opposition to Mosques, Muslim Cemeteries & Schools", "category": "Per Capita", "format": "number_with_decimal_2", "filterVal": "Opposition to Mosques, Muslim Cemeteries & Schools","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.brown.light, colors.brown.dark]},
+	per_capita_elected_official: {"variable":"per_capita_elected_official", "displayName":"Anti-Muslim Actions & Statements by Elected & Appointed Officials", "category": "Per Capita", "format": "number_with_decimal_2", "filterVal": "Anti-Muslim Actions & Statements by Elected & Appointed Officials","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.red.light, colors.red.dark]},
+	per_capita_hate: {"variable":"per_capita_hate", "displayName":"Media Reports of Anti-Muslim Violence & Crimes", "category": "Per Capita", "format": "number_with_decimal_2", "filterVal": "Media Reports of Anti-Muslim Violence & Crimes","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.blue.light, colors.blue.dark]},
 	per_capita_muslim_total: {"variable":"per_capita_muslim_total", "displayName":"All Incidents", "format": "number_with_decimal_2", "filterVal": null, "scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.turquoise.light, colors.turquoise.dark]},
 	per_capita_muslim_anti_sharia: {"variable":"per_capita_muslim_anti_sharia", "displayName":"Anti-Sharia Legislation", "format": "number_with_decimal_2", "filterVal": "Anti-Sharia Legislation","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.orange.light, colors.orange.dark]},
-	per_capita_muslim_anti_refugee: {"variable":"per_capita_muslim_anti_refugee", "displayName":"Anti-Refugee Legislation and Actions", "format": "number_with_decimal_2", "filterVal": "Anti-Refugee Legislation and Actions","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.purple.light, colors.purple.dark]},
-	per_capita_muslim_anti_construction: {"variable":"per_capita_muslim_anti_construction", "displayName":"Opposition to Mosques, Muslim Cemeteries, and Islamic Schools", "format": "number_with_decimal_2", "filterVal": "Opposition to Mosques, Muslim Cemeteries, and Islamic Schools","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.brown.light, colors.brown.dark]},
-	per_capita_muslim_elected_official: {"variable":"per_capita_muslim_elected_official", "displayName":"Anti-Muslim Actions by Elected or Appointed Officials", "format": "number_with_decimal_2", "filterVal": "Anti-Muslim Actions by Elected or Appointed Officials","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.red.light, colors.red.dark]},
-	per_capita_muslim_hate: {"variable":"per_capita_muslim_hate", "displayName":"Anti-Muslim Hate Incidents", "format": "number_with_decimal_2", "filterVal": "Anti-Muslim Hate Incidents","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.blue.light, colors.blue.dark]},
+	per_capita_muslim_anti_refugee: {"variable":"per_capita_muslim_anti_refugee", "displayName":"Opposition to Refugee Resettlement", "format": "number_with_decimal_2", "filterVal": "Opposition to Refugee Resettlement","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.purple.light, colors.purple.dark]},
+	per_capita_muslim_anti_construction: {"variable":"per_capita_muslim_anti_construction", "displayName":"Opposition to Mosques, Muslim Cemeteries & Schools", "format": "number_with_decimal_2", "filterVal": "Opposition to Mosques, Muslim Cemeteries & Schools","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.brown.light, colors.brown.dark]},
+	per_capita_muslim_elected_official: {"variable":"per_capita_muslim_elected_official", "displayName":"Anti-Muslim Actions & Statements by Elected & Appointed Officials", "format": "number_with_decimal_2", "filterVal": "Anti-Muslim Actions & Statements by Elected & Appointed Officials","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.red.light, colors.red.dark]},
+	per_capita_muslim_hate: {"variable":"per_capita_muslim_hate", "displayName":"Media Reports of Anti-Muslim Violence & Crimes", "format": "number_with_decimal_2", "filterVal": "Media Reports of Anti-Muslim Violence & Crimes","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.blue.light, colors.blue.dark]},
 }
 
 
@@ -83,8 +83,7 @@ let vizSettingsList = [
 		primaryDataSheet: "states",
 		tableVars: [ variables.state, variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_hate],
 		defaultOrdering: [1, "desc"],
-		pagination: true,
-		numPerPage: 20,
+		pagination: false,
 		colorScaling: false
 	},
 	// {
@@ -126,7 +125,7 @@ const reactVizSettingsList = [
 		primaryDataSheet: "incidents",
 		colorSettings: { colorVar: variables.category, showLegend: true },
 		tooltipTitleVar: variables.title,
-		tooltipVars: [variables.state, variables.category, variables.date, variables.description],
+		tooltipVars: [variables.state, variables.category, variables.processed_date, variables.description],
 		dotScaleRange: [1, 4],
 		interaction: "mouseover",
 		layouts: [
@@ -141,8 +140,9 @@ const reactVizSettingsList = [
 				label: "Incidents by State",
 				layout: "category",
 				categoryVar: variables.state,
+				sortCategoryValsFunction: (a, b) => { return new Date(a.date) - new Date(b.date)},
 				leftMargin: 120,
-				catRowHeight: 15
+				verticalPadding: 5
 			}
 		]
 	},

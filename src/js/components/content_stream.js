@@ -181,7 +181,7 @@ export class ContentStream {
 
 		entryTextContainers.append("h5")
 			.attr("class", "content-stream__entry__date")
-			.text((d) => { return d.date; });
+			.text((d) => { return d.processed_date; });
 
 		entryTextContainers.append("h5")
 			.attr("class", "content-stream__entry__title")

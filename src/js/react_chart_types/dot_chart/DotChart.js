@@ -33,6 +33,8 @@ class DotChart extends React.Component {
             this.data = this.data.filter(vizSettings.filterInitialDataFunction);
         }
 
+        this.data.map((d, i) => { d.id = i; return d;})
+
 		this.resizeFunc = this.resize.bind(this);
 
 		if (vizSettings.colorSettings.colorVar) {
