@@ -165,7 +165,7 @@ class HistogramAnnotations extends React.Component {
 
 		
 		return (
-			<svg width="100%" height={this.height} transform="translate(0, -10)">
+			<svg width="100%" height={this.height} transform="translate(0, -12)">
 				{this.sortedData.map((d, i) => this.renderAnnotationLine(d, i))}
 				{this.sortedData.map((d, i) => this.renderAnnotationText(d, i))}
 			</svg>
