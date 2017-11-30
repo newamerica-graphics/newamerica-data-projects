@@ -38,54 +38,54 @@ let variables = {
 
 
 let vizSettingsList = [
-	// {
-	// 	id: "#muslim-community-restrictions__states-map",
-	// 	vizType: "dashboard",
-	// 	layoutRows: [
-	// 		[
-	// 			{
-	// 				vizType: "topo_json_map",
-	// 				primaryDataSheet: "states",
-	// 				width: "70%",
-	// 				filterVars: [ variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_hate, variables.per_capita_total, variables.per_capita_anti_sharia, variables.per_capita_anti_refugee, variables.per_capita_anti_construction, variables.per_capita_elected_official, variables.per_capita_hate],
-	// 				geometryType: "states",
-	// 				geometryVar: variables.state_id,
-	// 				stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
-	// 				filterGroupSettings: {"hidden": false, "keepVarIndexSameWhenCatChanged": true},
-	// 				// tooltipVars: [ variables.state, variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official],
-	// 				legendSettings: {"orientation": "horizontal-center", "showTitle": true},
-	// 				addSmallStateInsets: true,
-	// 				isMessagePasser: true,
-	// 				interaction: "click",
-	// 				defaultFill: colors.grey.light,
-	// 				mouseoverOnlyIfValue: true,
-	// 				sameFilterIndexWhenCategoryChanged: true
-	// 			},
-	// 			{
-	// 				vizType: "content_stream",
-	// 				primaryDataSheet: "incidents",
-	// 				clickable: false,
-	// 				defaultFilter: variables.incidents_total,
-	// 				width: "30%",
-	// 				isMessagePasser: false,
-	// 				messageHandlerType: "change_value",
-	// 				idVar: variables.state,
-	// 				showCurrFilterVal: true, 
-	// 				filterVar: variables.category,
-	// 				additionalDataVars: [variables.population_total, variables.population_muslim]
-	// 			}
-	// 		],
-	// 	]
-	// },
-	// {
-	// 	id: "#muslim-community-restrictions__states-table",
-	// 	vizType: "table",
-	// 	primaryDataSheet: "states",
-	// 	tableVars: [ variables.state, variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_hate],
-	// 	defaultOrdering: [1, "desc"],
-	// 	pagination: false,
-	// 	colorScaling: false
-	// },
+	{
+		id: "#muslim-community-restrictions__states-map",
+		vizType: "dashboard",
+		layoutRows: [
+			[
+				{
+					vizType: "topo_json_map",
+					primaryDataSheet: "states",
+					width: "70%",
+					filterVars: [ variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_hate, variables.per_capita_total, variables.per_capita_anti_sharia, variables.per_capita_anti_refugee, variables.per_capita_anti_construction, variables.per_capita_elected_official, variables.per_capita_hate],
+					geometryType: "states",
+					geometryVar: variables.state_id,
+					stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
+					filterGroupSettings: {"hidden": false, "keepVarIndexSameWhenCatChanged": true},
+					// tooltipVars: [ variables.state, variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official],
+					legendSettings: {"orientation": "horizontal-center", "showTitle": true},
+					addSmallStateInsets: true,
+					isMessagePasser: true,
+					interaction: "click",
+					defaultFill: colors.grey.light,
+					mouseoverOnlyIfValue: true,
+					sameFilterIndexWhenCategoryChanged: true
+				},
+				{
+					vizType: "content_stream",
+					primaryDataSheet: "incidents",
+					clickable: false,
+					defaultFilter: variables.incidents_total,
+					width: "30%",
+					isMessagePasser: false,
+					messageHandlerType: "change_value",
+					idVar: variables.state,
+					showCurrFilterVal: true, 
+					filterVar: variables.category,
+					additionalDataVars: [variables.population_total, variables.population_muslim]
+				}
+			],
+		]
+	},
+	{
+		id: "#muslim-community-restrictions__states-table",
+		vizType: "table",
+		primaryDataSheet: "states",
+		tableVars: [ variables.state, variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_hate],
+		defaultOrdering: [1, "desc"],
+		pagination: false,
+		colorScaling: false
+	},
 ]
 
 const reactVizSettingsList = [

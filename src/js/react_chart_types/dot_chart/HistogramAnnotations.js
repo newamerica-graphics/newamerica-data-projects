@@ -19,6 +19,12 @@ class HistogramAnnotations extends React.Component {
 		let annotationPositions = []
 
 		this.sortedData = props.data.sort((a, b) => { return new Date(a.date) - new Date(b.date)})
+	
+		this.initialRender =
+
+		this.state = {
+			currHovered: null
+		}
 	}
 
 	componentDidMount() {
@@ -50,15 +56,16 @@ class HistogramAnnotations extends React.Component {
 				scaledXVal = scale(new Date(d.date))
 			}
 
-			// if (scaledXVal < 0 || scaledXVal > scale.range()[1]) {
-			// 	return d;
-			// }
-
 			startXPos = scaledXVal - textBounds.width/2 - innerPadding
+			if (startXPos < 0) {
+				startXPos = 0
+			}
 			endXPos = startXPos + textBounds.width + 2*innerPadding;
 
+			console.log(endXPos, width)
+
 			if (endXPos > width) {
-				startXPos = width - textBounds.width;
+				startXPos = width - textBounds.width - 2*innerPadding;
 				endXPos = width;
 			}
 
@@ -114,19 +121,22 @@ class HistogramAnnotations extends React.Component {
 		// if (!d.startXPos || !d.yPos) { 
 		// 	return <text className="dot-chart__histogram-annotation__text" ref={i}></text>; 
 		// }
-		let xPos = d.startXPos || 0,
+		let startXPos = d.startXPos || 0,
+			endXPos = d.endXPos || 0,
 			yPos = d.yPos || 0
-		console.log(d)
+
+		let className = "dot-chart__histogram-annotation__container"
+		className += this.state.currHovered === i ? " active" : "";
 
 		return (
-			<g>
-				<rect className="dot-chart__histogram-annotation__box" x={xPos} width={d.endXPos - xPos} y={yPos} height={20} />
-				<text className="dot-chart__histogram-annotation__text" ref={i} x={xPos + innerPadding} y={yPos + 14}>{d.text}</text>
+			<g className={className} onMouseEnter={() => this.mouseEnter(i)} onMouseLeave={() => this.mouseLeave()} >
+				<rect className="dot-chart__histogram-annotation__box" x={startXPos} width={endXPos - startXPos} y={yPos} height={20} />
+				<text className="dot-chart__histogram-annotation__text" ref={i} x={startXPos + innerPadding} y={yPos + 14}>{d.text}</text>
 			</g>
 		)
 	}
 
-	renderAnnotationLine(d) {
+	renderAnnotationLine(d, i) {
 		// if (!d.startXPos || !d.yPos) { 
 		// 	return <line className="dot-chart__histogram-annotation__line" />; 
 		// }
@@ -142,8 +152,11 @@ class HistogramAnnotations extends React.Component {
 		}
 		console.log(d)
 
+		let className = "dot-chart__histogram-annotation__line"
+		className += this.state.currHovered === i ? " active" : "";
+
 		return (
-			<line className="dot-chart__histogram-annotation__line" x1={xPos} x2={xPos} y1="0" y2={yPos} />
+			<line className={className} x1={xPos} x2={xPos} y1="0" y2={yPos} />
 		)
 	}
 
@@ -157,6 +170,18 @@ class HistogramAnnotations extends React.Component {
 				{this.sortedData.map((d, i) => this.renderAnnotationText(d, i))}
 			</svg>
 		)
+	}
+
+	mouseEnter(index) {
+		this.setState({
+			currHovered: index
+		})
+	}
+
+	mouseLeave() {
+		this.setState({
+			currHovered: null
+		})
 	}
 }
 

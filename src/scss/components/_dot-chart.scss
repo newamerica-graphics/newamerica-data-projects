@@ -58,16 +58,30 @@
 		&__text {
 			font-size: 12px;
 			fill: palette-get(na-black-70);
+
+			.active & {
+				fill: palette-get(na-black);
+			}
 		}
 
 		&__box {
 			fill: white;
 			stroke: palette-get(na-black-40);
+
+			.active & {
+				stroke: palette-get(na-black);
+				stroke-width: 2px;
+			}
 		}
 
 		&__line {
 			stroke: palette-get(na-black-40);
 			stroke-width: 1px;
+
+			&.active {
+				stroke: palette-get(na-black);
+				stroke-width: 2px;
+			}
 		}
 	}
 

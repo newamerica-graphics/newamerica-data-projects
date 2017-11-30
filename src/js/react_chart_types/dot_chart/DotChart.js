@@ -186,13 +186,7 @@ class DotChart extends React.Component {
     getHistogramAnnotations() {
         const { currLayout, currLayoutSettings } = this.state;
         return (
-            <Motion style={{currTransform: spring(currLayout.height + 40)}} >
-                {({currTransform}) => {
-                    return (
-                        <HistogramAnnotations data={this.props.data[currLayoutSettings.annotationSheet]} scale={currLayout.xScale} isYearMonth={currLayoutSettings.isYearMonth} width={this.state.width} />
-                    )
-                }}
-            </Motion>
+            <HistogramAnnotations data={this.props.data[currLayoutSettings.annotationSheet]} scale={currLayout.xScale} isYearMonth={currLayoutSettings.isYearMonth} width={this.state.width} />
         )
     }
 
