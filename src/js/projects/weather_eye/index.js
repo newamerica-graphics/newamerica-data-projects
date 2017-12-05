@@ -138,7 +138,7 @@ const reactVizSettingsList = [
 				fullWidthBreakpoint: 500,
 				sections:[
 					{
-						title: "Disaster Declarations by Type (Since 1982)",
+						title: "Disaster Declarations by Type (Since 1973)",
 						dataElements: [
 							{
 								type:"chart",
@@ -304,7 +304,7 @@ const reactVizSettingsList = [
 				fullWidthBreakpoint: 500,
 				sections:[
 					{
-						title: "Disaster Declarations by Type (Since 1982)",
+						title: "Disaster Declarations by Type (Since 1972)",
 						dataElements: [
 							{
 								type:"chart",
@@ -387,7 +387,7 @@ const reactVizSettingsList = [
 				fullWidthBreakpoint: 500,
 				sections:[
 					{
-						title: "Disaster Declarations by Type (Since 1982)",
+						title: "Disaster Declarations by Type (Since 1965)",
 						dataElements: [
 							{
 								type:"chart",
@@ -470,7 +470,7 @@ const reactVizSettingsList = [
 				fullWidthBreakpoint: 500,
 				sections:[
 					{
-						title: "Disaster Declarations by Type (Since 1982)",
+						title: "Disaster Declarations by Type (Since 1971)",
 						dataElements: [
 							{
 								type:"chart",
@@ -515,7 +515,7 @@ const reactVizSettingsList = [
 				layout: "histogram_fixed_interval",
 				xVar: variables.year,
 				sortingVar: variables.start_date,
-				fixedStartVal: 1965
+				fixedStartVal: 1973
 			},
 			{
 				label: "Storm Events by Month",
@@ -542,7 +542,7 @@ const reactVizSettingsList = [
 				layout: "histogram_fixed_interval",
 				xVar: variables.year,
 				sortingVar: variables.start_date,
-				fixedStartVal: 1965
+				fixedStartVal: 1982
 			},
 			{
 				label: "Storm Events by Month",
@@ -596,7 +596,7 @@ const reactVizSettingsList = [
 				layout: "histogram_fixed_interval",
 				xVar: variables.year,
 				sortingVar: variables.start_date,
-				fixedStartVal: 1965
+				fixedStartVal: 1972
 			},
 			{
 				label: "Storm Events by Month",
@@ -623,7 +623,7 @@ const reactVizSettingsList = [
 				layout: "histogram_fixed_interval",
 				xVar: variables.year,
 				sortingVar: variables.start_date,
-				fixedStartVal: 1965
+				fixedStartVal: 1971
 			},
 			{
 				label: "Storm Events by Month",
