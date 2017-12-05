@@ -183,10 +183,14 @@
 
 	&__cell {
 		cursor: pointer;
-		padding-right: 23px;
+		padding: 0px 10px;
+
+		&-contents {
+			display: table;
+		}
 
 		&__color-swatch-container, &__label, &__val-count {
-			display: inline-block;
+			display: table-cell;
 			float: none;
 		}
 
@@ -198,6 +202,7 @@
 		&__label {
 			padding-left: 9px;
 			margin-bottom: 5px;
+			text-align: left;
 			@include chart-secondary-text;
 
 			&:hover {

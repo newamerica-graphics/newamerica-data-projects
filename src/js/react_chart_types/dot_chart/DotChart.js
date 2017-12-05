@@ -282,7 +282,6 @@ class DotChart extends React.Component {
     					<svg className="dot-chart__container" width="100%" height={layoutHeight + 30}>
     						<g className="dot-chart__rendering-area" width={width} >
     							{currDataShown.map((d) => {
-                                    if (!d.id) return null;
     								let style = currLayout.renderDot(d)
 
     								let fillColor = this.setFillColor(d),

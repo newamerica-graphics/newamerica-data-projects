@@ -44,6 +44,8 @@ class HistogramFixedIntervalLayout {
 			})
 			.entries(this.data)
 
+		console.log(this.dataNest)
+
 		this.maxColCount = d3.max(this.dataNest, (d) => { return d.values.length});
 		this.height = (this.maxColCount)*(this.dotRadius*2 + verticalPadding) + verticalPadding
 	}
@@ -70,8 +72,6 @@ class HistogramFixedIntervalLayout {
 			this.width = width
 			this.xScale.range([this.dotRadius*4, this.width - (this.dotRadius*4)])
 		}
-
-		
 	}
 
 	renderDot(d, i) {

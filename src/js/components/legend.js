@@ -175,9 +175,12 @@ export class Legend {
 			} else {
 				cell.on("click", () => { this.toggleValsShown(i); valChangedFunction(this.valsShown); });
 			}
-			this.appendCellMarker(cell, i);
-			valCounts ? this.appendValCount(cell, i, valCounts) : null;
-			this.appendCellText(cell, i);
+			let cellContents = cell.append("div")
+				.attr("class", "legend__cell-contents")
+
+			this.appendCellMarker(cellContents, i);
+			valCounts ? this.appendValCount(cellContents, i, valCounts) : null;
+			this.appendCellText(cellContents, i);
 			
 			this.legendCellDivs[i] = cell;
 		}

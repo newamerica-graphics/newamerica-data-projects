@@ -84,7 +84,8 @@ let vizSettingsList = [
 		tableVars: [ variables.state, variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_hate],
 		defaultOrdering: [1, "desc"],
 		pagination: false,
-		colorScaling: false
+		colorScaling: false,
+		filterInitialDataFunction: d => d.state != "United States"
 	},
 ]
 

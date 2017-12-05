@@ -54,6 +54,14 @@
 		}
 	}
 
+	&__histogram-annotations {
+		display: none;
+
+		@media (min-width: 500px) {
+			display: block;
+		}
+	}
+
 	&__histogram-annotation {
 		&__text {
 			font-size: 12px;
