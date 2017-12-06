@@ -236,7 +236,7 @@ export class TopoJsonMap {
 
 	setLegend() {
 		console.log(this.data)
-		this.legendSettings.title = this.currFilter.displayName;
+		this.legendSettings.title = this.currFilter.altLegendTitle || this.currFilter.displayName;
 		this.legendSettings.format = this.currFilter.format;
 		this.legendSettings.scaleType = this.currFilter.scaleType;
 		this.legendSettings.colorScale = this.colorScale;
