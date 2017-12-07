@@ -75,7 +75,7 @@ let vizSettingsList = [
 	        	},
         		{ 
 	        		label: "Population by Race",
-	        		fields: [variables.white_perc, variables.black_perc, variables.hisp_perc, variables.amin_perc, variables.asian_perc] 
+	        		fields: [variables.white_perc, variables.black_perc, variables.hisp_perc, variables.amin_perc, variables.asian_perc, variables.two_or_more_perc] 
 	        	},
 	        	{ 
 	        		label: "Weather Profile",
@@ -126,9 +126,10 @@ const reactVizSettingsList = [
 								factBoxVars: [
 									{ label: "White", type: "value", variable: variables.white_perc},
 									{ label: "Black", type: "value", variable: variables.black_perc},
-									{ label: "Hispanic", type: "value", variable: variables.hisp_perc},
+									{ label: "Hispanic or Latino", type: "value", variable: variables.hisp_perc},
 									{ label: "American Indian", type: "value", variable: variables.amin_perc},
-									{ label: "Asian", type: "value", variable: variables.asian_perc}
+									{ label: "Asian", type: "value", variable: variables.asian_perc},
+									{ label: "Two or More Races", type: "value", variable: variables.two_or_more_perc}
 								]
 							},
 						]
@@ -209,9 +210,10 @@ const reactVizSettingsList = [
 								factBoxVars: [
 									{ label: "White", type: "value", variable: variables.white_perc},
 									{ label: "Black", type: "value", variable: variables.black_perc},
-									{ label: "Hispanic", type: "value", variable: variables.hisp_perc},
+									{ label: "Hispanic or Latino", type: "value", variable: variables.hisp_perc},
 									{ label: "American Indian", type: "value", variable: variables.amin_perc},
-									{ label: "Asian", type: "value", variable: variables.asian_perc}
+									{ label: "Asian", type: "value", variable: variables.asian_perc},
+									{ label: "Two or More Races", type: "value", variable: variables.two_or_more_perc}
 								]
 							},
 						]
@@ -292,9 +294,10 @@ const reactVizSettingsList = [
 								factBoxVars: [
 									{ label: "White", type: "value", variable: variables.white_perc},
 									{ label: "Black", type: "value", variable: variables.black_perc},
-									{ label: "Hispanic", type: "value", variable: variables.hisp_perc},
+									{ label: "Hispanic or Latino", type: "value", variable: variables.hisp_perc},
 									{ label: "American Indian", type: "value", variable: variables.amin_perc},
-									{ label: "Asian", type: "value", variable: variables.asian_perc}
+									{ label: "Asian", type: "value", variable: variables.asian_perc},
+									{ label: "Two or More Races", type: "value", variable: variables.two_or_more_perc}
 								]
 							},
 						]
@@ -375,9 +378,10 @@ const reactVizSettingsList = [
 								factBoxVars: [
 									{ label: "White", type: "value", variable: variables.white_perc},
 									{ label: "Black", type: "value", variable: variables.black_perc},
-									{ label: "Hispanic", type: "value", variable: variables.hisp_perc},
+									{ label: "Hispanic or Latino", type: "value", variable: variables.hisp_perc},
 									{ label: "American Indian", type: "value", variable: variables.amin_perc},
-									{ label: "Asian", type: "value", variable: variables.asian_perc}
+									{ label: "Asian", type: "value", variable: variables.asian_perc},
+									{ label: "Two or More Races", type: "value", variable: variables.two_or_more_perc}
 								]
 							},
 						]
@@ -458,9 +462,10 @@ const reactVizSettingsList = [
 								factBoxVars: [
 									{ label: "White", type: "value", variable: variables.white_perc},
 									{ label: "Black", type: "value", variable: variables.black_perc},
-									{ label: "Hispanic", type: "value", variable: variables.hisp_perc},
+									{ label: "Hispanic or Latino", type: "value", variable: variables.hisp_perc},
 									{ label: "American Indian", type: "value", variable: variables.amin_perc},
-									{ label: "Asian", type: "value", variable: variables.asian_perc}
+									{ label: "Asian", type: "value", variable: variables.asian_perc},
+									{ label: "Two or More Races", type: "value", variable: variables.two_or_more_perc}
 								]
 							},
 						]

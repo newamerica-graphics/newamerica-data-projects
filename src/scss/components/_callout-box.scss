@@ -25,10 +25,16 @@
 		display: table-cell;
 		vertical-align: top;
 		padding: 0px 20px;
+		border-left: 1px solid palette-get(na-black-10);
+
+		&:first-child {
+			border: none;
+		}
 
 		&.full-width {
 			display: table-row !important;
 			width: 100% !important;
+			border-bottom: 1px solid palette-get(na-black-10) !important;
 		}
 	}
 

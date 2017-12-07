@@ -43,8 +43,7 @@
 	}
 
 	&__value-container {
-		padding: 4px 0px;
-		max-height: 20px;
+		margin: 4px 0 -3px 0;
 		&.hidden {
 			display: none;
 		}
