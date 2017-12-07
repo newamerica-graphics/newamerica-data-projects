@@ -18,9 +18,10 @@ let variables = {
 	county_population: {"variable":"county_population", "displayName":"Population", "format": "number"},
 	white_perc: {"variable":"white_perc", "displayName":"% White", "format": "percent"},
 	black_perc: {"variable":"black_perc", "displayName":"% Black", "format": "percent"},
-	hisp_perc: {"variable":"hisp_perc", "displayName":"% Hispanic", "format": "percent"},
+	hisp_perc: {"variable":"hisp_perc", "displayName":"% Hispanic or Latino", "format": "percent"},
 	amin_perc: {"variable":"amin_perc", "displayName":"% American Indian", "format": "percent"},
 	asian_perc: {"variable":"asian_perc", "displayName":"% Asian", "format": "percent"},
+	two_or_more_perc: {"variable":"two_or_more_perc", "displayName":"% Two or More Races", "format": "percent"},
 	unemployment: {"variable":"unemployment", "displayName":"Unemployment Rate", "format": "percent"},
 	poverty_line: {"variable":"poverty_line", "displayName":"Living in Poverty", "format": "percent"},
 	total_disaster_count: {"variable":"total_disaster_count", "displayName":"Total", "format": "number"},
@@ -32,6 +33,7 @@ let variables = {
 	tropical_storm: {"variable":"tropical_storm", "displayName":"Tropical Storm", "format": "number"},
 	wildfire: {"variable":"wildfire", "displayName":"Wildfire", "format": "number"},
 	hurricane: {"variable":"hurricane", "displayName":"Hurricane", "format": "number"},
+	events_experienced: {"variable":"events_experienced", "displayName":"Weather Types Experienced", "format": "string"},
 }
 
 const months = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -77,7 +79,7 @@ let vizSettingsList = [
 	        	},
 	        	{ 
 	        		label: "Weather Profile",
-	        		fields: [variables.flood, variables.tornado, variables.snow_ice_storm, variables.severe_weather, variables.drought, variables.tropical_storm, variables.wildfire, variables.hurricane, variables.total_disaster_count] 
+	        		fields: [variables.events_experienced] 
 	        	}
         	]
         }
