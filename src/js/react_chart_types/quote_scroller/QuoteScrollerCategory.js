@@ -60,7 +60,7 @@ class QuoteScrollerCategory extends React.Component {
                 <h3 className="quote-scroller__category__title">{categoryData.key}</h3>
                 
                     <div className="quote-scroller__category__content">
-        			    {categoryDescription && <p className="quote-scroller__category__description">{categoryDescription}</p>}
+        			    {categoryDescription && <div className="quote-scroller__category__description" dangerouslySetInnerHTML={{__html:formatValue(categoryDescription, "markdown")}} ></div>}
                         <div className="quote-scroller__category__quotes">
                             {categoryData.values.map((d, i) => {
                                 return this.renderQuote(d, i);

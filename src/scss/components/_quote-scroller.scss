@@ -128,15 +128,13 @@
 				margin-left: auto;
 			}
 		}
-		&__text, &__source {
-			line-height: 1.4;
-			font-size: 15px;
-		}
 
 		&__text {
 			padding: 15px;
 			border: 2px solid rgba(46, 188, 179, .5);
 			margin-bottom: 0px;
+			line-height: 1.4;
+			font-size: 15px;
 			
 			& > * {
 				color: palette-get(na-black) !important;
@@ -152,7 +150,10 @@
 			font-weight: bold;
 			padding: 12px;
 			background-color: palette-get(na-turquoise);
-			letter-spacing: .5px
+			letter-spacing: .3px;
+			line-height: 1.3;
+			font-size: 12px;
+			max-width: 70%;
 		}
 
 		&:nth-child(1) { animation-delay: $transition-delay-offset;}
