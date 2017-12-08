@@ -11,14 +11,14 @@ let vizSettingsList = [
 		vizType: "interactive_svg",
 		svg: require("./assets/recommendations.svg"),
 		linkList: [
-			{id: "#transforming-the-workforce__improving_the_knowledge", url: "https://na-staging.herokuapp.com/in-depth/transforming-workforce/recommendations/#improving-the-knowledge-base"},
-			{id: "#transforming-the-workforce__support_for_implementation", url: "https://na-staging.herokuapp.com/in-depth/transforming-workforce/recommendations/#support-for-implementation"},
-			{id: "#transforming-the-workforce__professional_learning", url: "https://na-staging.herokuapp.com/in-depth/transforming-workforce/recommendations/#professional-learning-during-ongoing-practice"},
-			{id: "#transforming-the-workforce__qualification_requirements", url: "https://na-staging.herokuapp.com/in-depth/transforming-workforce/recommendations/#qualification-requirements-for-better-practice"},
-			{id: "#transforming-the-workforce__interprofessional_practice", url: "https://na-staging.herokuapp.com/in-depth/transforming-workforce/recommendations/#interprofessional-practice"},
-			{id: "#transforming-the-workforce__higher_education", url: "https://na-staging.herokuapp.com/in-depth/transforming-workforce/recommendations/#higher-education"},
-			{id: "#transforming-the-workforce__leadership", url: "https://na-staging.herokuapp.com/in-depth/transforming-workforce/recommendations/#leadership"},
-			{id: "#transforming-the-workforce__evaluation_and_assessment", url: "https://na-staging.herokuapp.com/in-depth/transforming-workforce/recommendations/#evaluation-assessment"},
+			{id: "#transforming-the-workforce__improving_the_knowledge", url: "www.newamerica.org/in-depth/transforming-early-education-workforce/blueprint-action/#improving-the-knowledge-base"},
+			{id: "#transforming-the-workforce__support_for_implementation", url: "www.newamerica.org/in-depth/transforming-early-education-workforce/blueprint-action/#support-for-implementation"},
+			{id: "#transforming-the-workforce__professional_learning", url: "www.newamerica.org/in-depth/transforming-early-education-workforce/blueprint-action/#professional-learning-during-ongoing-practice"},
+			{id: "#transforming-the-workforce__qualification_requirements", url: "www.newamerica.org/in-depth/transforming-early-education-workforce/blueprint-action/#qualification-requirements-for-professional-practice"},
+			{id: "#transforming-the-workforce__interprofessional_practice", url: "www.newamerica.org/in-depth/transforming-early-education-workforce/blueprint-action/#interprofessional-practice"},
+			{id: "#transforming-the-workforce__higher_education", url: "www.newamerica.org/in-depth/transforming-early-education-workforce/blueprint-action/#higher-education"},
+			{id: "#transforming-the-workforce__leadership", url: "www.newamerica.org/in-depth/transforming-early-education-workforce/blueprint-action/#leadership"},
+			{id: "#transforming-the-workforce__evaluation_and_assessment", url: "www.newamerica.org/in-depth/transforming-early-education-workforce/blueprint-action/#evaluation-and-assessment"},
 		]
 	}
 ]
