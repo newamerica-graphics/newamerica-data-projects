@@ -926,6 +926,57 @@ let reactVizSettingsList = [
 		]
 	},
 	{
+		id: "#drone-strikes__niger__call-out-data", 
+		vizType: "callout_box",
+		primaryDataSheet: "niger_strikes",
+		sections:[
+			{
+				title: "Live Statistics",
+				dataElements: [
+					{
+						type:"fact-box-list",
+						format:"horizontal",
+						factBoxVars: [
+							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
+							{ label: "Total strikes (Overall)",type: "count" },
+							{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
+							{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
+						]
+					},
+				]
+			},
+			{
+				title: "Most Recent Strike",
+				dataElements: [
+					{
+						type:"simple-map",
+						country: "niger",
+						latVar: { type: "value", variable: variables.geo_lat, query: {varName:"date", operation:"max"} },
+						lngVar: { type: "value", variable: variables.geo_lon, query: {varName:"date", operation:"max"} }
+					},
+					{
+						type:"fact-box-list",
+						format:"vertical",
+						factBoxVars: [
+							{ label: "Date", type: "value", variable: variables.date, format: "date", query: {varName:"date", operation:"max"} },
+							{ label: "Total Casualties", type: "value", variable: variables.total_lowhigh, query: {varName:"date", operation:"max"}, subVars: [
+								{ label: "Militants", type: "value", variable: variables.militants_lowhigh, query: {varName:"date", operation:"max"} },
+								{ label: "Civilians", type: "value", variable: variables.civilians_lowhigh, query: {varName:"date", operation:"max"} },
+								{ label: "Unknown", type: "value", variable: variables.unknown_lowhigh, query: {varName:"date", operation:"max"} }
+							]},
+							{ label: "Target organization", type: "value", variable: variables.target_organization_name, query: {varName:"date", operation:"max"} }
+						],
+					},
+					{
+						type:"paragraph",
+						paragraphVar: { label: "Details", type: "value", variable: variables.target_description, query: {varName:"date", operation:"max"} },
+							
+					}
+				]
+			}
+		]
+	},
+	{
 		id: "#drone-strikes__all__call-out-data", 
 		vizType: "callout_box",
 		primaryDataSheet: "pakistan_strikes",
