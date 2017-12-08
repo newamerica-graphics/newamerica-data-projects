@@ -1,104 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 22.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 1393 1406" style="enable-background:new 0 0 1393 1406;" xml:space="preserve">
-<style type="text/css">
-	@font-face {
-	    font-family: 'SimplonBP-Light';
-	    src: url('https://na-fonts.s3.amazonaws.com/fonts/simplon/Simplon_BP_Light_1.otf');
-	    font-weight: normal;
-	    font-style: normal;
-	}
-	@font-face {
-	    font-family: 'SimplonBP-Bold';
-	    src: url('https://na-fonts.s3.amazonaws.com/fonts/simplon/Simplon_BP_Bold_2.otf');
-	    font-weight: normal;
-	    font-style: normal;
-	}
-	@font-face {
-	    font-family: 'SimplonBP-Regular';
-	    src: url('https://na-fonts.s3.amazonaws.com/fonts/simplon/Simplon_BP_Regular_1.otf');
-	    font-weight: normal;
-	    font-style: normal;
-	}
-	@font-face {
-	    font-family: 'Platform-Medium';
-	    src: url('https://na-fonts.s3.amazonaws.com/fonts/platform/Platform-Medium.otf');
-	    font-weight: normal;
-	    font-style: normal;
-	}
-	.st0{fill:#2c2f35;}
-	.st1{fill:#3375FF;}
-	.st2{fill:#FFFFFF;}
-	.st3{font-family:'Platform-Medium';}
-	.st4{font-size:22px;}
-	.st5{fill:#C69C6D;}
-	.st6{fill:#2E3192;}
-	.st7{fill:#2EBCB4;}
-	.st8{fill:#D4145A;}
-	.st9{fill:#00B344;}
-	.st10{fill:#F7931E;}
-	.st11{fill:#A076AC;}
-	.st12{fill:none;}
-	.st13{font-family:'SimplonBP-Light';}
-	.st14{font-size:36px;}
-	.st15{font-family:'SimplonBP-Bold';}
-	.st16{font-size:20px;}
-	.st17{letter-spacing:1;}
-	.st18{font-family:'SimplonBP-Regular';}
-	.clickable-button {
-		cursor: pointer;
-	}
-	.clickable-button:hover > path {
-		fill-opacity: .7;
-	}
-</style>
-<rect class="st0" width="1393" height="1410"/>
-<g class="clickable-button" id="transforming-the-workforce__improving_the_knowledge">
-	<path class="st1" d="M1035,1262H791c-35.9,0-65-29.1-65-65v0c0-35.9,29.1-65,65-65h244c35.9,0,65,29.1,65,65v0
-		C1100,1232.9,1070.9,1262,1035,1262z"/>
-	<text transform="matrix(1 0 0 1 847.2324 1189.4567)"><tspan x="0" y="0" class="st2 st3 st4">Improving the </tspan><tspan x="-14.9" y="26" class="st2 st3 st4">knowledge base</tspan></text>
-</g>
-<g class="clickable-button" id="transforming-the-workforce__support_for_implementation">
-	<path class="st5" d="M621,1262H377c-35.9,0-65-29.1-65-65v0c0-35.9,29.1-65,65-65h244c35.9,0,65,29.1,65,65v0
-		C686,1232.9,656.9,1262,621,1262z"/>
-	<text transform="matrix(1 0 0 1 443.9023 1191.4565)"><tspan x="0" y="0" class="st2 st3 st4">Support for  </tspan><tspan x="-18.7" y="26" class="st2 st3 st4">Implementation</tspan></text>
-</g>
-<g class="clickable-button" id="transforming-the-workforce__professional_learning">
-	<path class="st6" d="M1032,808H788c-35.9,0-65-29.1-65-65v0c0-35.9,29.1-65,65-65h244c35.9,0,65,29.1,65,65v0
-		C1097,778.9,1067.9,808,1032,808z"/>
-	<text transform="matrix(1 0 0 1 781.5112 738.4568)"><tspan x="0" y="0" class="st2 st3 st4">Professional learning during </tspan><tspan x="47.6" y="26" class="st2 st3 st4">ongoing practice</tspan></text>
-</g>
-<g class="clickable-button" id="transforming-the-workforce__qualification_requirements">
-	<path class="st7" d="M618,808H374c-35.9,0-65-29.1-65-65v0c0-35.9,29.1-65,65-65h244c35.9,0,65,29.1,65,65v0
-		C683,778.9,653.9,808,618,808z"/>
-	<text transform="matrix(1 0 0 1 373.1318 738.4568)"><tspan x="0" y="0" class="st2 st3 st4">Qualification requirements </tspan><tspan x="9.2" y="26" class="st2 st3 st4">for professional practice</tspan></text>
-</g>
-<g class="clickable-button" id="transforming-the-workforce__interprofessional_practice">
-	<path class="st8" d="M836,638H592c-35.9,0-65-29.1-65-65v0c0-35.9,29.1-65,65-65h244c35.9,0,65,29.1,65,65v0
-		C901,608.9,871.9,638,836,638z"/>
-	<text transform="matrix(1 0 0 1 594.2236 579.4565)" class="st2 st3 st4">Interprofessional practice</text>
-</g>
-<g class="clickable-button" id="transforming-the-workforce__higher_education">
-	<path class="st9" d="M422.3,638.8h-244c-35.9,0-65-29.1-65-65v0c0-35.9,29.1-65,65-65h244c35.9,0,65,29.1,65,65v0
-		C487.3,609.7,458.2,638.8,422.3,638.8z"/>
-	<text transform="matrix(1 0 0 1 219.4895 580.2283)" class="st2 st3 st4">Higher education</text>
-</g>
-<g class="clickable-button" id="transforming-the-workforce__leadership">
-	<path class="st10" d="M1251,638h-244c-35.9,0-65-29.1-65-65v0c0-35.9,29.1-65,65-65h244c35.9,0,65,29.1,65,65v0
-		C1316,608.9,1286.9,638,1251,638z"/>
-	<text transform="matrix(1 0 0 1 1077.0918 579.4565)" class="st2 st3 st4">Leadership</text>
-</g>
-<g class="clickable-button" id="transforming-the-workforce__evaluation_and_assessment">
-	<path class="st11" d="M829,467H585c-35.9,0-65-29.1-65-65v0c0-35.9,29.1-65,65-65h244c35.9,0,65,29.1,65,65v0
-		C894,437.9,864.9,467,829,467z"/>
-	<rect x="597.7" y="376.8" class="st12" width="218.6" height="50.3"/>
-	<text transform="matrix(1 0 0 1 600 405)"><tspan x="0" y="0" class="st2 st3 st4">Evaluation + assessment</tspan></text>
-</g>
-<text transform="matrix(1 0 0 1 498.0527 1058.9199)" class="st2 st13 st14">Support State Progression</text>
-<text transform="matrix(1 0 0 1 619.6768 995.6006)" class="st2 st15 st17">OTHER ORGANIZATIONS</text>
-<rect x="416.2" y="227" class="st12" width="560.5" height="60"/>
-<text transform="matrix(1 0 0 1 400.5527 238.2002)"><tspan x="0" y="0" class="st2 st18 st16">The following recommendations are not listed in priority or sequential order, </tspan><tspan x="5.5" y="19.2" class="st2 st18 st16">where to begin depends on state readiness, willingness, and environment.</tspan></text>
-<text transform="matrix(1 0 0 1 477.1025 188.9199)" class="st2 st13 st14">Choose Your Own Starting Point</text>
-<text transform="matrix(1 0 0 1 684.1006 125.6006)" class="st2 st15 st17">STATES</text>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<svg version="1.1" id="Layer_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1393 866.1"
+	 enable-background="new 0 0 1393 866.1" xml:space="preserve">
+	<style type="text/css">
+		@font-face {
+		    font-family: 'SimplonBP-Light';
+		    src: url('https://na-fonts.s3.amazonaws.com/fonts/simplon/Simplon_BP_Light_1.otf');
+		    font-weight: normal;
+		    font-style: normal;
+		}
+		@font-face {
+		    font-family: 'SimplonBP-Bold';
+		    src: url('https://na-fonts.s3.amazonaws.com/fonts/simplon/Simplon_BP_Bold_2.otf');
+		    font-weight: normal;
+		    font-style: normal;
+		}
+		@font-face {
+		    font-family: 'SimplonBP-Regular';
+		    src: url('https://na-fonts.s3.amazonaws.com/fonts/simplon/Simplon_BP_Regular_1.otf');
+		    font-weight: normal;
+		    font-style: normal;
+		}
+		@font-face {
+		    font-family: 'Platform-Medium';
+		    src: url('https://na-fonts.s3.amazonaws.com/fonts/platform/Platform-Medium.otf');
+		    font-weight: normal;
+		    font-style: normal;
+		}
+		.clickable-button {
+			cursor: pointer;
+		}
+		.clickable-button:hover {
+			fill-opacity: .7;
+		}
+		text {
+			pointer-events: none;
+		}
+	</style>
+	<foreignObject requiredExtensions="&ns_ai;" x="0" y="0" width="1" height="1">
+		<i:pgfRef  xlink:href="#adobe_illustrator_pgf">
+		</i:pgfRef>
+	</foreignObject>
+	<g i:extraneous="self">
+		<rect fill="#2C2F35" width="1393" height="870"/>
+		<path class="clickable-button" id="transforming-the-workforce__support_for_implementation" fill="#C69C6D" d="M1243.6,584.7h-244c-35.9,0-65-29.1-65-65v0c0-35.9,29.1-65,65-65h244c35.9,0,65,29.1,65,65v0
+			C1308.6,555.6,1279.4,584.7,1243.6,584.7z"/>
+		<text transform="matrix(1 0 0 1 1065.8481 514.1232)"><tspan x="0" y="0" fill="#FFFFFF" font-family="'Platform-Medium'" font-size="22px">Support for  </tspan><tspan x="-18.6" y="26" fill="#FFFFFF" font-family="'Platform-Medium'" font-size="22px">implementation</tspan></text>
+		<path class="clickable-button" id="transforming-the-workforce__professional_learning" fill="#2E3192" d="M829.6,584.7h-244c-35.9,0-65-29.1-65-65v0c0-35.9,29.1-65,65-65h244c35.9,0,65,29.1,65,65v0
+			C894.6,555.6,865.4,584.7,829.6,584.7z"/>
+		<text transform="matrix(1 0 0 1 577.5771 515.1235)"><tspan x="0" y="0" fill="#FFFFFF" font-family="'Platform-Medium'" font-size="22px">Professional learning during </tspan><tspan x="48.3" y="26" fill="#FFFFFF" font-family="'Platform-Medium'" font-size="22px">ongoing practice</tspan></text>
+		<path class="clickable-button" id="transforming-the-workforce__qualification_requirements" fill="#2EBCB4" d="M415.6,584.7h-244c-35.9,0-65-29.1-65-65v0c0-35.9,29.1-65,65-65h244c35.9,0,65,29.1,65,65v0
+			C480.6,555.6,451.4,584.7,415.6,584.7z"/>
+		<text transform="matrix(1 0 0 1 169.3076 515.1234)"><tspan x="0" y="0" fill="#FFFFFF" font-family="'Platform-Medium'" font-size="22px">Qualification requirements </tspan><tspan x="9.3" y="26" fill="#FFFFFF" font-family="'Platform-Medium'" font-size="22px">for professional practice</tspan></text>
+		<path class="clickable-button" id="transforming-the-workforce__interprofessional_practice" fill="#D4145A" d="M828.9,415h-244c-35.9,0-65-29.1-65-65v0c0-35.9,29.1-65,65-65h244c35.9,0,65,29.1,65,65v0
+			C893.9,385.9,864.8,415,828.9,415z"/>
+		<text transform="matrix(1 0 0 1 585.7471 356.4565)" fill="#FFFFFF" font-family="'Platform-Medium'" font-size="22px">Interprofessional practice</text>
+		<path class="clickable-button" id="transforming-the-workforce__higher_education" fill="#00B344" d="M415.2,415.8h-244c-35.9,0-65-29.1-65-65v0c0-35.9,29.1-65,65-65h244c35.9,0,65,29.1,65,65v0
+			C480.2,386.7,451.1,415.8,415.2,415.8z"/>
+		<text transform="matrix(1 0 0 1 211.5627 357.2283)" fill="#FFFFFF" font-family="'Platform-Medium'" font-size="22px">Higher education</text>
+		<path class="clickable-button" id="transforming-the-workforce__leadership" fill="#F7931E" d="M1243.9,415h-244c-35.9,0-65-29.1-65-65v0c0-35.9,29.1-65,65-65h244c35.9,0,65,29.1,65,65v0
+			C1308.9,385.9,1279.8,415,1243.9,415z"/>
+		<text transform="matrix(1 0 0 1 1069.4956 356.4565)" fill="#FFFFFF" font-family="'Platform-Medium'" font-size="22px">Leadership</text>
+		<path class="clickable-button" id="transforming-the-workforce__improving_the_knowledge" fill="#3375FF" d="M1036.6,756h-244c-35.9,0-65-29.1-65-65v0c0-35.9,29.1-65,65-65h244c35.9,0,65,29.1,65,65v0
+			C1101.6,726.9,1072.4,756,1036.6,756z"/>
+		<text transform="matrix(1 0 0 1 848.123 683.4567)"><tspan x="0" y="0" fill="#FFFFFF" font-family="'Platform-Medium'" font-size="22px">Improving the </tspan><tspan x="-14.9" y="26" fill="#FFFFFF" font-family="'Platform-Medium'" font-size="22px">knowledge base</tspan></text>
+		<path class="clickable-button" id="transforming-the-workforce__evaluation_and_assessment" fill="#A076AC" d="M622.6,755.5h-244c-35.9,0-65-29.1-65-65v0c0-35.9,29.1-65,65-65h244c35.9,0,65,29.1,65,65v0
+			C687.6,726.4,658.4,755.5,622.6,755.5z"/>
+		<rect x="374.6" y="665.3" fill="none" width="252" height="50.3"/>
+		<text transform="matrix(1 0 0 1 377.0449 683.9563)"><tspan x="0" y="0" fill="#FFFFFF" font-family="'Platform-Medium'" font-size="22px">Evaluation and assessment </tspan><tspan x="12" y="26" fill="#FFFFFF" font-family="'Platform-Medium'" font-size="22px">of professional practice</tspan></text>
+		<rect x="422" y="157" fill="none" width="549" height="60"/>
+		<text transform="matrix(1 0 0 1 460.9995 170.2998)"><tspan x="0" y="0" fill="#FFFFFF" font-family="'SimplonBP-Regular'" font-size="19px">The following recommendations are not listed in priority or </tspan><tspan x="-11.7" y="22.8" fill="#FFFFFF" font-family="'SimplonBP-Regular'" font-size="19px">sequential order, where to begin depends on state readiness, </tspan><tspan x="114.2" y="45.6" fill="#FFFFFF" font-family="'SimplonBP-Regular'" font-size="19px">willingness, and environment.</tspan></text>
+		<text transform="matrix(1 0 0 1 430.5029 118.9199)" fill="#FFFFFF" font-family="'SimplonBP-Light'" font-size="40px">Choose Your Own Starting Point</text>
+	</g>
 </svg>
