@@ -221,19 +221,19 @@ class CustomHomegrownMap extends React.Component {
 		let w = $(this.refs.renderingArea).width();
 		this.setState({
         	width: w,
-        	height: w,
+        	height: 4*w/5,
         })
 	}
 
 	mouseover(d, e) {
-		let renderingAreaOffset = $(this.refs.renderingArea).offset().top
+		let renderingAreaOffset = $(this.refs.renderingArea).offset()
 
-		let tooltipPos = { top: e.pageY - renderingAreaOffset }
+		let tooltipPos = { top: e.pageY - renderingAreaOffset.top }
 
 		if (e.pageX + 160 > $(this.refs.fullContainer).width()) {
-			tooltipPos.right = $(this.refs.fullContainer).width() - e.pageX + 10;
+			tooltipPos.right = $(this.refs.fullContainer).width() - renderingAreaOffset.left - e.pageX + 15;
 		} else {
-			tooltipPos.left = e.pageX + 10
+			tooltipPos.left = e.pageX + 15 - renderingAreaOffset.left
 		}
 
 		this.setState({
