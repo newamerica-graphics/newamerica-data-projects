@@ -17,7 +17,7 @@ class CustomHomegrownMap extends React.Component {
 	constructor(props) {
 		super(props);
 
-		let data = props.data[props.vizSettings.primaryDataSheet];
+		let data = props.data[props.vizSettings.primaryDataSheet].filter(props.vizSettings.filterInitialDataFunction)
 
 		this.statesData = data.filter(d => d.geo_type === "state")
 			// .map(d => { d.id = stateIdMappings[d.geo_unit_name]; return d; })
@@ -73,6 +73,7 @@ class CustomHomegrownMap extends React.Component {
 	setInitialCountriesMap() {
 		this.countriesProjection = d3.geoEquirectangular()
 			.scale(1)
+			.rotate([-12,0])
 		    .translate([0, 0]);
 
         this.countriesPathGenerator = d3.geoPath()
@@ -186,7 +187,7 @@ class CustomHomegrownMap extends React.Component {
 								<div className="custom-homegrown-map__legend__color-swatch" style={{ backgroundColor: colors.red.light }}>
 								</div>
 							</div>
-							<h5 className="custom-homegrown-map__legend__text">Birth State of Jihadist Terrorist Responsible for Non-Lethal Attack in U.S.</h5>
+							<h5 className="custom-homegrown-map__legend__text">Birth State of Jihadist Terrorist Responsible for Attack in U.S.</h5>
 						</div>
 					</div>
 					<div className="custom-homegrown-map__legend__section">
@@ -195,7 +196,7 @@ class CustomHomegrownMap extends React.Component {
 								<div className="custom-homegrown-map__legend__color-swatch" style={{ backgroundColor: "#927d85" }}>
 								</div>
 							</div>
-							<h5 className="custom-homegrown-map__legend__text">Birth State of Jihadist Terrorist Responsible for Non-Lethal Attack in U.S. and Trump Visa Restricted Country</h5>
+							<h5 className="custom-homegrown-map__legend__text">Birth State of Jihadist Terrorist Responsible for Attack in U.S. and Trump Visa Restricted Country</h5>
 						</div>
 					</div>
 					<div className="custom-homegrown-map__legend__section">
@@ -250,9 +251,9 @@ class CustomHomegrownMap extends React.Component {
 	setFill(d) {
 		if (d.data) {
 			let dataVal = d.data.category
-			if (dataVal === "Birth State of Jihadist Terrorist Responsible for Non-Lethal Attack in U.S.") {
+			if (dataVal === "Birth State of Jihadist Terrorist Responsible for Attack in U.S.") {
 				return colors.red.light
-			} else if (dataVal === "Birth State of Jihadist Terrorist Responsible for Non-Lethal Attack in U.S. and Trump Visa Restricted Country") {
+			} else if (dataVal === "Birth State of Jihadist Terrorist Responsible for Attack in U.S. and Trump Visa Restricted Country") {
 				return "#927d85"
 			} else if (dataVal === "Trump Visa Restricted Country") {
 				return colors.turquoise.light

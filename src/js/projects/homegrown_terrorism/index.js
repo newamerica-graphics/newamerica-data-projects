@@ -225,14 +225,21 @@ const reactVizSettingsList = [
 	{
 		id: "#homegrown__non-lethal-origins",
 		vizType: "custom_homegrown_map",
-		primaryDataSheet: "non_lethal_origins",
+		primaryDataSheet: "origins",
+		filterInitialDataFunction: d => d.attack_type === "non-lethal"
+	},
+	{
+		id: "#homegrown__lethal-origins",
+		vizType: "custom_homegrown_map",
+		primaryDataSheet: "origins",
+		filterInitialDataFunction: d => d.attack_type === "lethal"
 	},
 ]
 
 let projectSettings = {
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/homegrown_extremism.json",
 	downloadDataLink: "https://docs.google.com/spreadsheets/d/1UHVsknlx8sWPNg6nYBg2_WdXTp2RwnWwe7BdInWncdg/",
-	dataSheetNames:["people_protected", "people_variables", "terror_plots", "terror_plots_variables", "non_lethal_origins"],
+	dataSheetNames:["people_protected", "people_variables", "terror_plots", "terror_plots_variables", "origins"],
 	imageFolderId: "0B2KbJlQb9jlgeG5hOXZqbURpRUE",
 	vizSettingsList: vizSettingsList,
 	reactVizSettingsList: reactVizSettingsList
