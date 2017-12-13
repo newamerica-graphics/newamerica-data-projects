@@ -205,7 +205,7 @@ let vizSettingsList = [
 			groupingVar: variables.year_charged_or_deceased, 
 			filterVars: [variables.online_radicalization],
 			legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
-			xAxisLabelInterval: {"small": 2, "medium": 2, "large": 1},
+			groupingAxisLabelInterval: {"small": 2, "medium": 2, "large": 1},
 			labelValues: false,
 			eventSettings: {
 				"mouseover":{ "tooltip": true, "fill": colors.blue.medium, "stroke": false }
@@ -221,12 +221,21 @@ let vizSettingsList = [
 	},
 ]
 
+const reactVizSettingsList = [
+	{
+		id: "#homegrown__non-lethal-origins",
+		vizType: "custom_homegrown_map",
+		primaryDataSheet: "non_lethal_origins",
+	},
+]
+
 let projectSettings = {
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/homegrown_extremism.json",
 	downloadDataLink: "https://docs.google.com/spreadsheets/d/1UHVsknlx8sWPNg6nYBg2_WdXTp2RwnWwe7BdInWncdg/",
-	dataSheetNames:["people_protected", "people_variables", "terror_plots", "terror_plots_variables"],
+	dataSheetNames:["people_protected", "people_variables", "terror_plots", "terror_plots_variables", "non_lethal_origins"],
 	imageFolderId: "0B2KbJlQb9jlgeG5hOXZqbURpRUE",
-	vizSettingsList: vizSettingsList
+	vizSettingsList: vizSettingsList,
+	reactVizSettingsList: reactVizSettingsList
 }
 
 setupProject(projectSettings);

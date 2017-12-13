@@ -44,6 +44,7 @@ import DefinitionExplorer from "./react_chart_types/definition_explorer/Definiti
 import CalloutBox from "./react_chart_types/callout_box/CalloutBox.js";
 import DotChart from "./react_chart_types/dot_chart/DotChart.js";
 import QuoteScroller from "./react_chart_types/quote_scroller/QuoteScroller.js";
+import CustomHomegrownMap from "./react_chart_types/custom_homegrown_map/CustomHomegrownMap.js";
 
 import { formatValue } from "./helper_functions/format_value.js";
 
@@ -244,6 +245,13 @@ export const setupProject = (projectSettings) => {
 			case "quote_scroller":
 				render(
 					<QuoteScroller vizSettings={vizSettings} data={data} />,
+					document.getElementById(vizSettings.id.replace("#", ""))
+				)
+				break;
+
+			case "custom_homegrown_map":
+				render(
+					<CustomHomegrownMap vizSettings={vizSettings} data={data} />,
 					document.getElementById(vizSettings.id.replace("#", ""))
 				)
 				break;

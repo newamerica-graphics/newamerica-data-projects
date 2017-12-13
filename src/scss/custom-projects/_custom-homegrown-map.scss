@@ -1,0 +1,85 @@
+.custom-homegrown-map {
+	padding: 20px 0px;
+	&__main {
+
+	}
+
+	&__section {
+		width: 100%;
+		padding: 10px;
+		position: relative;
+
+		@include breakpoint(medium) {
+			width: 50%;
+			display: inline-block;
+		}
+
+		&__title {
+			font-weight: bold;
+			font-size: 16px;
+			position: absolute;
+			padding-top: 10px;
+			padding-left: 10px;
+		}
+
+		&__map-container {
+			border: 1px solid palette-get(na-black-10);
+		}
+	}
+
+	&__path {
+		stroke: white;
+		stroke-width: 1px;
+	}
+
+	&__legend {
+		display: table;
+		padding: 20px;
+		&__section {
+			padding: 5px 0px;
+
+			@include breakpoint(medium) {
+				display: table-cell;
+				width: 33%;
+				padding: 0px 15px;
+				vertical-align: top;
+			}
+
+			&__content {
+				display: table;
+			}
+		}
+
+		&__color-swatch-container, &__text {
+			display: table-cell;
+			vertical-align: top;
+		}
+
+		&__color-swatch {
+			width: 25px;
+			height: 25px;
+			margin-top: 1px;
+		}
+
+		&__text {
+			font-size: 14px;
+			padding-left: 10px;
+			line-height: 1.2;
+		}
+	}
+
+	&__annotation__text {
+		font-size: 12px;
+		color: palette-get(na-black-40);
+	}
+
+	&__tooltip {
+		position: absolute;
+		padding: 7px;
+		border: 1px solid palette-get(na-black-10);
+		background-color: white;
+		font-size: 12px;
+		max-width: 150px;
+		line-height: 1.2;
+	}
+}
