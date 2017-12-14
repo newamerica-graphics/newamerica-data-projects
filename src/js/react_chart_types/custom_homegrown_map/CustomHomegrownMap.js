@@ -49,14 +49,16 @@ class CustomHomegrownMap extends React.Component {
 		})
 
 		this.state = {
-			width: 1000,
-			height: 1000
+			width: 0,
+			height: 0
 		}
 
 		this.updateStatesMap(this.state);
 		this.setInitialCountriesMap();
 
 		this.resizeFunc = this.resize.bind(this);
+
+		this.initialUpdate = true;
 	}
 
 	updateStatesMap(stateObject) {
@@ -122,13 +124,14 @@ class CustomHomegrownMap extends React.Component {
 
         this.findCountryBoundingRect();
 
-        this.resize()
+        this.resize();
     }
 
     componentWillUpdate(nextProps, nextState) {
-    	if (nextState.width != this.state.width) {
+    	if (this.initialUpdate || (nextState.width != this.state.width)) {
     		this.updateStatesMap(nextState);
 			this.updateCountriesMap(nextState);
+			this.initialUpdate = false;
     	}
     }
 
@@ -141,7 +144,7 @@ class CustomHomegrownMap extends React.Component {
 				<div className="custom-homegrown-map__main" ref="fullContainer">
 					<div className="custom-homegrown-map__section">
 						<h5 className="custom-homegrown-map__section__title">Jihadist Terrorists with Origins in the U.S.</h5>
-						<div className="custom-homegrown-map__section__map-container" style={{height: height + "px"}} ref="renderingArea">
+						<div className="custom-homegrown-map__section__map-container" ref="renderingArea">
 							<svg width={width} height={height}>
 								<g>
 									{ this.statesGeom.map(d => {
@@ -161,7 +164,7 @@ class CustomHomegrownMap extends React.Component {
 					</div>
 					<div className="custom-homegrown-map__section">
 						<h5 className="custom-homegrown-map__section__title">Jihadist Terrorists with Origins Outside the U.S.</h5>
-						<div className="custom-homegrown-map__section__map-container" style={{height: height + "px"}}>
+						<div className="custom-homegrown-map__section__map-container">
 							<svg width={width} height={height}>
 								<g>
 									{ this.countriesGeom.map(d => {
