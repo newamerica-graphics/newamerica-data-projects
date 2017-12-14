@@ -141,7 +141,7 @@ class CustomHomegrownMap extends React.Component {
 				<div className="custom-homegrown-map__main" ref="fullContainer">
 					<div className="custom-homegrown-map__section">
 						<h5 className="custom-homegrown-map__section__title">Jihadist Terrorists with Origins in the U.S.</h5>
-						<div className="custom-homegrown-map__section__map-container" ref="renderingArea">
+						<div className="custom-homegrown-map__section__map-container" style={{height: height + "px"}} ref="renderingArea">
 							<svg width={width} height={height}>
 								<g>
 									{ this.statesGeom.map(d => {
@@ -161,7 +161,7 @@ class CustomHomegrownMap extends React.Component {
 					</div>
 					<div className="custom-homegrown-map__section">
 						<h5 className="custom-homegrown-map__section__title">Jihadist Terrorists with Origins Outside the U.S.</h5>
-						<div className="custom-homegrown-map__section__map-container">
+						<div className="custom-homegrown-map__section__map-container" style={{height: height + "px"}}>
 							<svg width={width} height={height}>
 								<g>
 									{ this.countriesGeom.map(d => {
@@ -210,7 +210,7 @@ class CustomHomegrownMap extends React.Component {
 					</div>
 				</div>
 				<div className="custom-homegrown-map__annotation">
-					<h5 className="custom-homegrown-map__annotation__text">*On March 6, 2017 the Trump administration issued a new executive order, which did not include Iraq in the list of visa restricted countries. On Septemebr 24, the travel ban was revised again to drop Sudan, and add travel restrictions regarding Venezuela and North Korea  (not displayed on this map), as well as Chad.</h5>
+					<h5 className="custom-homegrown-map__annotation__text">*On March 6, 2017 the Trump administration issued a new executive order, which did not include Iraq in the list of visa restricted countries. On September 24, the travel ban was revised again to drop Sudan, and add travel restrictions regarding Venezuela and North Korea  (not displayed on this map), as well as Chad.</h5>
 				</div>
 				{tooltipVal && tooltipVal.data.text && tooltipVal.data.text != "" && <div className="custom-homegrown-map__tooltip" style={tooltipPos}>{tooltipVal.data.text}</div>}
 			</div>

@@ -19,10 +19,8 @@
 			color: palette-get(na-black);
 			font-size: 17px;
 			position: absolute;
-			padding-top: 10px;
-			padding-left: 10px;
-/*			max-width: 50%;
-*/			pointer-events: none;
+			padding: 10px;
+			pointer-events: none;
 		}
 
 		&__map-container {
