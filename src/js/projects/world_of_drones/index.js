@@ -1,5 +1,4 @@
 import { setupProject } from "../../viz_controller.js";
-
 import { colors } from "../../helper_functions/colors.js";
 
 let d3 = require("d3");
@@ -21,17 +20,15 @@ let variables = {
 	drones_in_combat_description: {"variable": "drones_in_combat_description", "displayName":"Description", "format":"string", "disableTableOrdering": true},
 }
 
-let vizSettingsList = [
-	{
-		id: "#world-of-drones__import-export", 
+let vizSettings = {
+	"world-of-drones__import-export", 
 		vizType: "bipartite",
 		primaryDataSheet: "countries",
 		keyVar: variables.name,
 		leftVar: variables.exports_to,
 		rightVar: variables.imports_from,
 	},
-	{
-		id: "#world-of-drones__developing-armed-drones",
+	"world-of-drones__developing-armed-drones": {
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "countries",
 		chartSettingsList: [
@@ -76,8 +73,7 @@ let vizSettingsList = [
 			}
 		]
 	},
-	{
-		id: "#world-of-drones__have-armed-drones",
+	"world-of-drones__have-armed-drones": {
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "countries",
 		chartSettingsList: [
@@ -122,8 +118,7 @@ let vizSettingsList = [
 			}
 		]
 	},
-	{
-		id: "#world-of-drones__drones-in-combat",
+	"world-of-drones__drones-in-combat": {
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "countries",
 		chartSettingsList: [
@@ -168,21 +163,11 @@ let vizSettingsList = [
 			}
 		]
 	},
-]
-
-let projectSettings = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/wod-military.json",
-	downloadDataLink: "https://docs.google.com/spreadsheets/d/1RptooWTfZbDEtlqNUb_GiqI6ihQubWUHffE9hbfht9k/",
-	dataSheetNames:["countries"],
-	vizSettingsList: vizSettingsList
 }
 
-setupProject(projectSettings);
+setupProject(vizSettings);
 
 function getDefaultValue(data) {
-	console.log("getting default value");
-	console.log(data);
 	let min = d3.min(data["countries"], (d) => { return Number(d["fake_year_data"]) });
-	console.log(min);
 	return min;
 }

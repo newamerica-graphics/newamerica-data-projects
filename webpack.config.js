@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 var path = require('path');
 var S3Plugin = require('webpack-s3-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var BUILD_DIR = path.resolve(__dirname, 'build/');
 var PROJECT_DIR = path.resolve(__dirname, 'src');
@@ -68,26 +69,38 @@ var config = {
       {
         test: /mapbox-gl.+\.js$/,
         loader: 'transform/cacheable?brfs'
-      }
+      },
+      {
+        test: /\.pug$/,
+        loader: 'pug-loader'
+      },
     ]
   },
   sassLoader: {
     includePaths: [path.resolve(__dirname, "./src/scss/index.scss")]
   },
-  plugins: (process.env.NODE_ENV === 'development') ? [] : [
-    new S3Plugin({
-      // Only upload css and js 
-      include: /.*\.(scss|css|js)/,
-      // s3Options are required 
-      s3Options: {
-        accessKeyId: AWS_ACCESS_KEY_ID,
-        secretAccessKey: AWS_SECRET_ACCESS_KEY,
-      },
-      s3UploadOptions: {
-        Bucket: DATA_PROJECTS_S3_BUCKET_NAME
-      }
-    })
-  ],
+  plugins: (process.env.NODE_ENV === 'development') ? 
+    [
+      new HtmlWebpackPlugin({
+        title: process.env.npm_config_project,
+        // otherData: "fifteen",
+        // template: './index_dev.ejs',
+        filename: '../index-dev.html'
+      })
+    ] : [
+      new S3Plugin({
+        // Only upload css and js 
+        include: /.*\.(scss|css|js)/,
+        // s3Options are required 
+        s3Options: {
+          accessKeyId: AWS_ACCESS_KEY_ID,
+          secretAccessKey: AWS_SECRET_ACCESS_KEY,
+        },
+        s3UploadOptions: {
+          Bucket: DATA_PROJECTS_S3_BUCKET_NAME
+        }
+      })
+    ],
   node: {
     fs: "empty",
     net: 'empty',

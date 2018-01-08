@@ -1,5 +1,4 @@
 import { setupProject } from "../../viz_controller.js";
-
 import { colors } from "../../helper_functions/colors.js";
 
 let variables = {
@@ -30,9 +29,8 @@ let variables = {
 	attack_description: {"variable": "description", "displayName":"Summary", "format":"string"},
 }
 
-let vizSettingsList = [
-	{
-		id: "#homegrown__outcome-for-extremist", 
+let vizSettings = {
+	"homegrown__outcome-for-extremist": { 
 		vizType: "chart_with_fact_box",
 		primaryDataSheet: "people_protected",
 		chartSettings: {
@@ -59,8 +57,7 @@ let vizSettingsList = [
 		},
 
 	},
-	{
-		id: "#homegrown__awlaki-over-time", 
+	"homegrown__awlaki-over-time": { 
 		vizType: "grouped_dot_matrix",
 		primaryDataSheet: "people_protected",
 		distanceBetweenGroups: 15,
@@ -76,8 +73,7 @@ let vizSettingsList = [
 			"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
 		}
 	},
-	{
-		id: "#homegrown__gender-of-extremists", 
+	"homegrown__gender-of-extremists": { 
 		vizType: "chart_with_fact_box",
 		primaryDataSheet: "people_protected",
 		chartSettings: {
@@ -102,8 +98,7 @@ let vizSettingsList = [
 			],
 		},
 	},
-	{
-		id: "#homegrown__citizenship-status", 
+	"homegrown__citizenship-status": { 
 		vizType: "dot_matrix",
 		primaryDataSheet: "people_protected",
 		orientation: "horizontal",
@@ -117,8 +112,7 @@ let vizSettingsList = [
 			"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
 		}
 	},
-	{
-		id: "#homegrown__convert-status", 
+	"homegrown__convert-status": { 
 		vizType: "dot_matrix",
 		primaryDataSheet: "people_protected",
 		orientation: "horizontal",
@@ -132,8 +126,7 @@ let vizSettingsList = [
 			"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
 		}
 	},
-	{
-		id: "#homegrown__age-of-extremists",
+	"homegrown__age-of-extremists": {
 		vizType: "chart_with_fact_box",
 		primaryDataSheet: "people_protected",
 		chartSettings: {
@@ -158,8 +151,7 @@ let vizSettingsList = [
 			],
 		},
 	},
-	{
-		id: "#homegrown__fact-box__method-of-radicalization", 
+	"homegrown__fact-box__method-of-radicalization": { 
 		vizType: "fact_box",
 		primaryDataSheet: "people_protected",
 		factBoxType: "colored_boxes",
@@ -167,8 +159,7 @@ let vizSettingsList = [
 			{ variable: variables.online_radicalization, value: "Yes", type:"percent", color:colors.turquoise.light, text:"Maintained a social media profile with jihadist material or utilized encryption for plotting"},
 		],
 	},
-	{
-		id: "#homegrown__deadly-attacks",
+	"homegrown__deadly-attacks": {
 		vizType: "step_chart",
 		yScaleType: "cumulative",
 		primaryDataSheet: "terror_plots",
@@ -181,8 +172,7 @@ let vizSettingsList = [
 		interpolation: "step",
 		dotSettings: { shape: "rect", width: "7"}
 	},
-	{
-		id: "#homegrown__fact-box__prevention-method", 
+	"homegrown__fact-box__prevention-method": { 
 		vizType: "fact_box",
 		primaryDataSheet: "people_protected",
 	 	factBoxType: "colored_boxes",
@@ -192,8 +182,7 @@ let vizSettingsList = [
 			{ variable: variables.inv_public_tip, value: "Yes", type:"percent", color:colors.purple.light, text:"Percent of jihadists implicated by a tip from the general public"},
 		],
 	},
-	{
-		id: "#homegrown__online-radicalization",
+	"homegrown__online-radicalization": {
 		vizType: "chart_with_fact_box",
 		primaryDataSheet: "people_protected",
 		chartSettings: {
@@ -219,30 +208,18 @@ let vizSettingsList = [
 			],
 		},
 	},
-]
-
-const reactVizSettingsList = [
-	{
-		id: "#homegrown__non-lethal-origins",
+	"homegrown__non-lethal-origins": {
+		isReact: true,
 		vizType: "custom_homegrown_map",
 		primaryDataSheet: "origins",
 		filterInitialDataFunction: d => d.attack_type === "non-lethal"
 	},
-	{
-		id: "#homegrown__lethal-origins",
+	"homegrown__lethal-origins": {
+		isReact: true,
 		vizType: "custom_homegrown_map",
 		primaryDataSheet: "origins",
 		filterInitialDataFunction: d => d.attack_type === "lethal"
 	},
-]
-
-let projectSettings = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/homegrown_extremism.json",
-	downloadDataLink: "https://docs.google.com/spreadsheets/d/1UHVsknlx8sWPNg6nYBg2_WdXTp2RwnWwe7BdInWncdg/",
-	dataSheetNames:["people_protected", "people_variables", "terror_plots", "terror_plots_variables", "origins"],
-	imageFolderId: "0B2KbJlQb9jlgeG5hOXZqbURpRUE",
-	vizSettingsList: vizSettingsList,
-	reactVizSettingsList: reactVizSettingsList
 }
 
-setupProject(projectSettings);
+setupProject(vizSettings);

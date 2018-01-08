@@ -2,6 +2,7 @@
 	position: relative;
 
 	&__chart-area {
-		min-height: 200px !important;
+		visibility: visible !important;
+		min-height: none !important;
 	}
 }

@@ -1,7 +1,5 @@
 import { setupProject } from "../../viz_controller.js";
-
 import { colors } from "../../helper_functions/colors.js";
-
 
 let variables = {
 	state: {"variable":"state", "displayName":"State", "format": "string"},
@@ -23,9 +21,8 @@ let variables = {
 	who_pays_for_care_value: {"variable":"value", "displayName":"Who Pays For Care?", "format":"percent", "scaleType": "categorical"},
 }
 
-let vizSettingsList = [
-	{
-		id: "#care-index__explore-the-index", 
+let vizSettings = {
+	"care-index__explore-the-index": { 
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "state_data",
 		chartSettingsList: [
@@ -50,8 +47,7 @@ let vizSettingsList = [
 			}
 		]
 	},
-	{
-		id: "#care-index__explore-the-index__availability", 
+	"care-index__explore-the-index__availability": { 
 		vizType: "topo_json_map",
 		primaryDataSheet: "state_data",
 		geometryType: "states",
@@ -61,8 +57,7 @@ let vizSettingsList = [
 		tooltipVars: [ variables.state, variables.availability_total_norm],
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
 	},
-	{
-		id: "#care-index__child-care-accredidation", 
+	"care-index__child-care-accredidation": { 
 		vizType: "topo_json_map",
 		primaryDataSheet: "state_data",
 		geometryType: "states",
@@ -72,8 +67,7 @@ let vizSettingsList = [
 		tooltipVars: [ variables.state, variables.in_center_pct_accred_statewide],
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
 	},
-	{
-		id: "#care-index__summary-box__new-mexico", 
+	"care-index__summary-box__new-mexico": { 
 		vizType: "summary_box",
 		primaryDataSheet: "state_data",
 		titleLabel: "State Overview",
@@ -82,8 +76,7 @@ let vizSettingsList = [
 		columns: ["value", "color_slider", "rank"],
 		vizVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ]
 	},
-	{
-		id: "#care-index__summary-box__georgia", 
+	"care-index__summary-box__georgia": { 
 		vizType: "summary_box",
 		primaryDataSheet: "state_data",
 		titleLabel: "State Overview",
@@ -92,8 +85,7 @@ let vizSettingsList = [
 		columns: ["value", "color_slider", "rank"],
 		vizVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ]
 	},
-	{
-		id: "#care-index__summary-box__illinois", 
+	"care-index__summary-box__illinois": { 
 		vizType: "summary_box",
 		primaryDataSheet: "state_data",
 		titleLabel: "State Overview",
@@ -102,8 +94,7 @@ let vizSettingsList = [
 		columns: ["value", "color_slider", "rank"],
 		vizVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ]
 	},
-	{
-		id: "#care-index__summary-box__massachusetts", 
+	"care-index__summary-box__massachusetts": { 
 		vizType: "summary_box",
 		primaryDataSheet: "state_data",
 		titleLabel: "State Overview",
@@ -112,22 +103,13 @@ let vizSettingsList = [
 		columns: ["value", "color_slider", "rank"],
 		vizVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ]
 	},
-	{
-		id: "#care-index__who-pays-for-care", 
+	"care-index__who-pays-for-care": {
 		vizType: "pie_chart",
 		primaryDataSheet: "who_pays_for_care",
 		labelVars: [variables.who_pays_for_care_source],
 		dataVars: [variables.who_pays_for_care_value],
 		legendShowVals: true,
 	}
-]
-
-let projectSettings = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/bll/care_index.json",
-	downloadDataLink: "https://docs.google.com/spreadsheets/d/18WEcJVDByP5bCPACgt2s9-sYIOItweq9fI9PCMIpUjY/",
-	dataSheetNames:["state_data", "state_data_variables", "who_pays_for_care", "types_of_care"],
-	vizSettingsList: vizSettingsList
 }
 
-setupProject(projectSettings);
-
+setupProject(vizSettings);

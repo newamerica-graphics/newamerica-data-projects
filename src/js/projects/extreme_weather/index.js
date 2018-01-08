@@ -1,7 +1,5 @@
 import { setupProject } from "../../viz_controller.js";
-
 import { colors } from "../../helper_functions/colors.js";
-
 
 let variables = {
 	year: {"variable":"year", "displayName":"Year", "format":"year"},
@@ -42,9 +40,8 @@ let variables = {
 
 let numBillionDollarEvents = 142;
 
-let vizSettingsList = [
-	{
-		id: "#extreme-weather__fema-declarations", 
+let vizSettings = {
+	"extreme-weather__fema-declarations": {
 		vizType: "topo_json_map",
 		primaryDataSheet: "fema_declarations",
 		geometryType: "counties",
@@ -56,8 +53,7 @@ let vizSettingsList = [
 		filterGroupSettings: { "mobileSelectBox": true },
 		zoomable: true
 	},
-	{
-		id: "#extreme-weather__fema-declarations-fire", 
+	"extreme-weather__fema-declarations-fire": {
 		vizType: "topo_json_map",
 		primaryDataSheet: "fema_declarations",
 		geometryType: "counties",
@@ -69,8 +65,7 @@ let vizSettingsList = [
 		filterGroupSettings: { "mobileSelectBox": true },
 		zoomable: false
 	},
-	{
-		id: "#extreme-weather__counties-map", 
+	"extreme-weather__counties-map": {
 		vizType: "dashboard",
 		defaultValue: numBillionDollarEvents - 1,
 		layoutRows: [
@@ -125,8 +120,7 @@ let vizSettingsList = [
 			]
 		]
 	},
-	{
-		id: "#extreme-weather__event-types", 
+	"extreme-weather__event-types": {
 		vizType: "bar_chart",
 		primaryDataSheet: "event_types",
 		groupingVar: variables.storm_type,
@@ -136,8 +130,7 @@ let vizSettingsList = [
 		labelValues: true,
 		showYAxis: false
 	},
-	{
-		id: "#extreme-weather__events-year-counts", 
+	"extreme-weather__events-year-counts": {
 		vizType: "bar_chart",
 		primaryDataSheet: "events_year_counts",
 		groupingVar: variables.year_counts_year,
@@ -152,16 +145,9 @@ let vizSettingsList = [
 			"mouseover":{ "tooltip": true, "fill": colors.turquoise.medium, "stroke": false }
 		}
 	},
-]
-
-let projectSettings = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/resourcesecurity/extreme_weather.json",
-	downloadDataLink: "https://docs.google.com/spreadsheets/d/18WEcJVDByP5bCPACgt2s9-sYIOItweq9fI9PCMIpUjY/",
-	dataSheetNames:["filtered_storm_events", "fema_declarations", "event_types", "events_year_counts"],
-	vizSettingsList: vizSettingsList
 }
 
-setupProject(projectSettings);
+setupProject(vizSettings);
 
 function getEventFilterVars() {
 	let filterVars = [];
@@ -173,4 +159,3 @@ function getEventFilterVars() {
 
 	return filterVars;
 }
-

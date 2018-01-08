@@ -1,7 +1,5 @@
 import { setupProject } from "../../viz_controller.js";
-
 import { colors } from "../../helper_functions/colors.js";
-
 
 let variables = {
 	category: {"variable":"category", "displayName":"Category", "format": "string", "scaleType":"categorical", "customDomain":["Anti-Sharia Legislation", "Opposition to Refugee Resettlement", "Opposition to Mosques, Muslim Cemeteries & Schools", "Anti-Muslim Actions & Statements by Elected & Appointed Officials", "Media Reports of Anti-Muslim Violence & Crimes"], "customRange":[colors.brown.light, colors.purple.light, colors.orange.light, colors.red.light, colors.blue.light]},
@@ -16,6 +14,7 @@ let variables = {
 	state_id: {"variable":"state_id", "displayName":"State id", "format": "string"},
 	population_total: {"variable":"population_total", "displayName":"Total Population", "format": "number"},
 	population_muslim: {"variable":"population_muslim", "displayName":"Estimated Muslim Population", "format": "number"},
+
 	incidents_total: {"variable":"incidents_total", "displayName":"All Incidents", "category": "Total Incident Counts", "format": "number", "filterVal": null, "scaleType": "quantize", "numBins":4, "customRange":[colors.white, colors.turquoise.light, colors.turquoise.dark]},
 	incidents_anti_sharia: {"variable":"incidents_anti_sharia", "displayName":"Anti-Sharia Legislation", "category": "Total Incident Counts", "format": "number", "filterVal": "Anti-Sharia Legislation","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.orange.light, colors.orange.dark]},
 	incidents_anti_refugee: {"variable":"incidents_anti_refugee", "displayName":"Opposition to Refugee Resettlement", "category": "Total Incident Counts", "format": "number", "filterVal": "Opposition to Refugee Resettlement","scaleType": "quantize", "numBins":3, "customRange":[colors.white, colors.purple.light, colors.purple.dark]},
@@ -36,10 +35,8 @@ let variables = {
 	per_capita_muslim_hate: {"variable":"per_capita_muslim_hate", "displayName":"Media Reports of Anti-Muslim Violence & Crimes", "format": "number_with_decimal_2", "filterVal": "Media Reports of Anti-Muslim Violence & Crimes","scaleType": "quantize", "numBins":5, "customRange":[colors.white, colors.blue.light, colors.blue.dark]},
 }
 
-
-let vizSettingsList = [
-	{
-		id: "#muslim-community-restrictions__states-map",
+let vizSettings = {
+	"muslim-community-restrictions__states-map": {
 		vizType: "dashboard",
 		layoutRows: [
 			[
@@ -77,8 +74,7 @@ let vizSettingsList = [
 			],
 		]
 	},
-	{
-		id: "#muslim-community-restrictions__states-table",
+	"muslim-community-restrictions__states-table": {
 		vizType: "table",
 		primaryDataSheet: "states",
 		tableVars: [ variables.state, variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_hate],
@@ -87,11 +83,8 @@ let vizSettingsList = [
 		colorScaling: false,
 		filterInitialDataFunction: d => d.state != "United States"
 	},
-]
-
-const reactVizSettingsList = [
-	{
-		id: "#muslim-community-restrictions__dot-chart", 
+	"muslim-community-restrictions__time-dot-chart": {
+		isReact: true,
 		vizType: "dot_chart",
 		primaryDataSheet: "incidents",
 		colorSettings: { colorVar: variables.category, showLegend: true },
@@ -120,14 +113,4 @@ const reactVizSettingsList = [
 	},
 ]
 
-let projectSettings = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/muslimdiaspora/muslim_community_restrictions.json",
-	downloadDataLink: "https://docs.google.com/spreadsheets/d/1t5lGCzrBMkvkb6zCfXQsQ9Kwqomvj_YzWRvfnS75vTs/",
-	dataSheetNames:["incidents", "states"],
-	vizSettingsList: vizSettingsList,
-	reactVizSettingsList: reactVizSettingsList
-}
-
-setupProject(projectSettings);
-
-	
+setupProject(vizSettings);

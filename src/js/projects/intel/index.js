@@ -2,7 +2,6 @@ import { setupProject } from "../../viz_controller.js";
 
 import { colors } from "../../helper_functions/colors.js";
 
-
 let variables = {
 	name: {"variable":"name", "displayName":"Program", "format": "string"},
 	primary_technological_tool: {"variable":"primary_technological_tool", "displayName":"Primary Tech Tool", "format": "string", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Video", "Video Conference", "Video Recorder", "Touchscreen Tablet", "Web App/ Website", "Mobile: Text Message", "Mobile: App", "Other"], "customRange":[colors.turquoise.light, colors.turquoise.medium, colors.turquoise.dark, colors.purple.light, colors.purple.dark, colors.blue.light, colors.blue.medium, colors.grey.medium]},
@@ -18,13 +17,11 @@ let variables = {
 	location: {"variable":"Location", "displayName":"Location", "format": "string"},
 	program: {"variable":"Program", "displayName":"Program", "format": "string"},
 
-
 }
 
 
-let vizSettingsList = [
-	{
-		id: "#intel__primary-tech-tool", 
+let vizSettings = {
+	"intel__primary-tech-tool": {
 		vizType: "category_breakdown",
 		primaryDataSheet: "programs",
 		dotSettings: { "width": 20, "offset": 5},
@@ -34,10 +31,9 @@ let vizSettingsList = [
 		idVar: variables.name,
 		clickToProfile: { "variable": variables.name.variable, "url": "https://www.newamerica.org/in-depth/family-engagement-digital-age/program-profile/?" }	
 	},
-	{
-		id: "#intel__start-year",
-		primaryDataSheet: "programs",
+	"intel__start-year": {
 		vizType: "comparative_dot_histogram",
+		primaryDataSheet: "programs",
 		groupingVars: [ variables.start_year ],
 		titleVar: variables.name,
 		legendSettings: {"orientation": "horizontal-center", "showTitle": false},
@@ -58,8 +54,7 @@ let vizSettingsList = [
 	// 		"mouseover":{ "tooltip": true, "fill": false, "stroke": "white", "strokeWidth": 3},
 	// 	}
 	// },
-	{
-		id: "#intel__national-initiatives", 
+	"intel__national-initiatives": {
 		vizType: "pindrop_map",
 		primaryDataSheet: "programs",
 		geometryType: "states",
@@ -72,8 +67,7 @@ let vizSettingsList = [
 		clickToProfile: { "variable": variables.name.variable, "url": "https://www.newamerica.org/in-depth/family-engagement-digital-age/program-profile/?" }
 
 	},
-	{
-		id: "#intel__locations",
+	"intel__locations": {
 		vizType: "dashboard",
 		defaultValue: null,
 		layoutRows: [
@@ -110,24 +104,6 @@ let vizSettingsList = [
 			]
 		]
 	},
-]
-
-const reactVizSettingsList = [
-	{
-		id: "#intel__resource-toolkit", 
-		vizType: "resource_toolkit",
-		primaryDataSheet: "toolkit_resources",
-	},
-]
-
-let projectSettings = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/edpolicy/intel.json",
-	downloadDataLink: "https://docs.google.com/spreadsheets/d/1eUKKUR-tAv_BbjD243xRyG2348I125QUgHDJUxVoO78",
-	dataSheetNames:["programs"],
-	vizSettingsList: vizSettingsList,
-	reactVizSettingsList: reactVizSettingsList
 }
 
-setupProject(projectSettings);
-
-	
+setupProject(vizSettings);

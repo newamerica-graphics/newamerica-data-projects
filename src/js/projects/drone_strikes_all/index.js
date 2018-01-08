@@ -89,22 +89,6 @@ const casualtiesNestDataFunction = (data, filterVar) => {
 	return nestedVals;
 }
 
-// const casualtiesByStrikeTypeNestDataFunction = (data, filterVar) => {
-// 	let nestedVals = d3.nest()
-// 		.key((d) => { return d.year; })
-// 		.key((d) => { return d[filterVar.variable]})
-// 		.sortKeys(d3.ascending)
-// 		.rollup((v) => {
-// 			console.log(v); 
-// 			return d3.sum(v, (valueObject) => {
-// 				return valueObject.total_avg;
-// 			})
-// 		})
-// 		.entries(data);
-
-// 	return nestedVals;
-// }
-
 const strikesNestDataFunction = (data, filterVar) => {
 	let nestedVals = d3.nest()
 		.key((d) => { console.log(d.year, d); return d.year; })
@@ -121,9 +105,8 @@ const leadersFilterFunction = (d) => {
 }
 
 
-let vizSettingsList = [
-	{
-		id: "#drone-strikes__pakistan__by-president", 
+let vizSettings = {
+	"drone-strikes__pakistan__by-president": { 
 		vizType: "filterable_chart",
 		primaryDataSheet: "pakistan_strikes",
 		chartType: "stacked_bar",
@@ -156,8 +139,7 @@ let vizSettingsList = [
 			},
 		]
 	},
-	{
-		id: "#drone-strikes__pakistan__by-casualty-type", 
+	"drone-strikes__pakistan__by-casualty-type": { 
 		vizType: "stacked_bar",
 		primaryDataSheet: "pakistan_strikes",
 		xVar: variables.year,
@@ -172,16 +154,14 @@ let vizSettingsList = [
 		showYAxis: true,
 		tooltipColorVals: true,
 	},
-	{
-		id: "#drone-strikes__pakistan__targets", 
+	"drone-strikes__pakistan__targets": { 
 		vizType: "percentage_stacked_bar",
 		// filterInitialDataBy: { field: "country", value:"Pakistan"},
 		primaryDataSheet: "pakistan_strikes",
 		groupingVar: variables.president,
 		filterVar: variables.target_organization_name,
 	},
-	{
-		id: "#drone-strikes__pakistan__strike-totals-by-president", 
+	"drone-strikes__pakistan__strike-totals-by-president", 
 		primaryDataSheet: "strikes_by_president",
 		vizType: "table",
 		tableVars: [ variables.president, variables.pk_total_strikes, variables.pk_civilians_lowhigh, variables.pk_militants_lowhigh, variables.pk_unknown_lowhigh, variables.pk_total_lowhigh],
@@ -192,8 +172,7 @@ let vizSettingsList = [
 		disableSearching: true,
 	 	disableOrdering: true
 	},
-	{
-		id: "#drone-strikes__pakistan__strike-map",
+	"drone-strikes__pakistan__strike-map",
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "pakistan_strikes",
 		tabIcons: ["globe", "table"],
@@ -256,8 +235,7 @@ let vizSettingsList = [
 			}
 		]
 	},
-	{
-		id: "#drone-strikes__pakistan__leaders-map",
+	"drone-strikes__pakistan__leaders-map",
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "pakistan_strikes",
 		tabIcons: ["table", "globe"],
@@ -321,8 +299,7 @@ let vizSettingsList = [
 		    },
 		]
 	},
-	{
-		id: "#drone-strikes__yemen__by-casualty-type", 
+	"drone-strikes__yemen__by-casualty-type": { 
 		vizType: "stacked_bar",
 		primaryDataSheet: "yemen_strikes",
 		xVar: variables.year,
@@ -337,8 +314,7 @@ let vizSettingsList = [
 		showYAxis: true,
 		tooltipColorVals: true
 	},
-	{
-		id: "#drone-strikes__yemen__by-president", 
+	"drone-strikes__yemen__by-president": { 
 		vizType: "filterable_chart",
 		primaryDataSheet: "yemen_strikes",
 		chartType: "stacked_bar",
@@ -371,8 +347,7 @@ let vizSettingsList = [
 			},
 		]
 	},
-	{
-		id: "#drone-strikes__yemen__by-strike-type", 
+	"drone-strikes__yemen__by-strike-type": { 
 		vizType: "filterable_chart",
 		primaryDataSheet: "yemen_strikes",
 		chartType: "stacked_bar",
@@ -404,16 +379,14 @@ let vizSettingsList = [
 			},
 		]
 	},
-	{
-		id: "#drone-strikes__yemen__targets", 
+	"drone-strikes__yemen__targets": { 
 		vizType: "percentage_stacked_bar",
 		// filterInitialDataBy: { field: "country", value:"yemen"},
 		primaryDataSheet: "yemen_strikes",
 		groupingVar: variables.president,
 		filterVar: variables.target_organization_name,
 	},
-	{
-		id: "#drone-strikes__yemen__strike-totals-by-president", 
+	"drone-strikes__yemen__strike-totals-by-president", 
 		primaryDataSheet: "strikes_by_president",
 		vizType: "table",
 		tableVars: [ variables.president, variables.ym_total_strikes, variables.ym_civilians_lowhigh, variables.ym_militants_lowhigh, variables.ym_unknown_lowhigh, variables.ym_total_lowhigh],
@@ -424,8 +397,7 @@ let vizSettingsList = [
 		disableSearching: true,
 	 	disableOrdering: true
 	},
-	{
-		id: "#drone-strikes__yemen__strike-map",
+	"drone-strikes__yemen__strike-map",
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "yemen_strikes",
 		tabIcons: ["globe", "table"],
@@ -483,8 +455,7 @@ let vizSettingsList = [
 			}
 		]
 	},
-	{
-		id: "#drone-strikes__yemen__leaders-map",
+	"drone-strikes__yemen__leaders-map",
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "yemen_strikes",
 		tabIcons: ["table", "globe"],
@@ -544,8 +515,7 @@ let vizSettingsList = [
 		]
 	},
 
-	{
-		id: "#drone-strikes__somalia__by-casualty-type", 
+	"drone-strikes__somalia__by-casualty-type": { 
 		vizType: "stacked_bar",
 		primaryDataSheet: "somalia_strikes",
 		xVar: variables.year,
@@ -560,8 +530,7 @@ let vizSettingsList = [
 		showYAxis: true,
 		tooltipColorVals: true,
 	},
-	{
-		id: "#drone-strikes__somalia__by-president", 
+	"drone-strikes__somalia__by-president": { 
 		vizType: "filterable_chart",
 		primaryDataSheet: "somalia_strikes",
 		chartType: "stacked_bar",
@@ -594,8 +563,7 @@ let vizSettingsList = [
 			},
 		]
 	},
-	{
-		id: "#drone-strikes__somalia__by-strike-type", 
+	"drone-strikes__somalia__by-strike-type": { 
 		vizType: "filterable_chart",
 		primaryDataSheet: "somalia_strikes",
 		chartType: "stacked_bar",
@@ -628,16 +596,14 @@ let vizSettingsList = [
 		]
 	},
 	
-	{
-		id: "#drone-strikes__somalia__targets", 
+	"drone-strikes__somalia__targets": { 
 		vizType: "percentage_stacked_bar",
 		// filterInitialDataBy: { field: "country", value:"somalia"},
 		primaryDataSheet: "somalia_strikes",
 		groupingVar: variables.president,
 		filterVar: variables.target_organization_name,
 	},
-	{
-		id: "#drone-strikes__somalia__strike-totals-by-president", 
+	"drone-strikes__somalia__strike-totals-by-president", 
 		primaryDataSheet: "strikes_by_president",
 		vizType: "table",
 		tableVars: [ variables.president, variables.sm_total_strikes, variables.sm_civilians_lowhigh, variables.sm_militants_lowhigh, variables.sm_unknown_lowhigh, variables.sm_total_lowhigh],
@@ -648,8 +614,7 @@ let vizSettingsList = [
 		disableSearching: true,
 	 	disableOrdering: true
 	},
-	{
-		id: "#drone-strikes__somalia__strike-map",
+	"drone-strikes__somalia__strike-map",
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "somalia_strikes",
 		tabIcons: ["globe", "table"],
@@ -707,8 +672,7 @@ let vizSettingsList = [
 			}
 		]
 	},
-	{
-		id: "#drone-strikes__somalia__leaders-map",
+	"drone-strikes__somalia__leaders-map",
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "somalia_strikes",
 		tabIcons: ["table", "globe"],
@@ -767,11 +731,8 @@ let vizSettingsList = [
 		    },
 		]
 	},
-]
-
-let reactVizSettingsList = [
-	{
-		id: "#drone-strikes__pakistan__call-out-data", 
+	"drone-strikes__pakistan__call-out-data": { 
+		isReact: true,
 		vizType: "callout_box",
 		primaryDataSheet: "pakistan_strikes",
 		sections:[
@@ -821,8 +782,8 @@ let reactVizSettingsList = [
 			}
 		]
 	},
-	{
-		id: "#drone-strikes__yemen__call-out-data", 
+	"drone-strikes__yemen__call-out-data": { 
+		isReact: true,
 		vizType: "callout_box",
 		primaryDataSheet: "yemen_strikes",
 		sections:[
@@ -873,8 +834,8 @@ let reactVizSettingsList = [
 			}
 		]
 	},
-	{
-		id: "#drone-strikes__somalia__call-out-data", 
+	"drone-strikes__somalia__call-out-data": {
+		isReact: true, 
 		vizType: "callout_box",
 		primaryDataSheet: "somalia_strikes",
 		sections:[
@@ -925,8 +886,8 @@ let reactVizSettingsList = [
 			}
 		]
 	},
-	{
-		id: "#drone-strikes__niger__call-out-data", 
+	"drone-strikes__niger__call-out-data": {
+		isReact: true,
 		vizType: "callout_box",
 		primaryDataSheet: "niger_strikes",
 		sections:[
@@ -976,11 +937,11 @@ let reactVizSettingsList = [
 			}
 		]
 	},
-	{
-		id: "#drone-strikes__all__call-out-data", 
+	"drone-strikes__all__call-out-data": {
+		isReact: true, 
 		vizType: "callout_box",
 		primaryDataSheet: "pakistan_strikes",
-		secondaryDataSheets: ["yemen_strikes", "somalia_strikes"],
+		secondaryDataSheets: ["yemen_strikes", "somalia_strikes", "niger_strikes"],
 		sections:[
 			{
 				title: "Live Statistics",
@@ -999,15 +960,6 @@ let reactVizSettingsList = [
 			}
 		]
 	},
-]
-
-let projectSettings = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/drone-strikes-all.json",
-	downloadDataLink: "https://docs.google.com/spreadsheets/d/11uMYLFFk8sEbYNIOrX3ENRdgCWxttKdYQ6b8hUW-XbI/",
-	dataSheetNames:["pakistan_strikes", "yemen_strikes", "somalia_strikes", "strikes_by_president"],
-	vizSettingsList: vizSettingsList,
-	reactVizSettingsList: reactVizSettingsList
 }
 
-setupProject(projectSettings);
-
+setupProject(vizSettings);
