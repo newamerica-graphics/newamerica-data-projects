@@ -1,5 +1,4 @@
-import { setupProject } from "../../viz_controller.js";
-import { colors } from "../../helper_functions/colors.js";
+let { colors } = require("../../helper_functions/colors.js")
 
 let variables = {
 	state_id: {"variable":"state_id", "displayName":"State Id"},
@@ -186,5 +185,8 @@ let vizSettings = {
 	},
 }
 
-setupProject(vizSettings);
+module.exports = {
+	vizSettings: vizSettings,
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/polreform/political-reform-fifty-states.json"
+}
 	

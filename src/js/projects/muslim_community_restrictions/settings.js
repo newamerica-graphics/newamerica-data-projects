@@ -1,5 +1,4 @@
-import { setupProject } from "../../viz_controller.js";
-import { colors } from "../../helper_functions/colors.js";
+let { colors } = require("../../helper_functions/colors.js")
 
 let variables = {
 	category: {"variable":"category", "displayName":"Category", "format": "string", "scaleType":"categorical", "customDomain":["Anti-Sharia Legislation", "Opposition to Refugee Resettlement", "Opposition to Mosques, Muslim Cemeteries & Schools", "Anti-Muslim Actions & Statements by Elected & Appointed Officials", "Media Reports of Anti-Muslim Violence & Crimes"], "customRange":[colors.brown.light, colors.purple.light, colors.orange.light, colors.red.light, colors.blue.light]},
@@ -110,7 +109,10 @@ let vizSettings = {
 				verticalPadding: 5
 			}
 		]
-	},
-]
+	},		
+}
 
-setupProject(vizSettings);
+module.exports = {
+	vizSettings: vizSettings,
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/muslimdiaspora/muslim_community_restrictions.json"
+}

@@ -17,19 +17,9 @@ import DefinitionExplorer from "./react_chart_types/definition_explorer/Definiti
 import CalloutBox from "./react_chart_types/callout_box/CalloutBox.js";
 import DotChart from "./react_chart_types/dot_chart/DotChart.js";
 
-export const setupProject = (vizSettings) => {
-	window.vizControl = new VizController(vizSettings);
 
-	window.vizControl.initialize({dataUrl:"https://na-data-projects.s3.amazonaws.com/data/muslimdiaspora/muslim_community_restrictions.json"});
 
-	window.addEventListener('resize', vizControl.resize);
-
-	// window.addEventListener('click', () => vizControl.render("muslim-community-restrictions__states-map"))
-	window.vizControl.render("muslim-community-restrictions__states-map")
-	window.vizControl.render("muslim-community-restrictions__time-dot-chart")
-}
-
-class VizController {
+export default class VizController {
 	constructor(vizSettings) {
 		this.vizSettings = vizSettings;
 

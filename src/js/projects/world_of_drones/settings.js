@@ -1,5 +1,4 @@
-import { setupProject } from "../../viz_controller.js";
-import { colors } from "../../helper_functions/colors.js";
+let { colors } = require("../../helper_functions/colors.js")
 
 let d3 = require("d3");
 
@@ -165,7 +164,10 @@ let vizSettings = {
 	},
 }
 
-setupProject(vizSettings);
+module.exports = {
+	vizSettings: vizSettings,
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/wod-military.json"
+}
 
 function getDefaultValue(data) {
 	let min = d3.min(data["countries"], (d) => { return Number(d["fake_year_data"]) });

@@ -7,9 +7,6 @@ import { FilterGroup } from "../components/filter_group.js";
 import { colors } from "../helper_functions/colors.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 
-import { usGeom } from '../../geometry/us.js';
-import { worldGeom } from '../../geometry/world.js';
-
 import { formatValue, deformatValue } from "../helper_functions/format_value.js";
 import { defineFillPattern } from "../helper_functions/define_fill_pattern.js";
 
@@ -21,7 +18,7 @@ let topojson = require("topojson");
 export class TopoJsonMap {
 	constructor(vizSettings) {
 		Object.assign(this, vizSettings);
-
+		
 		this.currFilter = this.filterVars[0];
 		
 		if (this.interaction == "click") { this.currClicked == null}; 
@@ -72,8 +69,10 @@ export class TopoJsonMap {
 
 	setGeometry(geometryType) {
 		if (geometryType == "world") {
+			let worldGeom = require('../../geometry/world.js');
 			this.geometry = topojson.feature(worldGeom, worldGeom.objects.countries).features;
 		} else {
+			let usGeom = require('../../geometry/us.js');
 			this.geometry = topojson.feature(usGeom, usGeom.objects[geometryType]).features;
 		}
 	}

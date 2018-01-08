@@ -1,6 +1,4 @@
-import { setupProject } from "../../viz_controller.js";
-
-import { colors } from "../../helper_functions/colors.js";
+let { colors } = require("../../helper_functions/colors.js")
 
 let variables = {
 	name: {"variable":"name", "displayName":"Program", "format": "string"},
@@ -106,4 +104,7 @@ let vizSettings = {
 	},
 }
 
-setupProject(vizSettings);
+module.exports = {
+	vizSettings: vizSettings,
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/edpolicy/intel.json"
+}

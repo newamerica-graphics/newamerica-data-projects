@@ -1,6 +1,4 @@
-import { setupProject } from "../../viz_controller.js";
-
-import { colors } from "../../helper_functions/colors.js";
+let { colors } = require("../../helper_functions/colors.js")
 const d3 = require("d3");
 
 let strikeCompareDate = new Date();
@@ -962,4 +960,7 @@ let vizSettings = {
 	},
 }
 
-setupProject(vizSettings);
+module.exports = {
+	vizSettings: vizSettings,
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/drone-strikes-all.json"
+}
