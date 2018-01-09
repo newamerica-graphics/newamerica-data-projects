@@ -133,7 +133,8 @@ let vizSettings = {
 		titleVar: variables.title,
 		descriptionVars: [variables.criteria, variables.criteria_description],
 		categoryVar: variables.category,
-		sorting: "numerical"
+		sorting: "numerical",
+		format: "single-column"
 	},
 }
 

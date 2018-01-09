@@ -13,10 +13,11 @@ const getRange = (start, end) => { return Array(end - start + 1).fill().map((_, 
 let dotPadding = .5;
 
 class HistogramLayout {
-	constructor(data, width, layoutSettings, dotSettings) {
+	constructor(data, width, layoutSettings) {
 		this.width = width;
 		this.data = data;
 		this.dotSettings = dotSettings;
+		console.log("hello!!!")
 		this.dataVariable = layoutSettings.dateVar.variable;
 
 		let extents = d3.extent(this.data, (d) => {

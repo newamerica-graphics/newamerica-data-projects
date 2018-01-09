@@ -57,6 +57,9 @@ export default class VizController {
 
 	render(dataVizId) {
 		let settingsObject = this.vizSettings[dataVizId]
+
+		console.log(settingsObject)
+		
 		if (settingsObject.isReact) {
 			if (this.data) {
 				this.renderReactChart(dataVizId, settingsObject)
