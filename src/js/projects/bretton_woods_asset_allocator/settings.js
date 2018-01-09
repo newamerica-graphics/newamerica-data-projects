@@ -1,7 +1,4 @@
-import { setupProject } from "../../viz_controller.js";
-
-import { colors } from "../../helper_functions/colors.js";
-
+let { colors } = require("../../helper_functions/colors.js")
 
 let variables = {
 	fund_name: {"variable":"fund_name", "displayName":"Fund Name", "format":"string"},
@@ -45,9 +42,8 @@ let variables = {
 	percent_of_aum_bn: {"variable":"percent_of_aum_bn", "displayName":"Percent of AUM", "format":"percent", "color": colors.turquoise.light},
 }
 
-let vizSettingsList = [
-	{
-		id: "#asset-allocator__bar-chart",
+let vizSettings = {
+	"asset-allocator__bar-chart": {
 		vizType: "bar_chart",
 		primaryDataSheet: "aggregate_scores",
 		orientation: "horizontal",
@@ -64,8 +60,7 @@ let vizSettingsList = [
 		customLeftMargin: 200,
 		showValueAxis: true
 	},
-	{
-		id: "#asset-allocator__world-map",
+	"asset-allocator__world-map": {
 		vizType: "pindrop_map",
 		primaryDataSheet: "funds",
 		geometryType: "world",
@@ -81,8 +76,7 @@ let vizSettingsList = [
 		applyForce: true
 		// clickToProfile: { "variable": variables.program.variable, "url": "https://www.newamerica.org/in-depth/integrating-technology-early-literacy/program-profile/?" }
 	},
-	{
-		id: "#asset-allocator__table",
+	"asset-allocator__table": {
 		primaryDataSheet: "funds",
 		vizType: "table",
 		tableVars: [ variables.fund_name, variables.country, variables.aum_bn, variables.aum_date, variables.type, variables.quintile, variables.disclosure, variables.intention, variables.clarity, variables.integration, variables.implementation_1, variables.implementation_2, variables.commitment, variables.accountability, variables.partnership, variables.standards, variables.development_1, variables.development_2 ],
@@ -91,8 +85,7 @@ let vizSettingsList = [
 		numPerPage: 20,
 		freezeColumn: {leftColumns: 1},
 	},
-	{
-		id: "#asset-allocator__leaders-table",
+	"asset-allocator__leaders-table": {
 		primaryDataSheet: "funds",
 		filterInitialDataFunction: (d) => { return d.top_twenty === "Leaders List"; },
 		vizType: "table",
@@ -101,8 +94,7 @@ let vizSettingsList = [
 		pagination: false,
 		numPerPage: 25,
 	},
-	{
-		id: "#asset-allocator__swf-and-gpf",
+	"asset-allocator__swf-and-gpf": {
 		vizType: "bar_chart",
 		primaryDataSheet: "swf_and_gpf",
 		orientation: "vertical",
@@ -118,8 +110,7 @@ let vizSettingsList = [
 		},
 		showValueAxis: true
 	},
-	{
-		id: "#asset-allocator__regional-composition",
+	"asset-allocator__regional-composition": {
 		vizType: "bar_chart",
 		primaryDataSheet: "regional_composition",
 		orientation: "horizontal",
@@ -135,12 +126,8 @@ let vizSettingsList = [
 		},
 		showValueAxis: true
 	},
-	
-]
-
-let reactVizSettingsList = [
-	{
-		id: "#asset-allocator__metric-definitions",
+	"asset-allocator__metric-definitions": {
+		isReact: true,
 		vizType: "definition_explorer",
 		primaryDataSheet: "metric_definitions",
 		titleVar: variables.title,
@@ -148,15 +135,10 @@ let reactVizSettingsList = [
 		categoryVar: variables.category,
 		sorting: "numerical"
 	},
-]
-
-let projectSettings = {
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/bw2/asset_allocator.json",
-	downloadDataLink: "https://docs.google.com/spreadsheets/d/13kxwNQPWpvjnBrw788YNa28Fwf5Yaa_0lwtxz3_cK3s/",
-	dataSheetNames:["metric_definitions", "funds", "aggregate_scores", "swf_and_gpf", "regional_composition"],
-	vizSettingsList: vizSettingsList,
-	reactVizSettingsList: reactVizSettingsList
 }
 
-setupProject(projectSettings);
+module.exports = {
+	vizSettings: vizSettings,
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/bw2/asset_allocator.json"
+}
 

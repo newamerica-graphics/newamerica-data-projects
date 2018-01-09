@@ -24,6 +24,7 @@ let vizSettings = {
 	"care-index__explore-the-index": { 
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "state_data",
+		tabIcons: ["globe", "table"],
 		chartSettingsList: [
 			{
 				vizType: "topo_json_map",
@@ -105,8 +106,8 @@ let vizSettings = {
 	"care-index__who-pays-for-care": {
 		vizType: "pie_chart",
 		primaryDataSheet: "who_pays_for_care",
-		labelVars: [variables.who_pays_for_care_source],
-		dataVars: [variables.who_pays_for_care_value],
+		labelVar: variables.who_pays_for_care_source,
+		dataVar: variables.who_pays_for_care_value,
 		legendShowVals: true,
 	}
 }

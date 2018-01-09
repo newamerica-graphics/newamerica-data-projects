@@ -1,11 +1,9 @@
-import { setupProject } from "../../viz_controller.js";
-
-import { colors } from "../../helper_functions/colors.js";
+let { colors } = require("../../helper_functions/colors.js")
 
 let variables = {	
 }
 
-let vizSettingsList = [
+let vizSettings = {
 	{
 		id: "#transforming-the-workforce__recommendations", 
 		vizType: "interactive_svg",
@@ -21,12 +19,11 @@ let vizSettingsList = [
 			{id: "#transforming-the-workforce__evaluation_and_assessment", url: "#evaluation-and-assessment"},
 		]
 	}
-]
-
-let projectSettings = {
-	vizSettingsList: vizSettingsList,
 }
 
-setupProject(projectSettings);
+module.exports = {
+	vizSettings: vizSettings,
+	dataUrl: null
+}
 
 	

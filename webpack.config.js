@@ -61,7 +61,7 @@ const config = env => {
     },
     plugins: (env.NODE_ENV === 'development') ? 
       [
-        new BundleAnalyzerPlugin(),
+        // new BundleAnalyzerPlugin(),
         new HtmlWebpackPlugin({
           title: env.project,
           vizIdList: Object.keys(vizSettings),

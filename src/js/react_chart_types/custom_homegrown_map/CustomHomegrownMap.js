@@ -8,7 +8,6 @@ import { worldGeom } from '../../../geometry/world.js';
 // import { stateIdMappings } from '../../helper_functions/state_id_mappings.js';
 // import { countryIdMappings } from '../../helper_functions/country_id_mappings.js';
 
-import $ from 'jquery';
 const d3 = require("d3");
 const topojson = require("topojson");
 

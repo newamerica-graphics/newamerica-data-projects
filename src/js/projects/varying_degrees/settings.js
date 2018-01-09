@@ -1,5 +1,5 @@
 let { colors } = require("../../helper_functions/colors.js")
-let $ =require('jquery');
+let $ = require('jquery');
 
 $.getScript('https://na-data-projects.s3.amazonaws.com/projects/varying_degrees-submodule.js', (d, err) => {
 	console.log(err);

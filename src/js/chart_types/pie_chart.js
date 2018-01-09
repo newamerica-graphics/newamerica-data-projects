@@ -41,9 +41,27 @@ export class PieChart {
 
 	render(data) {
 		this.rawData = data[this.primaryDataSheet];
+
+		let fakeRoot = {}
+
+		if (!this.categoryVar) {
+			fakeRoot[this.labelVar.variable] = "root"
+		}
+
+		this.rawData.push(fakeRoot)
+
+		console.log(fakeRoot)
+		console.log(this.rawData)
+
 		this.data = d3.stratify()
 		    .id((d) => { return d[this.labelVar.variable]; })
-		    .parentId((d) => { return d[this.categoryVar.variable]; })
+		    .parentId((d) => {
+		    	if (this.categoryVar) {
+		    		return d[this.categoryVar.variable]
+		    	} else {
+		    		return d[this.labelVar.variable] === "root" ? null : "root";
+		    	}
+		    })
 		    (this.rawData);
 
 		this.data.sum((d) => { return d[this.dataVar.variable]});

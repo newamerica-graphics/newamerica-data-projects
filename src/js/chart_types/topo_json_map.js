@@ -18,7 +18,7 @@ let topojson = require("topojson");
 export class TopoJsonMap {
 	constructor(vizSettings) {
 		Object.assign(this, vizSettings);
-		
+
 		this.currFilter = this.filterVars[0];
 		
 		if (this.interaction == "click") { this.currClicked == null}; 
@@ -72,7 +72,8 @@ export class TopoJsonMap {
 			let worldGeom = require('../../geometry/world.js');
 			this.geometry = topojson.feature(worldGeom, worldGeom.objects.countries).features;
 		} else {
-			let usGeom = require('../../geometry/us.js');
+			let usGeom = require('../../geometry/us.js').usGeom;
+			console.log(usGeom)
 			this.geometry = topojson.feature(usGeom, usGeom.objects[geometryType]).features;
 		}
 	}

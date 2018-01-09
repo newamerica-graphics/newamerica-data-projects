@@ -7,7 +7,6 @@ import { formatValue } from "../../helper_functions/format_value.js";
 import CalloutBoxDataElement from './CalloutBoxDataElement.js';
 
 const d3 = require("d3");
-import $ from 'jquery';
 
 class CalloutBox extends React.Component {
 	constructor(props) {
