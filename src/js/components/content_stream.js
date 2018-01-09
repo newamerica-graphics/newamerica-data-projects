@@ -135,7 +135,7 @@ export class ContentStream {
 		valueList = currFilter && currFilter.filterVal && this.filterVar ? valueList.filter((d) => { return d[this.filterVar.variable] == currFilter.filterVal}) : valueList
 		let sortedList = valueList.sort((a, b) => { return new Date(b.date) - new Date(a.date); });
 
-		if (color) {
+		if (this.hasColorOutline && color) {
 			this.contentStreamContainer
 				.style("border", "2px solid " + color)
 		}
@@ -160,10 +160,10 @@ export class ContentStream {
 		   	.attr("class", "content-stream__entry");
 
 		let entryContainer;
-		if (this.clickable) {
+		if (this.linkVar) {
 			entryContainer = this.entries.append("a")
 				.attr("class", "content-stream__entry__link-wrapper")
-			   	.attr("href", (d) => { return d.url; });
+			   	.attr("href", (d) => { return d[this.linkVar.variable]; });
 		} else {
 			entryContainer = this.entries;
 		}
@@ -181,7 +181,7 @@ export class ContentStream {
 
 		entryTextContainers.append("h5")
 			.attr("class", "content-stream__entry__date")
-			.text((d) => { return d.processed_date; });
+			.text((d) => { return d[this.dateVar.variable]; });
 
 		entryTextContainers.append("h5")
 			.attr("class", "content-stream__entry__title")

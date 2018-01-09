@@ -3,6 +3,7 @@ let { colors } = require("../../helper_functions/colors.js")
 let variables = {
 	title: {"variable":"title", "displayName":"Title", "format": "string"},
 	url: {"variable":"url", "displayName":"Url", "format": "string"},
+	date: {"variable":"date", "displayName":"Date", "format": "date"},
 	description: {"variable":"description", "displayName":"Description", "format": "string"},
 	image_url: {"variable":"image_url", "displayName":"Image Url", "format": "string"},
 	state_id: {"variable":"state_id", "displayName":"State ID", "format": "string"},
@@ -26,7 +27,8 @@ let vizSettings = {
 					filterGroupSettings: {"hidden": false},
 					isMessagePasser: true,
 					interaction: "click",
-					addSmallStateInsets: true
+					addSmallStateInsets: true,
+					defaultFill: colors.grey.light
 				}
 			],
 			[
@@ -37,6 +39,9 @@ let vizSettings = {
 					width: "100%",
 					isMessagePasser: false,
 					messageHandlerType: "change_value",
+					linkVar: variables.url,
+					dateVar: variables.date,
+					hasColorOutline: false
 				}
 			],
 		]

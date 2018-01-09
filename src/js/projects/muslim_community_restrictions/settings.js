@@ -68,7 +68,9 @@ let vizSettings = {
 					idVar: variables.state,
 					showCurrFilterVal: true, 
 					filterVar: variables.category,
-					additionalDataVars: [variables.population_total, variables.population_muslim]
+					additionalDataVars: [variables.population_total, variables.population_muslim],
+					dateVar: variables.processed_date,
+					hasColorOutline: true
 				}
 			],
 		]

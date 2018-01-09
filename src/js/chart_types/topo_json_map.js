@@ -209,7 +209,7 @@ export class TopoJsonMap {
 	}
 
 	setFill(d) {
-		if (d.data && d.data[this.currFilter.variable]) {
+		if (d.data && (d.data[this.currFilter.variable] || d.data[this.currFilter.variable] === 0)) {
 	   		var value = d.data[this.currFilter.variable];
 
 	   		if (value == 0) { return this.defaultFill }
