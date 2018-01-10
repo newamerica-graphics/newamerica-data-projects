@@ -48,8 +48,8 @@ export function getColorScale(data, filterVar) {
 			
 			// [customDomain, customRange] = newVals
 			console.log("heres!", newVals)
-			customDomain = newVals[0]
-			customRange = newVals[1]
+			customDomain = newVals.domain
+			customRange = newVals.range
 		}
 
 		console.log(customDomain, customRange);
@@ -84,7 +84,7 @@ export function getColorScale(data, filterVar) {
 }
 
 function filterUnusedVals(uniqueVals, customDomain, customRange, canSplitCategory) {
-	if (canSplitCategory) { return [customDomain, customRange] };
+	if (canSplitCategory) { return {"domain": customDomain, "range":customRange} };
 
 	let retDomain = [];
 	let retRange = [];

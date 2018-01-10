@@ -55,7 +55,7 @@ export class FilterGroup {
 			.attr("id", d => d.key);
 
 		this.filterDivs = this.filterLists.selectAll("li")
-			.data(d.values.length > 1 ? d => d.values : [])
+			.data(d => d.values.length > 1 ? d.values : [])
 			.enter().append("li")
 			.classed("filter-group__variable", true)
 			.classed("active", (d, i) => i === 0)

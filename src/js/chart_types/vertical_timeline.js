@@ -50,6 +50,8 @@ export class VerticalTimeline {
 		this.setDimensions();
 
 		this.colorScale = getColorScale(this.data, this.categoryVar);
+
+		console.log(this.colorScale.domain(), this.colorScale.range())
 		this.xScale.domain(this.categories);
 
 		this.appendCategoryTitles();
