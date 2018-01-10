@@ -48,8 +48,8 @@ export function getColorScale(data, filterVar) {
 			
 			// [customDomain, customRange] = newVals
 			console.log("heres!", newVals)
-			customDomain = newVals.domain
-			customRange = newVals.range
+			customDomain = newVals[0]
+			customRange = newVals[1]
 		}
 
 		console.log(customDomain, customRange);

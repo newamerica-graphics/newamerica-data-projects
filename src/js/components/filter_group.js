@@ -55,7 +55,7 @@ export class FilterGroup {
 			.attr("id", d => d.key);
 
 		this.filterDivs = this.filterLists.selectAll("li")
-			.data(d => d.values)
+			.data(d.values.length > 1 ? d => d.values : [])
 			.enter().append("li")
 			.classed("filter-group__variable", true)
 			.classed("active", (d, i) => i === 0)
@@ -81,9 +81,9 @@ export class FilterGroup {
 		console.log("changing filter to", newFilter, newFilterIndex)
 		this.activeFilterIndex = newFilterIndex;
 
-		this.filterDivs.classed("active", (d, i) => i === this.activeFilterIndex)
+		this.filterDivs ? this.filterDivs.classed("active", (d, i) => i === this.activeFilterIndex) : null
 
-		this.listenerFunc(newFilter)
+		this.listenerFunc(newFilter, newFilterIndex)
 	}
 
 	hasCategories() {
