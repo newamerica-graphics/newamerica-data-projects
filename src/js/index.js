@@ -1,13 +1,16 @@
-console.log(VIZ_SETTINGS, DATA_URL)
+console.log(PROJECT)
 
 import VizController from "./vizController.js"
+var {vizSettings, dataUrl} = require("./projects/" + PROJECT + "/settings.js")
 
-window.vizControl = new VizController(VIZ_SETTINGS);
+console.log(vizSettings, dataUrl)
 
-window.vizControl.initialize({dataUrl:DATA_URL});
+window.vizControl = new VizController(vizSettings);
+
+window.vizControl.initialize({dataUrl:dataUrl});
 
 window.addEventListener('resize', vizControl.resize);
 
-Object.keys(VIZ_SETTINGS).forEach((vizKey) => {
+Object.keys(vizSettings).forEach((vizKey) => {
     window.vizControl.render(vizKey)
 })

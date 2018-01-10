@@ -159,7 +159,7 @@ let vizSettings = {
 		groupingVar: variables.president,
 		filterVar: variables.target_organization_name,
 	},
-	"drone-strikes__pakistan__strike-totals-by-president", 
+	"drone-strikes__pakistan__strike-totals-by-president": { 
 		primaryDataSheet: "strikes_by_president",
 		vizType: "table",
 		tableVars: [ variables.president, variables.pk_total_strikes, variables.pk_civilians_lowhigh, variables.pk_militants_lowhigh, variables.pk_unknown_lowhigh, variables.pk_total_lowhigh],
@@ -170,7 +170,7 @@ let vizSettings = {
 		disableSearching: true,
 	 	disableOrdering: true
 	},
-	"drone-strikes__pakistan__strike-map",
+	"drone-strikes__pakistan__strike-map": {
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "pakistan_strikes",
 		tabIcons: ["globe", "table"],
@@ -233,7 +233,7 @@ let vizSettings = {
 			}
 		]
 	},
-	"drone-strikes__pakistan__leaders-map",
+	"drone-strikes__pakistan__leaders-map": {
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "pakistan_strikes",
 		tabIcons: ["table", "globe"],
@@ -384,7 +384,7 @@ let vizSettings = {
 		groupingVar: variables.president,
 		filterVar: variables.target_organization_name,
 	},
-	"drone-strikes__yemen__strike-totals-by-president", 
+	"drone-strikes__yemen__strike-totals-by-president": { 
 		primaryDataSheet: "strikes_by_president",
 		vizType: "table",
 		tableVars: [ variables.president, variables.ym_total_strikes, variables.ym_civilians_lowhigh, variables.ym_militants_lowhigh, variables.ym_unknown_lowhigh, variables.ym_total_lowhigh],
@@ -395,7 +395,7 @@ let vizSettings = {
 		disableSearching: true,
 	 	disableOrdering: true
 	},
-	"drone-strikes__yemen__strike-map",
+	"drone-strikes__yemen__strike-map": {
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "yemen_strikes",
 		tabIcons: ["globe", "table"],
@@ -453,7 +453,7 @@ let vizSettings = {
 			}
 		]
 	},
-	"drone-strikes__yemen__leaders-map",
+	"drone-strikes__yemen__leaders-map": {
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "yemen_strikes",
 		tabIcons: ["table", "globe"],
@@ -601,7 +601,7 @@ let vizSettings = {
 		groupingVar: variables.president,
 		filterVar: variables.target_organization_name,
 	},
-	"drone-strikes__somalia__strike-totals-by-president", 
+	"drone-strikes__somalia__strike-totals-by-president": { 
 		primaryDataSheet: "strikes_by_president",
 		vizType: "table",
 		tableVars: [ variables.president, variables.sm_total_strikes, variables.sm_civilians_lowhigh, variables.sm_militants_lowhigh, variables.sm_unknown_lowhigh, variables.sm_total_lowhigh],
@@ -612,7 +612,7 @@ let vizSettings = {
 		disableSearching: true,
 	 	disableOrdering: true
 	},
-	"drone-strikes__somalia__strike-map",
+	"drone-strikes__somalia__strike-map": {
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "somalia_strikes",
 		tabIcons: ["globe", "table"],
@@ -670,7 +670,7 @@ let vizSettings = {
 			}
 		]
 	},
-	"drone-strikes__somalia__leaders-map",
+	"drone-strikes__somalia__leaders-map": {
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "somalia_strikes",
 		tabIcons: ["table", "globe"],
@@ -733,6 +733,7 @@ let vizSettings = {
 		isReact: true,
 		vizType: "callout_box",
 		primaryDataSheet: "pakistan_strikes",
+		backgroundColor: "black",
 		sections:[
 			{
 				title: "Live Statistics",
@@ -784,6 +785,7 @@ let vizSettings = {
 		isReact: true,
 		vizType: "callout_box",
 		primaryDataSheet: "yemen_strikes",
+		backgroundColor: "black",
 		sections:[
 			{
 				title: "Live Statistics",
@@ -836,6 +838,7 @@ let vizSettings = {
 		isReact: true, 
 		vizType: "callout_box",
 		primaryDataSheet: "somalia_strikes",
+		backgroundColor: "black",
 		sections:[
 			{
 				title: "Live Statistics",
@@ -888,6 +891,7 @@ let vizSettings = {
 		isReact: true,
 		vizType: "callout_box",
 		primaryDataSheet: "niger_strikes",
+		backgroundColor: "black",
 		sections:[
 			{
 				title: "Live Statistics",
@@ -935,11 +939,64 @@ let vizSettings = {
 			}
 		]
 	},
+	"drone-strikes__libya__call-out-data": {
+		isReact: true,
+		vizType: "callout_box",
+		primaryDataSheet: "libya_strikes",
+		backgroundColor: "black",
+		sections:[
+			{
+				title: "Live Statistics",
+				dataElements: [
+					{
+						type:"fact-box-list",
+						format:"horizontal",
+						factBoxVars: [
+							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
+							{ label: "Total strikes (Overall)",type: "count" },
+							{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
+							{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
+						]
+					},
+				]
+			},
+			{
+				title: "Most Recent Strike",
+				dataElements: [
+					{
+						type:"simple-map",
+						country: "libya",
+						latVar: { type: "value", variable: variables.geo_lat, query: {varName:"date", operation:"max"} },
+						lngVar: { type: "value", variable: variables.geo_lon, query: {varName:"date", operation:"max"} }
+					},
+					{
+						type:"fact-box-list",
+						format:"vertical",
+						factBoxVars: [
+							{ label: "Date", type: "value", variable: variables.date, format: "date", query: {varName:"date", operation:"max"} },
+							{ label: "Total Casualties", type: "value", variable: variables.total_lowhigh, query: {varName:"date", operation:"max"}, subVars: [
+								{ label: "Militants", type: "value", variable: variables.militants_lowhigh, query: {varName:"date", operation:"max"} },
+								{ label: "Civilians", type: "value", variable: variables.civilians_lowhigh, query: {varName:"date", operation:"max"} },
+								{ label: "Unknown", type: "value", variable: variables.unknown_lowhigh, query: {varName:"date", operation:"max"} }
+							]},
+							{ label: "Target organization", type: "value", variable: variables.target_organization_name, query: {varName:"date", operation:"max"} }
+						],
+					},
+					{
+						type:"paragraph",
+						paragraphVar: { label: "Details", type: "value", variable: variables.target_description, query: {varName:"date", operation:"max"} },
+							
+					}
+				]
+			}
+		]
+	},
 	"drone-strikes__all__call-out-data": {
 		isReact: true, 
 		vizType: "callout_box",
 		primaryDataSheet: "pakistan_strikes",
-		secondaryDataSheets: ["yemen_strikes", "somalia_strikes", "niger_strikes"],
+		secondaryDataSheets: ["yemen_strikes", "somalia_strikes", "niger_strikes", "libya_strikes"],
+		backgroundColor: "black",
 		sections:[
 			{
 				title: "Live Statistics",

@@ -7,8 +7,8 @@ import { FilterGroup } from "../components/filter_group.js";
 import { colors } from "../helper_functions/colors.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 
-import { usGeom } from '../../geometry/us.js';
-import { worldGeom } from '../../geometry/world.js';
+// import { usGeom } from '../../geometry/us.js';
+// import { worldGeom } from '../../geometry/world.js';
 
 import { formatValue, deformatValue } from "../helper_functions/format_value.js";
 import { defineFillPattern } from "../helper_functions/define_fill_pattern.js";

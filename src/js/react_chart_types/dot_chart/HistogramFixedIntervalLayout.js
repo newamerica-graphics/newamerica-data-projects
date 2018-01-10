@@ -21,11 +21,15 @@ class HistogramFixedIntervalLayout {
 		this.xVariable = this.layoutSettings.xVar.variable;
 		this.sortingVariable = this.layoutSettings.sortingVar.variable;
 
+		console.log(this.extents)
+
 		let filledOutExtents = getRange(this.extents[0], this.extents[1])
 
 		filledOutExtents = this.layoutSettings.isYearMonth ? filledOutExtents.filter(d => {
 			return Number(d.toString().slice(-2)) <= 12 && Number(d.toString().slice(-2)) > 0
 		}) : filledOutExtents
+
+		console.log(filledOutExtents)
 
 		this.xScale.domain(filledOutExtents);
 

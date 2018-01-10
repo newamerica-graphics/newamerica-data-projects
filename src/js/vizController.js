@@ -119,7 +119,7 @@ export default class VizController {
 
 			case "dot_chart":
 				render(
-					<DotChart vizSettings={settingsObject} data={data} />,
+					<DotChart vizSettings={settingsObject} data={data} id={dataVizId} />,
 					document.getElementById(dataVizId)
 				)
 				break;

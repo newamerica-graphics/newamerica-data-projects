@@ -6,12 +6,11 @@
     <script type="text/javascript" src="https://na-staging-static.s3.amazonaws.com/static/js/mysite.js"></script>
   </head>
   <body>
+    <% for(var i=0; i<htmlWebpackPlugin.options.vizIdList.length; i++) { %>
   	<div class="block-dataviz">
-        <div class="dataviz" id="target-div">
-		  	<% for(var i=0; i<htmlWebpackPlugin.options.vizIdList.length; i++) { %>
 		  	<div class="dataviz__chart-area" id="<%= htmlWebpackPlugin.options.vizIdList[i] %>"></div>
-		  	<% } %>
 		</div>
+    <% } %>
 	</div>
   </body>
 </html>

@@ -15,7 +15,7 @@ var DATA_PROJECTS_S3_BUCKET_NAME = process.env.DATA_PROJECTS_S3_BUCKET_NAME;
 
 const config = env => {
   console.log(env)
-  var {vizSettings, dataUrl} = require("./src/js/projects/" + env.project + "/settings.js")
+  var {vizSettings} = require("./src/js/projects/" + env.project + "/settings.js")
 
   return {
     entry: env.NODE_ENV === "development" ? PROJECT_DIR + "/js/index-dev.js" : PROJECT_DIR + "/js/index.js",
@@ -69,8 +69,7 @@ const config = env => {
           filename: '../index-dev.html'
         }),
         new webpack.DefinePlugin({
-          VIZ_SETTINGS:JSON.stringify(vizSettings),
-          DATA_URL:JSON.stringify(dataUrl)
+          PROJECT: JSON.stringify(env.project)
         })
       ] : [
         new UglifyJSPlugin({

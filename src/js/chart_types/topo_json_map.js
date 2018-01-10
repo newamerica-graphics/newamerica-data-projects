@@ -68,14 +68,23 @@ export class TopoJsonMap {
 	}
 
 	setGeometry(geometryType) {
-		if (geometryType == "world") {
-			let worldGeom = require('../../geometry/world.js');
-			this.geometry = topojson.feature(worldGeom, worldGeom.objects.countries).features;
-		} else {
-			let usGeom = require('../../geometry/us.js').usGeom;
-			console.log(usGeom)
-			this.geometry = topojson.feature(usGeom, usGeom.objects[geometryType]).features;
-		}
+		this.geometryPromise = new Promise((resolve, reject) => {
+			
+			d3.json("https://na-data-projects.s3.amazonaws.com/geography/us.json", (error, data) => {
+				console.log(data, error)
+				let retGeom;
+
+				if (geometryType == "world") {
+					retGeom = topojson.feature(data, data.objects.countries).features;
+				} else {
+					retGeom = topojson.feature(data, data.objects[geometryType]).features;
+				}
+
+				resolve(retGeom);
+			})
+
+		})
+			
 	}
 
 	setDimensions() {
@@ -135,13 +144,18 @@ export class TopoJsonMap {
 		this.data = data[this.primaryDataSheet];
 		this.varDescriptionData = this.varDescriptionSheet ? data[this.varDescriptionSheet] : null;
 
-		this.setScale();
-		this.bindDataToGeom();
-		this.buildGraph();
-		this.legendSettings ? this.setLegend() : null;
-		if (!this.hideFilterGroup) {
-			this.filterGroup ? this.setFilterGroup() : null;
-		}
+		this.geometryPromise.then((geometry) => {
+			this.geometry = geometry;
+			
+			this.setScale();
+			this.bindDataToGeom();
+			this.buildGraph();
+			this.legendSettings ? this.setLegend() : null;
+			if (!this.hideFilterGroup) {
+				this.filterGroup ? this.setFilterGroup() : null;
+			}
+		})
+		
 	}
 
 	setScale() {
