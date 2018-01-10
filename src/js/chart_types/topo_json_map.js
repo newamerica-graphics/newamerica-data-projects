@@ -69,8 +69,9 @@ export class TopoJsonMap {
 
 	setGeometry(geometryType) {
 		this.geometryPromise = new Promise((resolve, reject) => {
+			let filename = geometryType === "world" ? "world.json" : "us.json";
 			
-			d3.json("https://na-data-projects.s3.amazonaws.com/geography/us.json", (error, data) => {
+			d3.json("https://na-data-projects.s3.amazonaws.com/geography/" + filename, (error, data) => {
 				console.log(data, error)
 				let retGeom;
 
@@ -146,7 +147,7 @@ export class TopoJsonMap {
 
 		this.geometryPromise.then((geometry) => {
 			this.geometry = geometry;
-			
+
 			this.setScale();
 			this.bindDataToGeom();
 			this.buildGraph();

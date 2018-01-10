@@ -1,7 +1,23 @@
-import $ from 'jquery';
-
 let { colors } = require("../../helper_functions/colors.js")
-import { formatValue } from "../../helper_functions/format_value.js";
+
+let d3 = require("d3")
+
+let formatValue =(value, format) => {
+    switch(format) {
+        case "number":
+            return isNaN(value) ? value : d3.format(",")(value);
+        case "number_with_decimal_2":
+            return isNaN(value) ? value : d3.format(",.2f")(value);
+        case "number_per_ten_thousand":
+            return isNaN(value) ? value : d3.format(",.2f")(Number(value)*10000);
+        case "price":
+            return isNaN(value) ? value : d3.format("$,.0f")(value);
+        case "percent_no_multiply":
+            return isNaN(value) ? value : d3.format(".1f")(value) + "%";
+        case "percent":
+            return isNaN(value) ? value : d3.format(".0%")(value);
+    }
+}
 
 let variables = {
     medhhinc: {"variable":"MEDHHINC", "displayName":"Median Household Income", "format": "price",  "scaleType": "quantize", "customDomain":[0, 37500, 75000, 112500, 150000], "customRange":["rgb(247, 247, 247)","rgb(238, 238, 239)","rgb(196, 197, 199)","rgb(120, 122, 126)","rgb(44, 47, 53)"], "numBins":5},

@@ -16,7 +16,7 @@ import { whichChart, defaultClickToProfile } from "./utilities.js";
 import DefinitionExplorer from "./react_chart_types/definition_explorer/DefinitionExplorer.js";
 import CalloutBox from "./react_chart_types/callout_box/CalloutBox.js";
 import DotChart from "./react_chart_types/dot_chart/DotChart.js";
-
+import CustomHomegrownMap from "./react_chart_types/custom_homegrown_map/CustomHomegrownMap.js";
 
 
 export default class VizController {
@@ -37,6 +37,7 @@ export default class VizController {
 
 	sendDataRequest(dataUrl) {
 		console.log(dataUrl)
+		if (!dataUrl) { return; }
 		d3.json(dataUrl, (data) => {
 			console.log("data received")
 			console.log(data);
@@ -72,7 +73,7 @@ export default class VizController {
 
 			this.vizList.push(chart)
 			
-			if (this.data) {
+			if (this.data || settingsObject.vizType === "financial_opportunity_map") {
 				chart.render(this.data) 
 			} else {
 				this.renderQueue.push((data) => { return chart.render(data); })
@@ -110,6 +111,14 @@ export default class VizController {
 					document.getElementById(dataVizId)
 				)
 				break;
+
+			case "custom_homegrown_map":
+				render(
+					<CustomHomegrownMap vizSettings={settingsObject} data={data} id={dataVizId} />,
+					document.getElementById(dataVizId)
+				)
+				break;
+
 			case "definition_explorer":
 				render(
 					<DefinitionExplorer vizSettings={settingsObject} data={data} />,
