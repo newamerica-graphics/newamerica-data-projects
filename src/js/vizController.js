@@ -11,7 +11,7 @@ import { render } from 'react-dom';
 
 import { formatValue } from "./helper_functions/format_value.js";
 
-import { whichChart, defaultClickToProfile } from "./utilities.js";
+import { whichChart, defaultClickToProfile, setCSVZipLink, setJSONZipLink, setProfileValues } from "./utilities.js";
 
 import DefinitionExplorer from "./react_chart_types/definition_explorer/DefinitionExplorer.js";
 import CalloutBox from "./react_chart_types/callout_box/CalloutBox.js";
@@ -26,7 +26,9 @@ export default class VizController {
 
 		this.renderQueue = [];
 		this.vizList = [];
-		this.clickToProfileFunction = defaultClickToProfile
+		this.clickToProfileFunction = defaultClickToProfile;
+		this.deferredSetDataDownload = null;
+
 	}
 
 	initialize({dataUrl, clickToProfileFunction}) {
@@ -36,7 +38,7 @@ export default class VizController {
 		}
 	}
 
-	sendDataRequest(dataUrl) {
+	sendDataRequest(dataUrl, downloadableDataSheets) {
 		console.log(dataUrl)
 		if (!dataUrl) { return; }
 		d3.json(dataUrl, (data) => {
@@ -47,9 +49,16 @@ export default class VizController {
 	    		for (let renderFunc of this.renderQueue) {
 	    			console.log("rendering from queue")
 	    			renderFunc(data);
+	    			// after refresh, this functionality can be handled from front-end page template, instead of here
+					this.hideLoadingGif(dataVizId);
 	    		}
 	    	}
 	    	this.data = data;
+
+	    	// the following function, which currently sets the values for the in depth profile pages based on the results from the data request, will be unneccessary after the refresh
+	    	setProfileValues(data);
+
+	    	if (this.deferredSetDataDownload) { this.deferredSetDataDownload() }
 	    });
 
 	    // $('.dataviz__render-now').each(() => {
@@ -65,6 +74,9 @@ export default class VizController {
 		if (settingsObject.isReact) {
 			if (this.data) {
 				this.renderReactChart(dataVizId, settingsObject)
+
+				// after refresh, this functionality can be handled from front-end page template, instead of here
+				this.hideLoadingGif(dataVizId);
 			} else {
 				this.renderQueue.push((data) => { return this.renderReactChart(dataVizId, settingsObject, data); })
 			}
@@ -76,7 +88,9 @@ export default class VizController {
 			this.vizList.push(chart)
 			
 			if (this.data || settingsObject.vizType === "financial_opportunity_map") {
-				chart.render(this.data) 
+				chart.render(this.data)
+				// after refresh, this functionality can be handled from front-end page template, instead of here
+				this.hideLoadingGif(dataVizId);
 			} else {
 				this.renderQueue.push((data) => { return chart.render(data); })
 			}
@@ -151,142 +165,34 @@ export default class VizController {
 	getData() {
 		return this.data;
 	}
+
+	// after refresh, this functionality can be handled from front-end page template, instead of here
+	hideLoadingGif(id) {
+		$(id).siblings(".dataviz__loading-gif").hide();
+		$(id).css("visibility", "visible").css("min-height","none");
+	}
+
+	setDataDownloadLinks(downloadableDataSheets, customDataDownloadSource) {
+		if (customDataDownloadSource) {
+			$("#in-depth__download__csv").attr("href", customDataDownloadSource);
+		} else {
+			if (!this.data) {
+				this.deferredSetDataDownload = (downloadableDataSheets, customDataDownloadSource) => this.setDataDownloadLinks(downloadableDataSheets, customDataDownloadSource)
+				return;
+			}
+
+			let downloadableDataJson = {};
+			for (let sheetName of downloadableDataSheets) {	
+				downloadableDataJson[sheetName] = this.data[sheetName];
+			}
+
+			setCSVZipLink(downloadableDataJson);
+			setJSONZipLink(downloadableDataJson);
+		}
+	}
 }
 
-// 	function hideLoadingGif(id) {
-// 		console.log("hiding loading gif");
-// 		console.log(id);
-// 		$(id).siblings(".dataviz__loading-gif").hide();
-// 		$(id).css("visibility", "visible").css("min-height","none");
-// 	}
 
-// function setDataDownloadLinks(data, projectSettings) {
-// 	if (projectSettings.customDataDownloadSource) {
-// 		$("#in-depth__download__csv").attr("href", projectSettings.customDataDownloadSource);
-// 	} else {
-// 		let publicDataJson = {};
-// 		for (let sheetName of dataSheetNames) {	
-// 			publicDataJson[sheetName] = data[sheetName];
-// 		}
 
-// 		setCSVZipLink(publicDataJson);
-// 		setJSONZipLink(publicDataJson);
-// 	}
-// }
 
-// 	function setCSVZipLink(dataJson) {
-// 		var zip = new JSZip();
 
-// 		for (let sheetName of dataSheetNames) {
-// 			let fields = Object.keys(dataJson[sheetName][0]);
-
-// 			console.log("LENGTH IS")
-// 			console.log(dataJson[sheetName].length)
-
-// 			let csvString = json2csv({ data: dataJson[sheetName], fields: fields });
-
-// 			console.log(csvString.length);
-
-// 			zip.file(sheetName + ".csv", csvString);
-// 		}
-
-// 		zip.generateAsync({type:"base64"}).then(function (base64) {
-// 		    $("#in-depth__download__csv").attr("href", "data:application/zip;base64," + base64);
-// 		});
-// 	}
-
-// 	function setJSONZipLink(dataJson) {
-// 		var jsonDataUrlString = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataJson));
-// 		$("#in-depth__download__json").attr("href", jsonDataUrlString);
-// 	}
-
-// 	function setProfileValues(data) {
-// 		let $inDepthProfile = $(".in-depth__profile");
-// 		let dataSheet = $inDepthProfile.attr("data-sheet-name");
-// 		let lookupField = $inDepthProfile.attr("data-lookup-field");
-// 		let lookupValue = decodeURI(window.location.search).replace("?", "");
-
-// 		if (!lookupField) {
-// 			return;
-// 		}
-
-// 		let allLookupValues = d3.nest()
-// 			.key((d) => { return d[lookupField].toLowerCase(); })
-// 			.map(data[dataSheet]);
-
-// 		let currElement = allLookupValues.get(lookupValue);
-// 		currElement = currElement ? currElement[0] : null;
-
-// 		if (currElement) {
-// 			setOtherValueSelectorOptions(allLookupValues.keys(), true);
-// 		} else {
-// 			setOtherValueSelectorOptions(allLookupValues.keys(), false);
-// 			$(".in-depth__profile__body").empty();
-// 			$(".in-depth__profile__title-block").hide();
-// 			return;
-// 		}
-
-// 		let valueDiv, footnoteLabelDiv, displayField, fieldFormat, footnoteField;
-		
-// 		$(".in-depth__profile__title-block__title").text(currElement[lookupField])
-
-// 		$(".block-data_reference").each(function(i, container) {
-// 			let footnoteCount = 1;
-// 			let footnoteContainer = $(container).children(".data-reference__footnote-container");
-
-// 			$(container).find(".data-reference__row").each(function(j, dataRow) {
-// 				valueDiv = $(dataRow).children(".data-reference__value");
-// 				footnoteLabelDiv = $(dataRow).find(".data-reference__footnote__label");
-
-// 				displayField = $(valueDiv).attr("data-field-name");
-// 				fieldFormat = $(valueDiv).attr("data-field-format");
-// 				footnoteField = $(footnoteLabelDiv).attr("data-footnote-field-name");
-
-// 				let value = formatValue(currElement[displayField], fieldFormat);
-
-// 				if (value && value.length > 0) {
-// 					if (fieldFormat == "markdown") {
-// 						$(valueDiv).html(value);
-// 					} else {
-// 						$(valueDiv).text(value);
-// 					}
-// 					if (footnoteField && currElement[footnoteField] && currElement[footnoteField] != null) {
-
-// 						$(footnoteLabelDiv).text(footnoteCount);
-// 						$(footnoteContainer).append("<li class='data-reference__footnote'>" + footnoteCount + ". " + currElement[footnoteField] + "</li>");
-// 						footnoteCount++;
-// 					}
-// 				} else {
-// 					$(dataRow).hide();
-// 				}
-// 			})
-// 		})
-
-// 		$(".video-data-reference").each(function(i, item) {
-// 			displayField = $(item).attr("data-field-name");
-// 			let hostSite = $(item).attr("data-host");
-			
-// 			let value = currElement[displayField];
-
-// 			if (value && value.length > 0) {
-// 				if (hostSite == "vimeo") {
-// 					$(item).append('<iframe width="640" height="360" frameborder="0" src="https://player.vimeo.com/video/' + value + '"></iframe>');
-// 				} else {
-// 					$(item).append('<iframe width="640" height="360" frameborder="0" src="https://www.youtube.com/embed/' + value + '"></iframe>');				}
-// 			} else {
-// 				$(item).hide();
-// 			}
-// 		})
-// 	}
-
-// 	function setOtherValueSelectorOptions(otherValuesList, pageHasValue) { 
-// 		let $valueSelector = $(".in-depth__profile__other-value-selector");
-// 		for (let item of otherValuesList) {
-// 			let option = $('<option/>')
-// 		        .addClass('in-depth__profile__other-value-selector__option')
-// 		        .text(item)
-// 		        .attr("value", encodeURI(item))
-// 		        .appendTo($valueSelector);
-// 		}
-// 	}
-// }

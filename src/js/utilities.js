@@ -63,3 +63,121 @@ export const defaultClickToProfile = (profileName) => {
 
 	window.location.pathname = "/" + splitPieces[1] + "/" + splitPieces[2] + "/profile/?" + encodeURI(profileName);
 }
+
+export const setCSVZipLink = (dataJson) => {
+	var zip = new JSZip();
+
+	for (let sheetName of dataSheetNames) {
+		let fields = Object.keys(dataJson[sheetName][0]);
+
+		console.log("LENGTH IS")
+		console.log(dataJson[sheetName].length)
+
+		let csvString = json2csv({ data: dataJson[sheetName], fields: fields });
+
+		console.log(csvString.length);
+
+		zip.file(sheetName + ".csv", csvString);
+	}
+
+	zip.generateAsync({type:"base64"}).then(function (base64) {
+	    $("#in-depth__download__csv").attr("href", "data:application/zip;base64," + base64);
+	});
+}
+
+export const setJSONZipLink = (dataJson) => {
+	var jsonDataUrlString = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataJson));
+	$("#in-depth__download__json").attr("href", jsonDataUrlString);
+}
+
+
+
+export const setProfileValues = (data) => {
+	let $inDepthProfile = $(".in-depth__profile");
+	let dataSheet = $inDepthProfile.attr("data-sheet-name");
+	let lookupField = $inDepthProfile.attr("data-lookup-field");
+	let lookupValue = decodeURI(window.location.search).replace("?", "");
+
+	if (!lookupField) {
+		return;
+	}
+
+	let allLookupValues = d3.nest()
+		.key((d) => { return d[lookupField].toLowerCase(); })
+		.map(data[dataSheet]);
+
+	let currElement = allLookupValues.get(lookupValue);
+	currElement = currElement ? currElement[0] : null;
+
+	if (currElement) {
+		setOtherValueSelectorOptions(allLookupValues.keys(), true);
+	} else {
+		setOtherValueSelectorOptions(allLookupValues.keys(), false);
+		$(".in-depth__profile__body").empty();
+		$(".in-depth__profile__title-block").hide();
+		return;
+	}
+
+	let valueDiv, footnoteLabelDiv, displayField, fieldFormat, footnoteField;
+	
+	$(".in-depth__profile__title-block__title").text(currElement[lookupField])
+
+	$(".block-data_reference").each(function(i, container) {
+		let footnoteCount = 1;
+		let footnoteContainer = $(container).children(".data-reference__footnote-container");
+
+		$(container).find(".data-reference__row").each(function(j, dataRow) {
+			valueDiv = $(dataRow).children(".data-reference__value");
+			footnoteLabelDiv = $(dataRow).find(".data-reference__footnote__label");
+
+			displayField = $(valueDiv).attr("data-field-name");
+			fieldFormat = $(valueDiv).attr("data-field-format");
+			footnoteField = $(footnoteLabelDiv).attr("data-footnote-field-name");
+
+			let value = formatValue(currElement[displayField], fieldFormat);
+
+			if (value && value.length > 0) {
+				if (fieldFormat == "markdown") {
+					$(valueDiv).html(value);
+				} else {
+					$(valueDiv).text(value);
+				}
+				if (footnoteField && currElement[footnoteField] && currElement[footnoteField] != null) {
+
+					$(footnoteLabelDiv).text(footnoteCount);
+					$(footnoteContainer).append("<li class='data-reference__footnote'>" + footnoteCount + ". " + currElement[footnoteField] + "</li>");
+					footnoteCount++;
+				}
+			} else {
+				$(dataRow).hide();
+			}
+		})
+	})
+
+	$(".video-data-reference").each(function(i, item) {
+		displayField = $(item).attr("data-field-name");
+		let hostSite = $(item).attr("data-host");
+		
+		let value = currElement[displayField];
+
+		if (value && value.length > 0) {
+			if (hostSite == "vimeo") {
+				$(item).append('<iframe width="640" height="360" frameborder="0" src="https://player.vimeo.com/video/' + value + '"></iframe>');
+			} else {
+				$(item).append('<iframe width="640" height="360" frameborder="0" src="https://www.youtube.com/embed/' + value + '"></iframe>');				}
+		} else {
+			$(item).hide();
+		}
+	})
+}
+
+const setOtherValueSelectorOptions = (otherValuesList, pageHasValue) => { 
+	let $valueSelector = $(".in-depth__profile__other-value-selector");
+	for (let item of otherValuesList) {
+		let option = $('<option/>')
+	        .addClass('in-depth__profile__other-value-selector__option')
+	        .text(item)
+	        .attr("value", encodeURI(item))
+	        .appendTo($valueSelector);
+	}
+}
