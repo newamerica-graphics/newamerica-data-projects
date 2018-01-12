@@ -84,7 +84,7 @@ export function getColorScale(data, filterVar) {
 }
 
 function filterUnusedVals(uniqueVals, customDomain, customRange, canSplitCategory) {
-	if (canSplitCategory) { return [customDomain, customRange] };
+	if (canSplitCategory) { return {"domain": customDomain, "range":customRange} };
 
 	let retDomain = [];
 	let retRange = [];

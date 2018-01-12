@@ -136,7 +136,13 @@ export class Slider {
 	}
 
 	render(data) {
-		this.data = data;
+		console.log(data)
+		if ($.isArray(data)) {
+			this.data = data
+		} else {
+			this.data = data[this.primaryDataSheet];
+		}
+		
 		let dataExtents = d3.extent(this.data, (d) => { return Number(d[this.sliderVar.variable]) != 0 ? Number(d[this.sliderVar.variable]) : null; });
 		this.scale.domain([dataExtents[0], dataExtents[1]]);
 		this.sliderVal = dataExtents[0];

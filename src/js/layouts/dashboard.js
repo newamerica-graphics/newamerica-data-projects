@@ -63,6 +63,9 @@ export class Dashboard {
 				component = new SelectBox(componentSettings);
 				break;
 			case "slider":
+				if (componentSettings.isMessagePasser) {
+					componentSettings.filterChangeFunction = this.changeFilter.bind(this);
+				}
 				component = new Slider(componentSettings);
 				break;
 			case "text_box":

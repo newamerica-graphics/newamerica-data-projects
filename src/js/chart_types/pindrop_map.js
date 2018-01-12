@@ -7,8 +7,8 @@ import { FilterGroup } from "../components/filter_group.js";
 import { colors } from "../helper_functions/colors.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 
-import { usGeom } from '../../geometry/us.js';
-import { worldGeom } from '../../geometry/world.js';
+// import { usGeom } from '../../geometry/us.js';
+// import { worldGeom } from '../../geometry/world.js';
 
 import { formatValue, deformatValue } from "../helper_functions/format_value.js";
 import { defineFillPattern } from "../helper_functions/define_fill_pattern.js";
@@ -22,8 +22,8 @@ export class PinDropMap {
 	constructor(vizSettings) {
 		Object.assign(this, vizSettings);
 		
-		this.currFilterIndex = 0;
-		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
+		
+		this.currFilter = this.filterVars[0];
 		this.zoomRatio = 1;
 
 		this.setGeometry(this.geometryType);
@@ -69,11 +69,22 @@ export class PinDropMap {
 	}
 
 	setGeometry(geometryType) {
-		if (geometryType == "world") {
-			this.geometry = topojson.feature(worldGeom, worldGeom.objects.countries).features;
-		} else {
-			this.geometry = topojson.feature(usGeom, usGeom.objects[geometryType]).features;
-		}
+		this.geometryPromise = new Promise((resolve, reject) => {
+			let filename = geometryType === "world" ? "world.json" : "us.json";
+			
+			d3.json("https://na-data-projects.s3.amazonaws.com/geography/" + filename, (error, data) => {
+				console.log(data, error)
+				let retGeom;
+
+				if (geometryType == "world") {
+					retGeom = topojson.feature(data, data.objects.countries).features;
+				} else {
+					retGeom = topojson.feature(data, data.objects[geometryType]).features;
+				}
+
+				resolve(retGeom);
+			})
+		})
 	}
 
 	setDimensions() {
@@ -126,17 +137,21 @@ export class PinDropMap {
 		this.data = data[this.primaryDataSheet];
 		this.varDescriptionData = this.varDescriptionSheet ? data[this.varDescriptionSheet] : null;
 
-		this.setScales();
+		this.geometryPromise.then((geometry) => {
+			this.geometry = geometry;
 
-		this.buildGraph();
+			this.setScales();
 
-		this.applyForce ? this.setupForceLayout() : null;
-		this.legendSettings ? this.setLegend() : null;
-		this.filterGroup ? this.setFilterGroup() : null;
+			this.buildGraph();
+
+			this.applyForce ? this.setupForceLayout() : null;
+			this.legendSettings ? this.setLegend() : null;
+			this.filterGroup ? this.setFilterGroup() : null;
+		})
 	}
 
 	setScales() {
-		this.colorScale = getColorScale(this.data, this.filterVars[this.currFilterIndex]);
+		this.colorScale = getColorScale(this.data, this.currFilter);
 		if (this.radiusVar) {
 			this.radiusScale = d3.scaleLinear().range([3, 20]);
 
@@ -208,13 +223,13 @@ export class PinDropMap {
 	}
 
 	setLegend() {
-		this.legendSettings.title = this.filterVars[this.currFilterIndex].displayName;
-		this.legendSettings.format = this.filterVars[this.currFilterIndex].format;
-		this.legendSettings.scaleType = this.filterVars[this.currFilterIndex].scaleType;
+		this.legendSettings.title = this.currFilter.displayName;
+		this.legendSettings.format = this.currFilter.format;
+		this.legendSettings.scaleType = this.currFilter.scaleType;
 		this.legendSettings.colorScale = this.colorScale;
 		this.legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
 		this.legendSettings.varDescriptionData = this.varDescriptionData;
-		this.legendSettings.varDescriptionVariable = this.filterVars[this.currFilterIndex].variable;
+		this.legendSettings.varDescriptionVariable = this.currFilter.variable;
 		this.legendSettings.radiusScale = this.radiusScale
 		this.legendSettings.radiusVar = this.radiusVar
 
@@ -250,9 +265,8 @@ export class PinDropMap {
 		this.legendSettings ? this.legend.resize() : null;
 	}
 
-	changeFilter(variableIndex) {
-		this.currFilterIndex = variableIndex;
-		this.currFilterVar = this.filterVars[this.currFilterIndex].variable;
+	changeFilter(variable) {
+		this.currFilter = variable;
 
 		this.setScales();
 		this.legendSettings ? this.setLegend() : null;
@@ -267,7 +281,7 @@ export class PinDropMap {
 		this.points
 			.attr("stroke-width", (d) => { return datum == d ? 2/this.zoomRatio : 1/this.zoomRatio})
 		
-		this.tooltip ? this.tooltip.show(datum, mousePos, this.filterVars[this.currFilterIndex], d3.select(path).attr("fill")) : null;
+		this.tooltip ? this.tooltip.show(datum, mousePos, this.currFilter, d3.select(path).attr("fill")) : null;
 	}
 
 	mouseout(path) {
@@ -279,7 +293,7 @@ export class PinDropMap {
 	changeVariableValsShown(valsShown) {
 		this.points
 			.style("display", (d) => {
-		   		let value = d ? d[this.currFilterVar] : null;
+		   		let value = d ? d[this.currFilter.variable] : null;
 		   		if (value) {
 		   			// to account for cases where values can be split across multiple categories
 		   			let splitVals = value.split(";");
@@ -307,9 +321,9 @@ export class PinDropMap {
 	}
 
 	setFill(d) {
-		if (d && d[this.currFilterVar]) {
-	   		let value = d[this.currFilterVar];
-	   		if (this.filterVars[this.currFilterIndex].canSplitCategory) {
+		if (d && d[this.currFilter.variable]) {
+	   		let value = d[this.currFilter.variable];
+	   		if (this.currFilter.canSplitCategory) {
 	   			let splitVals = value.split(";");
 	   			if (splitVals.length > 1) {
 	   				let id = Math.round(Math.random() * 10000);

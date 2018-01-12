@@ -7,9 +7,6 @@ import { FilterGroup } from "../components/filter_group.js";
 import { colors } from "../helper_functions/colors.js";
 import { getColorScale } from "../helper_functions/get_color_scale.js";
 
-import { usGeom } from '../../geometry/us.js';
-import { worldGeom } from '../../geometry/world.js';
-
 import { formatValue, deformatValue } from "../helper_functions/format_value.js";
 import { defineFillPattern } from "../helper_functions/define_fill_pattern.js";
 
@@ -71,11 +68,23 @@ export class TopoJsonMap {
 	}
 
 	setGeometry(geometryType) {
-		if (geometryType == "world") {
-			this.geometry = topojson.feature(worldGeom, worldGeom.objects.countries).features;
-		} else {
-			this.geometry = topojson.feature(usGeom, usGeom.objects[geometryType]).features;
-		}
+		this.geometryPromise = new Promise((resolve, reject) => {
+			let filename = geometryType === "world" ? "world.json" : "us.json";
+			
+			d3.json("https://na-data-projects.s3.amazonaws.com/geography/" + filename, (error, data) => {
+				let retGeom;
+
+				if (geometryType == "world") {
+					retGeom = topojson.feature(data, data.objects.countries).features;
+				} else {
+					retGeom = topojson.feature(data, data.objects[geometryType]).features;
+				}
+
+				resolve(retGeom);
+			})
+
+		})
+			
 	}
 
 	setDimensions() {
@@ -135,25 +144,25 @@ export class TopoJsonMap {
 		this.data = data[this.primaryDataSheet];
 		this.varDescriptionData = this.varDescriptionSheet ? data[this.varDescriptionSheet] : null;
 
-		this.setScale();
-		this.bindDataToGeom();
-		this.buildGraph();
-		this.legendSettings ? this.setLegend() : null;
-		if (!this.hideFilterGroup) {
-			this.filterGroup ? this.setFilterGroup() : null;
-		}
+		this.geometryPromise.then((geometry) => {
+			this.geometry = geometry;
+
+			this.setScale();
+			this.bindDataToGeom();
+			this.buildGraph();
+			this.legendSettings ? this.setLegend() : null;
+			if (!this.hideFilterGroup) {
+				this.filterGroup ? this.setFilterGroup() : null;
+			}
+		})
+		
 	}
 
 	setScale() {
 		this.colorScale = getColorScale(this.data, this.currFilter);
-
-		console.log(this.colorScale.domain())
-
 		if (this.currFilter.format == "number" && this.colorScale.domain()[0] == 0) {
 			this.colorScale.domain([1, this.colorScale.domain()[1]])
 		}
-
-		console.log(this.colorScale.domain())
 	}
 
 	bindDataToGeom() {
@@ -209,14 +218,13 @@ export class TopoJsonMap {
 	}
 
 	setFill(d) {
-		if (d.data && d.data[this.currFilter.variable]) {
+		if (d.data && (d.data[this.currFilter.variable] || d.data[this.currFilter.variable] === 0)) {
 	   		var value = d.data[this.currFilter.variable];
 
 	   		if (value == 0) { return this.defaultFill }
 	   		if (this.currFilter.canSplitCategory) {
 	   			let splitVals = value.split(";");
 	   			if (splitVals.length > 1) {
-	   				console.log(this.colorScale.domain())
 	   				let id = d.data[this.geometryVar.variable];
 	   				this.svgDefs = defineFillPattern(splitVals, id, this.colorScale, this.svgDefs, "polygon");
 					
@@ -235,7 +243,6 @@ export class TopoJsonMap {
 	}
 
 	setLegend() {
-		console.log(this.data)
 		this.legendSettings.title = this.currFilter.altLegendTitle || this.currFilter.displayName;
 		this.legendSettings.format = this.currFilter.format;
 		this.legendSettings.scaleType = this.currFilter.scaleType;
@@ -259,7 +266,6 @@ export class TopoJsonMap {
 	}
 
 	changeFilter(newFilter) {
-		console.log(newFilter)
 		this.currFilter = newFilter;
 
 		this.setScale();
@@ -331,7 +337,6 @@ export class TopoJsonMap {
 	}
 
 	mouseover(datum, path, eventObject) {
-		console.log(datum, path, eventObject);
 		if (this.mouseoverOnlyIfValue) {
 			if (!datum.data || !datum.data[this.currFilter.variable]) {
 				return;
@@ -368,7 +373,6 @@ export class TopoJsonMap {
 	}
 
 	clicked(datum, path, eventObject) {
-		console.log(this.currClicked);
 		if (this.currClicked) {
 			d3.select(this.currClicked)
 				.style("stroke", this.stroke.color || "white")
@@ -376,9 +380,7 @@ export class TopoJsonMap {
 			    .style("fill-opacity", this.stroke.opacity || "1")
 			this.currClicked = null;
 		}
-		console.log(datum, this.currFilter.variable)
 		if (datum && datum.data && datum.data[this.currFilter.variable] != 0 && datum.data[this.currFilter.variable] != "None") {
-			console.log("has data")
 			d3.select(path)
 				.style("stroke", "white")
 			    .style("stroke-width", "3");

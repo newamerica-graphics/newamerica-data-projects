@@ -1,195 +1,48 @@
-<!doctype html>
-<html lang="">
-    <head>
-        <meta charset="utf-8" /> 
-      <script type="text/javascript" src="https://na-staging-static.s3.amazonaws.com/static/js/mysite.js"></script>
-      <!-- <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v1.3.1/mapbox-gl-geocoder.css' type='text/css' /> -->
-      <style>
-
-</style>
-        
-    </head>
-    <body>
-        <!-- <select class="in-depth__profile__other-value-selector" onchange="document.location = '?' + this.value;" placeholder="Select Another Value">
-            <option value="" disabled selected>Select Another Value</option>
-        </select>
-        <div class="in-depth__profile__body post-body" data-sheet-name="state_data" data-lookup-field="state">
-            <div class="block-data_reference">
-                <div class="data-reference__value" data-field-name="hhi_median" data-field-format="number"></div>
-            </div>
-        </div> -->
-        <a name="download-data" id="in-depth__download__csv" download="bwii-responsible-asset-allocator.zip">Download as CSV</a>
-        <div class="block-dataviz">
-          <div class="dataviz" id="target-div">
-            <div class="dataviz__loading-gif"></div>
-            <div class="dataviz__chart-area" id="care-index__explore-the-index"></div>
-                <div class="dataviz__chart-area" id="care-index__explore-the-index"></div>
-                <div class="dataviz__chart-area" id="care-index__explore-the-index__availability"></div>
-                <div class="dataviz__chart-area" id="care-index__child-care-accredidation"></div>
-                <div class="dataviz__chart-area" id="care-index__summary-box__new-mexico"></div>
-                <div class="dataviz__chart-area" id="care-index__summary-box__georgia"></div>
-                <div class="dataviz__chart-area" id="care-index__summary-box__illinois"></div>
-                <div class="dataviz__chart-area" id="care-index__summary-box__massachusetts"></div>
-                <div class="dataviz__chart-area" id="care-index__who-pays-for-care"></div>
-                
-                <div class="dataviz__chart-area" id="homegrown__deadly-attacks"></div>
-                <div class="dataviz__chart-area" id="homegrown__fact-box__prevention-method"></div>
-                <div class="dataviz__chart-area" id="homegrown__fact-box__method-of-radicalization"></div>
-                <div class="dataviz__chart-area" id="homegrown__outcome-for-extremist"></div>
-                <div class="dataviz__chart-area" id="homegrown__awlaki-over-time"></div>
-                <div class="dataviz__chart-area" id="homegrown__citizenship-status"></div>
-                <div class="dataviz__chart-area" id="homegrown__convert-status"></div>
-                <div class="dataviz__chart-area" id="homegrown__convert-status-2"></div>
-                <div class="dataviz__chart-area" id="homegrown__convert-status-3"></div>
-                <div class="dataviz__chart-area" id="homegrown__age-of-extremists"></div>
-                <div class="dataviz__chart-area" id="homegrown__gender-of-extremists"></div>
-                <div class="dataviz__chart-area" id="homegrown__extremist-data-table"></div>
-                <div class="dataviz__chart-area" id="homegrown__fact-box__association-with-awlaki"></div>
-                <div class="dataviz__chart-area" id="homegrown__fact-box__gender-of-extremists"></div>
-                <div class="dataviz__chart-area" id="homegrown__online-radicalization"></div>
-                <div class="dataviz__chart-area" id="homegrown__non-lethal-origins"></div>
-                <div class="dataviz__chart-area" id="homegrown__lethal-origins"></div>
-
-                <div class="dataviz__loading-gif"></div>
-                <div class="dataviz__chart-area" id="extreme-weather__fema-declarations"></div>
-                <div class="dataviz__chart-area" id="extreme-weather__fema-declarations-fire"></div>
-                <div class="dataviz__chart-area" id="extreme-weather__counties-map"></div>
-                <div class="dataviz__chart-area" id="extreme-weather__event-types"></div>
-                <div class="dataviz__chart-area" id="extreme-weather__events-year-counts"></div>
-
-                <div class="dataviz__chart-area" id="world-of-drones__import-export"></div>
-                <div class="dataviz__chart-area" id="world-of-drones__have-armed-drones"></div>
-                <div class="dataviz__chart-area" id="world-of-drones__developing-armed-drones"></div>
-                <div class="dataviz__chart-area" id="world-of-drones__drones-in-combat"></div>
-
-                <div class="dataviz__chart-area" id="financial-opportunity__census-tract-map"></div>
-                <div class="dataviz__chart-area" id="financial-opportunity__county-map"></div>
-                <div class="dataviz__chart-area" id="financial-opportunity__census-tract-map-other-services"></div>
-
-                <div class="dataviz__chart-area" id="drone-strikes__pakistan__by-president"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__pakistan__by-casualty-type"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__pakistan__targets"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__pakistan__strike-list"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__pakistan__strike-totals-by-president"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__pakistan__strike-map"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__pakistan__leaders-map"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__pakistan__call-out-data"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__yemen__by-casualty-type"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__yemen__by-president"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__yemen__by-strike-type"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__yemen__targets"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__yemen__strike-list"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__yemen__strike-totals-by-president"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__yemen__strike-map"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__yemen__leaders-map"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__yemen__call-out-data"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__somalia__by-casualty-type"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__somalia__by-president"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__somalia__by-strike-type"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__somalia__targets"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__somalia__strike-list"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__somalia__strike-totals-by-president"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__somalia__strike-map"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__somalia__leaders-map"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__somalia__call-out-data"></div>
-                <div class="dataviz__chart-area" id="drone-strikes__all__call-out-data"></div>
-
-
-                <div class="dataviz__chart-area" id="dll-work-group__map"></div>
-
-                <div class="dataviz__chart-area" id="early-ed-leaders__pre-service-map"></div>
-                <div class="dataviz__chart-area" id="early-ed-leaders__in-service-map"></div>
-                <div class="dataviz__chart-area" id="early-ed-leaders__retention-map"></div>
-                <div class="dataviz__chart-area" id="early-ed-leaders__min-ed-requirement"></div>
-                <div class="dataviz__chart-area" id="early-ed-leaders__license-grade-span"></div>
-                <div class="dataviz__chart-area" id="early-ed-leaders__higher-ed-coursework"></div>
-                <div class="dataviz__chart-area" id="early-ed-leaders__clinical-experience"></div>
-                <div class="dataviz__chart-area" id="early-ed-leaders__prior-teaching-experience"></div>
-                <div class="dataviz__chart-area" id="early-ed-leaders__professional-learning"></div>
-                <div class="dataviz__chart-area" id="early-ed-leaders__joint-professional-learning"></div>
-                <div class="dataviz__chart-area" id="early-ed-leaders__track-principal-turnover"></div>
-                <div class="dataviz__chart-area" id="early-ed-leaders__avg-salary"></div>
-                <div class="dataviz__chart-area" id="early-ed-leaders__cd-avg-salary"></div>
-                <div class="dataviz__chart-area" id="early-ed-leaders__avg-salary-combined"></div>
-                <div class="dataviz__chart-area" id="early-ed-leaders__benefits"></div>
-                <div class="dataviz__chart-area" id="early-ed-leaders__cd-ed-training-requirement"></div>
-                <div class="dataviz__chart-area" id="early-ed-leaders__cd-prior-experience"></div>
-                <div class="dataviz__chart-area" id="early-ed-leaders__cd-has-credential"></div>
-                <div class="dataviz__chart-area" id="early-ed-leaders__cd-qris-different-tiers"></div>
-
-                <div class="dataviz__chart-area" id="pol-reform-50-states__early-voting"></div>
-                <div class="dataviz__chart-area" id="pol-reform-50-states__same-day-registration"></div>
-                <div class="dataviz__chart-area" id="pol-reform-50-states__automatic-voter-registration"></div>
-                <div class="dataviz__chart-area" id="pol-reform-50-states__online-registration"></div>
-                <div class="dataviz__chart-area" id="pol-reform-50-states__state-redistricting"></div>
-                <div class="dataviz__chart-area" id="pol-reform-50-states__congressional-redistricting"></div>
-                <div class="dataviz__chart-area" id="pol-reform-50-states__elections-map"></div>
-                <div class="dataviz__chart-area" id="pol-reform-50-states__redistricting-map"></div>
-                <div class="dataviz__chart-area" id="pol-reform-50-states__congressional-primaries"></div>
-                <div class="dataviz__chart-area" id="pol-reform-50-states__presidential-primaries"></div>
-                <div class="dataviz__chart-area" id="pol-reform-50-states__no-excuse-absentee"></div>
-
-                <div class="dataviz__chart-area" id="paid-family-leave-timeline__timeline"></div>
-                
-                <div class="dataviz__chart-area" id="varying-degrees__students-funding"></div>
-                <div class="dataviz__chart-area" id="varying-degrees__government-funding"></div>
-                <div class="dataviz__chart-area" id="varying-degrees__avg-student-age"></div>
-                <div class="dataviz__chart-area" id="varying-degrees__avg-student-full-part-time"></div>
-                <div class="dataviz__chart-area" id="varying-degrees__avg-student-school-type"></div>
-                <div class="dataviz__chart-area" id="varying-degrees__avg-student-aggregate"></div>
-                <div class="dataviz__chart-area" id="varying-degrees__percent-fin-aid"></div>
-                <div class="dataviz__chart-area" id="varying-degrees__state-spending"></div>
-                <div class="dataviz__chart-area" id="varying-degrees__federal-spending"></div>
-                <div class="dataviz__chart-area" id="root"></div>     
-
-                <div class="dataviz__chart-area" id="pol-reform-50-states__financing-map"></div>
-                <div class="dataviz__chart-area" id="pol-reform-50-states__electronic-filing"></div>
-                <div class="dataviz__chart-area" id="pol-reform-50-states__public-financing"></div>
-
-                <div class="dataviz__chart-area" id="intel__primary-tech-tool"></div>
-                <div class="dataviz__chart-area" id="intel__start-year"></div>
-                <div class="dataviz__chart-area" id="intel__national-initiatives"></div>
-                <div class="dataviz__chart-area" id="intel__locations"></div>
-                <div class="dataviz__chart-area" id="intel__resource-toolkit"></div>
-
-                <div class="dataviz__chart-area" id="cyber-malware__financial-impact"></div>
-                <div class="dataviz__chart-area" id="cyber-malware__explore-products"></div>
-
-                <div class="dataviz__chart-area" id="muslim-community-restrictions__states-map"></div>
-                <div class="dataviz__chart-area" id="muslim-community-restrictions__per-capita-states-map"></div>
-                <div class="dataviz__chart-area" id="muslim-community-restrictions__per-capita-muslim-states-map"></div>
-                <div class="dataviz__chart-area" id="muslim-community-restrictions__states-table"></div>
-                <div class="dataviz__chart-area" id="muslim-community-restrictions__time-dot-chart"></div>
-                <div class="dataviz__chart-area" id="muslim-community-restrictions__dot-chart"></div>
-
-                <div class="dataviz__chart-area" id="asset-allocator__world-map"></div>
-                <div class="dataviz__chart-area" id="asset-allocator__world-map-all"></div>
-                <div class="dataviz__chart-area" id="asset-allocator__table"></div>
-                <div class="dataviz__chart-area" id="asset-allocator__leaders-table"></div>
-                <div class="dataviz__chart-area" id="asset-allocator__metric-definitions"></div>
-                <div class="dataviz__chart-area" id="asset-allocator__disclosure"></div>
-                <div class="dataviz__chart-area" id="asset-allocator__intention"></div>
-                <div class="dataviz__chart-area" id="asset-allocator__bar-chart"></div>
-                <div class="dataviz__chart-area" id="asset-allocator__swf-and-gpf"></div>
-                <div class="dataviz__chart-area" id="asset-allocator__regional-composition"></div>
-
-                <div class="dataviz__chart-area" id="weather-eye__county-map"></div>
-                <div class="dataviz__chart-area" id="weather-eye__st-louis__call-out"></div>
-                <div class="dataviz__chart-area" id="weather-eye__caddo__call-out"></div>
-                <div class="dataviz__chart-area" id="weather-eye__essex__call-out"></div>
-                <div class="dataviz__chart-area" id="weather-eye__walsh__call-out"></div>
-                <div class="dataviz__chart-area" id="weather-eye__tulsa__call-out"></div>
-                <div class="dataviz__chart-area" id="weather-eye__st-louis__dot-chart"></div>
-                <div class="dataviz__chart-area" id="weather-eye__tulsa__dot-chart"></div>
-                <div class="dataviz__chart-area" id="weather-eye__caddo__dot-chart"></div>
-                <div class="dataviz__chart-area" id="weather-eye__essex__dot-chart"></div>
-                <div class="dataviz__chart-area" id="weather-eye__walsh__dot-chart"></div>
-                <div class="dataviz__chart-area" id="weather-eye__findings__all"></div>
-
-                <div class="dataviz__chart-area" id="transforming-the-workforce__recommendations"></div>
-            </div>
-          </div>
-        </div>
-        <script type="text/javascript" src="/build/homegrown_terrorism.js"></script>
-    </body>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <title>varying_degrees</title>
+    <script type="text/javascript" src="https://na-staging-static.s3.amazonaws.com/static/js/mysite.js"></script>
+  </head>
+  <body>
+    
+  	<div class="block-dataviz">
+		  	<div class="dataviz__chart-area" id="varying-degrees__students-funding"></div>
+		</div>
+    
+  	<div class="block-dataviz">
+		  	<div class="dataviz__chart-area" id="varying-degrees__government-funding"></div>
+		</div>
+    
+  	<div class="block-dataviz">
+		  	<div class="dataviz__chart-area" id="varying-degrees__avg-student-age"></div>
+		</div>
+    
+  	<div class="block-dataviz">
+		  	<div class="dataviz__chart-area" id="varying-degrees__avg-student-full-part-time"></div>
+		</div>
+    
+  	<div class="block-dataviz">
+		  	<div class="dataviz__chart-area" id="varying-degrees__avg-student-school-type"></div>
+		</div>
+    
+  	<div class="block-dataviz">
+		  	<div class="dataviz__chart-area" id="varying-degrees__percent-fin-aid"></div>
+		</div>
+    
+  	<div class="block-dataviz">
+		  	<div class="dataviz__chart-area" id="varying-degrees__state-spending"></div>
+		</div>
+    
+  	<div class="block-dataviz">
+		  	<div class="dataviz__chart-area" id="varying-degrees__federal-spending"></div>
+		</div>
+    
+  	<div class="block-dataviz">
+		  	<div class="dataviz__chart-area" id="varying-degrees__avg-student-aggregate"></div>
+		</div>
+    
+	</div>
+  <script type="text/javascript" src="build/varying_degrees.js"></script></body>
 </html>

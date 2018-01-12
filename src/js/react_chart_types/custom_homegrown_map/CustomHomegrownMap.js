@@ -3,12 +3,11 @@ import React from 'react';
 import { colors } from "../../helper_functions/colors.js";
 import { formatValue } from "../../helper_functions/format_value.js";
 
-import { usGeom } from '../../../geometry/us.js';
-import { worldGeom } from '../../../geometry/world.js';
+// import { usGeom } from '../../../geometry/us.js';
+// import { worldGeom } from '../../../geometry/world.js';
 // import { stateIdMappings } from '../../helper_functions/state_id_mappings.js';
 // import { countryIdMappings } from '../../helper_functions/country_id_mappings.js';
 
-import $ from 'jquery';
 const d3 = require("d3");
 const topojson = require("topojson");
 
@@ -17,6 +16,8 @@ class CustomHomegrownMap extends React.Component {
 	constructor(props) {
 		super(props);
 
+		this.sendGeomRequests();
+
 		let data = props.data[props.vizSettings.primaryDataSheet].filter(props.vizSettings.filterInitialDataFunction)
 
 		this.statesData = data.filter(d => d.geo_type === "state")
@@ -24,33 +25,11 @@ class CustomHomegrownMap extends React.Component {
 		this.countriesData = data.filter(d => d.geo_type === "country")
 			// .map(d => { d.id = countryIdMappings[d.geo_unit_name]; return d; })
 
-		this.statesGeom = topojson.feature(usGeom, usGeom.objects["states"]).features;
-
-		this.statesGeom.map(geom => {
-			this.statesData.forEach(d => {
-				if (+d.geo_id === geom.id) {
-					geom.data = d;
-					return;
-				}
-			})
-			return geom;
-		})
-
-		this.countriesGeom = topojson.feature(worldGeom, worldGeom.objects.countries).features;
-
-		this.countriesGeom.map(geom => {
-			this.countriesData.forEach(d => {
-				if (+d.geo_id === geom.id) {
-					geom.data = d;
-					return;
-				}
-			})
-			return geom;
-		})
-
 		this.state = {
 			width: 0,
-			height: 0
+			height: 0, 
+			statesGeom: null,
+			countriesGeom: null
 		}
 
 		this.updateStatesMap(this.state);
@@ -59,6 +38,46 @@ class CustomHomegrownMap extends React.Component {
 		this.resizeFunc = this.resize.bind(this);
 
 		this.initialUpdate = true;
+	}
+
+	sendGeomRequests() {
+		d3.json("https://na-data-projects.s3.amazonaws.com/geography/us.json", (error, data) => {
+			let statesGeom = topojson.feature(data, data.objects["states"]).features;
+
+			statesGeom.map(geom => {
+				this.statesData.forEach(d => {
+					if (+d.geo_id === geom.id) {
+						geom.data = d;
+						return;
+					}
+				})
+				return geom;
+			})
+
+			this.setState({
+				statesGeom: statesGeom
+			})
+		})
+
+		d3.json("https://na-data-projects.s3.amazonaws.com/geography/world.json", (error, data) => {
+			let countriesGeom = topojson.feature(data, data.objects.countries).features;
+
+			countriesGeom.map(geom => {
+				this.countriesData.forEach(d => {
+					if (+d.geo_id === geom.id) {
+						geom.data = d;
+						return;
+					}
+				})
+				return geom;
+			})
+
+			this.findCountryBoundingRect(countriesGeom);
+
+			this.setState({
+				countriesGeom: countriesGeom
+			})
+		})
 	}
 
 	updateStatesMap(stateObject) {
@@ -97,13 +116,13 @@ class CustomHomegrownMap extends React.Component {
             .projection(this.countriesProjection);
 	}
 
-	findCountryBoundingRect() {
+	findCountryBoundingRect(countriesGeom) {
 		let x0 = 10000,
 			y0 = 10000,
 			x1 = 0,
 			y1 = 0;
 
-		this.countriesGeom.forEach(d => {
+		countriesGeom.forEach(d => {
 			if (!d.data) {
 				return;
 			}
@@ -122,21 +141,21 @@ class CustomHomegrownMap extends React.Component {
 	componentDidMount() {
         $(window).resize(this.resizeFunc);
 
-        this.findCountryBoundingRect();
-
         this.resize();
     }
 
     componentWillUpdate(nextProps, nextState) {
-    	if (this.initialUpdate || (nextState.width != this.state.width)) {
+    	const {statesGeom, countriesGeom} = this.state;
+
+    	if ((nextState.statesGeom && nextState.countriesGeom) && ((!statesGeom || !countriesGeom) || (nextState.width != this.state.width))) {
     		this.updateStatesMap(nextState);
 			this.updateCountriesMap(nextState);
-			this.initialUpdate = false;
+			// this.initialUpdate = false;
     	}
     }
 
 	render() {
-		const { width, height, tooltipVal, tooltipPos } = this.state;
+		const { width, height, tooltipVal, tooltipPos, statesGeom, countriesGeom } = this.state;
 		const {  } = this.props.vizSettings;
 
 		return (
@@ -146,8 +165,8 @@ class CustomHomegrownMap extends React.Component {
 						<h5 className="custom-homegrown-map__section__title">Jihadist Terrorists with Origins in the U.S.</h5>
 						<div className="custom-homegrown-map__section__map-container" ref="renderingArea">
 							<svg width={width} height={height}>
-								<g>
-									{ this.statesGeom.map(d => {
+								{statesGeom && <g>
+									{ statesGeom.map(d => {
 										let fill = this.setFill(d);
 										return <path 
 													key={d.id} 
@@ -158,7 +177,7 @@ class CustomHomegrownMap extends React.Component {
 													onMouseOver={(e) => { return d.data ? this.mouseover(d, e) : null; }} 
                                                     onMouseOut={() => { return d.data ?  this.mouseout(d) : null; }} />
 									})}
-								</g>
+								</g>}
 							</svg>
 						</div>
 					</div>
@@ -166,8 +185,8 @@ class CustomHomegrownMap extends React.Component {
 						<h5 className="custom-homegrown-map__section__title">Jihadist Terrorists with Origins Outside the U.S.</h5>
 						<div className="custom-homegrown-map__section__map-container">
 							<svg width={width} height={height}>
-								<g>
-									{ this.countriesGeom.map(d => {
+								{ countriesGeom && <g>
+									{ countriesGeom.map(d => {
 										let fill = this.setFill(d);
 										return <path 
 													key={d.id} 
@@ -178,7 +197,7 @@ class CustomHomegrownMap extends React.Component {
 													onMouseOver={(e) => { return d.data ? this.mouseover(d, e) : null; }} 
                                                     onMouseOut={() => { return d.data ?  this.mouseout(d) : null; }} />
 									})}
-								</g>
+								</g>}
 							</svg>
 						</div>
 					</div>
@@ -250,9 +269,9 @@ class CustomHomegrownMap extends React.Component {
 	}
 
 	mouseout() {
-		// this.setState({
-		// 	tooltipVal: null
-		// })
+		this.setState({
+			tooltipVal: null
+		})
 	}
 
 	setFill(d) {

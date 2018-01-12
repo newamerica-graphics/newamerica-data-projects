@@ -105,17 +105,17 @@
         position: relative;
         display: inline-block;
         top: 50%;
+        left: 10px;
         right: 0px;
         font-weight: bold;
         font-size: 26px;
-        transform: translateY(-90%);
-
+        transform: translateY(-70%);
     }
 }
 
 .slider-div {
     display: inline-block;
-    width: calc(100% - 75px);
+    width: calc(100% - 170px);
 }
 
 .mapboxgl-map {

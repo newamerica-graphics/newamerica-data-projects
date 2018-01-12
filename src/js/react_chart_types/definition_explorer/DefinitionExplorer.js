@@ -34,10 +34,10 @@ class DefinitionExplorer extends React.Component {
 	}
 
 	render() {
-		const { titleVar, descriptionVars, chartTitle } = this.props.vizSettings;
+		const { titleVar, descriptionVars, chartTitle, format } = this.props.vizSettings;
 
 		return (
-			<div className="definition-explorer">
+			<div className={"definition-explorer " + format}>
 				<div className="definition-explorer__entry-container">
 					{this.categoryTitles.map((entryData) => {
 						let title = entryData.title,

@@ -1,4 +1,4 @@
-export var colors = {
+var colors = {
 	"turquoise":{ "very_light": "#97DED9", "very_light_2": "#62CDC6", "light": "#2EBCB3", "medium": "#1A8A84", "dark": "#005753"},
 	"blue": { "very_light":"#ADD2ED", "very_light_2":"#84BBE4", "light": "#5BA4DA", "medium": "#4378A0","dark": "#234A67", "very_dark":"#1B384E"},
 	"red": { "light": "#E75C64", "medium": "#A64046","dark": "#692025"},
@@ -11,6 +11,11 @@ export var colors = {
 	"black": "#2c2f35"
 }
 
-export function getDefaultColor(code) {
+function getDefaultColor(code) {
 	return colors[code].light;
+}
+
+module.exports = {
+	colors: colors,
+	getDefaultColor: getDefaultColor
 }

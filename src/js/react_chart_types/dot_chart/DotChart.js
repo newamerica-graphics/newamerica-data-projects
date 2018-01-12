@@ -1,4 +1,5 @@
 import React from 'react';
+import $ from 'jquery';
 
 import { colors } from "../../helper_functions/colors.js";
 
@@ -17,7 +18,6 @@ import CategoryLayout from './CategoryLayout.js';
 
 import { Motion, spring } from 'react-motion';
 import { Axis, axisPropsFromBandedScale, BOTTOM, TOP } from 'react-d3-axis';
-import $ from 'jquery';
 
 const getRange = (start, end) => { return Array(end - start + 1).fill().map((_, idx) => start + idx) }
 
@@ -138,13 +138,21 @@ class DotChart extends React.Component {
         const { currLayout, currLayoutSettings, width } = this.state;
         
         if (currLayoutSettings.isYearMonth) {
-            let extents = d3.extent(this.state.currDataShown, d => d.year_month)
+            let extents = d3.extent(this.data, d => d.year_month)
             extents = currLayoutSettings.fixedStartVal ? [currLayoutSettings.fixedStartVal, extents[1]] : extents
+
+            console.log(extents)
 
             extents = extents.map(d => Number(d.toString().slice(0,4)))
 
-            let range = getRange(extents[0], extents[1])
+            console.log(extents)
+
+            let range = getRange(extents[0] + 1, extents[1])
             range = range.map(d => d + "01")
+
+            console.log(range)
+
+            console.log(currLayout.xScale.domain())
 
             return (
                 <Motion style={{currTransform: spring(currLayout.height)}} >
@@ -268,7 +276,7 @@ class DotChart extends React.Component {
 
         let layoutHeight = currLayout ? currLayout.height : 0;
         // layoutHeight += currLayoutSettings.annotationSheet ? 50 : 0;
-
+        console.log(currDataShown)
 		return (
 			<div className="dot-chart" ref="renderingArea">
                 {layouts.length > 1 && 
@@ -288,7 +296,7 @@ class DotChart extends React.Component {
     									strokeColor = this.setStrokeColor(d)
 
     								return (
-    									<Motion style={style} key={d.id}>
+    									<Motion style={style} key={this.props.id + "_" + d.id}>
     										{({x, y}) => {
     											return (
                                                     <circle className={interaction == "click" ? "dot-chart__dot clickable" : "dot-chart__dot"}
@@ -352,6 +360,8 @@ class DotChart extends React.Component {
     }
 
     mouseover(d, x, y) {
+        console.log(this.props.id, d.id)
+
         if (this.props.vizSettings.interaction == "click") {
         	this.setState({
                 currHovered: d
