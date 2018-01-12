@@ -11,22 +11,22 @@ Primary repository for New America's data visualization projects
 
 #### Initializing a New Project
 1. Create a new folder within the src/js/projects directory titled with the project_id (no spaces/capital letters)
-2. Create an index.js file within this new folder.  index.js must contain:
+2. Create an settings.js file within this new folder.  settings.js must contain:
     * variables definitions array (see spec below)
     * vizSettings object (see spec below)
-    * ``` setupProject(projectSettings) ```
+    * ``` module.exports { vizSettings: vizSettings } ```
 
 #### Development
 
 1. to start the dev server run ``` npm run start ```
 2. to create a dev build of the project run ``` npm run dev --project=<project_id> ``` 
 (where project id is the title given to the folder in step 1) 
-    * You should now see a file in the local build directory entitled project_id.js
+    * You should now see a file in the local build directory entitled <project_id>.js
     * leave this command running, as it will watch for any changes you make to the project and update the bundle in your local build directory
     
 #### Creating a Production Build
 1. to create a production build of the project run ``` npm run build --project=<project_id> ```
-    * this will upload a copy of the bundled script to new america's data project s3 bucket, which will then be able to be included as an external script in any post content on the New America site  
+    * this will upload a copy of the bundled script to new america's data project s3 bucket, which will then be able to be included as an external script in any post page on the New America site  
     
 #### Integrating Bundled Project Script with New America Site
 1. Create a new In Depth Project, Blog Post, Article, Podcast, Policy Paper, etc. in the Wagtail editor
@@ -41,7 +41,7 @@ Primary repository for New America's data visualization projects
 
 ## Integration with Wagtail Templating Backend
 
-The bundled script for a given project will instantiate a viz controller class object for the project.  This viz controller has the following public methods:
+The bundled script output for a given project will instantiate a viz controller object for the project.  This viz controller has the following public methods:
 
 ##### initialize({dataUrl, clickToProfileFunction})
 * initiates data fetch call and optionally overrides click to profile function
