@@ -20,7 +20,7 @@ let variables = {
 }
 
 let vizSettings = {
-	"world-of-drones__import-export", 
+	"world-of-drones__import-export": {
 		vizType: "bipartite",
 		primaryDataSheet: "countries",
 		keyVar: variables.name,
@@ -30,6 +30,7 @@ let vizSettings = {
 	"world-of-drones__developing-armed-drones": {
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "countries",
+		tabIcons: ["globe", "table"],
 		chartSettingsList: [
 			{
 				vizType: "dashboard",
@@ -39,9 +40,11 @@ let vizSettings = {
 						{
 							vizType: "slider",
 							primaryDataSheet: "countries",
-							variable: variables.developing_armed_drones_year,
 							isMessagePasser: true,
-							automated: true
+							automated: true,
+							sliderVar: variables.developing_armed_drones_year,
+							showAllButton: false,
+							trackColors: []
 						}
 					],
 					[
@@ -75,6 +78,7 @@ let vizSettings = {
 	"world-of-drones__have-armed-drones": {
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "countries",
+	 tabIcons: ["globe", "table"],
 		chartSettingsList: [
 			{
 				vizType: "dashboard",
@@ -84,9 +88,11 @@ let vizSettings = {
 						{
 							vizType: "slider",
 							primaryDataSheet: "countries",
-							variable: variables.have_armed_drones_year,
 							isMessagePasser: true,
-							automated: true
+							automated: true,
+							sliderVar: variables.have_armed_drones_year,
+							showAllButton: false,
+							trackColors: []
 						}
 					],
 					[
@@ -120,6 +126,7 @@ let vizSettings = {
 	"world-of-drones__drones-in-combat": {
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "countries",
+	 tabIcons: ["globe", "table"],
 		chartSettingsList: [
 			{
 				vizType: "dashboard",
@@ -129,9 +136,11 @@ let vizSettings = {
 						{
 							vizType: "slider",
 							primaryDataSheet: "countries",
-							variable: variables.drones_in_combat_year,
 							isMessagePasser: true,
-							automated: true
+							automated: true,
+							sliderVar: variables.drones_in_combat_year,
+							showAllButton: false,
+							trackColors: []
 						}
 					],
 					[

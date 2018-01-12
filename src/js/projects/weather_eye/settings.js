@@ -36,7 +36,6 @@ let variables = {
 
 const months = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
-
 let vizSettings = {
 	"weather-eye__county-map": {
 		vizType: "mapbox_map",
@@ -671,12 +670,10 @@ let vizSettings = {
 		categoryVar: variables.category,
 		showCategoryTitle: true
 	}
-]
+}
 
 module.exports = {
 	vizSettings: vizSettings,
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/resourcesecurity/weather-eye.json"
 }
-
-setupProject(projectSettings);
 	

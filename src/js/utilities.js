@@ -23,6 +23,8 @@ import { FilterableChart } from "./layouts/filterable_chart.js";
 import { BarLineCombo } from "./chart_types/bar_line_combo.js";
 import { PinDropMap } from "./chart_types/pindrop_map.js";
 import { VerticalTimeline } from "./chart_types/vertical_timeline.js";
+import { InteractiveSvg } from "./chart_types/interactive_svg.js";
+import { DroneStrikesTargetsStackedBar } from "./chart_types/drone_strikes_targets_stacked_bar.js";
 
 export const whichChart = {
 	"bar_chart": BarChart,
@@ -34,10 +36,12 @@ export const whichChart = {
 	"dashboard": Dashboard,
 	"dot_matrix": DotMatrix,
 	"dot_histogram": DotHistogram,
+	"drone_strikes_targets_stacked_bar": DroneStrikesTargetsStackedBar,
 	"fact_box": FactBox,
 	"filterable_chart": FilterableChart,
 	"financial_opportunity_map": FinancialOpportunityMap,		
 	"grouped_dot_matrix": GroupedDotMatrix,
+	"interactive_svg": InteractiveSvg,
 	"line_chart": LineChart,
 	"mapbox_map": MapboxMap,
 	"percentage_stacked_bar": PercentageStackedBar,

@@ -64,9 +64,18 @@ class CalloutBox extends React.Component {
 
 		return (
 			<div className={"callout-box " + vizSettings.backgroundColor} ref="renderingArea">
-				{vizSettings.sections.map((sectionSettings, i) => 
-					this.renderSection(sectionSettings, i)
-				)}
+				{vizSettings.columns.map(columnSettings => {
+					console.log(columnSettings.fullWidthBreakpoint, this.state.width)
+					let classList = "callout-box__column"
+					if (columnSettings.fullWidthBreakpoint && this.state.width <= columnSettings.fullWidthBreakpoint) {
+						classList += " full-width";
+					}
+					return (
+						<div className={classList} style={{width: columnSettings.width}}>
+							{ columnSettings.sections.map((sectionSettings, i) => this.renderSection(sectionSettings, i)) }
+						</div>
+					)
+				})}
 			</div>
 		)
 	}

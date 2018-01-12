@@ -276,7 +276,7 @@ class DotChart extends React.Component {
 
         let layoutHeight = currLayout ? currLayout.height : 0;
         // layoutHeight += currLayoutSettings.annotationSheet ? 50 : 0;
-        console.log(this.props.id)
+        console.log(currDataShown)
 		return (
 			<div className="dot-chart" ref="renderingArea">
                 {layouts.length > 1 && 
@@ -299,7 +299,7 @@ class DotChart extends React.Component {
     									<Motion style={style} key={this.props.id + "_" + d.id}>
     										{({x, y}) => {
     											return (
-                                                    <circle key={this.props.id + "_" + d.id} className={interaction == "click" ? "dot-chart__dot clickable" : "dot-chart__dot"}
+                                                    <circle className={interaction == "click" ? "dot-chart__dot clickable" : "dot-chart__dot"}
                                                         cx={x} cy={y}
                                                         r={this.dotRadius}
                                                         fill={fillColor} 

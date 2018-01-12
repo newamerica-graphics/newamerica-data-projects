@@ -44,14 +44,12 @@ export class PieChart {
 
 		let fakeRoot = {}
 
+		console.log(this.categoryVar)
+
 		if (!this.categoryVar) {
-			fakeRoot[this.labelVar.variable] = "root"
+			fakeRoot[this.labelVar.variable] = "root";
+			this.rawData.push(fakeRoot)
 		}
-
-		this.rawData.push(fakeRoot)
-
-		console.log(fakeRoot)
-		console.log(this.rawData)
 
 		this.data = d3.stratify()
 		    .id((d) => { return d[this.labelVar.variable]; })
@@ -59,6 +57,7 @@ export class PieChart {
 		    	if (this.categoryVar) {
 		    		return d[this.categoryVar.variable]
 		    	} else {
+		    		console.log("here!")
 		    		return d[this.labelVar.variable] === "root" ? null : "root";
 		    	}
 		    })

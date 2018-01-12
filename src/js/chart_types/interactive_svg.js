@@ -14,6 +14,9 @@ export class InteractiveSvg {
 	constructor(vizSettings) {
 		Object.assign(this, vizSettings)
 
+		console.log(this.svgFileName)
+		this.svg = require("./../projects/transforming_the_workforce/assets/recommendations.svg")
+
 		d3.select(this.id).html(this.svg)
 
 		this.attachLinks();

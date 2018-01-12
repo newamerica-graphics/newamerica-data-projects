@@ -24,15 +24,76 @@ const getDataFilterFunction = (filterVar) => {
 }
 
 let vizSettings = {
-	// "compliance-violations__list": {
-	// 	vizType: "table",
-	// 	primaryDataSheet: "violations",
-	// 	tableVars: [ variables.primary_category__collection, variables.year, variables.description, variables.remedy, variables.sources_combined],
-	// 	defaultOrdering: [1, "desc"],
-	// 	pagination: true,
-	// 	numPerPage: 15,
-	// 	colorScaling: false
-	// },
+	"compliance-violations__list": {
+		vizType: "table",
+		primaryDataSheet: "violations",
+		tableVars: [ variables.primary_category__collection, variables.year, variables.description, variables.remedy, variables.sources_combined],
+		defaultOrdering: [1, "desc"],
+		pagination: true,
+		numPerPage: 15,
+		colorScaling: false
+	},
+	
+	"compliance-violations__collection": {
+		vizType: "dot_chart",
+		isReact: true,
+		primaryDataSheet: "violations",
+	 	filterInitialDataFunction: getDataFilterFunction(variables.primary_category__collection),
+		colorSettings: { colorVar: variables.primary_category__collection, showLegend: true },
+		tooltipTitleVar: variables.primary_category__collection,
+		tooltipVars: [variables.year, variables.description, variables.remedy, variables.sources_combined],
+		dotScaleRange: [1, 3.5],
+		interaction: "click",
+		layouts: [
+			{
+				label: "Violations Over Time",
+				layout: "histogram_fixed_interval",
+				xVar: variables.year_month,
+				sortingVar: variables.date,
+				isYearMonth: true,
+			}
+		]
+	},
+	"compliance-violations__communications-access": {
+		vizType: "dot_chart",
+		isReact: true,
+		primaryDataSheet: "violations",
+		filterInitialDataFunction: getDataFilterFunction(variables.primary_category__communications_access),
+		colorSettings: { colorVar: variables.primary_category__communications_access, showLegend: true },
+		tooltipTitleVar: variables.primary_category__communications_access,
+		tooltipVars: [variables.year, variables.description, variables.remedy, variables.sources_combined],
+		dotScaleRange: [1, 3.5],
+		interaction: "click",
+		layouts: [
+			{
+				label: "Violations Over Time",
+				layout: "histogram_fixed_interval",
+				xVar: variables.year_month,
+				sortingVar: variables.date,
+				isYearMonth: true,
+			}
+		]
+	},
+	"compliance-violations__other": {
+		vizType: "dot_chart",
+		isReact: true,
+		primaryDataSheet: "violations",
+		filterInitialDataFunction: getDataFilterFunction(variables.primary_category__other),
+		colorSettings: { colorVar: variables.primary_category__other, showLegend: true },
+		tooltipTitleVar: variables.primary_category__other,
+		tooltipVars: [variables.year, variables.description, variables.remedy, variables.sources_combined],
+		dotScaleRange: [1, 3.5],
+		interaction: "click",
+		layouts: [
+			{
+				label: "Violations Over Time",
+				layout: "histogram_fixed_interval",
+				xVar: variables.year_month,
+				sortingVar: variables.date,
+				isYearMonth: true,
+			}
+		]
+	},
 	"compliance-violations__all": {
 		isReact: true,
 		vizType: "dot_chart",
@@ -59,66 +120,6 @@ let vizSettings = {
 			}
 		]
 	},
-	// "compliance-violations__collection": {
-	// 	vizType: "dot_chart",
-	// 	isReact: true,
-	// 	primaryDataSheet: "violations",
-	//  	filterInitialDataFunction: getDataFilterFunction(variables.primary_category__collection),
-	// 	colorSettings: { colorVar: variables.primary_category__collection, showLegend: true },
-	// 	tooltipTitleVar: variables.primary_category__collection,
-	// 	tooltipVars: [variables.year, variables.description, variables.remedy, variables.sources_combined],
-	// 	dotScaleRange: [1, 3.5],
-	// 	interaction: "click",
-	// 	layouts: [
-	// 		{
-	// 			label: "Violations Over Time",
-	// 			layout: "histogram_fixed_interval",
-	// 			xVar: variables.year_month,
-	// 			sortingVar: variables.date,
-	// 			isYearMonth: true,
-	// 		}
-	// 	]
-	// },
-	// "compliance-violations__communications-access": {
-	// 	vizType: "dot_chart",
-	// 	isReact: true,
-	// 	primaryDataSheet: "violations",
-	// 	filterInitialDataFunction: getDataFilterFunction(variables.primary_category__communications_access),
-	// 	colorSettings: { colorVar: variables.primary_category__communications_access, showLegend: true },
-	// 	tooltipTitleVar: variables.primary_category__communications_access,
-	// 	tooltipVars: [variables.year, variables.description, variables.remedy, variables.sources_combined],
-	// 	dotScaleRange: [1, 3.5],
-	// 	interaction: "click",
-	// 	layouts: [
-	// 		{
-	// 			label: "Violations Over Time",
-	// 			layout: "histogram_fixed_interval",
-	// 			xVar: variables.year_month,
-	// 			sortingVar: variables.date,
-	// 			isYearMonth: true,
-	// 		}
-	// 	]
-	// },
-	"compliance-violations__other": {
-		vizType: "dot_chart",
-		isReact: true,
-		primaryDataSheet: "violations",
-		filterInitialDataFunction: getDataFilterFunction(variables.primary_category__other),
-		colorSettings: { colorVar: variables.primary_category__other, showLegend: true },
-		tooltipTitleVar: variables.primary_category__other,
-		tooltipVars: [variables.year, variables.description, variables.remedy, variables.sources_combined],
-		dotScaleRange: [1, 3.5],
-		interaction: "click",
-		layouts: [
-			{
-				label: "Violations Over Time",
-				layout: "histogram_fixed_interval",
-				xVar: variables.year_month,
-				sortingVar: variables.date,
-				isYearMonth: true,
-			}
-		]
-	}
 }
 
 module.exports = {

@@ -11,24 +11,18 @@ import { formatValue } from "../helper_functions/format_value.js";
 const barLabelPadding = 10,
 	mobileBreakpoint = 500;
 
-export class PercentageStackedBar {
+export class DroneStrikesTargetsStackedBar {
 	constructor(vizSettings, imageFolderId) {
-		Object.assign(this, vizSettings);		
+		let {id, primaryDataSheet, groupingVar, filterVar, filterInitialDataBy} = vizSettings;
+		this.id = id;
+		this.primaryDataSheet = primaryDataSheet;
+		this.groupingVar = groupingVar;
+		this.filterVar = filterVar;
+		this.filterInitialDataBy = filterInitialDataBy;
+		
 		this.margin = {top: 0, right: 300, bottom: 0, left: 0};
 
-		if (this.showLegend) {
-			let legendSettings = {
-				id : this.id,
-				showTitle : false,
-				markerSettings : { shape:"rect", size:10 },
-				orientation : "horizontal-left",
-				disableValueToggling : true
-			};
-			
-			this.legend = new Legend(legendSettings);
-		}
-
-		this.svg = d3.select(this.id).append("svg").attr("class", "percentage-stacked-bar");
+		this.svg = d3.select(id).append("svg").attr("class", "percentage-stacked-bar");
 
 		this.renderingArea = this.svg.append("g");
 
@@ -38,12 +32,11 @@ export class PercentageStackedBar {
 		this.lengthScale = d3.scaleLinear();
 
 		this.setDimensions();
-
-
 	}
 
 	setDimensions() {
 		this.w = $(this.id).width() - this.margin.left - this.margin.right;
+		console.log(this.w);
 
 		// if (this.w < 300) {
 			this.foldupMode = "mobile";
@@ -79,29 +72,17 @@ export class PercentageStackedBar {
 		if (this.filterInitialDataBy) {
             this.data = this.data.filter((d) => { return d[this.filterInitialDataBy.field] == this.filterInitialDataBy.value; })
         }
+
+		this.colorScale = getColorScale(this.data, this.filterVar);
 	    
-	    if (this.aggregateData) {
-			this.setScaleDomainsAggregate();
-			this.colorScale = getColorScale(this.data, this.filterVars[0]);
-		} else {
-			this.setScaleDomainsSimpleVal();
-			let colorDomain = [];
-			let colorRange = [];
-			for (let filterVar of this.filterVars) {
-				colorDomain.push(filterVar.displayName);
-				colorRange.push(filterVar.color);
-			}
-			this.colorScale = d3.scaleOrdinal().domain(colorDomain).range(colorRange);
-		}
+		this.setScaleDomains();
 
 		this.renderBars();
 		this.renderBarGroupLabels();
 		this.renderBarLabels();
-
-		if (this.showLegend) { this.setLegend(); }
 	}
 
-	setScaleDomainsAggregate() {
+	setScaleDomains() {
 		let groupingVals = new Set();
 
 		this.groupingSums = d3.nest()
@@ -119,33 +100,10 @@ export class PercentageStackedBar {
 
 		this.nestedVals = d3.nest()
 			.key((d) => { return d[this.groupingVar.variable]; })
-			.key((d) => { return d[this.filterVars[0].variable]; })
+			.key((d) => { return d[this.filterVar.variable]; })
 			.sortKeys((a, b) => { return this.colorScale.domain().indexOf(a) - this.colorScale.domain().indexOf(b); })
 			.rollup((v) => { let currGroupingVal = v[0][this.groupingVar.variable]; return {"count":v.length, "percent": v.length/this.groupingSums.get(currGroupingVal)}; })
 			.entries(this.data);
-
-		this.lengthScale.domain([0, 1]);
-		this.groupingScale.domain(Array.from(groupingVals));
-	}
-
-	setScaleDomainsSimpleVal() {
-		let groupingVals = new Set();
-		this.nestedVals = [];
-
-		this.data.forEach((d) => {
-			groupingVals.add(d[this.groupingVar.variable]);
-			let dataVal = { key:d[this.groupingVar.variable], values:[] };
-				
-			for (let filterVar of this.filterVars) {
-				dataVal.values.push({
-					key: filterVar.displayName,
-					value: { percent: d[filterVar.variable] }
-				})
-			}
-			this.nestedVals.push(dataVal);
-		})
-
-		console.log(this.nestedVals);
 
 		this.lengthScale.domain([0, 1]);
 		this.groupingScale.domain(Array.from(groupingVals));
@@ -156,21 +114,13 @@ export class PercentageStackedBar {
 			.data(this.nestedVals)
 		  .enter().append("g");
 
-		if (!this.aggregateData) {
-			this.backgroundRects = this.barGroups.append("rect")
-				.attr("x", 0)
-				.attr("y", 0)
-				.attr("fill", colors.grey.light)
-				.attr("height", this.groupingScale.bandwidth())
-		}
-
-		this.bars = this.barGroups.selectAll("rect.data-rect")
+		this.bars = this.barGroups.selectAll("rect")
 			.data((d) => { return d.values; })
 		  .enter().append("rect")
 		  	.attr("y", 0)
 		  	.attr("fill", (d) => { return this.colorScale(d.key); })
-			.style("fill-opacity", .75)
-			.attr("class", "data-rect")
+			.style("fill-opacity", 1)
+			.style("cursor", "pointer")
 			.on("mouseover", (d, index, paths) => {  return this.mouseover(d, paths[index], d3.event); })
 		  	.on("mouseout", (d, index, paths) => {  return this.mouseout(paths[index]); });
 
@@ -181,12 +131,6 @@ export class PercentageStackedBar {
 		this.barGroups
 			.attr("transform", (d) => { return "translate(0," + this.groupingScale(d.key) + ")"})
 		
-		if (this.backgroundRects) {
-			this.backgroundRects
-				.attr("width", this.w)
-				.attr("height", this.groupingScale.bandwidth());
-		}
-
 		let currCumulativeLength = 0;
 		this.bars
 			.attr("x", (d, i) => {
@@ -214,9 +158,7 @@ export class PercentageStackedBar {
 			.data((d) => { return d.values; })
 		  .enter().append("text")
 		  	.attr("class", "percentage-stacked-bar__bar-label")
-			.text((d) => { 
-				return this.aggregateData ? d.key : formatValue(d.value.percent, "percent");
-			});
+			.text((d) => { return d.key; });
 
 		this.setBarLabelPositions();
 	}
@@ -245,13 +187,6 @@ export class PercentageStackedBar {
 			
 	}
 
-	setLegend() {
-		let legendSettings = {};
-		legendSettings.scaleType = "categorical";
-		legendSettings.colorScale = this.colorScale;
-
-		this.legend.render(legendSettings);
-	}
 
 	resize() {
 		this.setDimensions();
@@ -283,12 +218,17 @@ export class PercentageStackedBar {
 						percent = formatValue(entry.value.percent, "percent");
 					}
 				})
+				if (count) {
+					return "<tspan class='percentage-stacked-bar__bar-group-hover-label__title' fill=" + this.colorScale(datum.key) + ">" + datum.key + ":</tspan>" + 
+						"<tspan class='percentage-stacked-bar__bar-group-hover-label__percent'> " + percent + "</tspan>" + 
+						"<tspan class='percentage-stacked-bar__bar-group-hover-label__count'> (" + count + " of " + this.groupingSums.get(d.key) + " strikes) </tspan>";
+				}
 			});
 	}
 
 	mouseout(path) {
 		this.bars
-			.style("fill-opacity", .75);
+			.style("fill-opacity", 1);
 
 		this.barGroupHoverLabels.remove();
 	}

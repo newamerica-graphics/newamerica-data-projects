@@ -50,6 +50,10 @@ const config = env => {
           use: "url-loader?limit=100000" 
         },
         { 
+          test: /\.svg$/, 
+          use: "svg-inline-loader" 
+        },
+        { 
           test: /\.json$/, 
           use: "json-loader" 
         },

@@ -17,6 +17,7 @@ import DefinitionExplorer from "./react_chart_types/definition_explorer/Definiti
 import CalloutBox from "./react_chart_types/callout_box/CalloutBox.js";
 import DotChart from "./react_chart_types/dot_chart/DotChart.js";
 import CustomHomegrownMap from "./react_chart_types/custom_homegrown_map/CustomHomegrownMap.js";
+import QuoteScroller from "./react_chart_types/quote_scroller/QuoteScroller.js";
 
 
 export default class VizController {
@@ -40,9 +41,9 @@ export default class VizController {
 		if (!dataUrl) { return; }
 		d3.json(dataUrl, (data) => {
 			console.log("data received")
-			console.log(data);
+			console.log(data, this.renderQueue);
 			if (!data) { return; }
-	    	if (this.renderQueue.length > 0) { 
+	    	if (this.renderQueue && this.renderQueue.length > 0) { 
 	    		for (let renderFunc of this.renderQueue) {
 	    			console.log("rendering from queue")
 	    			renderFunc(data);
@@ -69,6 +70,7 @@ export default class VizController {
 			}
 		} else {
 			let chart = this.initializeChart(dataVizId, settingsObject)
+
 			if (!chart) { return; }
 
 			this.vizList.push(chart)
@@ -129,6 +131,13 @@ export default class VizController {
 			case "dot_chart":
 				render(
 					<DotChart vizSettings={settingsObject} data={data} id={dataVizId} />,
+					document.getElementById(dataVizId)
+				)
+				break;
+
+			case "quote_scroller":
+				render(
+					<QuoteScroller vizSettings={settingsObject} data={data} id={dataVizId} />,
 					document.getElementById(dataVizId)
 				)
 				break;

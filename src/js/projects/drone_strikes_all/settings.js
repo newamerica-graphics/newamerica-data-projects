@@ -102,7 +102,6 @@ const leadersFilterFunction = (d) => {
 	return d.leaders_killed && d.leaders_killed > 0;
 }
 
-
 let vizSettings = {
 	"drone-strikes__pakistan__by-president": { 
 		vizType: "filterable_chart",
@@ -153,7 +152,7 @@ let vizSettings = {
 		tooltipColorVals: true,
 	},
 	"drone-strikes__pakistan__targets": { 
-		vizType: "percentage_stacked_bar",
+		vizType: "drone_strikes_targets_stacked_bar",
 		// filterInitialDataBy: { field: "country", value:"Pakistan"},
 		primaryDataSheet: "pakistan_strikes",
 		groupingVar: variables.president,
@@ -378,7 +377,7 @@ let vizSettings = {
 		]
 	},
 	"drone-strikes__yemen__targets": { 
-		vizType: "percentage_stacked_bar",
+		vizType: "drone_strikes_targets_stacked_bar",
 		// filterInitialDataBy: { field: "country", value:"yemen"},
 		primaryDataSheet: "yemen_strikes",
 		groupingVar: variables.president,
@@ -595,7 +594,7 @@ let vizSettings = {
 	},
 	
 	"drone-strikes__somalia__targets": { 
-		vizType: "percentage_stacked_bar",
+		vizType: "drone_strikes_targets_stacked_bar",
 		// filterInitialDataBy: { field: "country", value:"somalia"},
 		primaryDataSheet: "somalia_strikes",
 		groupingVar: variables.president,
@@ -734,48 +733,53 @@ let vizSettings = {
 		vizType: "callout_box",
 		primaryDataSheet: "pakistan_strikes",
 		backgroundColor: "black",
-		sections:[
+		columns: [
 			{
-				title: "Live Statistics",
-				dataElements: [
+				width: "100%",
+				sections:[
 					{
-						type:"fact-box-list",
-						format:"horizontal",
-						factBoxVars: [
-							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
-							{ label: "Total strikes (Overall)",type: "count" },
-							{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
-							{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
+						title: "Live Statistics",
+						dataElements: [
+							{
+								type:"fact-box-list",
+								format:"horizontal",
+								factBoxVars: [
+									{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
+									{ label: "Total strikes (Overall)",type: "count" },
+									{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
+									{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
+								]
+							},
 						]
 					},
-				]
-			},
-			{
-				title: "Most Recent Strike",
-				dataElements: [
 					{
-						type:"simple-map",
-						country: "pakistan",
-						latVar: { type: "value", variable: variables.geo_lat, query: {varName:"date", operation:"max"} },
-						lngVar: { type: "value", variable: variables.geo_lon, query: {varName:"date", operation:"max"} }
-					},
-					{
-						type:"fact-box-list",
-						format:"vertical",
-						factBoxVars: [
-							{ label: "Date", type: "value", variable: variables.date, format: "date", query: {varName:"date", operation:"max"} },
-							{ label: "Total Casualties", type: "value", variable: variables.total_lowhigh, query: {varName:"date", operation:"max"}, subVars: [
-								{ label: "Militants", type: "value", variable: variables.militants_lowhigh, query: {varName:"date", operation:"max"} },
-								{ label: "Civilians", type: "value", variable: variables.civilians_lowhigh, query: {varName:"date", operation:"max"} },
-								{ label: "Unknown", type: "value", variable: variables.unknown_lowhigh, query: {varName:"date", operation:"max"} }
-							]},
-							{ label: "Target organization", type: "value", variable: variables.target_organization_name, query: {varName:"date", operation:"max"} }
-						],
-					},
-					{
-						type:"paragraph",
-						paragraphVar: { label: "Details", type: "value", variable: variables.target_description, query: {varName:"date", operation:"max"} },
-							
+						title: "Most Recent Strike",
+						dataElements: [
+							{
+								type:"simple-map",
+								country: "pakistan",
+								latVar: { type: "value", variable: variables.geo_lat, query: {varName:"date", operation:"max"} },
+								lngVar: { type: "value", variable: variables.geo_lon, query: {varName:"date", operation:"max"} }
+							},
+							{
+								type:"fact-box-list",
+								format:"vertical",
+								factBoxVars: [
+									{ label: "Date", type: "value", variable: variables.date, format: "date", query: {varName:"date", operation:"max"} },
+									{ label: "Total Casualties", type: "value", variable: variables.total_lowhigh, query: {varName:"date", operation:"max"}, subVars: [
+										{ label: "Militants", type: "value", variable: variables.militants_lowhigh, query: {varName:"date", operation:"max"} },
+										{ label: "Civilians", type: "value", variable: variables.civilians_lowhigh, query: {varName:"date", operation:"max"} },
+										{ label: "Unknown", type: "value", variable: variables.unknown_lowhigh, query: {varName:"date", operation:"max"} }
+									]},
+									{ label: "Target organization", type: "value", variable: variables.target_organization_name, query: {varName:"date", operation:"max"} }
+								],
+							},
+							{
+								type:"paragraph",
+								paragraphVar: { label: "Details", type: "value", variable: variables.target_description, query: {varName:"date", operation:"max"} },
+									
+							}
+						]
 					}
 				]
 			}
@@ -786,49 +790,54 @@ let vizSettings = {
 		vizType: "callout_box",
 		primaryDataSheet: "yemen_strikes",
 		backgroundColor: "black",
-		sections:[
+		columns: [
 			{
-				title: "Live Statistics",
-				dataElements: [
+				width: "100%",
+				sections:[
 					{
-						type:"fact-box-list",
-						format:"horizontal",
-						factBoxVars: [
-							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
-							{ label: "Total strikes (Overall)",type: "count" },
-							{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
-							{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
+						title: "Live Statistics",
+						dataElements: [
+							{
+								type:"fact-box-list",
+								format:"horizontal",
+								factBoxVars: [
+									{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
+									{ label: "Total strikes (Overall)",type: "count" },
+									{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
+									{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
+								]
+							},
 						]
 					},
-				]
-			},
-			{
-				title: "Most Recent Strike",
-				dataElements: [
 					{
-						type:"simple-map",
-						country: "yemen",
-						latVar: { type: "value", variable: variables.geo_lat, query: {varName:"date", operation:"max"} },
-						lngVar: { type: "value", variable: variables.geo_lon, query: {varName:"date", operation:"max"} }
-					},
-					{
-						type:"fact-box-list",
-						format:"vertical",
-						factBoxVars: [
-							{ label: "Date", type: "value", variable: variables.date, format: "date", query: {varName:"date", operation:"max"} },
-							{ label: "Strike type", type: "value", variable: variables.strike_type, query: {varName:"date", operation:"max"} },						
-							{ label: "Total casualties", type: "value", variable: variables.total_lowhigh, query: {varName:"date", operation:"max"}, subVars: [
-								{ label: "Militants", type: "value", variable: variables.militants_lowhigh, query: {varName:"date", operation:"max"} },
-								{ label: "Civilians", type: "value", variable: variables.civilians_lowhigh, query: {varName:"date", operation:"max"} },
-								{ label: "Unknown", type: "value", variable: variables.unknown_lowhigh, query: {varName:"date", operation:"max"} }
-							]},
-							{ label: "Target organization", type: "value", variable: variables.target_organization_name, query: {varName:"date", operation:"max"} }
-						],
-					},
-					{
-						type:"paragraph",
-						paragraphVar: { label: "Details", type: "value", variable: variables.target_description, query: {varName:"date", operation:"max"} },
-							
+						title: "Most Recent Strike",
+						dataElements: [
+							{
+								type:"simple-map",
+								country: "yemen",
+								latVar: { type: "value", variable: variables.geo_lat, query: {varName:"date", operation:"max"} },
+								lngVar: { type: "value", variable: variables.geo_lon, query: {varName:"date", operation:"max"} }
+							},
+							{
+								type:"fact-box-list",
+								format:"vertical",
+								factBoxVars: [
+									{ label: "Date", type: "value", variable: variables.date, format: "date", query: {varName:"date", operation:"max"} },
+									{ label: "Strike type", type: "value", variable: variables.strike_type, query: {varName:"date", operation:"max"} },						
+									{ label: "Total casualties", type: "value", variable: variables.total_lowhigh, query: {varName:"date", operation:"max"}, subVars: [
+										{ label: "Militants", type: "value", variable: variables.militants_lowhigh, query: {varName:"date", operation:"max"} },
+										{ label: "Civilians", type: "value", variable: variables.civilians_lowhigh, query: {varName:"date", operation:"max"} },
+										{ label: "Unknown", type: "value", variable: variables.unknown_lowhigh, query: {varName:"date", operation:"max"} }
+									]},
+									{ label: "Target organization", type: "value", variable: variables.target_organization_name, query: {varName:"date", operation:"max"} }
+								],
+							},
+							{
+								type:"paragraph",
+								paragraphVar: { label: "Details", type: "value", variable: variables.target_description, query: {varName:"date", operation:"max"} },
+									
+							}
+						]
 					}
 				]
 			}
@@ -839,49 +848,54 @@ let vizSettings = {
 		vizType: "callout_box",
 		primaryDataSheet: "somalia_strikes",
 		backgroundColor: "black",
-		sections:[
+		columns: [
 			{
-				title: "Live Statistics",
-				dataElements: [
+				width: "100%",
+				sections:[
 					{
-						type:"fact-box-list",
-						format:"horizontal",
-						factBoxVars: [
-							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
-							{ label: "Total strikes (Overall)",type: "count" },
-							{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
-							{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
+						title: "Live Statistics",
+						dataElements: [
+							{
+								type:"fact-box-list",
+								format:"horizontal",
+								factBoxVars: [
+									{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
+									{ label: "Total strikes (Overall)",type: "count" },
+									{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
+									{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
+								]
+							},
 						]
 					},
-				]
-			},
-			{
-				title: "Most Recent Strike",
-				dataElements: [
 					{
-						type:"simple-map",
-						country: "somalia",
-						latVar: { type: "value", variable: variables.geo_lat, query: {varName:"date", operation:"max"} },
-						lngVar: { type: "value", variable: variables.geo_lon, query: {varName:"date", operation:"max"} }
-					},
-					{
-						type:"fact-box-list",
-						format:"vertical",
-						factBoxVars: [
-							{ label: "Date", type: "value", variable: variables.date, format: "date", query: {varName:"date", operation:"max"} },
-							{ label: "Strike type", type: "value", variable: variables.strike_type, query: {varName:"date", operation:"max"} },							
-							{ label: "Total casualties", type: "value", variable: variables.total_lowhigh, query: {varName:"date", operation:"max"}, subVars: [
-								{ label: "Militants", type: "value", variable: variables.militants_lowhigh, query: {varName:"date", operation:"max"} },
-								{ label: "Civilians", type: "value", variable: variables.civilians_lowhigh, query: {varName:"date", operation:"max"} },
-								{ label: "Unknown", type: "value", variable: variables.unknown_lowhigh, query: {varName:"date", operation:"max"} }
-							]},
-							{ label: "Target organization", type: "value", variable: variables.target_organization_name, query: {varName:"date", operation:"max"} }
-						],
-					},
-					{
-						type:"paragraph",
-						paragraphVar: { label: "Details", type: "value", variable: variables.target_description, query: {varName:"date", operation:"max"} },
-							
+						title: "Most Recent Strike",
+						dataElements: [
+							{
+								type:"simple-map",
+								country: "somalia",
+								latVar: { type: "value", variable: variables.geo_lat, query: {varName:"date", operation:"max"} },
+								lngVar: { type: "value", variable: variables.geo_lon, query: {varName:"date", operation:"max"} }
+							},
+							{
+								type:"fact-box-list",
+								format:"vertical",
+								factBoxVars: [
+									{ label: "Date", type: "value", variable: variables.date, format: "date", query: {varName:"date", operation:"max"} },
+									{ label: "Strike type", type: "value", variable: variables.strike_type, query: {varName:"date", operation:"max"} },							
+									{ label: "Total casualties", type: "value", variable: variables.total_lowhigh, query: {varName:"date", operation:"max"}, subVars: [
+										{ label: "Militants", type: "value", variable: variables.militants_lowhigh, query: {varName:"date", operation:"max"} },
+										{ label: "Civilians", type: "value", variable: variables.civilians_lowhigh, query: {varName:"date", operation:"max"} },
+										{ label: "Unknown", type: "value", variable: variables.unknown_lowhigh, query: {varName:"date", operation:"max"} }
+									]},
+									{ label: "Target organization", type: "value", variable: variables.target_organization_name, query: {varName:"date", operation:"max"} }
+								],
+							},
+							{
+								type:"paragraph",
+								paragraphVar: { label: "Details", type: "value", variable: variables.target_description, query: {varName:"date", operation:"max"} },
+									
+							}
+						]
 					}
 				]
 			}
@@ -892,48 +906,53 @@ let vizSettings = {
 		vizType: "callout_box",
 		primaryDataSheet: "niger_strikes",
 		backgroundColor: "black",
-		sections:[
+		columns: [
 			{
-				title: "Live Statistics",
-				dataElements: [
+				width: "100%",
+				sections:[
 					{
-						type:"fact-box-list",
-						format:"horizontal",
-						factBoxVars: [
-							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
-							{ label: "Total strikes (Overall)",type: "count" },
-							{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
-							{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
+						title: "Live Statistics",
+						dataElements: [
+							{
+								type:"fact-box-list",
+								format:"horizontal",
+								factBoxVars: [
+									{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
+									{ label: "Total strikes (Overall)",type: "count" },
+									{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
+									{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
+								]
+							},
 						]
 					},
-				]
-			},
-			{
-				title: "Most Recent Strike",
-				dataElements: [
 					{
-						type:"simple-map",
-						country: "niger",
-						latVar: { type: "value", variable: variables.geo_lat, query: {varName:"date", operation:"max"} },
-						lngVar: { type: "value", variable: variables.geo_lon, query: {varName:"date", operation:"max"} }
-					},
-					{
-						type:"fact-box-list",
-						format:"vertical",
-						factBoxVars: [
-							{ label: "Date", type: "value", variable: variables.date, format: "date", query: {varName:"date", operation:"max"} },
-							{ label: "Total Casualties", type: "value", variable: variables.total_lowhigh, query: {varName:"date", operation:"max"}, subVars: [
-								{ label: "Militants", type: "value", variable: variables.militants_lowhigh, query: {varName:"date", operation:"max"} },
-								{ label: "Civilians", type: "value", variable: variables.civilians_lowhigh, query: {varName:"date", operation:"max"} },
-								{ label: "Unknown", type: "value", variable: variables.unknown_lowhigh, query: {varName:"date", operation:"max"} }
-							]},
-							{ label: "Target organization", type: "value", variable: variables.target_organization_name, query: {varName:"date", operation:"max"} }
-						],
-					},
-					{
-						type:"paragraph",
-						paragraphVar: { label: "Details", type: "value", variable: variables.target_description, query: {varName:"date", operation:"max"} },
-							
+						title: "Most Recent Strike",
+						dataElements: [
+							{
+								type:"simple-map",
+								country: "niger",
+								latVar: { type: "value", variable: variables.geo_lat, query: {varName:"date", operation:"max"} },
+								lngVar: { type: "value", variable: variables.geo_lon, query: {varName:"date", operation:"max"} }
+							},
+							{
+								type:"fact-box-list",
+								format:"vertical",
+								factBoxVars: [
+									{ label: "Date", type: "value", variable: variables.date, format: "date", query: {varName:"date", operation:"max"} },
+									{ label: "Total Casualties", type: "value", variable: variables.total_lowhigh, query: {varName:"date", operation:"max"}, subVars: [
+										{ label: "Militants", type: "value", variable: variables.militants_lowhigh, query: {varName:"date", operation:"max"} },
+										{ label: "Civilians", type: "value", variable: variables.civilians_lowhigh, query: {varName:"date", operation:"max"} },
+										{ label: "Unknown", type: "value", variable: variables.unknown_lowhigh, query: {varName:"date", operation:"max"} }
+									]},
+									{ label: "Target organization", type: "value", variable: variables.target_organization_name, query: {varName:"date", operation:"max"} }
+								],
+							},
+							{
+								type:"paragraph",
+								paragraphVar: { label: "Details", type: "value", variable: variables.target_description, query: {varName:"date", operation:"max"} },
+									
+							}
+						]
 					}
 				]
 			}
@@ -944,48 +963,53 @@ let vizSettings = {
 		vizType: "callout_box",
 		primaryDataSheet: "libya_strikes",
 		backgroundColor: "black",
-		sections:[
+		columns: [
 			{
-				title: "Live Statistics",
-				dataElements: [
+				width: "100%",
+				sections:[
 					{
-						type:"fact-box-list",
-						format:"horizontal",
-						factBoxVars: [
-							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
-							{ label: "Total strikes (Overall)",type: "count" },
-							{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
-							{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
+						title: "Live Statistics",
+						dataElements: [
+							{
+								type:"fact-box-list",
+								format:"horizontal",
+								factBoxVars: [
+									{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
+									{ label: "Total strikes (Overall)",type: "count" },
+									{ label: "Civilian casualties (Overall)",type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
+									{ label: "Total casualties (Overall)",type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
+								]
+							},
 						]
 					},
-				]
-			},
-			{
-				title: "Most Recent Strike",
-				dataElements: [
 					{
-						type:"simple-map",
-						country: "libya",
-						latVar: { type: "value", variable: variables.geo_lat, query: {varName:"date", operation:"max"} },
-						lngVar: { type: "value", variable: variables.geo_lon, query: {varName:"date", operation:"max"} }
-					},
-					{
-						type:"fact-box-list",
-						format:"vertical",
-						factBoxVars: [
-							{ label: "Date", type: "value", variable: variables.date, format: "date", query: {varName:"date", operation:"max"} },
-							{ label: "Total Casualties", type: "value", variable: variables.total_lowhigh, query: {varName:"date", operation:"max"}, subVars: [
-								{ label: "Militants", type: "value", variable: variables.militants_lowhigh, query: {varName:"date", operation:"max"} },
-								{ label: "Civilians", type: "value", variable: variables.civilians_lowhigh, query: {varName:"date", operation:"max"} },
-								{ label: "Unknown", type: "value", variable: variables.unknown_lowhigh, query: {varName:"date", operation:"max"} }
-							]},
-							{ label: "Target organization", type: "value", variable: variables.target_organization_name, query: {varName:"date", operation:"max"} }
-						],
-					},
-					{
-						type:"paragraph",
-						paragraphVar: { label: "Details", type: "value", variable: variables.target_description, query: {varName:"date", operation:"max"} },
-							
+						title: "Most Recent Strike",
+						dataElements: [
+							{
+								type:"simple-map",
+								country: "libya",
+								latVar: { type: "value", variable: variables.geo_lat, query: {varName:"date", operation:"max"} },
+								lngVar: { type: "value", variable: variables.geo_lon, query: {varName:"date", operation:"max"} }
+							},
+							{
+								type:"fact-box-list",
+								format:"vertical",
+								factBoxVars: [
+									{ label: "Date", type: "value", variable: variables.date, format: "date", query: {varName:"date", operation:"max"} },
+									{ label: "Total Casualties", type: "value", variable: variables.total_lowhigh, query: {varName:"date", operation:"max"}, subVars: [
+										{ label: "Militants", type: "value", variable: variables.militants_lowhigh, query: {varName:"date", operation:"max"} },
+										{ label: "Civilians", type: "value", variable: variables.civilians_lowhigh, query: {varName:"date", operation:"max"} },
+										{ label: "Unknown", type: "value", variable: variables.unknown_lowhigh, query: {varName:"date", operation:"max"} }
+									]},
+									{ label: "Target organization", type: "value", variable: variables.target_organization_name, query: {varName:"date", operation:"max"} }
+								],
+							},
+							{
+								type:"paragraph",
+								paragraphVar: { label: "Details", type: "value", variable: variables.target_description, query: {varName:"date", operation:"max"} },
+									
+							}
+						]
 					}
 				]
 			}
@@ -997,20 +1021,25 @@ let vizSettings = {
 		primaryDataSheet: "pakistan_strikes",
 		secondaryDataSheets: ["yemen_strikes", "somalia_strikes", "niger_strikes", "libya_strikes"],
 		backgroundColor: "black",
-		sections:[
+		columns: [
 			{
-				title: "Live Statistics",
-				dataElements: [
+				width: "100%",
+				sections:[
 					{
-						type:"fact-box-list",
-						format:"horizontal",
-						factBoxVars: [
-							{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
-							{ label: "Total strikes (Overall)", type: "count" },
-							{ label: "Civilian casualties (Overall)", type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
-							{ label: "Total casualties (Overall)", type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
+						title: "Live Statistics",
+						dataElements: [
+							{
+								type:"fact-box-list",
+								format:"horizontal",
+								factBoxVars: [
+									{ label: "Strikes in last 6 mos.", type: "count", query: {varName:"date", operation:">", compareValue:strikeCompareDate} },
+									{ label: "Total strikes (Overall)", type: "count" },
+									{ label: "Civilian casualties (Overall)", type: "sum-range", variableMin: variables.civilians_low, variableMax:variables.civilians_high},
+									{ label: "Total casualties (Overall)", type: "sum-range", variableMin: variables.total_low, variableMax:variables.total_high}
+								]
+							},
 						]
-					},
+					}
 				]
 			}
 		]

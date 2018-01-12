@@ -4,10 +4,9 @@ let variables = {
 }
 
 let vizSettings = {
-	{
-		id: "#transforming-the-workforce__recommendations", 
+	"transforming-the-workforce__recommendations": {
 		vizType: "interactive_svg",
-		svg: require("./assets/recommendations.svg"),
+		svgFileName: "./../projects/transforming_the_workforce/assets/recommendations.svg",
 		linkList: [
 			{id: "#transforming-the-workforce__improving_the_knowledge", url: "#improving-the-knowledge-base"},
 			{id: "#transforming-the-workforce__support_for_implementation", url: "#support-for-implementation"},

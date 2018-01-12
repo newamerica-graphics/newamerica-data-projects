@@ -1,9 +1,11 @@
 console.log(PROJECT)
 
 import VizController from "./vizController.js"
-var {vizSettings, dataUrl} = require("./projects/" + PROJECT + "/settings.js")
+var {vizSettings, dataUrl, externalScript} = require("./projects/" + PROJECT + "/settings.js")
 
-console.log(vizSettings, dataUrl)
+console.log(vizSettings, dataUrl, externalScript)
+
+if (externalScript) { $.getScript(externalScript) }
 
 window.vizControl = new VizController(vizSettings);
 
