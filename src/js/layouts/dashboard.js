@@ -103,6 +103,8 @@ export class Dashboard {
 	}
 
 	changeFilter(messageObject, messageOriginator) {
+		console.log(messageObject, messageOriginator)
+
 		for (let component of this.componentList) {
 			if (component.id != messageOriginator.id) {
 				switch (component.messageHandlerType) {

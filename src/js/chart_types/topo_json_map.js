@@ -380,7 +380,7 @@ export class TopoJsonMap {
 			    .style("fill-opacity", this.stroke.opacity || "1")
 			this.currClicked = null;
 		}
-		if (datum && datum.data && datum.data[this.currFilter.variable] != 0 && datum.data[this.currFilter.variable] != "None") {
+		if (datum && (datum.data || datum.data == 0)) {
 			d3.select(path)
 				.style("stroke", "white")
 			    .style("stroke-width", "3");

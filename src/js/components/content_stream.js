@@ -84,6 +84,7 @@ export class ContentStream {
 	}
 
 	changeValue(params) {
+		console.log(params)
 		if (this.entries) { this.entries.remove(); }
 
 		if (params.dataPoint) {
@@ -109,9 +110,9 @@ export class ContentStream {
 	setStreamContent({color, dataPoint, currFilter}) {
 		let valueList, filterVal;
 
-		console.log(dataPoint)
+		console.log(dataPoint, this.dataNest)
 
-		if (dataPoint == "all" || !dataPoint.state || !this.dataNest.get(String(dataPoint.state))) {
+		if (dataPoint == "all" || !dataPoint.state) {
 			valueList = this.data;
 			this.contentStreamTitle
 				.text("All States");
@@ -132,18 +133,25 @@ export class ContentStream {
 			}
 		}
 
+		if (this.additionalDataVars) {
+			this.additionalDataValues
+				.text((varSettings) => { return dataPoint[varSettings.variable]})
+		}
+
+		console.log(valueList)
+
+		if (!valueList) { this.showNoValueText(); return; }
+
 		valueList = currFilter && currFilter.filterVal && this.filterVar ? valueList.filter((d) => { return d[this.filterVar.variable] == currFilter.filterVal}) : valueList
 		let sortedList = valueList.sort((a, b) => { return new Date(b.date) - new Date(a.date); });
+
+		if (sortedList.length === 0) { this.showNoValueText(); return; }
 
 		if (this.hasColorOutline && color) {
 			this.contentStreamContainer
 				.style("border", "2px solid " + color)
 		}
 
-		if (this.additionalDataVars) {
-			this.additionalDataValues
-				.text((varSettings) => { return dataPoint[varSettings.variable]})
-		}
 		
 		if (this.showCurrFilterVal && currFilter) {
 			this.filterValLabel
@@ -194,5 +202,14 @@ export class ContentStream {
 		entryTextContainers.append("div")
 			.attr("class", "content-stream__entry__source")
 			.html((d) => { return d.sources_combined; });
+	}
+
+	showNoValueText() {
+		this.filterValLabel.text("")
+		this.filterValValue.text("")
+
+		this.entries = this.contentStream.append("div").attr("class", "content-stream__no-value-text").text(this.noValueText)
+
+		return; 
 	}
 }

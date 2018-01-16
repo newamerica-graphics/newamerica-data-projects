@@ -62,6 +62,7 @@ let vizSettings = {
 					primaryDataSheet: "incidents",
 					clickable: false,
 					defaultFilter: variables.incidents_total,
+					noValueText: "No incidents of this type recorded for this state",
 					width: "30%",
 					isMessagePasser: false,
 					messageHandlerType: "change_value",
@@ -111,7 +112,7 @@ let vizSettings = {
 				verticalPadding: 5
 			}
 		]
-	},		
+	},
 }
 
 module.exports = {

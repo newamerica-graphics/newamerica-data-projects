@@ -9,7 +9,7 @@ window.vizControl = new VizController(vizSettings);
 
 window.vizControl.initialize({dataUrl:dataUrl});
 
-window.addEventListener('resize', vizControl.resize);
+window.addEventListener('resize', () => vizControl.resize());
 
 Object.keys(vizSettings).forEach((vizKey) => {
     window.vizControl.render(vizKey)

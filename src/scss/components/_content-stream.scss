@@ -73,6 +73,12 @@
 		}
 	}
 
+	&__no-value-text {
+		font-size: 14px;
+		color: palette-get(na-black-40);
+		font-style: italic;
+	}
+
 	&__fadeout {
 	    width: 100%;
 	    height: 50px;

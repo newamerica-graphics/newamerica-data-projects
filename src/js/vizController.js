@@ -50,7 +50,7 @@ export default class VizController {
 	    			console.log("rendering from queue")
 	    			renderFunc(data);
 	    			// after refresh, this functionality can be handled from front-end page template, instead of here
-					this.hideLoadingGif(dataVizId);
+					// this.hideLoadingGif(dataVizId);
 	    		}
 	    	}
 	    	this.data = data;
@@ -102,6 +102,7 @@ export default class VizController {
 	}
 
 	resize() {
+		console.log(this)
 		this.vizList.forEach((viz) => {
 			viz.resize();
 		})
