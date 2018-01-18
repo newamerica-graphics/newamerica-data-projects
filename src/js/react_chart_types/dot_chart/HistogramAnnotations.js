@@ -14,7 +14,6 @@ const innerPadding = 5,
 class HistogramAnnotations extends React.Component {
 	constructor(props) {
 		super(props)
-		console.log(props)
 
 		let annotationPositions = []
 
@@ -28,24 +27,20 @@ class HistogramAnnotations extends React.Component {
 	}
 
 	componentDidMount() {
-		console.log(this.refs)
 		this.forceUpdate()
 	}
 
 	componentWillUpdate(nextProps) {
-		console.log(this.refs)
 		this.setAnnotationPositions(nextProps)
 
 	}
 
 	setAnnotationPositions({ scale, width }) {
-		console.log("setting positions")
 
 		let scaledXVal, startXPos, endXPos, yIndex;
 		this.rows = [];
 		this.rows[0] = [];
 
-		console.log(scale.domain(), scale.range())
 
 		this.sortedData.map((d, i) => {
 			let textElem = this.refs[i];
@@ -62,20 +57,12 @@ class HistogramAnnotations extends React.Component {
 			}
 			endXPos = startXPos + textBounds.width + 2*innerPadding;
 
-			console.log(endXPos, width)
-
 			if (endXPos > width) {
 				startXPos = width - textBounds.width - 2*innerPadding;
 				endXPos = width;
 			}
 
-			console.log(d)
-			console.log(this.rows)
-			console.log(startXPos, endXPos)
-
 			let yIndex = this.calcYIndex(startXPos, endXPos)
-
-			console.log(yIndex)
 
 			d.yPos = 25 * yIndex + 10;
 			d.startXPos = startXPos;
@@ -150,7 +137,6 @@ class HistogramAnnotations extends React.Component {
 		} else {
 			xPos = scale(new Date(d.date))
 		}
-		console.log(d)
 
 		let className = "dot-chart__histogram-annotation__line"
 		className += this.state.currHovered === i ? " active" : "";

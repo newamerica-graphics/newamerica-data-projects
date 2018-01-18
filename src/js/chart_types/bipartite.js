@@ -110,7 +110,6 @@ export class Bipartite {
 		}
 		this.rightVals = Array.from(rightVals).sort(d3.ascending);
 		this.leftVals.sort(d3.ascending);
-		console.log(this.linkVals);
 	}
 
 	setNodeOffsets() {
@@ -304,10 +303,8 @@ export class Bipartite {
 		coord += 10;
 		// transform would bring nodes out the bottom of the svg
 		if (coord - (listLen * minNodeOffset)/2 < 0) {
-			console.log("less!");
 			return 0;
 		} else if (coord + (listLen * minNodeOffset)/2 > this.h) {
-			console.log("greater!");
 			return this.h - (listLen * minNodeOffset);
 		} else {
 			return coord - (listLen * minNodeOffset)/2;

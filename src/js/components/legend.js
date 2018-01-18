@@ -57,9 +57,7 @@ export class Legend {
 			
 			if (this.varDescriptionData) {
 				let varDescriptionText = this.getVarDescriptionText();
-				console.log(varDescriptionText)
 				if (varDescriptionText) {
-					console.log("showing description!");
 					this.appendVarDescription(varDescriptionText);
 				}
 			}
@@ -289,17 +287,17 @@ export class Legend {
             .attr("stroke-width", 1)
             .attr("cx", width/2)
             .attr("cy", height/2 - 5)
-            .attr("r", (d) => { console.log(d); return d; });
+            .attr("r", (d) => { return d; });
 
         svg.selectAll("text")
             .data(this.radiusScale.range())
           .enter().append("text")
             .attr("x", width/2)
-            .attr("y", (d) => { console.log(d); return height/2 + d + 7; })
+            .attr("y", (d) => { return height/2 + d + 7; })
             .style("font-size", "12px")
             .attr("fill", "#6b6d71")
             .style("text-anchor", "middle")
-            .text((d, i) => { console.log(d); return formatValue(Math.ceil(this.radiusScale.domain()[i]), this.radiusVar.format); });
+            .text((d, i) => { return formatValue(Math.ceil(this.radiusScale.domain()[i]), this.radiusVar.format); });
 	}
 
 	appendVarDescription(varDescriptionText) {

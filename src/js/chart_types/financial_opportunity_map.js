@@ -29,7 +29,6 @@ export class FinancialOpportunityMap {
         this.toggleOffLayers = toggleOffLayers;
         this.colorStops = [];
         this.currToggledIndex = 0;
-        console.log(MapboxGeocoder);
 
         let mapContainer = d3.select(id).append("div")
             .attr("id", id.replace("#", "") + '-map-container')

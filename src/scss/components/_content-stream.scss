@@ -27,14 +27,9 @@
 		max-height: 700px;
 		min-height: 300px;
 		position: relative;
-
-		/*@media screen and (min-width:700px){
-			border-left: 2px solid palette-get(na-black-30);
-		}*/
 	}
 
 	&__title-container {
-		/*height: 50px;*/
 		padding-bottom: 10px;
 	}
 
@@ -137,9 +132,5 @@
 			font-size: 16px !important;
 			font-weight: normal !important;
 		}
-
-		/*a {
-			border-bottom: none !important;
-		}*/
 	}
 }

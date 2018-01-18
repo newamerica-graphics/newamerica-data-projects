@@ -1,4 +1,6 @@
-let { colors } = require("../../helper_functions/colors.js")
+const { colors } = require("../../helper_functions/colors.js")
+const d3 = require("d3")
+const { combineSources } = require("../../helper_functions/combine_sources.js")
 
 let variables = {
 	category: {"variable":"category", "displayName":"Category", "format": "string", "scaleType":"categorical", "customDomain":["Anti-Sharia Legislation", "Opposition to Refugee Resettlement", "Opposition to Mosques, Muslim Cemeteries & Schools", "Anti-Muslim Actions & Statements by Elected & Appointed Officials", "Media Reports of Anti-Muslim Violence & Crimes"], "customRange":[colors.brown.light, colors.purple.light, colors.orange.light, colors.red.light, colors.blue.light]},
@@ -85,7 +87,7 @@ let vizSettings = {
 		colorScaling: false,
 		filterInitialDataFunction: d => d.state != "United States"
 	},
-	"muslim-community-restrictions__time-dot-chart": {
+	"muslim-community-restrictions__dot-chart": {
 		isReact: true,
 		vizType: "dot_chart",
 		primaryDataSheet: "incidents",
@@ -115,7 +117,26 @@ let vizSettings = {
 	},
 }
 
+const preProcessData = (data) => {
+	const fullDateFormat = d3.timeFormat("%B %-d, %Y"),
+		monthYearFormat = d3.timeFormat("%B %Y"),
+		yearMonthFormat = d3.timeFormat("%Y%m")
+
+	data.incidents.map(d => {
+		let date = new Date(d.date)
+
+		d.processed_date = d.show_day === "TRUE" ? fullDateFormat(date) : monthYearFormat(date)
+		d.year_month = yearMonthFormat(date)
+		d.source_combined = combineSources([d.source1_display_name, d.source1_url, d.source2_display_name, d.source2_url, d.source3_display_name, d.source3_url, d.source4_display_name, d.source4_url])
+
+		return d;
+	})
+
+	return data;
+}
+
 module.exports = {
 	vizSettings: vizSettings,
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/muslimdiaspora/muslim_community_restrictions.json"
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/muslimdiaspora/muslim_community_restrictions.json",
+	preProcessData: preProcessData
 }

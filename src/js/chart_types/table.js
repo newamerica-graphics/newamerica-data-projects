@@ -37,7 +37,6 @@ export class Table {
 	            	this.data = this.data.filter((d) => { return d[filter.field] });
 	            }
 			}
-			
         }
 
         if (this.filterInitialDataFunction) { 
@@ -206,7 +205,6 @@ export class Table {
 }
 
 function setTableWidth() {
-	console.log("setting table width")
 	var $contentContainer = $(".content-container");
 	var $body = $("body")
 	var bodyWidth = $body.width();

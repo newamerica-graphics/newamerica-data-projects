@@ -44,8 +44,6 @@ export class PieChart {
 
 		let fakeRoot = {}
 
-		console.log(this.categoryVar)
-
 		if (!this.categoryVar) {
 			fakeRoot[this.labelVar.variable] = "root";
 			this.rawData.push(fakeRoot)
@@ -57,7 +55,6 @@ export class PieChart {
 		    	if (this.categoryVar) {
 		    		return d[this.categoryVar.variable]
 		    	} else {
-		    		console.log("here!")
 		    		return d[this.labelVar.variable] === "root" ? null : "root";
 		    	}
 		    })
@@ -114,7 +111,6 @@ export class PieChart {
 			if (d.parent) {
 				let value = formatValue(d.value, this.dataVar.format)
 				valCounts.set(d.id, value);
-				console.log(d.depth, i);
 				if (d.depth > 1) {
 					indentedIndices.push(i);
 				}
@@ -129,7 +125,6 @@ export class PieChart {
 		legendSettings.valChangedFunction = this.changeVariableValsShown.bind(this);
 		legendSettings.valCounts = valCounts;
 		legendSettings.indentedIndices = indentedIndices;
-		console.log(indentedIndices);
 
 		this.legend.render(legendSettings);
 	}

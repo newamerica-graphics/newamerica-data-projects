@@ -39,8 +39,6 @@ export class StackedBar {
 			this.infoTextContainer.append("h5")
 				.attr("class", "bar-chart__info-text__text")
 				.text(this.infoText.text)
-
-
 		}
 
 		this.svg = d3.select(this.id).append("svg").attr("class", "bar-chart");
@@ -126,11 +124,8 @@ export class StackedBar {
 
 		this.nestedVals = this.dataNestFunction(this.data, this.filterVar);
 
-		console.log(this.nestedVals)
-
 		this.nestedVals.forEach((yearObject, i) => {
 			if (isNaN(yearObject.key)) {
-				console.log(yearObject)
 				this.nestedVals.splice(i, 1)
 			} else {
 				yearList.push(yearObject.key);
@@ -142,8 +137,6 @@ export class StackedBar {
 		
 		let yearExtents = d3.extent(yearList);
 
-		console.log(yearExtents, yearList, this.nestedVals)
-		
 		this.yScale.domain([0, maxTotalYearVal]);
 		this.xScale.domain(range(+yearExtents[0], +yearExtents[1]));
 	}

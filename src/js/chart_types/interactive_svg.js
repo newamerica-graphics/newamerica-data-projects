@@ -14,7 +14,6 @@ export class InteractiveSvg {
 	constructor(vizSettings) {
 		Object.assign(this, vizSettings)
 
-		console.log(this.svgFileName)
 		this.svg = require("./../projects/transforming_the_workforce/assets/recommendations.svg")
 
 		d3.select(this.id).html(this.svg)
@@ -24,7 +23,7 @@ export class InteractiveSvg {
 
 	attachLinks() {
 		this.linkList.forEach(d => {
-			$(d.id).click(() => { console.log("clicked!"); window.location.href = d.url; })
+			$(d.id).click(() => { window.location.href = d.url; })
 		})
 	}
 

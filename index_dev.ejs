@@ -8,7 +8,12 @@
   <body>
     <% for(var i=0; i<htmlWebpackPlugin.options.vizIdList.length; i++) { %>
   	<div class="block-dataviz">
-		  	<div class="dataviz__chart-area" id="<%= htmlWebpackPlugin.options.vizIdList[i] %>"></div>
+      <div class="dataviz">
+        <div class="dataviz__chart-container">
+          <div class="dataviz__loading-gif"></div>
+		  	  <div class="dataviz__chart-area" id="<%= htmlWebpackPlugin.options.vizIdList[i] %>"></div>
+        </div>
+      </div>
 		</div>
     <% } %>
 	</div>

@@ -31,7 +31,6 @@ export class CategoryBreakdown {
 		this.rawData = data[this.primaryDataSheet];
 		this.setScale(this.rawData);
 		this.data = this.getDataNest(this.rawData);
-		console.log(this.data);
 		this.setDimensions();
 		
 		this.buildGraph();
@@ -266,8 +265,6 @@ export class CategoryBreakdown {
 		mousePos[1] = eventObject.pageY;
 
 		let rawDataPoint = this.rawData.filter((d) => { return d[this.idVar.variable] == hovered[this.idVar.variable]})[0];
-
-		console.log(rawDataPoint);
 
 		this.tooltip ? this.tooltip.show(rawDataPoint, mousePos, this.currFilter, null) : null;
 

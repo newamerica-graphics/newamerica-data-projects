@@ -20,8 +20,6 @@ export class FilterGroup {
 			this.categoryNest = d3.nest()
 				.key(d => d.category)
 				.entries(this.filterVars)
-
-			console.log(this.categoryNest)
 		}
 
 		this.filterContainer = parentContainer.append("ul")
@@ -64,7 +62,6 @@ export class FilterGroup {
 	}
 
 	changeCategory(newCategory, newCategoryIndex) {
-		console.log("changing category to", newCategory, newCategoryIndex)
 		this.activeCategoryIndex = newCategoryIndex;
 
 		this.categoryDivs.classed("active", (d, i) => i === this.activeCategoryIndex)
@@ -78,7 +75,6 @@ export class FilterGroup {
 	}
 
 	changeFilter(newFilter, newFilterIndex) {
-		console.log("changing filter to", newFilter, newFilterIndex)
 		this.activeFilterIndex = newFilterIndex;
 
 		this.filterDivs ? this.filterDivs.classed("active", (d, i) => i === this.activeFilterIndex) : null

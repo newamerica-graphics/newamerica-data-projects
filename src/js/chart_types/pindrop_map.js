@@ -22,7 +22,6 @@ export class PinDropMap {
 	constructor(vizSettings) {
 		Object.assign(this, vizSettings);
 		
-		
 		this.currFilter = this.filterVars[0];
 		this.zoomRatio = 1;
 
@@ -73,7 +72,6 @@ export class PinDropMap {
 			let filename = geometryType === "world" ? "world.json" : "us.json";
 			
 			d3.json("https://na-data-projects.s3.amazonaws.com/geography/" + filename, (error, data) => {
-				console.log(data, error)
 				let retGeom;
 
 				if (geometryType == "world") {

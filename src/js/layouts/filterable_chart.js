@@ -9,7 +9,6 @@ import { SelectBox } from "../components/select_box.js";
 export class FilterableChart {
 	constructor(vizSettings) {
 		Object.assign(this, vizSettings);
-		console.log("in filterable chart");
 		this.filterValList = this.customFilterOptions || this.getFilterValList();
 
 		let selectBoxSettings = {
@@ -30,7 +29,6 @@ export class FilterableChart {
 	}
 
 	renderChart() {
-		console.log(this.data)
 		if (this.chart) {
 			this.chart.removeChart();
 			delete this.chart;
@@ -67,9 +65,6 @@ export class FilterableChart {
 	}
 
 	changeTopic(index) {
-		console.log("changing topic");
-		
-		console.log(index);
 		this.currTopic = index;
 		this.renderChart();
 	}

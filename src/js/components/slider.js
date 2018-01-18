@@ -136,7 +136,6 @@ export class Slider {
 	}
 
 	render(data) {
-		console.log(data)
 		if ($.isArray(data)) {
 			this.data = data
 		} else {
@@ -196,25 +195,19 @@ export class Slider {
 	}
 
 	toggleAnimation(newAnimationVal, forceState) {
-		console.log("toggling animation " + this.animationState + " " + this.currAnimationVal);
-
 		if (this.animationState == "playing" || forceState == "pause") {
 			this.animationState = "paused";
 			this.currAnimationVal = newAnimationVal;
-			console.log("stopping animation " + this.animationState + " " + this.currAnimationVal);
 			window.clearInterval(this.intervalFunction);
 			
 			this.animationButton
 				.html(animationButtonIcons.play)
-
-			console.log("resting state " + this.animationState + " " + this.currAnimationVal);
 		} else {
 			this.animationState = "playing";
 			this.currAnimationVal = newAnimationVal;
 			if (this.currAnimationVal >= this.scale.range()[1]) {
 				this.currAnimationVal = this.scale.range()[0];
 			}
-			console.log("starting animation " + this.animationState + " " + this.currAnimationVal);
 			let interval = 7000/this.w;
 
 			this.intervalFunction = window.setInterval(() => {
@@ -241,9 +234,6 @@ export class Slider {
 			this.showAll ? this.showAll.classed("selected", false) : null;
 			this.handle.classed("hidden", false);
 		}
-
-		console.log("done toggling animation " + this.animationState + " " + this.currAnimationVal);
-		// this.startStopFunction(this.animationState);
 	}
 
 	addAnimationTrigger() {
@@ -252,7 +242,6 @@ export class Slider {
 		  element: document.getElementById(id),
 		  offset: '50%',
 		  handler: () => {
-		    console.log(this);
 		    this.animationState = "paused";
 			this.toggleAnimation(this.scale.range()[0])
 			waypoint.destroy();

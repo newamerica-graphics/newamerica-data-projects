@@ -68,8 +68,6 @@ export class LineChart {
 		this.colorScale = d3.scaleOrdinal()
 			.domain(this.yVars.map((d) => { return d.displayName; }))
 			.range(this.yVars.map((d) => { return d.color; }))
-
-		console.log(this.colorScale.domain(), this.colorScale.range());
 	}
 
 	initializeHoverLines() {
@@ -110,7 +108,6 @@ export class LineChart {
 			this.xScale.domain(d3.extent(this.data, (d) => { return d[this.xVar.variable]; }));
 		}
 
-		console.log(this.xScale.domain());
 		this.yScale.domain(this.getYScaleDomain(this.yVars[0]));
 		
 		if (this.dualYScale) {

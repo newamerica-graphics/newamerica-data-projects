@@ -145,8 +145,6 @@ export class PercentageStackedBar {
 			this.nestedVals.push(dataVal);
 		})
 
-		console.log(this.nestedVals);
-
 		this.lengthScale.domain([0, 1]);
 		this.groupingScale.domain(Array.from(groupingVals));
 	}
@@ -264,7 +262,6 @@ export class PercentageStackedBar {
 			.style("fill-opacity", (d) => { return d.key == datum.key ? 1 : .2; });
 
 		this.barGroupHoverLabels = this.barGroups
-			// .style("fill", (d) => { console.log(d); return "white"; })
 			.append("text")
 			.attr("transform", () => {
 				// if (this.foldupMode == "desktop") {

@@ -185,7 +185,6 @@ export class StepChart {
 		for (let d of data) {
 			if (d[this.currXVarName] && d[this.currYVarName]) {
 				if (d[this.currYVarName] != 0) {
-					console.log(d[this.currXVarName]);
 					d[this.currXVarName] = this.dateParser(d[this.currXVarName]);
 					retArray.push(d);
 				}
@@ -196,8 +195,7 @@ export class StepChart {
 	}
 
 	setXYScaleDomains() {
-		let xExtents = d3.extent(this.data, (d) => { console.log(d, this.currXVarName); return d[this.currXVarName]; });
-		console.log(xExtents)
+		let xExtents = d3.extent(this.data, (d) => { return d[this.currXVarName]; });
 
 		if (this.currXVar.clampScale) {
 			this.xScale.domain(xExtents);

@@ -51,7 +51,6 @@ export class VerticalTimeline {
 
 		this.colorScale = getColorScale(this.data, this.categoryVar);
 
-		console.log(this.colorScale.domain(), this.colorScale.range())
 		this.xScale.domain(this.categories);
 
 		this.appendCategoryTitles();
@@ -105,7 +104,7 @@ export class VerticalTimeline {
 				.attr("class", "vertical-timeline__beg-end-label-container top")
 				.append("div")
 				.attr("class", "vertical-timeline__beg-end-label")
-				.style("background-color", (d) => { console.log(d); return this.colorScale(d); })
+				.style("background-color", (d) => { return this.colorScale(d); })
 				.text(this.begEndLabels[0])
 		}
 
@@ -129,7 +128,7 @@ export class VerticalTimeline {
 		this.timelineItemGroups.append("h5")
 			.attr("class", "vertical-timeline__time")
 			.style("color", (d) => { return this.colorScale(d.key); })
-			.text((d) => { console.log(d); return d.values[0][this.timeVar.variable] + this.timeSuffix; });
+			.text((d) => { return d.values[0][this.timeVar.variable] + this.timeSuffix; });
 
 		this.timelineItems = this.timelineItemGroups.selectAll(".vertical-timeline__item")
 			.data(d => d.values)
@@ -142,8 +141,6 @@ export class VerticalTimeline {
 			.style("color", (d) => { return d.primary === "TRUE" ? this.colorScale(d.category) : "";})
 			.html((d) => { return formatValue(d[this.descriptionVar.variable], "markdown"); })
 
-		console.log(this.descriptionText.select("a"))
-		console.log(this.descriptionText.selectAll("a").nodes())
 		let prevColor;
 		this.descriptionText.selectAll("a")
 			.style("color", (datum) => { 
@@ -163,7 +160,7 @@ export class VerticalTimeline {
 				.attr("class", "vertical-timeline__beg-end-label-container bottom")
 				.append("div")
 				.attr("class", "vertical-timeline__beg-end-label")
-				.style("background-color", (d) => { console.log(d); return this.colorScale(d); })
+				.style("background-color", (d) => { return this.colorScale(d); })
 				.text(this.begEndLabels[1])
 		}
 

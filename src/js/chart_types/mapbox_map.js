@@ -67,7 +67,6 @@ export class MapboxMap {
             this.setRadiusScale(this.data);
         }
 
-        console.log(this.data)
         this.setPopupDataBox();
 
         if (this.colorVar) {
@@ -137,7 +136,6 @@ export class MapboxMap {
                 this.map.on('mousemove', (e) => {
                     let features = this.map.queryRenderedFeatures(e.point, { layers: ['points'] });
                     
-                    console.log(this.clickPrompt)
 
                     if (!features.length) {
                         this.map.setFilter("points-selected", ["==", "id", ""]);
@@ -187,14 +185,11 @@ export class MapboxMap {
     }
 
     processData(data) {
-        console.log(data);
         this.data = GeoJSON.parse(data, {Point: ['geo_lat', 'geo_lon']});
         this.source = {
             "type": "geojson",
             "data" : this.data
         }
-        console.log(this.data);
-        console.log(data)
     }
 
     addControls() {
@@ -226,7 +221,6 @@ export class MapboxMap {
 
     setRadiusScale(data) {
         let extents = d3.extent(data, (d) => { return Number(d[this.radiusVar.variable]); });
-        console.log(extents);
         this.radiusScale = d3.scaleLinear()
             .domain(extents)
             .range([3, 30]);
@@ -311,16 +305,16 @@ export class MapboxMap {
             .attr("stroke-width", 1)
             .attr("cx", width/2)
             .attr("cy", height/2)
-            .attr("r", (d) => { console.log(d); return d[1]; });
+            .attr("r", (d) => { return d[1]; });
 
         svg.selectAll("text")
             .data(this.radiusStops)
           .enter().append("text")
             .attr("x", width/2)
-            .attr("y", (d) => { console.log(d); return height/2 - d[1] - 3; })
+            .attr("y", (d) => { return height/2 - d[1] - 3; })
             .attr("fill", "#6b6d71")
             .style("text-anchor", "middle")
-            .text((d) => { console.log(d); return d[0]; });
+            .text((d) => { return d[0]; });
 
     }
 
@@ -336,12 +330,8 @@ export class MapboxMap {
     }
 
     changeValue(value) {
-        console.log("setting value to:", value);
-        console.log(this.map.loaded())
         if (value) {
-            console.log(value);
             if (value == "all") {
-                console.log("setting value to ALL");
                 this.map.setFilter('points', ['!=', 'year', ""]);
             } else {
                 this.map.setFilter('points', ['==', 'year', String(value)]);

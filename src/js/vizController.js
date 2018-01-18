@@ -21,18 +21,18 @@ import QuoteScroller from "./react_chart_types/quote_scroller/QuoteScroller.js";
 
 
 export default class VizController {
-	constructor(vizSettings) {
+	constructor(vizSettings, preProcessData) {
 		this.vizSettings = vizSettings;
 
 		this.renderQueue = [];
 		this.vizList = [];
 		this.clickToProfileFunction = defaultClickToProfile;
 		this.deferredSetDataDownload = null;
-
+		this.preProcessData = preProcessData
 	}
 
-	initialize({dataUrl, clickToProfileFunction}) {
-		this.sendDataRequest(dataUrl)
+	initialize({dataUrl, clickToProfileFunction, downloadableDataSheets}) {
+		this.sendDataRequest(dataUrl, downloadableDataSheets)
 		if (clickToProfileFunction) {
 			this.overrideClickToProfileFunction(clickToProfileFunction)
 		}
@@ -45,18 +45,18 @@ export default class VizController {
 			console.log("data received")
 			console.log(data, this.renderQueue);
 			if (!data) { return; }
+			this.data = this.preProcessData ? this.preProcessData(data) : data
+			console.log(this.data)
 	    	if (this.renderQueue && this.renderQueue.length > 0) { 
 	    		for (let renderFunc of this.renderQueue) {
 	    			console.log("rendering from queue")
-	    			renderFunc(data);
-	    			// after refresh, this functionality can be handled from front-end page template, instead of here
-					// this.hideLoadingGif(dataVizId);
+	    			renderFunc(this.data);
 	    		}
 	    	}
-	    	this.data = data;
+	    	
 
 	    	// the following function, which currently sets the values for the in depth profile pages based on the results from the data request, will be unneccessary after the refresh
-	    	setProfileValues(data);
+	    	setProfileValues(this.data);
 
 	    	if (this.deferredSetDataDownload) { this.deferredSetDataDownload() }
 	    });
@@ -78,7 +78,7 @@ export default class VizController {
 				// after refresh, this functionality can be handled from front-end page template, instead of here
 				this.hideLoadingGif(dataVizId);
 			} else {
-				this.renderQueue.push((data) => { return this.renderReactChart(dataVizId, settingsObject, data); })
+				this.renderQueue.push((data) => { this.hideLoadingGif(dataVizId); return this.renderReactChart(dataVizId, settingsObject, data); })
 			}
 		} else {
 			let chart = this.initializeChart(dataVizId, settingsObject)
@@ -92,7 +92,7 @@ export default class VizController {
 				// after refresh, this functionality can be handled from front-end page template, instead of here
 				this.hideLoadingGif(dataVizId);
 			} else {
-				this.renderQueue.push((data) => { return chart.render(data); })
+				this.renderQueue.push((data) => { this.hideLoadingGif(dataVizId); return chart.render(data); })
 			}
 		}
 	}
@@ -104,12 +104,13 @@ export default class VizController {
 	resize() {
 		console.log(this)
 		this.vizList.forEach((viz) => {
-			viz.resize();
+			viz.resize ? viz.resize() : null;
 		})
 	}
 
 	initializeChart(dataVizId, settingsObject) {
 		if (!settingsObject) { return null; }
+		if ($("#" + dataVizId).length < 1) { return; }
 
 		settingsObject.id = "#" + dataVizId
 		settingsObject.clickToProfileFunction = this.clickToProfileFunction
@@ -117,7 +118,9 @@ export default class VizController {
 	}
 
 	renderReactChart(dataVizId, settingsObject, data) {
+		console.log("here!")
 		if ($("#" + dataVizId).length < 1) { return; }
+		console.log("there!")
 
 		settingsObject.clickToProfileFunction = this.clickToProfileFunction
 
@@ -169,8 +172,10 @@ export default class VizController {
 
 	// after refresh, this functionality can be handled from front-end page template, instead of here
 	hideLoadingGif(id) {
-		$(id).siblings(".dataviz__loading-gif").hide();
-		$(id).css("visibility", "visible").css("min-height","none");
+		console.log("hiding loading gif for " + id)
+		let selector = "#" + id
+		$(selector).siblings(".dataviz__loading-gif").hide();
+		$(selector).css("visibility", "visible").css("min-height","none");
 	}
 
 	setDataDownloadLinks(downloadableDataSheets, customDataDownloadSource) {

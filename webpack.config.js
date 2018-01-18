@@ -79,19 +79,21 @@ const config = env => {
         new UglifyJSPlugin({
           sourceMap: true
         }),
-        // new S3Plugin({
-        //   // Only upload css and js 
-        //   include: /.*\.(scss|css|js)/,
-        //   // s3Options are required 
-        //   s3Options: {
-        //     accessKeyId: AWS_ACCESS_KEY_ID,
-        //     secretAccessKey: AWS_SECRET_ACCESS_KEY,
-        //   },
-        //   s3UploadOptions: {
-        //     Bucket: DATA_PROJECTS_S3_BUCKET_NAME
-        //   }
-        // }),
-        new webpack.optimize.ModuleConcatenationPlugin()
+        new webpack.DefinePlugin({
+          PROJECT: JSON.stringify(env.project)
+        }),
+        new S3Plugin({
+          // Only upload css and js 
+          include: /.*\.(scss|css|js)/,
+          // s3Options are required 
+          s3Options: {
+            accessKeyId: AWS_ACCESS_KEY_ID,
+            secretAccessKey: AWS_SECRET_ACCESS_KEY,
+          },
+          s3UploadOptions: {
+            Bucket: DATA_PROJECTS_S3_BUCKET_NAME
+          }
+        }),
       ],
     node: {
       fs: "empty",

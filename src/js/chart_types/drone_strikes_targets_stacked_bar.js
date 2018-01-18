@@ -36,7 +36,6 @@ export class DroneStrikesTargetsStackedBar {
 
 	setDimensions() {
 		this.w = $(this.id).width() - this.margin.left - this.margin.right;
-		console.log(this.w);
 
 		// if (this.w < 300) {
 			this.foldupMode = "mobile";
@@ -199,7 +198,6 @@ export class DroneStrikesTargetsStackedBar {
 			.style("fill-opacity", (d) => { return d.key == datum.key ? 1 : .2; });
 
 		this.barGroupHoverLabels = this.barGroups
-			// .style("fill", (d) => { console.log(d); return "white"; })
 			.append("text")
 			.attr("transform", () => {
 				// if (this.foldupMode == "desktop") {

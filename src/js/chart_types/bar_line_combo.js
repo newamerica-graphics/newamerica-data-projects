@@ -57,13 +57,6 @@ export class BarLineCombo {
 		legendSettings.colorScale = this.colorScale;
 
 		this.legend.render(legendSettings);
-
-		console.log(this.xScale.domain())
-		console.log(this.xScale.range());
-		console.log(this.y1Scale.domain())
-		console.log(this.y1Scale.range());
-		console.log(this.y2Scale.domain())
-		console.log(this.y2Scale.range());
 	}
 
 	setDimensions() {
@@ -91,7 +84,7 @@ export class BarLineCombo {
 		    .x((d) => { return d[this.lineVar.variable] ? this.xScale(d[this.xVar.variable]) + this.xScale.bandwidth()/2 : null; })
 		    .y((d) => { return d[this.lineVar.variable] ? +this.y2Scale(d[this.lineVar.variable]) : null; });
 		
-		this.valueline.defined((d) => { console.log(d[this.lineVar.variable]); return d[this.lineVar.variable] != null; });
+		this.valueline.defined((d) => { return d[this.lineVar.variable] != null; });
 	}
 
 	setXYScaleDomains() {

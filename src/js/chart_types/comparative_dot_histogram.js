@@ -87,20 +87,15 @@ export class ComparativeDotHistogram {
 	}
 
 	setDataNest() {
-		console.log(this.binScale.domain(), this.binScale.range());
 		this.dataNest = d3.nest()
 			.key((d) => { return this.binScale(d.value); })
 			.sortKeys((a, b) => { return d3.ascending(+a, +b); })
 			.sortValues((a, b) => { return d3.ascending(+a.value, +b.value);})
 			.entries(this.data);
-
-		console.log(this.dataNest);
 	}
 
 	setDimensions() {
-		console.log("setting dimensions");
 		this.w = $(this.id).width();
-		console.log(this.w);
 		let widthBinRatio = this.w/this.numBins;
 		this.circleXOffset = widthBinRatio/8;
 		this.circleYOffset = widthBinRatio/30;

@@ -5,7 +5,6 @@ let d3 = require("d3");
 export class SelectBox {
 	constructor(componentSettings) {
 		Object.assign(this, componentSettings);
-		console.log(this)
 		this.selectBoxContainer = d3.select(this.id).append("div")
 			.attr("class", "select-box-container");
 
@@ -16,7 +15,6 @@ export class SelectBox {
 				index -= this.placeholder ? 1 : 0;
 
 				if (this.hasShowAllButton) {
-					console.log("has show all");
 					this.showAllButton
 						.style("display", "inline-block");
 				}
@@ -69,7 +67,6 @@ export class SelectBox {
 		$(this.id + " .select-box").val(value);
 
 		if (this.hasShowAllButton) {
-			console.log("has show all", value);
 			this.showAllButton
 				.style("display", value && value != null ? "inline-block" : "none");
 		}

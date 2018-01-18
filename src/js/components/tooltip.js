@@ -93,10 +93,6 @@ export class Tooltip {
 			.attr("class", "tooltip__category__list-item__label")
 			.text((d) => { return d.displayName + ":" })
 
-		console.log(this.colorScale);
-		if(this.colorScale) {
-			console.log(this.colorScale.domain(), this.colorScale.range())
-		}
 		this.listItems.append("h3")
 			.attr("class", "tooltip__category__list-item__value")
 	}
@@ -129,7 +125,7 @@ export class Tooltip {
 
 		if (this.showOnlyVars == "same category") {
 			this.categoryContainers
-				.style("display", (d) => { console.log(d); return currFilterVar.category == d.key ? "block" : "none"; })
+				.style("display", (d) => { return currFilterVar.category == d.key ? "block" : "none"; })
 		}
 
 		this.listItems

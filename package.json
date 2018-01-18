@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --env.NODE_ENV=development ",
     "dev": "webpack --env.NODE_ENV=development -d --watch",
-    "build": "NODE_ENV=production webpack -p"
+    "build": "webpack --env.NODE_ENV=production -p"
   },
   "repository": {
     "type": "git",

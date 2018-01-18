@@ -14,7 +14,6 @@ import { BarChart } from "../chart_types/bar_chart.js";
 export class ChartWithFactBox {
 	constructor(vizSettings, imageFolderId) {
 		let { id, primaryDataSheet, chartSettings, factBoxSettings } = vizSettings;
-		console.log("here!");
 		this.id = id;
 		factBoxSettings.id = id;
 		factBoxSettings.factBoxType = "simple";

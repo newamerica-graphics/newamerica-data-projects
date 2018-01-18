@@ -28,6 +28,8 @@ class DotChart extends React.Component {
 		super(props);
         const {data, vizSettings} = props
 
+        console.log("rendering!", props)
+
 		this.data = data[vizSettings.primaryDataSheet];
         if (vizSettings.filterInitialDataFunction) {
             this.data = this.data.filter(vizSettings.filterInitialDataFunction);

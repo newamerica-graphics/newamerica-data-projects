@@ -33,26 +33,19 @@ export function getColorScale(data, filterVar) {
 	let scale, domain, range;
 
 	if (!scaleType) {
-		console.log("no scale type!");
 		return d3.scaleQuantize().range(["#ffffff", "#ffffff"]);
 	}
 
 	if (scaleType == "categorical") {
 		scale = d3.scaleOrdinal();
-		console.log(customDomain, customRange);
-
 		let uniqueVals = getUniqueVals(data, filterVar);
-		console.log(uniqueVals)
 		if (customDomain) {
 			let newVals = filterUnusedVals(uniqueVals, customDomain, customRange, canSplitCategory)
 			
-			// [customDomain, customRange] = newVals
-			console.log("heres!", newVals)
 			customDomain = newVals.domain
 			customRange = newVals.range
 		}
 
-		console.log(customDomain, customRange);
 		domain = setCategoricalDomain(uniqueVals, customDomain);
 		range = setCategoricalRange(uniqueVals, customRange);
 
@@ -60,8 +53,6 @@ export function getColorScale(data, filterVar) {
 		scale = d3.scaleQuantize();
 		range = setColorBins(numBins, customRange);
 		domain = customDomain ? customDomain : setQuantizeDomain(filterVar, data);
-		console.log(range, domain);
-		
 	} else if (scaleType == "linear") {
 		scale = d3.scaleLinear();
 		domain = customDomain ? customDomain : setLinearDomain(filterVar, data);
@@ -96,10 +87,6 @@ function filterUnusedVals(uniqueVals, customDomain, customRange, canSplitCategor
 			retRange.push(customRange[i]);
 		}
 	}
-
-	console.log("in filter unused vals")
-	console.log(retDomain)
-	console.log(retRange)
 
 	return {"domain": retDomain, "range":retRange};
 }

@@ -11,7 +11,6 @@ import { Dashboard } from "./dashboard.js";
 export class TabbedChartLayout {
 	constructor(vizSettings) {
 		Object.assign(this, vizSettings);
-		console.log(this)
 		this.chartToggle = new ChartToggle(this.id, this.tabIcons);
 		this.vizList = [];
 		let i = 0;
@@ -49,10 +48,8 @@ export class TabbedChartLayout {
 	}
 
 	render(data) {
-		console.log(this);
 		let visibilityToggles = [];
 		for (let viz of this.vizList) {
-			console.log(viz);
 			viz.render(data);
 		}
 

@@ -1,5 +1,6 @@
 let { colors } = require("../../helper_functions/colors.js")
 const d3 = require("d3");
+const { combineSources } = require("../../helper_functions/combine_sources.js")
 
 let strikeCompareDate = new Date();
 strikeCompareDate.setMonth(strikeCompareDate.getMonth() - 6)
@@ -1046,7 +1047,38 @@ let vizSettings = {
 	},
 }
 
+const getLowHigh = (low, high) => {
+	let lowVal = +low,
+		highVal = +high;
+
+	if (lowVal === highVal) {
+		return low
+	} else {
+		return "Between " + low + " and " + high
+	}
+}
+
+const preProcessData = (data) => {
+	const sheets = ["pakistan_strikes", "yemen_strikes", "somalia_strikes", "niger_strikes", "libya_strikes"]
+
+	sheets.forEach(sheet => {
+		data[sheet].map(d => {
+			d.sources_combined = combineSources([d.source1_name, d.source1_url, d.source2_name, d.source2_url, d.source3_name, d.source3_url, d.source4_name, d.source4_url, d.source5_name, d.source5_url, d.source6_name, d.source6_url, d.source7_name, d.source7_url])
+			d.militants_lowhigh = getLowHigh(d.militants_low, d.militants_high)
+			d.civilians_lowhigh = getLowHigh(d.civilians_low, d.civilians_high)
+			d.unknown_lowhigh = getLowHigh(d.unknown_low, d.unknown_high)
+			d.total_lowhigh = getLowHigh(d.total_low, d.total_high)
+
+			return d;
+		})
+	})
+	
+
+	return data;
+}
+
 module.exports = {
 	vizSettings: vizSettings,
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/drone-strikes-all.json"
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/drone-strikes-all.json",
+	preProcessData: preProcessData
 }

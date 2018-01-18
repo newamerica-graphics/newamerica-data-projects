@@ -133,7 +133,6 @@ export class BarChart {
 	}
 
 	setScaleDomains() {
-		console.log(this.data)
 		let groupingVals = d3.nest()
 			.key((d) => { return this.dataNest ? d.key : d[this.groupingVar.variable]})
 			.map(this.data);
@@ -166,8 +165,6 @@ export class BarChart {
 		    	d.vals = this.filterVars.map((filterVar) => { return {variable: filterVar.variable, format: filterVar.format, label: this.groupingScale.domain()[i], value: +d[filterVar.variable]}; });
 		    }
 		});
-
-		console.log(this.data);
 
 		this.groups = this.renderingArea.selectAll(".group")
 	      	.data(this.data)
@@ -248,7 +245,6 @@ export class BarChart {
 			.rollup((v) => {
 				let length = v.length;
 				let filteredLength = v.filter((d) => { return d[this.filterVars[0].variable] == this.dataNest.value }).length;
-				console.log(filteredLength, length)
 				return { percent: filteredLength/length, length: length }
 			})
 			.sortKeys(d3.ascending)
@@ -268,7 +264,7 @@ export class BarChart {
 	      	});
 
 	    this.bars
-	    	.attr("width", (d) => { console.log(this.valueScales[d.variable](d.value), d.variable, d.value, this.valueScales[d.variable].domain(), this.valueScales[d.variable].range()); return this.orientation === "horizontal" ? this.valueScales[d.variable](d.value) : this.categoryScale.bandwidth() })
+	    	.attr("width", (d) => { return this.orientation === "horizontal" ? this.valueScales[d.variable](d.value) : this.categoryScale.bandwidth() })
 			.attr("height", (d) => { return this.orientation === "horizontal" ? this.categoryScale.bandwidth() : this.h - this.valueScales[d.variable](d.value); })
 			.attr("x", (d) => { return this.orientation === "horizontal" ? 0 : this.categoryScale(d.variable); })
 			.attr("y", (d) => { return this.orientation === "horizontal" ? this.categoryScale(d.variable) : this.valueScales[d.variable](d.value); })

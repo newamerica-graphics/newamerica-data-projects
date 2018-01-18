@@ -84,7 +84,6 @@ export class ContentStream {
 	}
 
 	changeValue(params) {
-		console.log(params)
 		if (this.entries) { this.entries.remove(); }
 
 		if (params.dataPoint) {
@@ -109,8 +108,6 @@ export class ContentStream {
 
 	setStreamContent({color, dataPoint, currFilter}) {
 		let valueList, filterVal;
-
-		console.log(dataPoint, this.dataNest)
 
 		if (dataPoint == "all" || !dataPoint.state) {
 			valueList = this.data;
@@ -137,8 +134,6 @@ export class ContentStream {
 			this.additionalDataValues
 				.text((varSettings) => { return dataPoint[varSettings.variable]})
 		}
-
-		console.log(valueList)
 
 		if (!valueList) { this.showNoValueText(); return; }
 
