@@ -43,14 +43,15 @@ Primary repository for New America's data visualization projects
 
 The bundled script output for a given project will instantiate a viz controller object for the project.  This viz controller has the following public methods:
 
-##### initialize({dataUrl, clickToProfileFunction})
+##### initialize({dataUrl, clickToProfileFunction, downloadableDataSheets})
 * initiates data fetch call and optionally overrides click to profile function
-* (required) @param {String} dataUrl - url path for project's data json source
-* (optional) @param {String} clickToProfileFunction - overrides default clickToProfileFunction (function called within viz elements that link to a project's profile pages)
+* (required) dataUrl {String} - url path for project's data json source
+* (optional) clickToProfileFunction {String} - overrides default clickToProfileFunction (function called within viz elements that link to a project's profile pages)
+* (optional) downloadableDataSheets {[String]} - specifies names of sheets in Google Sheet for project that should available for download (defaults to all sheets)
 
 ##### render(dataVizId)
 * renders a given dataviz element
-* (required) @param {String} dataVizId - id (without #) for the viz element you wish to render
+* (required) dataVizId {String} - id (without #) for the viz element you wish to render
 
 ##### resize()
 * loops through list of non-react viz elements, calling each element's resize function
