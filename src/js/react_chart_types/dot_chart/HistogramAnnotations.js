@@ -32,7 +32,6 @@ class HistogramAnnotations extends React.Component {
 
 	componentWillUpdate(nextProps) {
 		this.setAnnotationPositions(nextProps)
-
 	}
 
 	setAnnotationPositions({ scale, width }) {

@@ -14,7 +14,6 @@ class SelectBox extends React.Component {
 	}
 
 	filterChanged(val) {
-		console.log("Selected: " + JSON.stringify(val));
 		if (val) {
 			this.props.filterChangeFunc(val.value)
 		} else {
@@ -28,7 +27,6 @@ class SelectBox extends React.Component {
 			return { value: d, label: d}
 		})
 
-		console.log(options)
 		return (
 			<Select
 				name="select-box"

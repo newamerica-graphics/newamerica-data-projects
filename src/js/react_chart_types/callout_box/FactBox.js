@@ -8,8 +8,6 @@ import { getValue } from "./utilities.js";
 const FactBox = ({variableSettings, data, format}) => {
 	let currDate = new Date();
 
-	console.log("in fact box")
-	
 	let value = getValue(variableSettings, data);
 
 	if (variableSettings.format) {

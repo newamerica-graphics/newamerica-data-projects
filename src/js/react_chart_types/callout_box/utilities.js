@@ -5,10 +5,6 @@ import { formatValue } from "../../helper_functions/format_value.js";
 
 export const getValue = (variableSettings, data) => {
 	const { type, query, variable } = variableSettings;
-
-	console.log("in get value!")
-	console.log(data, variable)
-
 	let retVal;
 
 	switch (type) {

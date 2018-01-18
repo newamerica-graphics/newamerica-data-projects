@@ -28,8 +28,6 @@ class DotChart extends React.Component {
 		super(props);
         const {data, vizSettings} = props
 
-        console.log("rendering!", props)
-
 		this.data = data[vizSettings.primaryDataSheet];
         if (vizSettings.filterInitialDataFunction) {
             this.data = this.data.filter(vizSettings.filterInitialDataFunction);
@@ -143,18 +141,10 @@ class DotChart extends React.Component {
             let extents = d3.extent(this.data, d => d.year_month)
             extents = currLayoutSettings.fixedStartVal ? [currLayoutSettings.fixedStartVal, extents[1]] : extents
 
-            console.log(extents)
-
             extents = extents.map(d => Number(d.toString().slice(0,4)))
-
-            console.log(extents)
 
             let range = getRange(extents[0] + 1, extents[1])
             range = range.map(d => d + "01")
-
-            console.log(range)
-
-            console.log(currLayout.xScale.domain())
 
             return (
                 <Motion style={{currTransform: spring(currLayout.height)}} >
@@ -278,7 +268,6 @@ class DotChart extends React.Component {
 
         let layoutHeight = currLayout ? currLayout.height : 0;
         // layoutHeight += currLayoutSettings.annotationSheet ? 50 : 0;
-        console.log(currDataShown)
 		return (
 			<div className="dot-chart" ref="renderingArea">
                 {layouts.length > 1 && 
@@ -362,8 +351,6 @@ class DotChart extends React.Component {
     }
 
     mouseover(d, x, y) {
-        console.log(this.props.id, d.id)
-
         if (this.props.vizSettings.interaction == "click") {
         	this.setState({
                 currHovered: d

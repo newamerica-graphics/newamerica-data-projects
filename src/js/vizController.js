@@ -39,37 +39,25 @@ export default class VizController {
 	}
 
 	sendDataRequest(dataUrl, downloadableDataSheets) {
-		console.log(dataUrl)
 		if (!dataUrl) { return; }
 		d3.json(dataUrl, (data) => {
-			console.log("data received")
-			console.log(data, this.renderQueue);
 			if (!data) { return; }
 			this.data = this.preProcessData ? this.preProcessData(data) : data
-			console.log(this.data)
 	    	if (this.renderQueue && this.renderQueue.length > 0) { 
 	    		for (let renderFunc of this.renderQueue) {
-	    			console.log("rendering from queue")
 	    			renderFunc(this.data);
 	    		}
 	    	}
-	    	
 
 	    	// the following function, which currently sets the values for the in depth profile pages based on the results from the data request, will be unneccessary after the refresh
 	    	setProfileValues(this.data);
 
 	    	if (this.deferredSetDataDownload) { this.deferredSetDataDownload() }
 	    });
-
-	    // $('.dataviz__render-now').each(() => {
-	    // 	this.render(this.getAttribute('id'));
-	    // });
 	}
 
 	render(dataVizId) {
 		let settingsObject = this.vizSettings[dataVizId]
-
-		console.log(settingsObject)
 		
 		if (settingsObject.isReact) {
 			if (this.data) {
@@ -102,7 +90,6 @@ export default class VizController {
 	}
 
 	resize() {
-		console.log(this)
 		this.vizList.forEach((viz) => {
 			viz.resize ? viz.resize() : null;
 		})
@@ -118,9 +105,7 @@ export default class VizController {
 	}
 
 	renderReactChart(dataVizId, settingsObject, data) {
-		console.log("here!")
 		if ($("#" + dataVizId).length < 1) { return; }
-		console.log("there!")
 
 		settingsObject.clickToProfileFunction = this.clickToProfileFunction
 
@@ -172,7 +157,6 @@ export default class VizController {
 
 	// after refresh, this functionality can be handled from front-end page template, instead of here
 	hideLoadingGif(id) {
-		console.log("hiding loading gif for " + id)
 		let selector = "#" + id
 		$(selector).siblings(".dataviz__loading-gif").hide();
 		$(selector).css("visibility", "visible").css("min-height","none");

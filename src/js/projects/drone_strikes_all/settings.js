@@ -78,7 +78,6 @@ const casualtiesNestDataFunction = (data, filterVar) => {
 		.key((d) => { return d[filterVar.variable]})
 		.sortKeys((a, b) => {return filterVar.customDomain.indexOf(a) - filterVar.customDomain.indexOf(b); })
 		.rollup((v) => {
-			console.log(v); 
 			return d3.sum(v, (valueObject) => {
 				return valueObject.total_avg;
 			})
@@ -90,7 +89,7 @@ const casualtiesNestDataFunction = (data, filterVar) => {
 
 const strikesNestDataFunction = (data, filterVar) => {
 	let nestedVals = d3.nest()
-		.key((d) => { console.log(d.year, d); return d.year; })
+		.key((d) => { return d.year; })
 		.key((d) => { return d[filterVar.variable]})
 		.sortKeys((a, b) => {return filterVar.customDomain.indexOf(a) - filterVar.customDomain.indexOf(b); })
 		.rollup((v) => { return v.length; })

@@ -70,7 +70,6 @@ class DefinitionEntry extends React.Component {
 
 	renderSubentries() {
 		const {title, descriptionVars, subentrySettings, entryData} = this.props;
-		console.log(subentrySettings)
 		if (subentrySettings) {
 			return (
 				<div className="definition-explorer__entry__sub-list">

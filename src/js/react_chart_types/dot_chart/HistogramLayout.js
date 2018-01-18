@@ -17,7 +17,6 @@ class HistogramLayout {
 		this.width = width;
 		this.data = data;
 		this.dotSettings = dotSettings;
-		console.log("hello!!!")
 		this.dataVariable = layoutSettings.dateVar.variable;
 
 		let extents = d3.extent(this.data, (d) => {
@@ -33,12 +32,7 @@ class HistogramLayout {
 		this.binScale = d3.scaleQuantize().domain([startRounded, endRounded])
 		this.yScale = d3.scaleLinear();
 
-		// let axisScaleDomain = d3.timeYear.range(binScaleStart.setFullYear(binScaleStart.getFullYear() + 1), binScaleEnd.setFullYear(binScaleEnd.getFullYear() - 1))
 		let axisScaleDomain = d3.timeYear.range(startRounded, endRounded)
-		// console.log(axisScaleDomain.map((d) => {
-		// 	console.log(d.getMonth())
-		// 	return d.setMonth(d.getMonth() + 6)
-		// }))
 
 		this.axisScale = d3.scaleBand().domain(axisScaleDomain);
 
@@ -72,12 +66,8 @@ class HistogramLayout {
 			})
 			.entries(this.data)
 
-		console.log(this.dataNest)
-
 		this.maxColCount = d3.max(this.dataNest, (d) => { return d.values.length});
 		this.height = (this.maxColCount + 1)*((this.dotWidth + dotPadding)*2) + 27
-
-		// console.log(this.maxColCount);
 	}
 
 
@@ -91,16 +81,12 @@ class HistogramLayout {
 	}
 
 	renderDot(d, i) {
-		// console.log(this.width, this.height)
 		let xPos = 0,
 			yPos = 0;
 		if (d[this.dataVariable]) {
 			let bin = this.binScale(new Date(d[this.dataVariable]));
 			yPos = this.getYPos(bin, d, i);
-			
-			// console.log(yPos)
 			xPos = this.xScale(bin)
-
 		}
 		return {x: spring(xPos), y: spring(yPos), r: this.dotWidth }
 	}
@@ -111,7 +97,6 @@ class HistogramLayout {
 
 		this.dataNest.forEach((bin) => {
 			if (+bin.key === whichBin) {
-				// console.log(bin)
 				binValList = bin.values;
 				return;
 			}
@@ -123,14 +108,11 @@ class HistogramLayout {
 					retVal = index;
 					return;
 				}
-
 			})
 		}
 
 		return this.dotWidth + ((this.maxColCount - retVal)*((this.dotWidth + dotPadding)*2));
 	}
-
-	
 }
 
 export default HistogramLayout;

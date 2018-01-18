@@ -33,7 +33,6 @@ class SimpleMap extends React.Component {
 	}
 
 	projection() {
-		console.log(this.state.width, this.state.geometry)
 	    return d3.geoMercator()
 	      .fitExtent([[mapPadding, mapPadding], [this.state.width - mapPadding, this.state.width - mapPadding]], this.state.geometry)
 	 }
@@ -66,9 +65,6 @@ class SimpleMap extends React.Component {
 
 			let dataLat= getValue(latVar, data),
 				dataLng= getValue(lngVar, data);
-
-			console.log(dataLat, dataLng)
-			console.log(this.projection())
 
 			let point;
 			if (dataLat && dataLng) {

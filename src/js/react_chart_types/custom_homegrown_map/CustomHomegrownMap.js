@@ -242,7 +242,6 @@ class CustomHomegrownMap extends React.Component {
 	resize() {
 		let w = $(this.refs.renderingArea).width();
 
-		console.log(w, $(this.refs.renderingArea).height())
 		this.setState({
         	width: w,
         	height: 4*w/5,
@@ -253,8 +252,6 @@ class CustomHomegrownMap extends React.Component {
 		let renderingAreaOffset = $(this.refs.renderingArea).offset()
 
 		let tooltipPos = { top: e.pageY - renderingAreaOffset.top }
-
-		console.log(e.pageX, $(this.refs.fullContainer).width(), renderingAreaOffset)
 
 		if (e.pageX + 160 > $(this.refs.fullContainer).width()) {
 			tooltipPos.right = $(this.refs.fullContainer).width() - (e.pageX - renderingAreaOffset.left) + 15;
