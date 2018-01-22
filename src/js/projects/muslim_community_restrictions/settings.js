@@ -127,7 +127,7 @@ const preProcessData = (data) => {
 
 		d.processed_date = d.show_day === "TRUE" ? fullDateFormat(date) : monthYearFormat(date)
 		d.year_month = yearMonthFormat(date)
-		d.source_combined = combineSources([d.source1_display_name, d.source1_url, d.source2_display_name, d.source2_url, d.source3_display_name, d.source3_url, d.source4_display_name, d.source4_url])
+		d.sources_combined = combineSources([d.source1_display_name, d.source1_url, d.source2_display_name, d.source2_url, d.source3_display_name, d.source3_url, d.source4_display_name, d.source4_url])
 
 		return d;
 	})

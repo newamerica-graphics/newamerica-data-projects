@@ -1,7 +1,6 @@
 let mapboxgl = require('mapbox-gl');
 
 window.mapboxgl = mapboxgl;
-var MapboxGeocoder = require('mapbox-gl-geocoder/mapbox-gl-geocoder.min.js');
 // require('mapbox-gl-geocoder');
 let GeoJSON = require('geojson');
 
@@ -17,10 +16,6 @@ let d3 = require("d3");
 
 mapboxgl.acessToken = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
 mapboxgl.config.ACCESS_TOKEN = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
-// MapboxGeocoder.acessToken = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
-
-// window.mapboxgl.acessToken = 'pk.eyJ1IjoibmV3YW1lcmljYW1hcGJveCIsImEiOiJjaXVmdTUzbXcwMGdsMzNwMmRweXN5eG52In0.AXO-coBbL621lzrE14xtEA';
-
 
 export class MapboxMap {
     constructor(vizSettings, imageFolderId) {
@@ -45,6 +40,7 @@ export class MapboxMap {
         })
 
         this.map = new mapboxgl.Map(this.mapboxSettings);
+        console.log("initializing map")
 
         this.addControls();
     }
@@ -57,6 +53,7 @@ export class MapboxMap {
     }
 
     render(data) {
+        console.log("rendering map")
         this.data = data[this.primaryDataSheet]
         if (this.filterInitialDataBy) {
             this.data = this.data.filter((d) => { return d[this.filterInitialDataBy.field] == this.filterInitialDataBy.value; })
@@ -88,6 +85,7 @@ export class MapboxMap {
 
         this.processData(this.data);
         this.map.on('load', () => {
+            console.log("calling on load function")
             this.map.addSource("dataSource", this.source);
             this.map.addLayer({
                 "id": "points",
@@ -185,6 +183,7 @@ export class MapboxMap {
     }
 
     processData(data) {
+        console.log("processing data")
         this.data = GeoJSON.parse(data, {Point: ['geo_lat', 'geo_lon']});
         this.source = {
             "type": "geojson",
@@ -319,6 +318,7 @@ export class MapboxMap {
     }
 
     resize() {
+        console.log("resizing map")
         this.setDimensions()
         if (this.sliderSettings) {
             this.slider.resize();
@@ -330,6 +330,7 @@ export class MapboxMap {
     }
 
     changeValue(value) {
+        console.log("changing value")
         if (value) {
             if (value == "all") {
                 this.map.setFilter('points', ['!=', 'year', ""]);
@@ -340,6 +341,7 @@ export class MapboxMap {
     }
 
     sliderStartStop(animationState) {
+        console.log("start stop slider")
         if (animationState == "playing") {
             this.map.setFilter("points-selected", ["==", "id", ""]);
             this.dataBox.hide();
