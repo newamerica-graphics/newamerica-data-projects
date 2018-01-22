@@ -19,13 +19,13 @@ Primary repository for New America's data visualization projects
 #### Development
 
 1. to start the dev server run ``` npm run start ```
-2. to create a dev build of the project run ``` npm run dev --project=<project_id> ``` 
+2. to create a dev build of the project run ``` npm run dev -- --env.project=<project_id> ``` 
 (where project id is the title given to the folder in step 1) 
     * You should now see a file in the local build directory entitled <project_id>.js
     * leave this command running, as it will watch for any changes you make to the project and update the bundle in your local build directory
     
 #### Creating a Production Build
-1. to create a production build of the project run ``` npm run build --project=<project_id> ```
+1. to create a production build of the project run ``` npm run build -- --env.project=<project_id> ```
     * this will upload a copy of the bundled script to new america's data project s3 bucket, which will then be able to be included as an external script in any post page on the New America site  
     
 #### Integrating Bundled Project Script with New America Site
