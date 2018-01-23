@@ -72,11 +72,10 @@ In addition to these fields, each vizType requires additional variables to defin
 
 The bundled script output for a given project will instantiate a viz controller object for the project.  This viz controller has the following public methods:
 
-##### initialize({dataUrl, clickToProfileFunction, downloadableDataSheets})
+##### initialize({dataUrl, clickToProfileFunction})
 * initiates data fetch call and optionally overrides click to profile function
 * (required) dataUrl {String} - url path for project's data json source
 * (optional) clickToProfileFunction {String} - overrides default clickToProfileFunction (function called within viz elements that link to a project's profile pages)
-* (optional) downloadableDataSheets {[String]} - specifies names of sheets in Google Sheet for project that should available for download (defaults to all sheets)
 
 ##### render(dataVizId)
 * renders a given dataviz element
@@ -92,3 +91,7 @@ The bundled script output for a given project will instantiate a viz controller 
 * get method for retrieving the project data, if async data call has not yet completed, will return null
 * @return {object} object containing an array for each sheet in the datasheet
 
+##### setDataDownloadLinks(downloadableDataSheets, customDataDownloadSource) - can be changed after refresh
+* sets download csv and json links on in-depth page
+* (optional) downloadableDataSheets [String] - specifies names of sheets in Google Sheet for project that should available for download (defaults to all sheets)
+* (optional) customDownloadSource {String} - specifies link to custom data download
