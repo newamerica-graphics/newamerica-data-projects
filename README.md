@@ -34,10 +34,39 @@ Primary repository for New America's data visualization projects
 3. Add dataviz blocks to the post, with the corresponding dataviz id for each visualization
 
 ## Variables Definition Spec
-(coming soon)
+The variables definition section of the settings config defines the formatting and display settings for each variable used in the visualizations for the project. It consists of an object with entries for every variable, each containing the following :
+
+* variable: the variable name (corresponds with column title in spreadsheet)
+* displayName: how the variable should be displayed in labels, legends, tooltips
+* format: how the value of the variable should be formatted wherever displayed - possible options include:
+   * number: 134,500
+   * integer: 145
+   * price: $3,355.98
+   * year: 1990
+   * percent: 57%
+   * rank: 1st
+   * date: January 1, 2015
+   * string: "This is a string"
+   * markdown
+   * link
+
+Depending upon the visualization, additional fields may be required in the variable definition.  These include:
+* scaleType: "linear"|"categorical"|"quantize"
+* customDomain: []
+* customRange: []
+* numBins: int (for quantize scales)
+* color
+* category
+* disableTableOrdering: true|false
+* canSplitCategory: true|false
 
 ## Viz Settings Definition Spec
-(coming soon)
+The vizSettings object contains a key-value pair for each visualization in the project, where the key is the id which will be targeted in the DOM and the value is a settings object defining the custom behavior of that visualization.  All chart types require the following:
+* vizType: any of the react or non-react chart names (i.e. "bar_chart", "line_chart")
+* primaryDataSheet: the name of the individual sheet where the data for the visualization should be pulled
+* isReact: defaults to false
+
+In addition to these fields, each vizType requires additional variables to define its requisite settings. 
 
 ## Integration with Wagtail Templating Backend
 
