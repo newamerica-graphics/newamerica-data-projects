@@ -27,7 +27,7 @@ class CustomHomegrownMap extends React.Component {
 
 		this.state = {
 			width: 0,
-			height: 0, 
+			height: 0,
 			statesGeom: null,
 			countriesGeom: null
 		}
@@ -168,13 +168,13 @@ class CustomHomegrownMap extends React.Component {
 								{statesGeom && <g>
 									{ statesGeom.map(d => {
 										let fill = this.setFill(d);
-										return <path 
-													key={d.id} 
-													className="custom-homegrown-map__path" 
-													d={this.statesPathGenerator(d)} 
+										return <path
+													key={d.id}
+													className="custom-homegrown-map__path"
+													d={this.statesPathGenerator(d)}
 													fill={fill}
 													fillOpacity={tooltipVal && tooltipVal.data.geo_type == "state" && tooltipVal.id === d.id ? ".5" : "1"}
-													onMouseOver={(e) => { return d.data ? this.mouseover(d, e) : null; }} 
+													onMouseOver={(e) => { return d.data ? this.mouseover(d, e) : null; }}
                                                     onMouseOut={() => { return d.data ?  this.mouseout(d) : null; }} />
 									})}
 								</g>}
@@ -188,13 +188,13 @@ class CustomHomegrownMap extends React.Component {
 								{ countriesGeom && <g>
 									{ countriesGeom.map(d => {
 										let fill = this.setFill(d);
-										return <path 
-													key={d.id} 
-													className="custom-homegrown-map__path" 
-													d={this.countriesPathGenerator(d)} 
-													fill={fill} 
+										return <path
+													key={d.id}
+													className="custom-homegrown-map__path"
+													d={this.countriesPathGenerator(d)}
+													fill={fill}
 													fillOpacity={tooltipVal && tooltipVal.data.geo_type == "country" && tooltipVal.id === d.id ? ".5" : "1"}
-													onMouseOver={(e) => { return d.data ? this.mouseover(d, e) : null; }} 
+													onMouseOver={(e) => { return d.data ? this.mouseover(d, e) : null; }}
                                                     onMouseOut={() => { return d.data ?  this.mouseout(d) : null; }} />
 									})}
 								</g>}
@@ -232,7 +232,7 @@ class CustomHomegrownMap extends React.Component {
 					</div>
 				</div>
 				<div className="custom-homegrown-map__annotation">
-					<h5 className="custom-homegrown-map__annotation__text">*On March 6, 2017 the Trump administration issued a new executive order, which did not include Iraq in the list of visa restricted countries. On September 24, the travel ban was revised again to drop Sudan, and add travel restrictions regarding Venezuela and North Korea  (not displayed on this map), as well as Chad.</h5>
+					<h5 className="custom-homegrown-map__annotation__text">*On March 6, 2017 the Trump administration issued a new executive order, which did not include Iraq in the list of visa restricted countries. On September 24, the travel ban was revised again to drop Sudan, and add travel restrictions regarding Venezuela and North Korea  (not displayed on this map), as well as Chad. This graphic excludes Mahad Abdirahman, a U.S. citizen of Somali descent, as his birth location and whether he was a naturalized citizen is unknown as of January 31, 2018.</h5>
 				</div>
 				{tooltipVal && tooltipVal.data.text && tooltipVal.data.text != "" && <div className="custom-homegrown-map__tooltip" style={tooltipPos}>{tooltipVal.data.text}</div>}
 			</div>
