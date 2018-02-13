@@ -29,8 +29,31 @@ let variables = {
 	public_financing_funding_level: {"variable":"public_financing_funding_level", "displayName":"Public Financing Funding Level", "format": "string", "scaleType":"categorical", "category":"Public Financing", "customDomain":["Full", "Partial", "None"], "customRange":[colors.turquoise.light, colors.blue.light, colors.red.light]},
 	ranked_choice_voting: {"variable":"ranked_choice_voting", "displayName":"Ranked Choice Voting", "format": "string", "category":"Ranked Choice Voting", "scaleType":"categorical", "customDomain":["State level", "Cities Using RCV", "Locally Awaiting Implementation", "Military & Overseas", "Party Use", "No"], "customRange":[colors.turquoise.light, colors.blue.light, colors.blue.dark, colors.purple.light, colors.purple.dark, colors.red.light]},
 	ranked_choice_voting_more_info: {"variable":"ranked_choice_voting_more_info", "displayName":"Ranked Choice Voting Details", "format": "string", "category":"Ranked Choice Voting"},
-
 }
+
+const contrLimitSources = [
+	{field:"individ", displayName:"Individual Donor"},
+	{field:"pac", displayName:"Political Action Committee"},
+	{field:"PP", displayName:"Political Party"},
+	{field:"corp", displayName:"Corporation"},
+	{field:"union", displayName:"Union"}
+]
+
+const contrLimitRecipients = [
+	{field:"cand_house", displayName:"House Candidate"},
+	{field:"cand_senate", displayName:"Senate Candidate"},
+	{field:"cand_gub", displayName:"Gubernatorial Candidate"},
+	{field:"pac", displayName:"Political Action Committee"},
+	{field:"PP", displayName:"Political Party"},
+]
+
+contrLimitSources.forEach(source => {
+	contrLimitRecipients.forEach(recip => {
+		let fieldName = source.field + "_" + recip.field
+		variables[fieldName] = {"variable": fieldName, "displayName": recip.displayName, "format": "string", "category": source.displayName}
+		variables[fieldName + "_bucket"] = {"variable": fieldName + "_bucket", "displayName": recip.displayName, "format": "string", "category": source.displayName, "scaleType":"categorical", "customDomain":["Prohibited", "$1,000 or Less", "$1,001-$2,500", "$2,501-$5,000", "$5,001-$10,000", "Greater than $10,000", "Unlimited"], "customRange":[colors.red.light, colors.blue.very_light, colors.blue.very_light_2, colors.blue.light, colors.blue.medium, colors.blue.dark, colors.black]}
+	})
+})
 
 let vizSettings = {
 	"pol-reform-50-states__elections-map": {
@@ -75,6 +98,25 @@ let vizSettings = {
 		tooltipShowOnly: "same category",
 		addSmallStateInsets: true,
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
+		filterGroupSettings: {"hidden": false},
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }
+	},
+	"pol-reform-50-states__contribution-limits-map": {
+		vizType: "topo_json_map",
+		primaryDataSheet: "live_data",
+		geometryType: "states",
+		geometryVar: variables.state_id,
+		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
+		filterVars: [
+			variables.individ_cand_house_bucket, variables.individ_cand_senate_bucket, variables.individ_cand_gub_bucket, variables.individ_PP_bucket, variables.individ_pac_bucket, variables.pac_cand_house_bucket, variables.pac_cand_senate_bucket, variables.pac_cand_gub_bucket, variables.pac_PP_bucket, variables.pac_pac_bucket, variables.PP_cand_house_bucket, variables.PP_cand_senate_bucket, variables.PP_cand_gub_bucket, variables.PP_PP_bucket, variables.PP_pac_bucket, variables.corp_cand_house_bucket, variables.corp_cand_senate_bucket, variables.corp_cand_gub_bucket, variables.corp_PP_bucket, variables.corp_pac_bucket, variables.union_cand_house_bucket, variables.union_cand_senate_bucket, variables.union_cand_gub_bucket, variables.union_PP_bucket, variables.union_pac_bucket
+		],
+		tooltipVars: [ variables.state,
+			variables.individ_cand_house, variables.individ_cand_senate, variables.individ_cand_gub, variables.individ_PP, variables.individ_pac, variables.pac_cand_house, variables.pac_cand_senate, variables.pac_cand_gub, variables.pac_PP, variables.pac_pac, variables.PP_cand_house, variables.PP_cand_senate, variables.PP_cand_gub, variables.PP_PP, variables.PP_pac, variables.corp_cand_house, variables.corp_cand_senate, variables.corp_cand_gub, variables.corp_PP, variables.corp_pac, variables.union_cand_house, variables.union_cand_senate, variables.union_cand_gub, variables.union_PP, variables.union_pac
+		],
+		varDescriptionSheet: "states_variables",
+		legendSettings: {"orientation": "vertical-right", "showTitle": true, "showValueDescriptions": true},
+		tooltipShowOnly: "same category",
+		addSmallStateInsets: true,
 		filterGroupSettings: {"hidden": false},
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }
 	},
@@ -220,7 +262,53 @@ let vizSettings = {
 	},
 }
 
+
+const preProcessData = (data) => {
+	data["live_data"].map(d => {
+		contrLimitSources.forEach(source => {
+			contrLimitRecipients.forEach(recip => {
+				let fieldName = source.field + "_" + recip.field
+				d[fieldName + "_bucket"] = setBucketValue(d[fieldName])
+			})
+		})
+
+		return d;
+	})
+
+	return data;
+}
+
+const setBucketValue = (value) => {
+  if (!value || value == "" || value == "Unlimited" || value == "Prohibited") {
+    return value;
+  }
+
+  let processedValue = value;
+
+  if (isNaN(value)) {
+    processedValue = processedValue.match(/\d{1,3}(?:[.,]\d{3})*/)
+		processedValue = processedValue ? processedValue.toString().replace(",","") : null
+  }
+
+  if (isNaN(processedValue)) {
+    return processedValue;
+  } else {
+    if (processedValue <= 1000) {
+      return "$1,000 or Less";
+    } else if (processedValue <= 2500) {
+      return "$1,001-$2,500";
+    } else if (processedValue <= 5000) {
+      return "$2,501-$5,000";
+    } else if (processedValue <= 10000) {
+      return "$5,001-$10,000";
+    } else {
+      return "Greater than $10,000";
+    }
+  }
+}
+
 module.exports = {
 	vizSettings: vizSettings,
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/polreform/political-reform-fifty-states.json"
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/polreform/political-reform-fifty-states.json",
+	preProcessData: preProcessData
 }

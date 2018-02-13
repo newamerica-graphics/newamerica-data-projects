@@ -81,7 +81,7 @@ let vizSettings = {
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
 		filterGroupSettings: {"hidden": false},
 		addSmallStateInsets: true,
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }		
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/pre-k-leaders/state-profile/?" }
 	},
 	"early-ed-leaders__min-ed-requirement": {
 		vizType: "category_breakdown",
@@ -247,4 +247,3 @@ module.exports = {
 	vizSettings: vizSettings,
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/edpolicy/early_ed_leaders.json"
 }
-	
