@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/newamericafoundation/newamerica-data-projects#readme",
   "dependencies": {
+    "animate.css": "^3.5.2",
     "babel-preset-es2015": "^6.9.0",
     "d3": "^4.2.1",
     "d3-svg-legend": "^2.9.0",

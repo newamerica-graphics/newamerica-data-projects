@@ -12,7 +12,7 @@ const categoryYPadding = 10,
 export class CategoryBreakdown {
 	constructor(vizSettings, imageFolderId) {
 		Object.assign(this, vizSettings);
-	
+
 		this.chartContainer = d3.select(this.id)
 			.append("div")
 			.attr("class", "category-breakdown");
@@ -32,7 +32,7 @@ export class CategoryBreakdown {
 		this.setScale(this.rawData);
 		this.data = this.getDataNest(this.rawData);
 		this.setDimensions();
-		
+
 		this.buildGraph();
 	}
 
@@ -76,13 +76,13 @@ export class CategoryBreakdown {
 		this.numPerRow = Math.floor(this.w/(this.dotSettings.width + this.dotSettings.offset));
 
 		// this.h = this.setCategoryYTransforms();
-		
+
 		// this.dotsPerCol = Math.ceil(this.dataLength/numCols);
 
-		// this.h = this.dotsPerCol * (this.dotSettings.width + this.dotSettings.offset);		
+		// this.h = this.dotsPerCol * (this.dotSettings.width + this.dotSettings.offset);
 		// this.svg
 		// 	.attr("height", this.h);
-		
+
 	}
 
 	setCategoryYTransforms() {
@@ -107,11 +107,11 @@ export class CategoryBreakdown {
 
 		this.textContainers = this.categoryContainers.append("div")
 			.attr("class", "category-breakdown__text")
-			
+
 		this.textContainers.append("h3")
 			.attr("class", "category-breakdown__text__heading")
 			.text((d) => { return d.key; });
-		
+
 		this.textContainers.append("h5")
 			.attr("class", "category-breakdown__text__subheading")
 			// .attr("transform", "translate(0,30)")
@@ -149,7 +149,7 @@ export class CategoryBreakdown {
 			.attr("cy", this.dotSettings.width/2)
 			.attr("r", this.dotSettings.width/2)
 			.attr("fill", (d) => { return this.labelVar ? "white" : this.colorScale(d[this.currFilterVar]); })
-			.attr("stroke", (d) => { return this.colorScale(d[this.currFilterVar]); })
+			.attr("stroke", (d) => { return d[this.currFilterVar] ? this.colorScale(d[this.currFilterVar].trim()) : colors.grey.medium; })
 
 		if (this.labelVar) {
 			this.dataCircleText = this.dataG.append("text")
@@ -157,7 +157,7 @@ export class CategoryBreakdown {
 				.attr("id", (d, i) => { return i; })
 				.attr("x", this.dotSettings.width/2)
 				.attr("y", this.dotSettings.width/2)
-				.attr("fill", (d) => { return this.colorScale(d[this.currFilterVar]); })
+				.attr("fill", (d) => { return d[this.currFilterVar] ? this.colorScale(d[this.currFilterVar].trim()) : colors.grey.medium; })
 				.text((d) => { return d[this.labelVar.variable]; });
 		}
 	}
@@ -167,7 +167,7 @@ export class CategoryBreakdown {
 	}
 
 	calcY(i) {
-		return Math.floor(i/this.numPerRow)*(this.dotSettings.width + this.dotSettings.offset) + 2; 
+		return Math.floor(i/this.numPerRow)*(this.dotSettings.width + this.dotSettings.offset) + 2;
 	}
 
 	sortData() {
@@ -195,7 +195,7 @@ export class CategoryBreakdown {
 					}
 				});
 			} else {
-				this.data.sort((a, b) => { 
+				this.data.sort((a, b) => {
 					let elem1 = a[this.currFilterVar];
 					let elem2 = b[this.currFilterVar];
 
@@ -237,7 +237,7 @@ export class CategoryBreakdown {
 			.attr("fill", (d) => {
 				if (this.labelVar) {
 					if (d[this.idVar.variable] == hovered[this.idVar.variable]) {
-						return this.colorScale(d[this.currFilterVar]);
+						return d[this.currFilterVar] ? this.colorScale(d[this.currFilterVar].trim()) : colors.grey.medium
 					} else {
 						return "white";
 					}
@@ -245,7 +245,7 @@ export class CategoryBreakdown {
 					if (d[this.idVar.variable] == hovered[this.idVar.variable]) {
 						return "white";
 					} else {
-						return this.colorScale(d[this.currFilterVar]);
+						return d[this.currFilterVar] ? this.colorScale(d[this.currFilterVar].trim()) : colors.grey.medium
 					}
 				}
 		    });
@@ -255,7 +255,7 @@ export class CategoryBreakdown {
 					if (d[this.idVar.variable] == hovered[this.idVar.variable]) {
 						return "white";
 					} else {
-						return this.colorScale(d[this.currFilterVar]);
+						return d[this.currFilterVar] ? this.colorScale(d[this.currFilterVar].trim()) : colors.grey.medium
 					}
 			    });
 		}

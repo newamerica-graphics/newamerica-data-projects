@@ -41,7 +41,7 @@ export function getColorScale(data, filterVar) {
 		let uniqueVals = getUniqueVals(data, filterVar);
 		if (customDomain) {
 			let newVals = filterUnusedVals(uniqueVals, customDomain, customRange, canSplitCategory)
-			
+
 			customDomain = newVals.domain
 			customRange = newVals.range
 		}
@@ -70,7 +70,7 @@ export function getColorScale(data, filterVar) {
 	if (!dontNice && (scaleType == "linear" || scaleType == "quantize")) {
 		scale.nice();
 	}
-		
+
 	return scale;
 }
 
@@ -112,6 +112,7 @@ function setCategoricalRange(uniqueVals, customRange) {
 }
 
 function getUniqueVals(data, filterVar) {
+	console.log(data)
 	let uniqueVals = d3.nest()
 		.key((d) => { return d[filterVar.variable] })
 		.map(data);
@@ -122,7 +123,7 @@ function getUniqueVals(data, filterVar) {
 
 function setQuantizeDomain(filterVar, data) {
 	let filterName = filterVar.variable;
-	let dataMin = Number(d3.min(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; })); 
+	let dataMin = Number(d3.min(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; }));
 	let dataMax = Number(d3.max(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; }));
 
 	return [dataMin, dataMax];
@@ -130,7 +131,7 @@ function setQuantizeDomain(filterVar, data) {
 
 function setLinearDomain(filterVar, data) {
 	let filterName = filterVar.variable;
-	let dataMin = Number(d3.min(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; })); 
+	let dataMin = Number(d3.min(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; }));
 	let dataMax = Number(d3.max(data, (d) => { return d[filterName] ? Number(d[filterName]) : null; }));
 
 	return [dataMin, dataMax];

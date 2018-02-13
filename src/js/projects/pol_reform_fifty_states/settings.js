@@ -9,73 +9,78 @@ let variables = {
 	online_registration: {"variable":"online_registration", "displayName":"Online Registration", "format": "string", "category":"Registration", "scaleType":"categorical", "customDomain":["Yes", "No"], "customRange":[colors.turquoise.light, colors.red.light]},
 	same_day_registration: {"variable":"same_day_registration", "displayName":"Same Day Registration", "format": "string", "category":"Registration", "scaleType":"categorical", "customDomain":["Yes", "No"], "customRange":[colors.turquoise.light, colors.red.light]},
 	automatic_voter_registration: {"variable":"automatic_voter_registration", "displayName":"Automatic Voter Registration", "format": "string", "category":"Registration", "scaleType":"categorical", "customDomain":["Yes", "No"], "customRange":[colors.turquoise.light, colors.red.light]},
-	state_redistricting: {"variable":"state_redistricting", "displayName":"State Redistricting", "format": "string", "category":"Redistricting", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Advisory Commission", "Independent Commission", "Political Commission", "State Legislature"], "customRange":[colors.turquoise.light, colors.blue.light, colors.purple.light, colors.turquoise.medium]},
+	state_redistricting: {"variable":"state_redistricting", "displayName":"State Redistricting", "format": "string", "category":"Redistricting", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["State Legislature", "Advisory Commission", "Independent Commission", "Executive Commission", "Elected Official Commission"], "customRange":[colors.turquoise.light, colors.blue.light, colors.purple.light, colors.red.medium, colors.turquoise.medium]},
 	state_redistricting_more_info: {"variable":"state_redistricting_more_info", "displayName":"State Redistricting Details", "format": "string"},
-	congressional_redistricting: {"variable":"congressional_redistricting", "displayName":"Congressional Redistricting", "format": "string", "category":"Redistricting", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Advisory Commission", "Independent Commission", "Political Commission", "State Legislature", "N/A"], "customRange":[colors.turquoise.light, colors.blue.light, colors.purple.light, colors.turquoise.medium, colors.grey.medium]},
+	congressional_redistricting: {"variable":"congressional_redistricting", "displayName":"Congressional Redistricting", "format": "string", "category":"Redistricting", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["State Legislature", "Advisory Commission", "Independent Commission", "Elected Official Commission", "N/A"], "customRange":[colors.turquoise.light, colors.blue.light, colors.purple.light, colors.turquoise.medium, colors.grey.medium]},
 	congressional_redistricting_more_info: {"variable":"congressional_redistricting_more_info", "displayName":"Congressional Redistricting Details", "format": "string"},
-	congressional_primary_type: {"variable":"congressional_primary_type", "displayName":"Congressional Primary Type", "format": "string", "category":"Primaries", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Closed", "Semi-closed", "Open", "Top two", "Blanket", "Two round system"], "customRange":[colors.turquoise.dark, colors.turquoise.medium, colors.turquoise.light, colors.blue.light, colors.purple.light, colors.red.light]},
+	congressional_primary_type: {"variable":"congressional_primary_type", "displayName":"Congressional Primary Type", "format": "string", "category":"Primaries", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Closed", "Semi-closed", "Open", "Top two", "Blanket", "Two round system"], "customRange":[colors.turquoise.dark, colors.turquoise.medium, colors.turquoise.light, colors.blue.light, colors.purple.light, colors.purple.dark]},
 	congressional_primary_rules: {"variable":"congressional_primary_rules", "displayName":"Congressional Primary Rules", "format": "string", "category":"Primaries"},
 	presidential_primary_type: {"variable":"presidential_primary_type", "displayName":"Presidential Primary Type", "format": "price", "category":"Primaries", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Closed", "Semi-closed", "Open"], "customRange":[colors.turquoise.light, colors.blue.light, colors.purple.light]},
 	presidential_primary_rules: {"variable":"presidential_primary_rules", "displayName":"Presidential Primary Rules", "format": "string", "category":"Primaries"},
-	who_discloses: {"variable":"who_discloses", "displayName":"Who Discloses?", "format": "string", "scaleType":"categorical"},
-	what_is_disclosed: {"variable":"what_is_disclosed", "displayName":"What is Disclosed?", "format": "string", "scaleType":"categorical"},
-	when_it_is_disclosed: {"variable":"when_it_is_disclosed", "displayName":"When is it Disclosed?", "format": "string"},
-	electronic_filing: {"variable":"electronic_filing", "displayName":"Electronic Filing", "format": "string", "category":"Electronic Filing", "scaleType":"categorical", "customDomain":["Yes", "No"], "customRange":[colors.turquoise.light, colors.red.light]},
+	who_discloses: {"variable":"who_discloses", "displayName":"Who Discloses?", "format": "string", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Candidates", "PACs", "Parties", "Independent Expenditure Committees", "Small Donor Committees", "Political Committees", "Ballot Initiative Committees", "Candidate Committees", "Corporations", "Political Issue Committees", "Issue Committees"], "customRange":[colors.turquoise.light, colors.turquoise.medium, colors.turquoise.dark, colors.blue.light, colors.blue.medium, colors.blue.dark, colors.purple.light, colors.purple.medium, colors.purple.dark, colors.red.light, colors.red.dark]},
+	what_is_disclosed: {"variable":"what_is_disclosed", "displayName":"What is Disclosed?", "format": "string", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Contributions", "Contributions (Employer)", "In-Kind Donations", "Expenditures", "Expenses", "Debts", "Loans", "Fundraising Sales", "Transfers"], "customRange":[colors.turquoise.light, colors.turquoise.medium, colors.turquoise.dark, colors.red.light, colors.red.medium, colors.red.dark, colors.purple.light, colors.blue.light, colors.blue.dark]},
+	when_it_is_disclosed: {"variable":"when_it_is_disclosed", "displayName":"When is it Disclosed?", "format": "string", "canSplitCategory":true},
+	electronic_filing_required: {"variable":"electronic_filing_required", "displayName":"Electronic Filing", "format": "string", "category":"Electronic Filing", "scaleType":"categorical", "customDomain":["Yes", "No"], "customRange":[colors.turquoise.light, colors.red.light]},
 	public_financing: {"variable":"public_financing", "displayName":"Public Financing", "format": "string", "category":"Public Financing", "scaleType":"categorical", "customDomain":["Yes", "No"], "customRange":[colors.turquoise.light, colors.red.light]},
 	public_financing_qualified: {"variable":"public_financing_qualified", "displayName":"Public Financing Qualified", "format": "string", "category":"Public Financing" },
 	public_financing_amount: {"variable":"public_financing_amount", "displayName":"Public Financing Amount", "format": "string", "category":"Public Financing" },
 	public_financing_contributors: {"variable":"public_financing_contributors", "displayName":"Public Financing Contributors", "format": "string", "category":"Public Financing" },
 	public_financing_promise: {"variable":"public_financing_promise", "displayName":"Public Financing Promise", "format": "string", "category":"Public Financing" },
-	public_financing_funding_level: {"variable":"public_financing_funding_level", "displayName":"Public Financing Funding Level", "format": "string", "scaleType":"categorical", "customDomain":["Full", "Partial", "None"], "customRange":[colors.turquoise.light, colors.blue.light, colors.grey.medium]},
-	ranked_choice_voting: {"variable":"ranked_choice_voting", "displayName":"Ranked Choice Voting", "format": "string", "category":"Voting"},
+	public_financing_funding_level: {"variable":"public_financing_funding_level", "displayName":"Public Financing Funding Level", "format": "string", "scaleType":"categorical", "category":"Public Financing", "customDomain":["Full", "Partial", "None"], "customRange":[colors.turquoise.light, colors.blue.light, colors.red.light]},
+	ranked_choice_voting: {"variable":"ranked_choice_voting", "displayName":"Ranked Choice Voting", "format": "string", "category":"Ranked Choice Voting", "scaleType":"categorical", "customDomain":["State level", "Cities Using RCV", "Locally Awaiting Implementation", "Military & Overseas", "Party Use", "No"], "customRange":[colors.turquoise.light, colors.blue.light, colors.blue.dark, colors.purple.light, colors.purple.dark, colors.red.light]},
+	ranked_choice_voting_more_info: {"variable":"ranked_choice_voting_more_info", "displayName":"Ranked Choice Voting Details", "format": "string", "category":"Ranked Choice Voting"},
+
 }
 
 let vizSettings = {
-	"pol-reform-50-states__elections-map": { 
+	"pol-reform-50-states__elections-map": {
 		vizType: "topo_json_map",
-		primaryDataSheet: "states",
+		primaryDataSheet: "live_data",
 		geometryType: "states",
 		geometryVar: variables.state_id,
 		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
 		filterVars: [ variables.online_registration, variables.same_day_registration, variables.automatic_voter_registration, variables.early_voting, variables.no_excuse_absentee],
-		tooltipVars: [ variables.state, variables.online_registration, variables.same_day_registration, variables.automatic_voter_registration, variables.early_voting, variables.no_excuse_absentee, variables.ranked_choice_voting],
+		tooltipVars: [ variables.state, variables.online_registration, variables.same_day_registration, variables.automatic_voter_registration, variables.early_voting, variables.no_excuse_absentee],
 		varDescriptionSheet: "states_variables",
 		legendSettings: {"orientation": "vertical-right", "showTitle": true, "showValueDescriptions": true},
 		tooltipShowOnly: "same category",
+		addSmallStateInsets: true,
 		filterGroupSettings: {"hidden": false},
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }
 	},
-	"pol-reform-50-states__redistricting-map": { 
+	"pol-reform-50-states__redistricting-map": {
 		vizType: "topo_json_map",
-		primaryDataSheet: "states",
+		primaryDataSheet: "live_data",
 		geometryType: "states",
 		geometryVar: variables.state_id,
 		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
-		filterVars: [ variables.congressional_primary_type, variables.presidential_primary_type, variables.state_redistricting, variables.congressional_redistricting],
-		tooltipVars: [ variables.state, variables.congressional_primary_type, variables.congressional_primary_rules, variables.presidential_primary_type, variables.presidential_primary_rules, variables.state_redistricting, variables.state_redistricting_more_info, variables.congressional_redistricting, variables.congressional_redistricting_more_info],
+		filterVars: [ variables.congressional_primary_type, variables.presidential_primary_type, variables.ranked_choice_voting, variables.state_redistricting, variables.congressional_redistricting],
+		tooltipVars: [ variables.state, variables.congressional_primary_type, variables.congressional_primary_rules, variables.presidential_primary_type, variables.presidential_primary_rules, variables.ranked_choice_voting, variables.ranked_choice_voting_more_info, variables.state_redistricting, variables.state_redistricting_more_info, variables.congressional_redistricting, variables.congressional_redistricting_more_info],
 		tooltipShowOnly: "same category",
+		addSmallStateInsets: true,
 		varDescriptionSheet: "states_variables",
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
 		filterGroupSettings: {"hidden": false},
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }
 	},
-	"pol-reform-50-states__financing-map": { 
+	"pol-reform-50-states__financing-map": {
 		vizType: "topo_json_map",
-		primaryDataSheet: "states",
+		primaryDataSheet: "live_data",
 		geometryType: "states",
 		geometryVar: variables.state_id,
 		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
-		filterVars: [ variables.electronic_filing, variables.public_financing],
+		filterVars: [ variables.electronic_filing_required, variables.public_financing_funding_level],
 		varDescriptionSheet: "states_variables",
-		tooltipVars: [ variables.state, variables.who_discloses, variables.what_is_disclosed, variables.when_it_is_disclosed, variables.electronic_filing, variables.public_financing, variables.public_financing_qualified, variables.public_financing_amount, variables.public_financing_contributors, variables.public_financing_promise, variables.public_financing_funding_level],
+		tooltipVars: [ variables.state, variables.electronic_filing_required, variables.public_financing_funding_level, variables.public_financing_qualified, variables.public_financing_amount, variables.public_financing_contributors, variables.public_financing_promise],
 		tooltipShowOnly: "same category",
+		addSmallStateInsets: true,
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
 		filterGroupSettings: {"hidden": false},
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }	
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" }
 	},
-	"pol-reform-50-states__congressional-primaries": { 
+	"pol-reform-50-states__congressional-primaries": {
 		vizType: "category_breakdown",
-		primaryDataSheet: "states",
+		primaryDataSheet: "live_data",
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.congressional_primary_type ],
 		labelVar: variables.state_abbrev,
@@ -83,9 +88,9 @@ let vizSettings = {
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	"pol-reform-50-states__presidential-primaries": { 
+	"pol-reform-50-states__presidential-primaries": {
 		vizType: "category_breakdown",
-		primaryDataSheet: "states",
+		primaryDataSheet: "live_data",
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.presidential_primary_type ],
 		labelVar: variables.state_abbrev,
@@ -93,9 +98,19 @@ let vizSettings = {
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	"pol-reform-50-states__early-voting": { 
+	"pol-reform-50-states__ranked-choice-voting": {
 		vizType: "category_breakdown",
-		primaryDataSheet: "states",
+		primaryDataSheet: "live_data",
+		dotSettings: { "width": 30, "offset": 5},
+		filterVars: [ variables.ranked_choice_voting ],
+		labelVar: variables.state_abbrev,
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
+	},
+	"pol-reform-50-states__early-voting": {
+		vizType: "category_breakdown",
+		primaryDataSheet: "live_data",
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.early_voting ],
 		labelVar: variables.state_abbrev,
@@ -103,9 +118,9 @@ let vizSettings = {
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	"pol-reform-50-states__same-day-registration": { 
+	"pol-reform-50-states__same-day-registration": {
 		vizType: "category_breakdown",
-		primaryDataSheet: "states",
+		primaryDataSheet: "live_data",
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.same_day_registration ],
 		labelVar: variables.state_abbrev,
@@ -113,9 +128,9 @@ let vizSettings = {
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	"pol-reform-50-states__automatic-voter-registration": { 
+	"pol-reform-50-states__automatic-voter-registration": {
 		vizType: "category_breakdown",
-		primaryDataSheet: "states",
+		primaryDataSheet: "live_data",
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.automatic_voter_registration ],
 		labelVar: variables.state_abbrev,
@@ -123,9 +138,9 @@ let vizSettings = {
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	"pol-reform-50-states__online-registration": { 
+	"pol-reform-50-states__online-registration": {
 		vizType: "category_breakdown",
-		primaryDataSheet: "states",
+		primaryDataSheet: "live_data",
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.online_registration ],
 		labelVar: variables.state_abbrev,
@@ -133,9 +148,9 @@ let vizSettings = {
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	"pol-reform-50-states__state-redistricting": { 
+	"pol-reform-50-states__state-redistricting": {
 		vizType: "category_breakdown",
-		primaryDataSheet: "states",
+		primaryDataSheet: "live_data",
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.state_redistricting ],
 		labelVar: variables.state_abbrev,
@@ -143,9 +158,9 @@ let vizSettings = {
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	"pol-reform-50-states__congressional-redistricting": { 
+	"pol-reform-50-states__congressional-redistricting": {
 		vizType: "category_breakdown",
-		primaryDataSheet: "states",
+		primaryDataSheet: "live_data",
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.congressional_redistricting ],
 		labelVar: variables.state_abbrev,
@@ -153,33 +168,53 @@ let vizSettings = {
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	"pol-reform-50-states__no-excuse-absentee": { 
+	"pol-reform-50-states__no-excuse-absentee": {
 		vizType: "category_breakdown",
-		primaryDataSheet: "states",
+		primaryDataSheet: "live_data",
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.no_excuse_absentee ],
-		labelVar: variables.state_abbrev,
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" },	
-		idVar: variables.state_id,
-		quantityLabel: "states",
-	},
-	"pol-reform-50-states__electronic-filing": { 
-		vizType: "category_breakdown",
-		primaryDataSheet: "states",
-		dotSettings: { "width": 30, "offset": 5},
-		filterVars: [ variables.electronic_filing ],
 		labelVar: variables.state_abbrev,
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" },
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
-	"pol-reform-50-states__public-financing": { 
+	"pol-reform-50-states__electronic-filing": {
 		vizType: "category_breakdown",
-		primaryDataSheet: "states",
+		primaryDataSheet: "live_data",
+		dotSettings: { "width": 30, "offset": 5},
+		filterVars: [ variables.electronic_filing_required ],
+		labelVar: variables.state_abbrev,
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
+	},
+	"pol-reform-50-states__public-financing": {
+		vizType: "category_breakdown",
+		primaryDataSheet: "live_data",
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.public_financing_funding_level ],
 		labelVar: variables.state_abbrev,
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" },	
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
+	},
+	"pol-reform-50-states__who-discloses": {
+		vizType: "category_breakdown",
+		primaryDataSheet: "live_data",
+		dotSettings: { "width": 30, "offset": 5},
+		filterVars: [ variables.who_discloses ],
+		labelVar: variables.state_abbrev,
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" },
+		idVar: variables.state_id,
+		quantityLabel: "states",
+	},
+	"pol-reform-50-states__what-is-disclosed": {
+		vizType: "category_breakdown",
+		primaryDataSheet: "live_data",
+		dotSettings: { "width": 30, "offset": 5},
+		filterVars: [ variables.what_is_disclosed ],
+		labelVar: variables.state_abbrev,
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/fifty-state-solution/state-profile/?" },
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
@@ -189,4 +224,3 @@ module.exports = {
 	vizSettings: vizSettings,
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/polreform/political-reform-fifty-states.json"
 }
-	

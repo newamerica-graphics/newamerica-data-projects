@@ -43,7 +43,7 @@ export default class VizController {
 		d3.json(dataUrl, (data) => {
 			if (!data) { return; }
 			this.data = this.preProcessData ? this.preProcessData(data) : data
-	    	if (this.renderQueue && this.renderQueue.length > 0) { 
+	    	if (this.renderQueue && this.renderQueue.length > 0) {
 	    		for (let renderFunc of this.renderQueue) {
 	    			renderFunc(this.data);
 	    		}
@@ -58,7 +58,7 @@ export default class VizController {
 
 	render(dataVizId) {
 		let settingsObject = this.vizSettings[dataVizId]
-		
+
 		if (settingsObject.isReact) {
 			if (this.data) {
 				this.renderReactChart(dataVizId, settingsObject)
@@ -74,7 +74,7 @@ export default class VizController {
 			if (!chart) { return; }
 
 			this.vizList.push(chart)
-			
+
 			if (this.data || settingsObject.vizType === "financial_opportunity_map") {
 				chart.render(this.data)
 				// after refresh, this functionality can be handled from front-end page template, instead of here
@@ -159,7 +159,7 @@ export default class VizController {
 	hideLoadingGif(id) {
 		let selector = "#" + id
 		$(selector).siblings(".dataviz__loading-gif").hide();
-		$(selector).css("visibility", "visible").css("min-height","none");
+		$(selector).css("visibility", "visible").css("min-height","0px");
 	}
 
 	setDataDownloadLinks(downloadableDataSheets, customDataDownloadSource) {
@@ -172,7 +172,7 @@ export default class VizController {
 			}
 
 			let downloadableDataJson = {};
-			for (let sheetName of downloadableDataSheets) {	
+			for (let sheetName of downloadableDataSheets) {
 				downloadableDataJson[sheetName] = this.data[sheetName];
 			}
 
@@ -181,8 +181,3 @@ export default class VizController {
 		}
 	}
 }
-
-
-
-
-
