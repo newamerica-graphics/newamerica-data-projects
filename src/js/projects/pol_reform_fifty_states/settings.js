@@ -26,7 +26,7 @@ let variables = {
 	public_financing_amount: {"variable":"public_financing_amount", "displayName":"Qualifying Amount", "format": "string", "category":"Public Financing" },
 	public_financing_contributors: {"variable":"public_financing_contributors", "displayName":"Public Financing Contributors", "format": "string", "category":"Public Financing" },
 	public_financing_promise: {"variable":"public_financing_promise", "displayName":"Public Financing Promise", "format": "string", "category":"Public Financing" },
-	public_financing_funding_level: {"variable":"public_financing_funding_level", "displayName":"Public Financing Funding Level", "format": "string", "scaleType":"categorical", "canSplitCategory":true, "category":"Public Financing", "customDomain":["Full", "Partial", "None", "N/A"], "customRange":[colors.turquoise.light, colors.blue.light, colors.red.light, colors.grey.light]},
+	public_financing_funding_level: {"variable":"public_financing_funding_level", "displayName":"Public Financing Funding Level", "format": "string", "scaleType":"categorical", "canSplitCategory":true, "category":"Public Financing", "customDomain":["Full", "Partial", "None", "N/A"], "customRange":[colors.turquoise.light, colors.blue.light, colors.red.light, colors.grey.medium]},
 	public_financing_type: {"variable":"public_financing_type", "displayName":"Public Financing Type", "format": "string", "scaleType":"categorical", "category":"Public Financing", "canSplitCategory":true, "customDomain":["Grants", "Matching Funds", "Refunds", "Vouchers", "N/A"], "customRange":[colors.turquoise.light, colors.blue.light, colors.purple.light, colors.turquoise.medium, colors.grey.medium]},
 	public_financing_jurisdiction: {"variable":"public_financing_jurisdiction", "displayName":"Public Financing Jurisdiction", "format": "string", "scaleType":"categorical", "category":"Public Financing", "canSplitCategory":true, "customDomain":["State", "Municipal", "N/A"], "customRange":[colors.turquoise.light, colors.blue.light, colors.grey.medium]},
 	public_financing_jurisdiction_more_info: {"variable":"public_financing_jurisdiction_more_info", "displayName":"Public Financing Jurisdiction Details", "format": "string", "category":"Public Financing"},
@@ -99,6 +99,21 @@ let vizSettings = {
 		filterVars: [ variables.electronic_filing_required, variables.public_financing_funding_level, variables.public_financing_type, variables.public_financing_jurisdiction],
 		varDescriptionSheet: "states_variables",
 		tooltipVars: [ variables.state, variables.electronic_filing_required, variables.public_financing_funding_level, variables.public_financing_qualified, variables.public_financing_amount, variables.public_financing_contributors, variables.public_financing_promise, variables.public_financing_type, variables.public_financing_jurisdiction, variables.public_financing_jurisdiction_more_info, variables.public_financing_participation],
+		tooltipShowOnly: "same category",
+		addSmallStateInsets: true,
+		legendSettings: {"orientation": "vertical-right", "showTitle": true},
+		filterGroupSettings: {"hidden": false},
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/laboratories-of-democracy/state-profile/?" }
+	},
+	"pol-reform-50-states__electronic-filing-map": {
+		vizType: "topo_json_map",
+		primaryDataSheet: "live_data",
+		geometryType: "states",
+		geometryVar: variables.state_id,
+		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
+		filterVars: [ variables.electronic_filing_required],
+		varDescriptionSheet: "states_variables",
+		tooltipVars: [ variables.state, variables.electronic_filing_required],
 		tooltipShowOnly: "same category",
 		addSmallStateInsets: true,
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
@@ -313,6 +328,6 @@ const setBucketValue = (value) => {
 
 module.exports = {
 	vizSettings: vizSettings,
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/polreform/political-reform-fifty-states.json",
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/polreform/lab-of-democracy.json",
 	preProcessData: preProcessData
 }
