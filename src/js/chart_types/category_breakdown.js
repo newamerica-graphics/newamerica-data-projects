@@ -276,7 +276,7 @@ export class CategoryBreakdown {
 
 		if (this.labelVar) {
 			this.dataCircleText
-				.attr("fill", (d) => { return this.colorScale(d[this.currFilterVar]); });
+				.attr("fill", (d) => { return d[this.currFilterVar] ? this.colorScale(d[this.currFilterVar].trim()) : colors.grey.medium; });
 		}
 
 		this.tooltip ? this.tooltip.hide() : null;

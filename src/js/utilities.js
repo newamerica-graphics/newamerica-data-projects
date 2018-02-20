@@ -26,6 +26,10 @@ import { VerticalTimeline } from "./chart_types/vertical_timeline.js";
 import { InteractiveSvg } from "./chart_types/interactive_svg.js";
 import { DroneStrikesTargetsStackedBar } from "./chart_types/drone_strikes_targets_stacked_bar.js";
 
+const $ = require("jquery")
+const d3 = require("d3")
+import { formatValue } from './helper_functions/format_value.js'
+
 export const whichChart = {
 	"bar_chart": BarChart,
 	"bar_line_combo": BarLineCombo,
@@ -39,7 +43,7 @@ export const whichChart = {
 	"drone_strikes_targets_stacked_bar": DroneStrikesTargetsStackedBar,
 	"fact_box": FactBox,
 	"filterable_chart": FilterableChart,
-	"financial_opportunity_map": FinancialOpportunityMap,		
+	"financial_opportunity_map": FinancialOpportunityMap,
 	"grouped_dot_matrix": GroupedDotMatrix,
 	"interactive_svg": InteractiveSvg,
 	"line_chart": LineChart,
@@ -119,7 +123,7 @@ export const setProfileValues = (data) => {
 	}
 
 	let valueDiv, footnoteLabelDiv, displayField, fieldFormat, footnoteField;
-	
+
 	$(".in-depth__profile__title-block__title").text(currElement[lookupField])
 
 	$(".block-data_reference").each(function(i, container) {
@@ -157,7 +161,7 @@ export const setProfileValues = (data) => {
 	$(".video-data-reference").each(function(i, item) {
 		displayField = $(item).attr("data-field-name");
 		let hostSite = $(item).attr("data-host");
-		
+
 		let value = currElement[displayField];
 
 		if (value && value.length > 0) {
@@ -171,7 +175,7 @@ export const setProfileValues = (data) => {
 	})
 }
 
-const setOtherValueSelectorOptions = (otherValuesList, pageHasValue) => { 
+const setOtherValueSelectorOptions = (otherValuesList, pageHasValue) => {
 	let $valueSelector = $(".in-depth__profile__other-value-selector");
 	for (let item of otherValuesList) {
 		let option = $('<option/>')

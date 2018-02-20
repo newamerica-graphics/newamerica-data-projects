@@ -19,7 +19,7 @@ export class Tooltip {
 		this.appendTooltip();
 
 		this.setCategoryNest();
-		
+
 		this.tooltipCategoryTitles = {};
 	}
 
@@ -50,7 +50,7 @@ export class Tooltip {
 			.append("div")
 			.attr("class", "tooltip__title-container")
 			.classed("no-content", this.tooltipVars.length < 1);
-			
+
 		if (this.tooltipImageVar) {
 			this.imageContainer = titleContainer
 				.append("div")
@@ -105,7 +105,7 @@ export class Tooltip {
 		if ($(window).width() < 450) {
 			return;
 		}
-		
+
         if (this.tooltipImageVar) {
         	if (datum[this.tooltipImageVar.variable]) {
         		this.titleDiv
@@ -136,7 +136,7 @@ export class Tooltip {
 
 		this.listItems.selectAll("h3.tooltip__category__list-item__value")
 			.text((d) => { return formatValue(datum[d.variable], d.format); })
-			
+
 		this.listItemLabels
 			.style("color", (d) => { return this.colorScale ? this.colorScale(d.variable) : colors.black; })
 			.style("font-weight", (d) => { return this.colorScale ? "bold" : "normal"; })
@@ -173,9 +173,9 @@ export class Tooltip {
 		return retCoords;
 	}
 
-	setMultiColorBorder(inputColor) { 
+	setMultiColorBorder(inputColor) {
 		let retVal = "linear-gradient(to right, ";
-		let patternId = inputColor.replace('url(', '').replace(')', '');
+		let patternId = inputColor.replace('url(', '').replace(')', '').replace('"','').replace('"','');
 
 		if ($(patternId).is("linearGradient")) {
 			let colors = $(patternId).children("stop");
