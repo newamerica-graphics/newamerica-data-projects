@@ -45,7 +45,9 @@ class CustomHomegrownMap extends React.Component {
 			let statesGeom = topojson.feature(data, data.objects["states"]).features;
 
 			statesGeom.map(geom => {
+
 				this.statesData.forEach(d => {
+					console.log(d.geo_id, geom.id)
 					if (+d.geo_id === geom.id) {
 						geom.data = d;
 						return;
@@ -63,6 +65,7 @@ class CustomHomegrownMap extends React.Component {
 			let countriesGeom = topojson.feature(data, data.objects.countries).features;
 
 			countriesGeom.map(geom => {
+
 				this.countriesData.forEach(d => {
 					if (+d.geo_id === geom.id) {
 						geom.data = d;
@@ -157,6 +160,8 @@ class CustomHomegrownMap extends React.Component {
 	render() {
 		const { width, height, tooltipVal, tooltipPos, statesGeom, countriesGeom } = this.state;
 		const {  } = this.props.vizSettings;
+
+		console.log(this.state)
 
 		return (
 			<div className="custom-homegrown-map">

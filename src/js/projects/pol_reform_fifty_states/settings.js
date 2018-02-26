@@ -9,14 +9,14 @@ let variables = {
 	online_registration: {"variable":"online_registration", "displayName":"Online Registration", "format": "string", "category":"Registration", "scaleType":"categorical", "customDomain":["Yes", "No", "N/A"], "customRange":[colors.turquoise.light, colors.red.light, colors.grey.medium]},
 	same_day_registration: {"variable":"same_day_registration", "displayName":"Same Day Registration", "format": "string", "category":"Registration", "scaleType":"categorical", "customDomain":["Yes", "No", "N/A"], "customRange":[colors.turquoise.light, colors.red.light, colors.grey.medium]},
 	automatic_voter_registration: {"variable":"automatic_voter_registration", "displayName":"Automatic Voter Registration", "format": "string", "category":"Registration", "scaleType":"categorical", "customDomain":["Yes", "No", "N/A"], "customRange":[colors.turquoise.light, colors.red.light, colors.grey.medium]},
-	state_redistricting: {"variable":"state_redistricting", "displayName":"State Redistricting", "format": "string", "category":"Redistricting", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["State Legislature", "Advisory Commission", "Independent Commission", "Executive Commission", "Elected Official Commission", "N/A"], "customRange":[colors.turquoise.light, colors.blue.light, colors.purple.light, colors.red.medium, colors.turquoise.medium, colors.grey.medium]},
-	state_redistricting_more_info: {"variable":"state_redistricting_more_info", "displayName":"State Redistricting Details", "format": "string"},
-	congressional_redistricting: {"variable":"congressional_redistricting", "displayName":"Congressional Redistricting", "format": "string", "category":"Redistricting", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["State Legislature", "Advisory Commission", "Independent Commission", "Elected Official Commission", "N/A"], "customRange":[colors.turquoise.light, colors.blue.light, colors.purple.light, colors.turquoise.medium, colors.grey.medium]},
-	congressional_redistricting_more_info: {"variable":"congressional_redistricting_more_info", "displayName":"Congressional Redistricting Details", "format": "string"},
-	congressional_primary_type: {"variable":"congressional_primary_type", "displayName":"Congressional Primary Type", "format": "string", "category":"Primaries", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Closed", "Semi-closed", "Open", "Top two", "Blanket", "Two round system"], "customRange":[colors.turquoise.dark, colors.turquoise.medium, colors.turquoise.light, colors.blue.light, colors.purple.light, colors.purple.dark]},
-	congressional_primary_rules: {"variable":"congressional_primary_rules", "displayName":"Congressional Primary Rules", "format": "string", "category":"Primaries"},
-	presidential_primary_type: {"variable":"presidential_primary_type", "displayName":"Presidential Primary Type", "format": "price", "category":"Primaries", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Closed", "Semi-closed", "Open"], "customRange":[colors.turquoise.light, colors.blue.light, colors.purple.light]},
-	presidential_primary_rules: {"variable":"presidential_primary_rules", "displayName":"Presidential Primary Rules", "format": "string", "category":"Primaries"},
+	state_redistricting: {"variable":"state_redistricting", "displayName":"State Redistricting", "format": "string", "category":"State Redistricting", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["State Legislature", "Advisory Commission", "Independent Commission", "Executive Commission", "Elected Official Commission", "N/A"], "customRange":[colors.turquoise.light, colors.blue.light, colors.purple.light, colors.red.medium, colors.turquoise.medium, colors.grey.medium]},
+	state_redistricting_more_info: {"variable":"state_redistricting_more_info", "displayName":"State Redistricting Details", "format": "string", "category":"State Redistricting"},
+	congressional_redistricting: {"variable":"congressional_redistricting", "displayName":"Congressional Redistricting", "format": "string", "category":"Cogressional Redistricting",  "scaleType":"categorical", "canSplitCategory":true, "customDomain":["State Legislature", "Advisory Commission", "Independent Commission", "Elected Official Commission", "N/A"], "customRange":[colors.turquoise.light, colors.blue.light, colors.purple.light, colors.turquoise.medium, colors.grey.medium]},
+	congressional_redistricting_more_info: {"variable":"congressional_redistricting_more_info", "displayName":"Congressional Redistricting Details", "format": "string", "category":"Congressional Redistricting"},
+	congressional_primary_type: {"variable":"congressional_primary_type", "displayName":"Congressional Primary Type", "format": "string", "category":"Congressional Primary", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Closed", "Semi-closed", "Open", "Top two", "Blanket", "Two round system"], "customRange":[colors.turquoise.dark, colors.turquoise.medium, colors.turquoise.light, colors.blue.light, colors.purple.light, colors.purple.dark]},
+	congressional_primary_rules: {"variable":"congressional_primary_rules", "displayName":"Congressional Primary Rules", "format": "string", "category":"Congressional Primary"},
+	presidential_primary_type: {"variable":"presidential_primary_type", "displayName":"Presidential Primary Type", "format": "price", "category":"Presidential Primary", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Closed", "Semi-closed", "Open"], "customRange":[colors.turquoise.light, colors.blue.light, colors.purple.light]},
+	presidential_primary_rules: {"variable":"presidential_primary_rules", "displayName":"Presidential Primary Rules", "format": "string", "category":"Presidential Primary"},
 	who_discloses: {"variable":"who_discloses", "displayName":"Who Discloses?", "format": "string", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Candidates", "Political Committees", "Parties", "Ballot Initiative Committees", "Candidate Committees", "Independent Expenditure Committees", "Small Donor Committees", "Candidate Committees", "Corporations", "N/A"], "customRange":[colors.turquoise.light, colors.blue.light, colors.purple.light, colors.turquoise.medium, colors.blue.medium, colors.purple.medium, colors.turquoise.dark, colors.blue.dark, colors.grey.medium]},
 	what_is_disclosed: {"variable":"what_is_disclosed", "displayName":"What is Disclosed?", "format": "string", "scaleType":"categorical", "canSplitCategory":true, "customDomain":["Contributions", "Contributions (Employer)", "In-Kind Donations", "Expenditures", "Expenses", "Debts", "Loans", "Fundraising Sales", "Transfers", "N/A"], "customRange":[colors.turquoise.light, colors.turquoise.medium, colors.turquoise.dark, colors.red.light, colors.red.medium, colors.red.dark, colors.purple.light, colors.blue.light, colors.blue.dark, colors.grey.medium]},
 	when_it_is_disclosed: {"variable":"when_it_is_disclosed", "displayName":"When is it Disclosed?", "format": "string", "canSplitCategory":true},
@@ -52,10 +52,11 @@ const contrLimitRecipients = [
 ]
 
 contrLimitSources.forEach(source => {
+	variables[source.field + "_more_info"] = {"variable": source.field + "_more_info", "displayName": source.displayName + " - Details", "format": "string", "category": source.displayName}
 	contrLimitRecipients.forEach(recip => {
 		let fieldName = source.field + "_" + recip.field
 		variables[fieldName] = {"variable": fieldName, "displayName": recip.displayName, "format": "string", "category": source.displayName}
-		variables[fieldName + "_bucket"] = {"variable": fieldName + "_bucket", "displayName": recip.displayName, "format": "string", "category": source.displayName, "scaleType":"categorical", "customDomain":["Prohibited", "$1,000 or Less", "$1,001-$2,500", "$2,501-$5,000", "$5,001-$10,000", "Greater than $10,000", "Unlimited"], "customRange":[colors.red.light, colors.blue.very_light, colors.blue.very_light_2, colors.blue.light, colors.blue.medium, colors.blue.dark, colors.black]}
+		variables[fieldName + "_bucket"] = {"variable": fieldName + "_bucket", "displayName": recip.displayName, "format": "string", "category": source.displayName, "scaleType":"categorical", "customDomain":["Prohibited", "$1,000 or Less", "$1,001-$2,500", "$2,501-$5,000", "$5,001-$10,000", "Greater than $10,000", "Unlimited", "Unavailable"], "customRange":[colors.red.light, colors.blue.very_light, colors.blue.very_light_2, colors.blue.light, colors.blue.medium, colors.blue.dark, colors.black, colors.grey.medium]}
 	})
 })
 
@@ -75,14 +76,44 @@ let vizSettings = {
 		filterGroupSettings: {"hidden": false},
 		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/laboratories-of-democracy/state-profile/?" }
 	},
+	"pol-reform-50-states__primaries-map": {
+		vizType: "topo_json_map",
+		primaryDataSheet: "live_data",
+		geometryType: "states",
+		geometryVar: variables.state_id,
+		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
+		filterVars: [ variables.congressional_primary_type, variables.presidential_primary_type],
+		tooltipVars: [ variables.state, variables.congressional_primary_type, variables.congressional_primary_rules, variables.presidential_primary_type, variables.presidential_primary_rules],
+		tooltipShowOnly: "same category",
+		addSmallStateInsets: true,
+		varDescriptionSheet: "states_variables",
+		legendSettings: {"orientation": "vertical-right", "showTitle": true},
+		filterGroupSettings: {"hidden": false},
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/laboratories-of-democracy/state-profile/?" }
+	},
+	"pol-reform-50-states__voting-map": {
+		vizType: "topo_json_map",
+		primaryDataSheet: "live_data",
+		geometryType: "states",
+		geometryVar: variables.state_id,
+		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
+		filterVars: [ variables.ranked_choice_voting],
+		tooltipVars: [ variables.state, variables.ranked_choice_voting, variables.ranked_choice_voting_more_info],
+		tooltipShowOnly: "same category",
+		addSmallStateInsets: true,
+		varDescriptionSheet: "states_variables",
+		legendSettings: {"orientation": "vertical-right", "showTitle": true},
+		filterGroupSettings: {"hidden": false},
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/laboratories-of-democracy/state-profile/?" }
+	},
 	"pol-reform-50-states__redistricting-map": {
 		vizType: "topo_json_map",
 		primaryDataSheet: "live_data",
 		geometryType: "states",
 		geometryVar: variables.state_id,
 		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
-		filterVars: [ variables.congressional_primary_type, variables.presidential_primary_type, variables.ranked_choice_voting, variables.state_redistricting, variables.congressional_redistricting],
-		tooltipVars: [ variables.state, variables.congressional_primary_type, variables.congressional_primary_rules, variables.presidential_primary_type, variables.presidential_primary_rules, variables.ranked_choice_voting, variables.ranked_choice_voting_more_info, variables.state_redistricting, variables.state_redistricting_more_info, variables.congressional_redistricting, variables.congressional_redistricting_more_info],
+		filterVars: [ variables.state_redistricting, variables.congressional_redistricting],
+		tooltipVars: [ variables.state, variables.state_redistricting, variables.state_redistricting_more_info, variables.congressional_redistricting, variables.congressional_redistricting_more_info],
 		tooltipShowOnly: "same category",
 		addSmallStateInsets: true,
 		varDescriptionSheet: "states_variables",
@@ -96,9 +127,9 @@ let vizSettings = {
 		geometryType: "states",
 		geometryVar: variables.state_id,
 		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
-		filterVars: [ variables.electronic_filing_required, variables.public_financing_funding_level, variables.public_financing_type, variables.public_financing_jurisdiction],
+		filterVars: [ variables.public_financing_funding_level, variables.public_financing_type, variables.public_financing_jurisdiction],
 		varDescriptionSheet: "states_variables",
-		tooltipVars: [ variables.state, variables.electronic_filing_required, variables.public_financing_funding_level, variables.public_financing_qualified, variables.public_financing_amount, variables.public_financing_contributors, variables.public_financing_promise, variables.public_financing_type, variables.public_financing_jurisdiction, variables.public_financing_jurisdiction_more_info, variables.public_financing_participation],
+		tooltipVars: [ variables.state, variables.public_financing_funding_level, variables.public_financing_qualified, variables.public_financing_amount, variables.public_financing_contributors, variables.public_financing_promise, variables.public_financing_type, variables.public_financing_jurisdiction, variables.public_financing_jurisdiction_more_info, variables.public_financing_participation],
 		tooltipShowOnly: "same category",
 		addSmallStateInsets: true,
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
@@ -130,7 +161,7 @@ let vizSettings = {
 			variables.individ_cand_house_bucket, variables.individ_cand_senate_bucket, variables.individ_cand_gub_bucket, variables.individ_PP_bucket, variables.individ_pac_bucket, variables.pac_cand_house_bucket, variables.pac_cand_senate_bucket, variables.pac_cand_gub_bucket, variables.pac_PP_bucket, variables.pac_pac_bucket, variables.PP_cand_house_bucket, variables.PP_cand_senate_bucket, variables.PP_cand_gub_bucket, variables.PP_PP_bucket, variables.PP_pac_bucket, variables.corp_cand_house_bucket, variables.corp_cand_senate_bucket, variables.corp_cand_gub_bucket, variables.corp_PP_bucket, variables.corp_pac_bucket, variables.union_cand_house_bucket, variables.union_cand_senate_bucket, variables.union_cand_gub_bucket, variables.union_PP_bucket, variables.union_pac_bucket
 		],
 		tooltipVars: [ variables.state,
-			variables.individ_cand_house, variables.individ_cand_senate, variables.individ_cand_gub, variables.individ_PP, variables.individ_pac, variables.pac_cand_house, variables.pac_cand_senate, variables.pac_cand_gub, variables.pac_PP, variables.pac_pac, variables.PP_cand_house, variables.PP_cand_senate, variables.PP_cand_gub, variables.PP_PP, variables.PP_pac, variables.corp_cand_house, variables.corp_cand_senate, variables.corp_cand_gub, variables.corp_PP, variables.corp_pac, variables.union_cand_house, variables.union_cand_senate, variables.union_cand_gub, variables.union_PP, variables.union_pac
+			variables.individ_cand_house, variables.individ_cand_senate, variables.individ_cand_gub, variables.individ_PP, variables.individ_pac, variables.individ_more_info, variables.pac_cand_house, variables.pac_cand_senate, variables.pac_cand_gub, variables.pac_PP, variables.pac_pac, variables.pac_more_info, variables.PP_cand_house, variables.PP_cand_senate, variables.PP_cand_gub, variables.PP_PP, variables.PP_pac, variables.PP_more_info, variables.corp_cand_house, variables.corp_cand_senate, variables.corp_cand_gub, variables.corp_PP, variables.corp_pac, variables.corp_more_info, variables.union_cand_house, variables.union_cand_senate, variables.union_cand_gub, variables.union_PP, variables.union_pac, variables.union_more_info
 		],
 		varDescriptionSheet: "states_variables",
 		legendSettings: {"orientation": "vertical-right", "showTitle": true, "showValueDescriptions": true},
