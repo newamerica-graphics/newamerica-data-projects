@@ -18,7 +18,7 @@ class HistogramAnnotations extends React.Component {
 		let annotationPositions = []
 
 		this.sortedData = props.data.sort((a, b) => { return new Date(a.date) - new Date(b.date)})
-	
+
 		this.initialRender =
 
 		this.state = {
@@ -73,7 +73,7 @@ class HistogramAnnotations extends React.Component {
 		this.height = this.rows.length * 25 + 10;
 	}
 
-	calcYIndex(startXPos, endXPos) {	
+	calcYIndex(startXPos, endXPos) {
 		let i = 0;
 
 		for (let row of this.rows) {
@@ -81,7 +81,7 @@ class HistogramAnnotations extends React.Component {
 			// loop through all intervals stored within row
 			for (let rowInterval of row) {
 				// check if start or end position overlaps with interval
-				if ((startXPos >= rowInterval.start && startXPos <= rowInterval.end) || 
+				if ((startXPos >= rowInterval.start && startXPos <= rowInterval.end) ||
 					(endXPos >= rowInterval.start && endXPos <= rowInterval.end) ||
 					(startXPos <= rowInterval.start)) {
 					// if overlap, breaks loop, moves to next row
@@ -104,8 +104,8 @@ class HistogramAnnotations extends React.Component {
 
 
 	renderAnnotationText(d, i) {
-		// if (!d.startXPos || !d.yPos) { 
-		// 	return <text className="dot-chart__histogram-annotation__text" ref={i}></text>; 
+		// if (!d.startXPos || !d.yPos) {
+		// 	return <text className="dot-chart__histogram-annotation__text" ref={i}></text>;
 		// }
 		let startXPos = d.startXPos || 0,
 			endXPos = d.endXPos || 0,
@@ -123,8 +123,8 @@ class HistogramAnnotations extends React.Component {
 	}
 
 	renderAnnotationLine(d, i) {
-		// if (!d.startXPos || !d.yPos) { 
-		// 	return <line className="dot-chart__histogram-annotation__line" />; 
+		// if (!d.startXPos || !d.yPos) {
+		// 	return <line className="dot-chart__histogram-annotation__line" />;
 		// }
 		const { scale } = this.props;
 
@@ -148,9 +148,9 @@ class HistogramAnnotations extends React.Component {
 	render() {
 		const { data } = this.props;
 
-		
+
 		return (
-			<svg className="dot-chart__histogram-annotations" width="100%" height={this.height} transform="translate(0, -12)">
+			<svg className="dot-chart__histogram-annotations" width="100%" height={this.height} transform="translate(0, -10)">
 				{this.sortedData.map((d, i) => this.renderAnnotationLine(d, i))}
 				{this.sortedData.map((d, i) => this.renderAnnotationText(d, i))}
 			</svg>

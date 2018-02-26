@@ -69,7 +69,7 @@ let vizSettings = {
 					isMessagePasser: false,
 					messageHandlerType: "change_value",
 					idVar: variables.state,
-					showCurrFilterVal: true, 
+					showCurrFilterVal: true,
 					filterVar: variables.category,
 					additionalDataVars: [variables.population_total, variables.population_muslim],
 					dateVar: variables.processed_date,
