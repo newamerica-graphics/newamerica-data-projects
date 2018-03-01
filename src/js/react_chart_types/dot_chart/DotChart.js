@@ -75,7 +75,7 @@ class DotChart extends React.Component {
     }
 
     getCurrWidth() {
-        return $(this.refs.renderingArea).width() - 15;
+        return $(this.refs.renderingArea).width() - 30;
     }
 
     getCurrLayout(data, layoutSettings, w) {
@@ -118,7 +118,7 @@ class DotChart extends React.Component {
             <Motion style={{currTransform: spring(currLayout.height - 27)}} >
                 {({currTransform}) => {
                     return (
-                        <g transform="translate(0,15)">
+                        <g transform="translate(15,15)">
                             <g className="dot-chart__axis-time" style={{transform: "translateY(" + currTransform + "px)"}}>
                                 <Axis {...axisPropsFromBandedScale(currLayout.axisScale)} format={(d) => { return d3.timeFormat("%Y")(d) }} style={{orient: BOTTOM}} />
                             </g>
@@ -143,14 +143,14 @@ class DotChart extends React.Component {
 
             extents = extents.map(d => Number(d.toString().slice(0,4)))
 
-            let range = getRange(extents[0] + 1, extents[1])
+            let range = getRange(extents[0], extents[1])
             range = range.map(d => d + "01")
 
             return (
                 <Motion style={{currTransform: spring(currLayout.height)}} >
                     {({currTransform}) => {
                         return (
-                            <g transform="translate(0,15)">
+                            <g transform="translate(15,15)">
                                 <g className="dot-chart__axis-time" style={{transform: "translateY(" + currTransform + "px)"}}>
                                     <Axis {...axisPropsFromBandedScale(currLayout.xScale)} values={range} format={d => d.slice(0,4)} style={{orient: BOTTOM}} />
                                 </g>
@@ -193,7 +193,7 @@ class DotChart extends React.Component {
     getCategoryAxis() {
         const { currLayout, currLayoutSettings } = this.state;
         return (
-            <g transform="translate(0,15)">
+            <g transform="translate(15,15)">
                 {currLayout.yScale.domain().map((d) => {
                     return (
                         <Motion style={{y:spring(currLayout.yScale(d))}} key={d}>
@@ -279,7 +279,7 @@ class DotChart extends React.Component {
 				{ currLayout &&
                     <div>
     					<svg className="dot-chart__container" width="100%" height={layoutHeight + 45}>
-    						<g className="dot-chart__rendering-area" width={width} transform="translate(0,15)">
+    						<g className="dot-chart__rendering-area" width={width} transform="translate(15,15)">
     							{currDataShown.map((d) => {
     								let style = currLayout.renderDot(d)
 
