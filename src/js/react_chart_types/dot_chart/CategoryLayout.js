@@ -9,6 +9,7 @@ import {spring} from "react-motion";
 
 const d3 = require("d3");
 
+const topPadding = 5;
 const getRange = (start, end) => { return Array(end - start + 1).fill().map((_, idx) => start + idx) }
 
 class CategoryLayout {
@@ -41,7 +42,7 @@ class CategoryLayout {
 	}
 
 	setYScale() {
-		let runningYTotal = this.dotRadius + this.horizontalPadding;
+		let runningYTotal = this.dotRadius + this.horizontalPadding + topPadding;
 		let currY = runningYTotal;
 
 		this.yScale.range(this.sortedCategoryVals.map((d, i) => {
@@ -79,8 +80,8 @@ class CategoryLayout {
 
 				yPos += whichAdditionalRow*((this.dotRadius + this.horizontalPadding) * 2)
 				xIndex = xIndex % this.maxDotsPerRow
-			} 
-			
+			}
+
 			xPos = this.layoutSettings.leftMargin + xIndex * (this.dotRadius + this.horizontalPadding) * 2
 		}
 		return {x: spring(xPos), y: spring(yPos)}
