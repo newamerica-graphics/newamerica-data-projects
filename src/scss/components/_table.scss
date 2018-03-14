@@ -6,6 +6,7 @@
 			color: palette-get(na-black);
 			font-weight: bold;
 			border: none !important;
+			font-size: 14px !important;
 		}
 
 		span {
@@ -52,7 +53,7 @@ table.dataTable {
 
 	td {
 		color: palette-get(na-black-40);
-		
+
 
 		&.sorting_1 {
 			color: palette-get(na-black);
@@ -63,6 +64,10 @@ table.dataTable {
 			width: 15px;
 			height: 15px;
 		}
+	}
+
+	a {
+		font-size: 14px !important;
 	}
 
 	th, td {
