@@ -12,9 +12,9 @@ export default function Tooltip(props) {
 		};
 
 		if (x < (renderingAreaWidth - 300)) {
-			styleObject.left = (x + 10) + "px";
+			styleObject.left = (x + 25) + "px";
 		} else {
-			styleObject.right = (renderingAreaWidth - x + 10) + "px";
+			styleObject.right = (renderingAreaWidth - x + 25) + "px";
 		}
 
 		tooltipTitle = title;
