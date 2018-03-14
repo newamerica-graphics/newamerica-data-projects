@@ -27,7 +27,7 @@ let variables = {
 	fema_typhoon: {"variable":"typhoon", "displayName":"Typhoon", "format":"number", "scaleType":"linear"},
 	fema_earthquake: {"variable":"earthquake", "displayName":"Earthquake", "format":"number", "scaleType":"linear"},
 	fema_other: {"variable":"other", "displayName":"Other", "format":"number", "scaleType":"linear", "customRange":[colors.white, colors.turquoise.medium]},
-	
+
 	storm_type: {"variable":"storm_type", "displayName":"Storm Type", "format":"string", "scaleType":"categorical"},
 	frequency: {"variable":"frequency", "displayName":"Count", "format":"number", "color": colors.turquoise.light},
 	average_cost: {"variable":"average_cost", "displayName":"Average Cost (Billions)", "format":"price_with_decimal_1", "scaleType":"linear", "color": colors.blue.medium},
@@ -148,7 +148,8 @@ let vizSettings = {
 
 module.exports = {
 	vizSettings: vizSettings,
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/resourcesecurity/extreme_weather.json"
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/resourcesecurity/extreme_weather.json",
+	downloadableSheets: ["filtered_storm_events", "fema_declarations", "event_types", "event_year_counts"]
 }
 
 function getEventFilterVars() {

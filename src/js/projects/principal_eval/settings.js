@@ -194,5 +194,6 @@ let vizSettings = {
 
 module.exports = {
 	vizSettings: vizSettings,
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/edpolicy/principal_eval.json"
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/edpolicy/principal_eval.json",
+	downloadableSheets: ["all_states_web_version"]
 }

@@ -6,6 +6,8 @@
     <script type="text/javascript" src="https://na-staging-static.s3.amazonaws.com/static/js/mysite.js"></script>
   </head>
   <body>
+    <a id="in-depth__download__csv" download="<%= htmlWebpackPlugin.options.title %>.zip">Download CSV</a>
+    <a id="in-depth__download__json" download="<%= htmlWebpackPlugin.options.title %>.json">Download JSON</a>
     <% for(var i=0; i<htmlWebpackPlugin.options.vizIdList.length; i++) { %>
   	<div class="block-dataviz">
       <div class="dataviz">

@@ -360,5 +360,6 @@ const setBucketValue = (value) => {
 module.exports = {
 	vizSettings: vizSettings,
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/polreform/lab-of-democracy.json",
-	preProcessData: preProcessData
+	preProcessData: preProcessData,
+	downloadableSheets: ["live_data"]
 }

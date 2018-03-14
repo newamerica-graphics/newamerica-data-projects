@@ -69,7 +69,7 @@ let vizSettings = {
 					isMessagePasser: false,
 					messageHandlerType: "change_value",
 					idVar: variables.state,
-					showCurrFilterVal: true, 
+					showCurrFilterVal: true,
 					filterVar: variables.category,
 					additionalDataVars: [variables.population_total, variables.population_muslim],
 					dateVar: variables.processed_date,
@@ -138,5 +138,6 @@ const preProcessData = (data) => {
 module.exports = {
 	vizSettings: vizSettings,
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/muslimdiaspora/muslim_community_restrictions.json",
-	preProcessData: preProcessData
+	preProcessData: preProcessData,
+	downloadableSheets: ["incidents", "states"]
 }

@@ -175,7 +175,8 @@ let vizSettings = {
 
 module.exports = {
 	vizSettings: vizSettings,
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/wod-military.json"
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/isp/wod-military.json",
+	downloadableSheets: ["countries"]
 }
 
 function getDefaultValue(data) {

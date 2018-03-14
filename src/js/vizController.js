@@ -1,6 +1,4 @@
 require('./../scss/index.scss');
-var json2csv = require('json2csv');
-var JSZip = require("jszip");
 
 import $ from 'jquery';
 let d3 = require("d3");
@@ -31,14 +29,14 @@ export default class VizController {
 		this.preProcessData = preProcessData
 	}
 
-	initialize({dataUrl, clickToProfileFunction, downloadableDataSheets}) {
-		this.sendDataRequest(dataUrl, downloadableDataSheets)
+	initialize({dataUrl, clickToProfileFunction, downloadableSheets}) {
+		this.sendDataRequest(dataUrl, downloadableSheets)
 		if (clickToProfileFunction) {
 			this.overrideClickToProfileFunction(clickToProfileFunction)
 		}
 	}
 
-	sendDataRequest(dataUrl, downloadableDataSheets) {
+	sendDataRequest(dataUrl) {
 		if (!dataUrl) { return; }
 		d3.json(dataUrl, (data) => {
 			if (!data) { return; }
@@ -51,6 +49,8 @@ export default class VizController {
 
 	    	// the following function, which currently sets the values for the in depth profile pages based on the results from the data request, will be unneccessary after the refresh
 	    	setProfileValues(this.data);
+
+				console.log(this.deferredSetDataDownload)
 
 	    	if (this.deferredSetDataDownload) { this.deferredSetDataDownload() }
 	    });
@@ -162,22 +162,22 @@ export default class VizController {
 		$(selector).css("visibility", "visible").css("min-height","0px");
 	}
 
-	setDataDownloadLinks(downloadableDataSheets, customDataDownloadSource) {
-		if (customDataDownloadSource) {
-			$("#in-depth__download__csv").attr("href", customDataDownloadSource);
-		} else {
-			if (!this.data) {
-				this.deferredSetDataDownload = (downloadableDataSheets, customDataDownloadSource) => this.setDataDownloadLinks(downloadableDataSheets, customDataDownloadSource)
-				return;
-			}
-
-			let downloadableDataJson = {};
-			for (let sheetName of downloadableDataSheets) {
-				downloadableDataJson[sheetName] = this.data[sheetName];
-			}
-
-			setCSVZipLink(downloadableDataJson);
-			setJSONZipLink(downloadableDataJson);
+	setDataDownloadLinks(downloadableSheets) {
+		console.log("settings data download links")
+		console.log(this.data)
+		console.log(downloadableSheets)
+		if (!this.data) {
+			this.deferredSetDataDownload = () => this.setDataDownloadLinks(downloadableSheets)
+			console.log("this.deferredSetDataDownload", this.deferredSetDataDownload)
+			return;
 		}
+
+		let downloadableDataJson = {};
+		for (let sheetName of downloadableSheets) {
+			downloadableDataJson[sheetName] = this.data[sheetName];
+		}
+
+		setCSVZipLink(downloadableDataJson);
+		setJSONZipLink(downloadableDataJson);
 	}
 }

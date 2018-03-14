@@ -2,7 +2,7 @@
 // (currently stored in the project's settings file) and loops through the vizIds in the project, calling the render function for each
 
 import VizController from "./vizController.js"
-var {vizSettings, preProcessData, dataUrl, downloadableDataSheets, externalScript} = require("./projects/" + PROJECT + "/settings.js")
+var {vizSettings, preProcessData, dataUrl, downloadableSheets, externalScript} = require("./projects/" + PROJECT + "/settings.js")
 
 if (externalScript) { $.getScript(externalScript) }
 
@@ -16,7 +16,7 @@ Object.keys(vizSettings).forEach((vizKey) => {
     window.vizControl.render(vizKey)
 })
 
-// window.vizControl.setDataDownloadLinks(downloadableDataSheets, customDataDownloadSource)
+window.vizControl.setDataDownloadLinks(downloadableSheets)
 
 // ---------------------------------------------------------------
 // When the refresh is finished, replace the above with the following:

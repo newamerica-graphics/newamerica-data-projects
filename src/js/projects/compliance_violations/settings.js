@@ -33,7 +33,7 @@ let vizSettings = {
 		numPerPage: 15,
 		colorScaling: false
 	},
-	
+
 	"compliance-violations__collection": {
 		vizType: "dot_chart",
 		isReact: true,
@@ -124,5 +124,6 @@ let vizSettings = {
 
 module.exports = {
 	vizSettings: vizSettings,
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/oti/compliance-violations.json"
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/oti/compliance-violations.json",
+	downloadableSheets: ["violations", "glossary"]
 }

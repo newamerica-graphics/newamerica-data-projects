@@ -10,7 +10,7 @@ let variables = {
 	aum_date: {"variable":"aum_date", "displayName":"AUM Last Updated", "format":"year"},
 	type: {"variable":"type", "displayName":"Type", "format":"string"},
 	top_twenty: {"variable":"top_twenty", "displayName":"Asset Allocator Group", "format":"string", "category":"Top Twenty Funds", "scaleType": "categorical", "customDomain":["Leaders List", "Other Rated Funds"], "customRange":[colors.turquoise.light, colors.black]},
-	cumulative_score: {"variable":"cumulative_score", "displayName":"Cumulative Score", "format":"number", "scaleType": "quantize", "numBins":5, "customDomain": [0, 100], "customRange": [colors.white, colors.turquoise.light, colors.turquoise.dark]},	
+	cumulative_score: {"variable":"cumulative_score", "displayName":"Cumulative Score", "format":"number", "scaleType": "quantize", "numBins":5, "customDomain": [0, 100], "customRange": [colors.white, colors.turquoise.light, colors.turquoise.dark]},
 
 	disclosure: {"variable":"disclosure", "displayName":"1. Disclosure", "format":"number", "scaleType": "categorical", "disableTableOrdering":true, "passFailChecks": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
 	intention: {"variable":"intention", "displayName":"2. Intention", "format":"number", "scaleType": "categorical", "disableTableOrdering":true, "passFailChecks": true, "customDomain": ["Passed", "Failed"], "customRange": [colors.turquoise.light, colors.red.light]},
@@ -47,7 +47,7 @@ let vizSettings = {
 		vizType: "bar_chart",
 		primaryDataSheet: "aggregate_scores",
 		orientation: "horizontal",
-		groupingVar: variables.category, 
+		groupingVar: variables.category,
 		filterVars: [variables.leaders_score_avg, variables.rest_score_avg],
 		filtersUseSameScale: true,
 		tooltipVars: [variables.category, variables.leaders_score_avg, variables.rest_score_avg],
@@ -98,7 +98,7 @@ let vizSettings = {
 		vizType: "bar_chart",
 		primaryDataSheet: "swf_and_gpf",
 		orientation: "vertical",
-		groupingVar: variables.fund_category, 
+		groupingVar: variables.fund_category,
 		filterVars: [variables.number_of_funds, variables.aum_tn],
 		filtersUseSameScale: false,
 		tooltipVars: [variables.fund_category, variables.number_of_funds, variables.aum_tn],
@@ -114,7 +114,7 @@ let vizSettings = {
 		vizType: "bar_chart",
 		primaryDataSheet: "regional_composition",
 		orientation: "horizontal",
-		groupingVar: variables.region, 
+		groupingVar: variables.region,
 		filterVars: [variables.percent_of_funds, variables.percent_of_aum_bn],
 		filtersUseSameScale: true,
 		tooltipVars: [variables.region, variables.percent_of_funds, variables.percent_of_aum_bn],
@@ -140,6 +140,6 @@ let vizSettings = {
 
 module.exports = {
 	vizSettings: vizSettings,
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/bw2/asset_allocator.json"
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/bw2/asset_allocator.json",
+	downloadableSheets: ["metric_definitions", "funds", "aggregate_scores", "swf_and_gpf", "regional_composition"]
 }
-

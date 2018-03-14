@@ -21,7 +21,7 @@ let variables = {
 }
 
 let vizSettings = {
-	"care-index__explore-the-index": { 
+	"care-index__explore-the-index": {
 		vizType: "tabbed_chart_layout",
 		primaryDataSheet: "state_data",
 		tabIcons: ["globe", "table"],
@@ -47,7 +47,7 @@ let vizSettings = {
 			}
 		]
 	},
-	"care-index__explore-the-index__availability": { 
+	"care-index__explore-the-index__availability": {
 		vizType: "topo_json_map",
 		primaryDataSheet: "state_data",
 		geometryType: "states",
@@ -57,7 +57,7 @@ let vizSettings = {
 		tooltipVars: [ variables.state, variables.availability_total_norm],
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
 	},
-	"care-index__child-care-accredidation": { 
+	"care-index__child-care-accredidation": {
 		vizType: "topo_json_map",
 		primaryDataSheet: "state_data",
 		geometryType: "states",
@@ -67,7 +67,7 @@ let vizSettings = {
 		tooltipVars: [ variables.state, variables.in_center_pct_accred_statewide],
 		legendSettings: {"orientation": "vertical-right", "showTitle": true},
 	},
-	"care-index__summary-box__new-mexico": { 
+	"care-index__summary-box__new-mexico": {
 		vizType: "summary_box",
 		primaryDataSheet: "state_data",
 		titleLabel: "State Overview",
@@ -76,7 +76,7 @@ let vizSettings = {
 		columns: ["value", "color_slider", "rank"],
 		vizVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ]
 	},
-	"care-index__summary-box__georgia": { 
+	"care-index__summary-box__georgia": {
 		vizType: "summary_box",
 		primaryDataSheet: "state_data",
 		titleLabel: "State Overview",
@@ -85,7 +85,7 @@ let vizSettings = {
 		columns: ["value", "color_slider", "rank"],
 		vizVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ]
 	},
-	"care-index__summary-box__illinois": { 
+	"care-index__summary-box__illinois": {
 		vizType: "summary_box",
 		primaryDataSheet: "state_data",
 		titleLabel: "State Overview",
@@ -94,7 +94,7 @@ let vizSettings = {
 		columns: ["value", "color_slider", "rank"],
 		vizVars: [ variables.cost_in_home_yearly, variables.cost_in_center_yearly, variables.average_cost, variables.cost_as_proportion_of_hhi, variables.cost_as_proportion_of_min_wage, variables.quality_total_norm, variables.availability_total_norm, variables.care_index_combined ]
 	},
-	"care-index__summary-box__massachusetts": { 
+	"care-index__summary-box__massachusetts": {
 		vizType: "summary_box",
 		primaryDataSheet: "state_data",
 		titleLabel: "State Overview",
@@ -114,5 +114,6 @@ let vizSettings = {
 
 module.exports = {
 	vizSettings: vizSettings,
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/bll/care_index.json"
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/bll/care_index.json",
+	downloadableSheets: ["state_data", "state_data_variables", "types_of_care", "who_pays_for_care"]
 }

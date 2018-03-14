@@ -27,7 +27,7 @@ let vizSettings = {
 		tooltipVars: [ variables.name, variables.primary_technological_tool, variables.tech_tool],
 		quantityLabel: "programs",
 		idVar: variables.name,
-		clickToProfile: { "variable": variables.name.variable, "url": "https://www.newamerica.org/in-depth/family-engagement-digital-age/program-profile/?" }	
+		clickToProfile: { "variable": variables.name.variable, "url": "https://www.newamerica.org/in-depth/family-engagement-digital-age/program-profile/?" }
 	},
 	"intel__national-initiatives": {
 		vizType: "pindrop_map",
@@ -60,7 +60,7 @@ let vizSettings = {
 				}
 			],
 			[
-				{ 
+				{
 					vizType: "pindrop_map",
 					primaryDataSheet: "program_locations",
 					isMessagePasser: true,
@@ -83,5 +83,6 @@ let vizSettings = {
 
 module.exports = {
 	vizSettings: vizSettings,
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/edpolicy/intel.json"
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/edpolicy/intel.json",
+	downloadableSheets: ["programs", "programs_variables", "program_locations"]
 }

@@ -96,7 +96,7 @@ let vizSettings = {
 		xVar: variables.state_spending_year,
 		barVar: variables.state_spending_total,
 		lineVar: variables.state_spending_per_student,
-		
+
 	},
 	"varying-degrees__federal-spending": {
 		vizType: "bar_line_combo",
@@ -126,5 +126,6 @@ let vizSettings = {
 module.exports = {
 	vizSettings: vizSettings,
 	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/edpolicy/varying_degrees.json",
-	externalScript: 'https://na-data-projects.s3.amazonaws.com/projects/varying_degrees-submodule.js'
+	externalScript: 'https://na-data-projects.s3.amazonaws.com/projects/varying_degrees-submodule.js',
+	downloadableSheets: ["funding", "state_spending", "fed_spending", "percent_fin_aid", "avg_student_race_ethnicity", "avg_student_age", "avg_student_full_part_time", "avg_student_school_type", "avg_student_dependents", "avg_student_learning_environment", "avg_student_gender", "avg_student_employment", "avg_student_financial_aid", "avg_student_housing"]
 }

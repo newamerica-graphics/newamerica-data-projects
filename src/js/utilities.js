@@ -28,6 +28,8 @@ import { DroneStrikesTargetsStackedBar } from "./chart_types/drone_strikes_targe
 
 const $ = require("jquery")
 const d3 = require("d3")
+const json2csv = require('json2csv');
+const JSZip = require("jszip");
 import { formatValue } from './helper_functions/format_value.js'
 
 export const whichChart = {
@@ -71,7 +73,9 @@ export const defaultClickToProfile = (profileName) => {
 export const setCSVZipLink = (dataJson) => {
 	var zip = new JSZip();
 
-	for (let sheetName of dataSheetNames) {
+	console.log(dataJson)
+
+	for (let sheetName of Object.keys(dataJson)) {
 		let fields = Object.keys(dataJson[sheetName][0]);
 
 		console.log("LENGTH IS")

@@ -4,9 +4,9 @@ let variables = {
 	type: {"variable":"type", "displayName":"Type", "format": "string", "scaleType":"categorical", "customDomain":["Tropical Storm", "Flood", "Snow/ Ice Storm", "Severe Weather", "Drought",  "Wildfire", "Tornado", "Hurricane"], "customRange":[colors.turquoise.light, colors.blue.light, colors.blue.dark, colors.purple.light, colors.red.light, colors.red.dark, colors.orange.light, colors.orange.dark]},
 	fema_description: {"variable":"fema_description", "displayName":"FEMA Description", "format": "string"},
 	end_date: {"variable":"end_date", "displayName":"End Date", "format": "date"},
-	start_date: {"variable":"start_date", "displayName":"Start Date", "format": "date"}, 
-	year: {"variable":"year", "displayName":"Year", "format": "year"}, 
-	month: {"variable":"month", "displayName":"Month", "format": "number"}, 
+	start_date: {"variable":"start_date", "displayName":"Start Date", "format": "date"},
+	year: {"variable":"year", "displayName":"Year", "format": "year"},
+	month: {"variable":"month", "displayName":"Month", "format": "number"},
 
 	category: {"variable":"category", "displayName":"Category", "format": "string"},
 
@@ -66,22 +66,22 @@ let vizSettings = {
         	title: variables.name,
         	subtitle: [variables.state],
         	categories: [
-        		{ 
-	        		fields: [variables.county_population, variables.unemployment, variables.poverty_line] 
+        		{
+	        		fields: [variables.county_population, variables.unemployment, variables.poverty_line]
 	        	},
-        		{ 
+        		{
 	        		label: "Population by Race",
-	        		fields: [variables.white_perc, variables.black_perc, variables.hisp_perc, variables.amin_perc, variables.asian_perc, variables.two_or_more_perc] 
+	        		fields: [variables.white_perc, variables.black_perc, variables.hisp_perc, variables.amin_perc, variables.asian_perc, variables.two_or_more_perc]
 	        	},
-	        	{ 
+	        	{
 	        		label: "Weather Profile",
-	        		fields: [variables.events_experienced] 
+	        		fields: [variables.events_experienced]
 	        	}
         	]
         }
     },
 	"weather-eye__st-louis__call-out": {
-		isReact: true, 
+		isReact: true,
 		vizType: "callout_box",
 		primaryDataSheet: "county_overview",
 		filterInitialDataFunction: d => d.name === "St Louis County",
@@ -165,7 +165,7 @@ let vizSettings = {
 		]
 	},
 	"weather-eye__caddo__call-out": {
-		isReact: true, 
+		isReact: true,
 		vizType: "callout_box",
 		primaryDataSheet: "county_overview",
 		filterInitialDataFunction: d => d.name === "Caddo County",
@@ -249,7 +249,7 @@ let vizSettings = {
 		]
 	},
 	"weather-eye__essex__call-out": {
-		isReact: true, 
+		isReact: true,
 		vizType: "callout_box",
 		primaryDataSheet: "county_overview",
 		filterInitialDataFunction: d => d.name === "Essex County",
@@ -333,7 +333,7 @@ let vizSettings = {
 		]
 	},
 	"weather-eye__walsh__call-out": {
-		isReact: true, 
+		isReact: true,
 		vizType: "callout_box",
 		primaryDataSheet: "county_overview",
 		filterInitialDataFunction: d => d.name === "Walsh County",
@@ -417,7 +417,7 @@ let vizSettings = {
 		]
 	},
 	"weather-eye__tulsa__call-out": {
-		isReact: true, 
+		isReact: true,
 		vizType: "callout_box",
 		primaryDataSheet: "county_overview",
 		filterInitialDataFunction: d => d.name === "Tulsa County",
@@ -501,7 +501,7 @@ let vizSettings = {
 		]
 	},
 	"weather-eye__st-louis__dot-chart": {
-		isReact: true, 
+		isReact: true,
 		vizType: "dot_chart",
 		primaryDataSheet: "st_louis",
 		colorSettings: { colorVar: variables.type, showLegend: true },
@@ -528,7 +528,7 @@ let vizSettings = {
 		]
 	},
 	"weather-eye__caddo__dot-chart": {
-		isReact: true, 
+		isReact: true,
 		vizType: "dot_chart",
 		primaryDataSheet: "caddo",
 		colorSettings: { colorVar: variables.type, showLegend: true },
@@ -555,7 +555,7 @@ let vizSettings = {
 		]
 	},
 	"weather-eye__walsh__dot-chart": {
-		isReact: true, 
+		isReact: true,
 		vizType: "dot_chart",
 		primaryDataSheet: "walsh",
 		colorSettings: { colorVar: variables.type, showLegend: true },
@@ -582,7 +582,7 @@ let vizSettings = {
 		]
 	},
 	"weather-eye__essex__dot-chart": {
-		isReact: true, 
+		isReact: true,
 		vizType: "dot_chart",
 		primaryDataSheet: "essex",
 		colorSettings: { colorVar: variables.type, showLegend: true },
@@ -609,7 +609,7 @@ let vizSettings = {
 		]
 	},
 	"weather-eye__tulsa__dot-chart": {
-		isReact: true, 
+		isReact: true,
 		vizType: "dot_chart",
 		primaryDataSheet: "tulsa",
 		colorSettings: { colorVar: variables.type, showLegend: true },
@@ -636,7 +636,7 @@ let vizSettings = {
 		]
 	},
 	"weather-eye__cumberland__dot-chart": {
-		isReact: true, 
+		isReact: true,
 		vizType: "dot_chart",
 		primaryDataSheet: "cumberland",
 		colorSettings: { colorVar: variables.type, showLegend: true },
@@ -663,7 +663,7 @@ let vizSettings = {
 		]
 	},
 	"weather-eye__findings__all": {
-		isReact: true, 
+		isReact: true,
 		vizType: "quote_scroller",
 		primaryDataSheet: "storm_quotes",
 		categoryDescriptionSheet: "storm_quotes_category_descriptions",
@@ -674,6 +674,6 @@ let vizSettings = {
 
 module.exports = {
 	vizSettings: vizSettings,
-	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/resourcesecurity/weather-eye.json"
+	dataUrl: "https://na-data-projects.s3.amazonaws.com/data/resourcesecurity/weather-eye.json",
+	downloadableSheets: ["county_overview", "st_louis", "walsh", "caddo", "essex", "tulsa", "cumberland", "storm_quotes"]
 }
-	
