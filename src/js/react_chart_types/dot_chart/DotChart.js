@@ -75,7 +75,7 @@ class DotChart extends React.Component {
     }
 
     getCurrWidth() {
-        return $(this.refs.renderingArea).width();
+        return $(this.refs.renderingArea).width() - 30;
     }
 
     getCurrLayout(data, layoutSettings, w) {
@@ -118,7 +118,7 @@ class DotChart extends React.Component {
             <Motion style={{currTransform: spring(currLayout.height - 27)}} >
                 {({currTransform}) => {
                     return (
-                        <g>
+                        <g transform="translate(15,0)">
                             <g className="dot-chart__axis-time" style={{transform: "translateY(" + currTransform + "px)"}}>
                                 <Axis {...axisPropsFromBandedScale(currLayout.axisScale)} format={(d) => { return d3.timeFormat("%Y")(d) }} style={{orient: BOTTOM}} />
                             </g>
@@ -136,21 +136,21 @@ class DotChart extends React.Component {
 
     getHistogramFixedIntervalAxis() {
         const { currLayout, currLayoutSettings, width } = this.state;
-        
+
         if (currLayoutSettings.isYearMonth) {
             let extents = d3.extent(this.data, d => d.year_month)
             extents = currLayoutSettings.fixedStartVal ? [currLayoutSettings.fixedStartVal, extents[1]] : extents
 
             extents = extents.map(d => Number(d.toString().slice(0,4)))
 
-            let range = getRange(extents[0] + 1, extents[1])
+            let range = currLayoutSettings.hideFirstLabel ? getRange(extents[0] + 1, extents[1]) : getRange(extents[0], extents[1])
             range = range.map(d => d + "01")
 
             return (
                 <Motion style={{currTransform: spring(currLayout.height)}} >
                     {({currTransform}) => {
                         return (
-                            <g>
+                            <g transform="translate(15,0)">
                                 <g className="dot-chart__axis-time" style={{transform: "translateY(" + currTransform + "px)"}}>
                                     <Axis {...axisPropsFromBandedScale(currLayout.xScale)} values={range} format={d => d.slice(0,4)} style={{orient: BOTTOM}} />
                                 </g>
@@ -171,7 +171,7 @@ class DotChart extends React.Component {
                 <Motion style={{currTransform: spring(currLayout.height)}} >
                     {({currTransform}) => {
                         return (
-                            <g>
+                            <g transform="translate(15,0)">
                                 <g className="dot-chart__axis-time" style={{transform: "translateY(" + currTransform + "px)"}}>
                                     <Axis {...axisPropsFromBandedScale(currLayout.xScale)} format={d => currLayoutSettings.axisLabelOverrideFunc ? currLayoutSettings.axisLabelOverrideFunc(d) : d} position={(d) => { return (d - 1)%tickInterval == 0 ? currLayout.xScale(d) + currLayout.xScale.bandwidth()/2 : -100 }} style={{orient: BOTTOM}} />
                                 </g>
@@ -193,7 +193,7 @@ class DotChart extends React.Component {
     getCategoryAxis() {
         const { currLayout, currLayoutSettings } = this.state;
         return (
-            <g>
+            <g transform="translate(15, 0)">
                 {currLayout.yScale.domain().map((d) => {
                     return (
                         <Motion style={{y:spring(currLayout.yScale(d))}} key={d}>
@@ -203,17 +203,17 @@ class DotChart extends React.Component {
                         </Motion>
                     )
                 })}
-                
+
             </g>
         )
     }
 
     toggleChartVals(newVals) {
         let newData;
-        
+
         let varName = this.props.vizSettings.colorSettings.colorVar.variable
         newData = this.data.filter((d) => { return newVals.indexOf(d[varName]) > -1 })
-        
+
         this.setState({
             currDataShown: newData,
             currLayout: this.getCurrLayout(newData, this.state.currLayoutSettings, this.state.width),
@@ -248,7 +248,7 @@ class DotChart extends React.Component {
 
     	if ((currClicked && currClicked == d) || (currHovered && currHovered == d)) {
     		return "black"
-    	} 
+    	}
     	return this.setFillColor(d)
     }
 
@@ -270,16 +270,16 @@ class DotChart extends React.Component {
         // layoutHeight += currLayoutSettings.annotationSheet ? 50 : 0;
 		return (
 			<div className="dot-chart" ref="renderingArea">
-                {layouts.length > 1 && 
-                    <LayoutSelector layouts={layouts} currSelected={currLayoutSettings} layoutChangeFunc={this.changeLayout.bind(this)} /> 
+                {layouts.length > 1 &&
+                    <LayoutSelector layouts={layouts} currSelected={currLayoutSettings} layoutChangeFunc={this.changeLayout.bind(this)} />
                 }
-                {colorSettings.showLegend && 
-                    <LegendCategorical valsShown={valsShown} toggleChartVals={this.toggleChartVals.bind(this)} colorScale={this.colorScale} orientation="horizontal-center"/> 
+                {colorSettings.showLegend &&
+                    <LegendCategorical valsShown={valsShown} toggleChartVals={this.toggleChartVals.bind(this)} colorScale={this.colorScale} orientation="horizontal-center"/>
                 }
 				{ currLayout &&
                     <div>
-    					<svg className="dot-chart__container" width="100%" height={layoutHeight + 30}>
-    						<g className="dot-chart__rendering-area" width={width} >
+    					<svg className="dot-chart__container" width="100%" height={layoutHeight + 45}>
+    						<g className="dot-chart__rendering-area" width={width} transform="translate(15,0)">
     							{currDataShown.map((d) => {
     								let style = currLayout.renderDot(d)
 
@@ -293,10 +293,10 @@ class DotChart extends React.Component {
                                                     <circle className={interaction == "click" ? "dot-chart__dot clickable" : "dot-chart__dot"}
                                                         cx={x} cy={y}
                                                         r={this.dotRadius}
-                                                        fill={fillColor} 
-                                                        stroke={strokeColor} 
-                                                        onClick={(e, b) => { e.stopPropagation(); return interaction == "click" ? this.clicked(d, x, y) : null; }} 
-                                                        onMouseOver={() => { return this.mouseover(d, x, y); }} 
+                                                        fill={fillColor}
+                                                        stroke={strokeColor}
+                                                        onClick={(e, b) => { e.stopPropagation(); return interaction == "click" ? this.clicked(d, x, y) : null; }}
+                                                        onMouseOver={() => { return this.mouseover(d, x, y); }}
                                                         onMouseOut={() => { return this.mouseout(d); }}/>
                                                 )
     										}}
@@ -308,9 +308,9 @@ class DotChart extends React.Component {
                         </svg>
                         {layoutAnnotations}
                     </div>
-					
+
 				}
-                
+
 				<Tooltip settings={this.state.tooltipSettings} />
 			</div>
 		)

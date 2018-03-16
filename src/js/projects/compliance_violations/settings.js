@@ -51,6 +51,7 @@ let vizSettings = {
 				xVar: variables.year_month,
 				sortingVar: variables.date,
 				isYearMonth: true,
+				hideFirstLabel: true
 			}
 		]
 	},
@@ -71,6 +72,7 @@ let vizSettings = {
 				xVar: variables.year_month,
 				sortingVar: variables.date,
 				isYearMonth: true,
+				hideFirstLabel: true
 			}
 		]
 	},
@@ -91,6 +93,7 @@ let vizSettings = {
 				xVar: variables.year_month,
 				sortingVar: variables.date,
 				isYearMonth: true,
+				hideFirstLabel: true
 			}
 		]
 	},
@@ -110,6 +113,7 @@ let vizSettings = {
 				xVar: variables.year_month,
 				sortingVar: variables.date,
 				isYearMonth: true,
+				hideFirstLabel: true
 			},
 			{
 				label: "Violations by Type",
