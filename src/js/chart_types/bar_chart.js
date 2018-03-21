@@ -15,7 +15,8 @@ let dataPointWidth = 7;
 
 export class BarChart {
 	constructor(vizSettings, imageFolderId) {
-		Object.assign(this, vizSettings)
+		Object.assign(this, vizSettings);
+		if(!this.groupingAxisLabelInterval) this.groupingAxisLabelInterval = {large: 1, medium: 1, small: 1};
 		this.margin = {top: 20, right: 20};
 		this.margin.left = this.customLeftMargin ? this.customLeftMargin : (this.showValueAxis ? 85 : 20);
 		this.margin.bottom = this.filterVars.length == 1 ? 50 : 30;
@@ -33,7 +34,7 @@ export class BarChart {
 		this.categoryVals = [];
 		let colorVals = [];
 		let colorLabels = [];
-		
+
 		for (let filterVar of this.filterVars) {
 			this.categoryVals.push(filterVar.variable);
 			colorVals.push(filterVar.color);
@@ -45,7 +46,7 @@ export class BarChart {
 			.domain(this.categoryVals)
 			.range(colorVals);
 
-		
+
 		if (this.filterVars.length > 1) {
 			this.legendSettings.id = this.id;
 			this.legendSettings.markerSettings = { shape:"rect", size:10 };
@@ -55,8 +56,8 @@ export class BarChart {
 		}
 
 		if (this.dataNest) {
-			let tooltipSettings = { 
-				"id":this.id, 
+			let tooltipSettings = {
+				"id":this.id,
 				"tooltipVars": [
 					{ variable: "key", displayName: "Year", format: "year" },
 					{ variable: "value", displayName: "Percent Radicalized Online", format: "percent" },
@@ -79,7 +80,7 @@ export class BarChart {
 		if (this.dataNest) {
 			this.setDataNest();
 		}
-	    
+
 	    this.setScaleDomains();
 	    this.setDimensions();
 	    this.setScaleRanges();
@@ -105,7 +106,7 @@ export class BarChart {
 
 		if (this.orientation === "horizontal") {
 			let maxBarHeight = 20;
-			let barHeight = this.w/15 < maxBarHeight ? this.w/15 : maxBarHeight 
+			let barHeight = this.w/15 < maxBarHeight ? this.w/15 : maxBarHeight
 			this.h = this.groupingScale.domain().length * this.filterVars.length * barHeight
 		} else {
 			this.h = 2*this.w/3;
@@ -197,7 +198,7 @@ export class BarChart {
 	renderAxes() {
 		this.groupingAxis = this.renderingArea.append("g")
 			.attr("class", "axis axis-x")
-			
+
 		if (this.filterVars.length == 1 && this.orientation != "horizontal") {
 			this.groupingAxisLabel = this.groupingAxis.append("text")
 				.attr("y", 50)
@@ -209,7 +210,7 @@ export class BarChart {
 		if (this.showValueAxis) {
 			this.valueAxis = this.renderingArea.append("g")
 				.attr("class", "y axis")
-		    
+
 		    if (this.orientation != "horizontal") {
 			    this.valueAxisLabel = this.valueAxis.append("text")
 					.attr("transform", "rotate(-90)")
@@ -257,9 +258,9 @@ export class BarChart {
 		this.groups
 			.attr("transform", (d) => {
 	      		if (this.orientation === "horizontal") {
-	      			return this.dataNest ? "translate(0, " + this.groupingScale(d.key) + ")" : "translate(0, " + this.groupingScale(d[this.groupingVar.variable]) + ")" ; 
+	      			return this.dataNest ? "translate(0, " + this.groupingScale(d.key) + ")" : "translate(0, " + this.groupingScale(d[this.groupingVar.variable]) + ")" ;
 	      		} else {
-	      			return this.dataNest ? "translate(" + this.groupingScale(d.key) + ",0)" : "translate(" + this.groupingScale(d[this.groupingVar.variable]) + ",0)" ; 
+	      			return this.dataNest ? "translate(" + this.groupingScale(d.key) + ",0)" : "translate(" + this.groupingScale(d[this.groupingVar.variable]) + ",0)" ;
 	      		}
 	      	});
 
@@ -329,7 +330,7 @@ export class BarChart {
 			d3.select(path)
 				.style("fill-opacity", .7);
 		}
-		
+
 		let mousePos = [];
 		mousePos[0] = eventObject.pageX;
 		mousePos[1] = eventObject.pageY;
@@ -354,7 +355,7 @@ export class BarChart {
 			d3.select(path)
 				.style("fill-opacity", 1);
 		}
-		
+
 
 	    this.tooltip.hide();
 	}

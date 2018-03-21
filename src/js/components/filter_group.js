@@ -26,7 +26,7 @@ export class FilterGroup {
 			.attr("class", "filter-group__variable-container");
 
 		if (this.filterGroupSettings && this.filterGroupSettings.mobileSelectBox) {
-			filterContainer.classed("has-mobile-select", true);
+			this.filterContainer.classed("has-mobile-select", true);
 			this.mobileSelectBox = d3.select(this.id)
 				.append("select")
 				.attr("class", "select-box filter-group__mobile-select-box");
@@ -37,13 +37,14 @@ export class FilterGroup {
 		this.listenerFunc = listenerFunc
 		this.mobileSelectBox ? this.renderMobileSelectBox(listenerFunc) : null;
 
-		this.categoryDivs = this.categoryContainer.selectAll("p")
-			.data(this.categoryNest)
-			.enter().append("p")
-			.classed("filter-group__category", true)
-			.classed("active", (d, i) => i === 0)
-			.text(d => d.key)
-			.on("click", (d, i) => this.changeCategory(d, i));
+		if(this.categoryContainer){
+			this.categoryDivs = this.categoryContainer.selectAll("p")
+				.data(this.categoryNest)
+				.enter().append("p")
+				.classed("filter-group__category", true)
+				.classed("active", (d, i) => i === 0)
+				.text(d => d.key)
+				.on("click", (d, i) => this.changeCategory(d, i));
 
 		this.filterLists = this.filterContainer.selectAll("ul")
 			.data(this.categoryNest)
@@ -59,6 +60,7 @@ export class FilterGroup {
 			.classed("active", (d, i) => i === 0)
 			.text(d => d.displayName)
 			.on("click", (d, i) => this.changeFilter(d, i))
+		}
 	}
 
 	changeCategory(newCategory, newCategoryIndex) {

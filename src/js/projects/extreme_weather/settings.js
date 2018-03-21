@@ -124,6 +124,7 @@ let vizSettings = {
 		primaryDataSheet: "event_types",
 		groupingVar: variables.storm_type,
 		filterVars: [ variables.frequency, variables.average_cost],
+		groupingAxisLabelInterval: {large: 1, medium: 3, small: 3},
 		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
 		xAxisLabelInterval: {"small": 2, "medium": 1, "large": 1},
 		labelValues: true,
@@ -132,6 +133,7 @@ let vizSettings = {
 	"extreme-weather__events-year-counts": {
 		vizType: "bar_chart",
 		primaryDataSheet: "events_year_counts",
+		groupingAxisLabelInterval: {large: 4, medium: 6, small: 12},
 		groupingVar: variables.year_counts_year,
 		filterVars: [ variables.year_counts_count ],
 		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},

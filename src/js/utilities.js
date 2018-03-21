@@ -73,17 +73,11 @@ export const defaultClickToProfile = (profileName) => {
 export const setCSVZipLink = (dataJson) => {
 	var zip = new JSZip();
 
-	console.log(dataJson)
-
 	for (let sheetName of Object.keys(dataJson)) {
+		if(!dataJson[sheetName]) continue;
 		let fields = Object.keys(dataJson[sheetName][0]);
 
-		console.log("LENGTH IS")
-		console.log(dataJson[sheetName].length)
-
 		let csvString = json2csv({ data: dataJson[sheetName], fields: fields });
-
-		console.log(csvString.length);
 
 		zip.file(sheetName + ".csv", csvString);
 	}

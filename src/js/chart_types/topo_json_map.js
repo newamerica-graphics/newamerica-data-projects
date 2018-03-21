@@ -20,8 +20,8 @@ export class TopoJsonMap {
 		Object.assign(this, vizSettings);
 
 		this.currFilter = this.filterVars[0];
-		
-		if (this.interaction == "click") { this.currClicked == null}; 
+
+		if (this.interaction == "click") { this.currClicked == null};
 
 		this.defaultFill = this.defaultFill ? this.defaultFill : "#fff";
 
@@ -70,7 +70,7 @@ export class TopoJsonMap {
 	setGeometry(geometryType) {
 		this.geometryPromise = new Promise((resolve, reject) => {
 			let filename = geometryType === "world" ? "world.json" : "us.json";
-			
+
 			d3.json("https://na-data-projects.s3.amazonaws.com/geography/" + filename, (error, data) => {
 				let retGeom;
 
@@ -84,7 +84,7 @@ export class TopoJsonMap {
 			})
 
 		})
-			
+
 	}
 
 	setDimensions() {
@@ -137,7 +137,7 @@ export class TopoJsonMap {
 				.scale(scalingFactor)
 				.translate([translateX, this.h/2]);
 		}
-		
+
 	}
 
 	render(data) {
@@ -150,12 +150,13 @@ export class TopoJsonMap {
 			this.setScale();
 			this.bindDataToGeom();
 			this.buildGraph();
+			console.log(this.paths)
 			this.legendSettings ? this.setLegend() : null;
 			if (!this.hideFilterGroup) {
 				this.filterGroup ? this.setFilterGroup() : null;
 			}
 		})
-		
+
 	}
 
 	setScale() {
@@ -178,6 +179,7 @@ export class TopoJsonMap {
 	}
 
 	buildGraph() {
+
 		this.paths = this.g.selectAll("path")
 		   .data(this.geometry)
 		   .enter()
@@ -227,7 +229,7 @@ export class TopoJsonMap {
 	   			if (splitVals.length > 1) {
 	   				let id = d.data[this.geometryVar.variable];
 	   				this.svgDefs = defineFillPattern(splitVals, id, this.colorScale, this.svgDefs, "polygon");
-					
+
 	   				return "url(#pattern" + id + ")";
 	   			}
 	   		}
@@ -258,7 +260,7 @@ export class TopoJsonMap {
 		this.filterGroup.render(this.changeFilter.bind(this));
 	}
 
-	
+
 	resize() {
 		this.setDimensions();
 		this.paths.attr("d", (d) => {return this.addSmallStateInsets && d.id == 11 ? this.smallStateCirclePathGenerator() : this.pathGenerator(d)});
@@ -266,6 +268,7 @@ export class TopoJsonMap {
 	}
 
 	changeFilter(newFilter) {
+		if(!this.paths) return;
 		this.currFilter = newFilter;
 
 		this.setScale();
@@ -341,7 +344,7 @@ export class TopoJsonMap {
 			if (!datum.data || !datum.data[this.currFilter.variable]) {
 				return;
 			}
-		} 
+		}
 		if (this.currClicked != path) {
 			d3.select(path)
 				.style("stroke", this.stroke.hoverColor || "white")
@@ -354,7 +357,7 @@ export class TopoJsonMap {
 			mousePos[0] = eventObject.pageX;
 			mousePos[1] = eventObject.pageY;
 			this.dashboardChangeFunc ? this.dashboardChangeFunc({dataPoint: datum.data, color: d3.select(path).style("fill"), currFilter: this.currFilter}, this) : null;
-			
+
 			this.tooltip ? this.tooltip.show(datum.data, mousePos, this.currFilter, d3.select(path).style("fill")) : null;
 		}
 	}
@@ -430,5 +433,5 @@ export class TopoJsonMap {
 		  .style("stroke-width", 1.5 / k + "px")
 		  .on("end", () => { return this.centered ? this.tooltip.show(datum.data, [this.w / 2 + 30, this.h / 2]) : null; })
 	}
-			
+
 }
