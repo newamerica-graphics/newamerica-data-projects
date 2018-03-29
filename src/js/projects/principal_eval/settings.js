@@ -36,7 +36,7 @@ let vizSettings = {
 		addSmallStateInsets: true,
 		// tooltipShowOnly: "same category",
 		filterGroupSettings: {"hidden": false},
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/instructional-leaderships-standards/state-profile/?" }
+		clickToProfile: { "variable": variables.state.variable, "url": " https://www.newamerica.org/in-depth/mapping-instructional-leadership/state-profile/?" }
 	},
 	"principal-eval__coded-standards-map": {
 		vizType: "topo_json_map",
@@ -50,7 +50,7 @@ let vizSettings = {
 		addSmallStateInsets: true,
 		// tooltipShowOnly: "same category",
 		filterGroupSettings: {"hidden": false},
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/instructional-leaderships-standards/state-profile/?" }
+		clickToProfile: { "variable": variables.state.variable, "url": " https://www.newamerica.org/in-depth/mapping-instructional-leadership/state-profile/?" }
 	},
 	"principal-eval__teacher-support": {
 		vizType: "category_breakdown",
@@ -58,7 +58,7 @@ let vizSettings = {
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.teacher_support ],
 		labelVar: variables.state_abbrev,
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/instructional-leaderships-standards/state-profile/?" },
+		clickToProfile: { "variable": variables.state.variable, "url": " https://www.newamerica.org/in-depth/mapping-instructional-leadership/state-profile/?" },
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
@@ -68,7 +68,7 @@ let vizSettings = {
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.curriculum_and_instruction ],
 		labelVar: variables.state_abbrev,
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/instructional-leaderships-standards/state-profile/?" },
+		clickToProfile: { "variable": variables.state.variable, "url": " https://www.newamerica.org/in-depth/mapping-instructional-leadership/state-profile/?" },
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
@@ -78,7 +78,7 @@ let vizSettings = {
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.evidence_based_decision_making ],
 		labelVar: variables.state_abbrev,
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/instructional-leaderships-standards/state-profile/?" },
+		clickToProfile: { "variable": variables.state.variable, "url": " https://www.newamerica.org/in-depth/mapping-instructional-leadership/state-profile/?" },
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
@@ -88,7 +88,7 @@ let vizSettings = {
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.school_learning_culture ],
 		labelVar: variables.state_abbrev,
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/instructional-leaderships-standards/state-profile/?" },
+		clickToProfile: { "variable": variables.state.variable, "url": " https://www.newamerica.org/in-depth/mapping-instructional-leadership/state-profile/?" },
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
@@ -105,7 +105,7 @@ let vizSettings = {
 		addSmallStateInsets: true,
 		// tooltipShowOnly: "same category",
 		filterGroupSettings: {"hidden": false},
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/instructional-leaderships-standards/state-profile/?" }
+		clickToProfile: { "variable": variables.state.variable, "url": " https://www.newamerica.org/in-depth/mapping-instructional-leadership/state-profile/?" }
 	},
 	"principal-eval__tiers": {
 		vizType: "category_breakdown",
@@ -113,7 +113,7 @@ let vizSettings = {
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.tier ],
 		labelVar: variables.state_abbrev,
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/instructional-leaderships-standards/state-profile/?" },
+		clickToProfile: { "variable": variables.state.variable, "url": " https://www.newamerica.org/in-depth/mapping-instructional-leadership/state-profile/?" },
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
@@ -130,7 +130,7 @@ let vizSettings = {
 		defaultFill: colors.grey.light,
 		// tooltipShowOnly: "same category",
 		filterGroupSettings: {"hidden": false},
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/instructional-leaderships-standards/state-profile/?" }
+		clickToProfile: { "variable": variables.state.variable, "url": " https://www.newamerica.org/in-depth/mapping-instructional-leadership/state-profile/?" }
 	},
 	"principal-eval__trainings-and-resources": {
 		vizType: "category_breakdown",
@@ -138,7 +138,7 @@ let vizSettings = {
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.training_and_resources ],
 		labelVar: variables.state_abbrev,
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/instructional-leaderships-standards/state-profile/?" },
+		clickToProfile: { "variable": variables.state.variable, "url": " https://www.newamerica.org/in-depth/mapping-instructional-leadership/state-profile/?" },
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
@@ -148,7 +148,7 @@ let vizSettings = {
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.additional_staff ],
 		labelVar: variables.state_abbrev,
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/instructional-leaderships-standards/state-profile/?" },
+		clickToProfile: { "variable": variables.state.variable, "url": " https://www.newamerica.org/in-depth/mapping-instructional-leadership/state-profile/?" },
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
@@ -158,7 +158,7 @@ let vizSettings = {
 		dotSettings: { "width": 30, "offset": 5},
 		filterVars: [ variables.organizing_networks ],
 		labelVar: variables.state_abbrev,
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/instructional-leaderships-standards/state-profile/?" },
+		clickToProfile: { "variable": variables.state.variable, "url": " https://www.newamerica.org/in-depth/mapping-instructional-leadership/state-profile/?" },
 		idVar: variables.state_id,
 		quantityLabel: "states",
 	},
