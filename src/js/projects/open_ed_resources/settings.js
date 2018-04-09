@@ -30,6 +30,7 @@ let vizSettings = {
 		filterVars: [ variables.placeholder_val ],
 		tooltipVars: [ variables.district, variables.state, variables.grade_level_band, variables.content_area ],
 		filterGroupSettings: {"hidden": true},
+		applyForce: true
 	},
 	"open-ed-resources__oer-resources": {
 		primaryDataSheet: "oer",

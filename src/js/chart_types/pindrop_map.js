@@ -21,7 +21,7 @@ let topojson = require("topojson");
 export class PinDropMap {
 	constructor(vizSettings) {
 		Object.assign(this, vizSettings);
-		
+
 		this.currFilter = this.filterVars[0];
 		this.zoomRatio = 1;
 
@@ -70,7 +70,7 @@ export class PinDropMap {
 	setGeometry(geometryType) {
 		this.geometryPromise = new Promise((resolve, reject) => {
 			let filename = geometryType === "world" ? "world.json" : "us.json";
-			
+
 			d3.json("https://na-data-projects.s3.amazonaws.com/geography/" + filename, (error, data) => {
 				let retGeom;
 
@@ -204,13 +204,13 @@ export class PinDropMap {
 	setupForceLayout() {
 		this.forceLayout = d3.forceSimulation(this.data)
 			.force("force-x", d3.forceX((d) => {
-				return this.projection([d.long, d.lat])[0];
+				return this.projection([d.long, d.lat]) ? this.projection([d.long, d.lat])[0] : null;
 			}))
 			.force("force-y", d3.forceY((d) => {
-				return this.projection([d.long, d.lat])[1];
+				return this.projection([d.long, d.lat]) ? this.projection([d.long, d.lat])[1] : null;
 			}))
 			.force("collide", d3.forceCollide((d) => {
-				return this.radiusScale ? this.radiusScale(d[this.radiusVar.variable]) : this.pinRadius; 
+				return this.radiusScale ? this.radiusScale(d[this.radiusVar.variable]) : this.pinRadius;
 			}).strength(.5))
 
 		this.forceLayout.on("tick", (a, b, c) => {
@@ -237,7 +237,7 @@ export class PinDropMap {
 	setFilterGroup() {
 		this.filterGroup.render(this.changeFilter.bind(this));
 	}
-	
+
 	resize() {
 		this.setDimensions();
 		this.paths.attr("d", (d) => { return this.pathGenerator(d) });
@@ -253,7 +253,7 @@ export class PinDropMap {
 
 			this.forceLayout.restart()
 			this.forceLayout.alpha(1)
-			
+
 		} else {
 			this.points
 				.attr("cx", (d) => { return this.projection([d.long, d.lat])[0]; })
@@ -278,7 +278,7 @@ export class PinDropMap {
 
 		this.points
 			.attr("stroke-width", (d) => { return datum == d ? 2/this.zoomRatio : 1/this.zoomRatio})
-		
+
 		this.tooltip ? this.tooltip.show(datum, mousePos, this.currFilter, d3.select(path).attr("fill")) : null;
 	}
 
@@ -354,7 +354,7 @@ export class PinDropMap {
 			this.zoomOutPrompt.style("display", "none");
 			this.legend.setOrientation("vertical-right", true);
 		}
-		  
+
 
 		this.g.transition()
 		  .duration(750)
@@ -385,5 +385,5 @@ export class PinDropMap {
 
 		this.legend ? this.legend.toggleValsShown("all") : null;
 	}
-			
+
 }
