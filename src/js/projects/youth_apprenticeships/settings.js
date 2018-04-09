@@ -18,13 +18,12 @@ let vizSettings = {
 		stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "1", hoverOpacity: ".6"},
 		filterVars: [ variables.state_category],
 		tooltipVars: [ variables.state, variables.program_type, variables.program_desc_1],
-		defaultFill: colors.grey.medium,
+		defaultFill: colors.grey.medium_light,
 		legendSettings: {"orientation": "vertical-right", "showTitle": false},
 		addSmallStateInsets: false,
 		filterGroupSettings: {"hidden": true},
-		clickToProfile: { "variable": variables.state.variable, "url": " https://www.newamerica.org/in-depth/mapping-instructional-leadership/state-profile/?" }
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/youth-apprenticeships/state-profile/?" }
 	},
-
 }
 
 module.exports = {
