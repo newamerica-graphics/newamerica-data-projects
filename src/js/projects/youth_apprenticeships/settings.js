@@ -22,7 +22,7 @@ let vizSettings = {
 		legendSettings: {"orientation": "vertical-right", "showTitle": false},
 		addSmallStateInsets: false,
 		filterGroupSettings: {"hidden": true},
-		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/youth-apprenticeships/state-profile/?" }
+		clickToProfile: { "variable": variables.state.variable, "url": "https://www.newamerica.org/in-depth/youth-apprenticeship/state-profile/?" }
 	},
 }
 
