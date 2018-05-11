@@ -94,7 +94,7 @@ let vizSettings = {
 		colorSettings: { colorVar: variables.category, showLegend: true },
 		tooltipTitleVar: variables.title,
 		tooltipVars: [variables.state, variables.category, variables.processed_date, variables.description],
-		dotScaleRange: [1, 4],
+		dotScaleRange: [1, 3],
 		interaction: "mouseover",
 		layouts: [
 			{
