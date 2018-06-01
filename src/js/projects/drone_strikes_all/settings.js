@@ -13,6 +13,7 @@ let variables = {
 	geo_lon: {"variable":"geo_lon", "displayName":"Longitude", "format": "number"},
 	village: {"variable":"village", "displayName":"Village", "format": "string"},
 	region: {"variable":"region", "displayName":"Region", "format": "string"},
+	city_district: {"variable":"city_district", "displayName":"City District", "format": "string"},
 	total_avg: {"variable":"total_avg", "displayName":"Total Casualties", "format": "integer", "color": colors.turquoise.light, "scaleType": "linear"},
 	civilians_avg: {"variable":"civilians_avg", "displayName":"Civilians", "format": "integer", "color": colors.blue.medium},
 	unknown_avg: {"variable":"unknown_avg", "displayName":"Unknown", "format": "integer", "color": colors.grey.medium},
@@ -36,6 +37,8 @@ let variables = {
 	leader_description: {"variable":"leader_description", "displayName":"Leader Description", "format": "string"},
 	leaders_killed: {"variable":"leaders_killed", "displayName":"Leaders Killed", "format": "number", "scaleType": "linear"},
 	strike_type: {"variable":"strike_type", "displayName":"Strike Type", "format": "string", "scaleType": "categorical", "customDomain": ["Drone Strike", "Air Strike", "Ground Operation", "Surveillance Operation"], "customRange": [colors.turquoise.light, colors.blue.light, colors.purple.light, colors.red.medium]},
+	belligerent_combined: {"variable":"belligerent_combined", "displayName":"Belligerent", "format": "string", "scaleType": "categorical", "customDomain": ["LNA", "GNA", "GNC", "Egypt", "UAE", "Israel", "US", "France", "Contested", "Unknown"], "customRange": [colors.turquoise.light, colors.turquoise.dark, colors.blue.light, colors.blue.dark, colors.purple.light, colors.purple.dark, colors.orange.light, colors.orange.dark, colors.grey.dark, colors.grey.medium]},
+
 
 	pk_total_strikes: {"variable":"pk_total_strikes", "displayName":"Total Strikes", "format": "number"},
 	pk_civilians_lowhigh: {"variable":"pk_civilians_lowhigh", "displayName":"Civilian Casualties", "format": "string", "disableTableOrdering": true},
@@ -52,6 +55,18 @@ let variables = {
 	sm_militants_lowhigh: {"variable":"sm_militants_lowhigh", "displayName":"Militant Casualties", "format": "string", "disableTableOrdering": true},
 	sm_unknown_lowhigh: {"variable":"sm_unknown_lowhigh", "displayName":"Unknown Casualties", "format": "string", "disableTableOrdering": true},
 	sm_total_lowhigh: {"variable":"sm_total_lowhigh", "displayName":"Total Casualties", "format": "string", "disableTableOrdering": true},
+	lb_total_strikes: {"variable":"lb_total_strikes", "displayName":"Total Strikes", "format": "number"},
+	lb_civilians_lowhigh: {"variable":"lb_civilians_lowhigh", "displayName":"Civilian Casualties", "format": "string", "disableTableOrdering": true},
+	lb_militants_lowhigh: {"variable":"lb_militants_lowhigh", "displayName":"Militant Casualties", "format": "string", "disableTableOrdering": true},
+	lb_unknown_lowhigh: {"variable":"lb_unknown_lowhigh", "displayName":"Unknown Casualties", "format": "string", "disableTableOrdering": true},
+	lb_total_lowhigh: {"variable":"lb_total_lowhigh", "displayName":"Total Casualties", "format": "string", "disableTableOrdering": true},
+	belligerent: {"variable":"belligerent", "displayName":"Belligerent", "format": "string"},
+
+	us_strikes_year: {"variable":"year", "displayName":"Year", "format":"string", "scaleType":"categorical"},
+	us_strikes_strikes: {"variable":"strikes", "displayName":"Strikes", "format":"number", "color": colors.turquoise.light},
+	us_strikes_casualties: {"variable":"casualties", "displayName":"Casualties", "format":"number", "scaleType":"linear", "color": colors.blue.medium},
+
+
 }
 
 const casualtyTypeNestDataFunction = (data, filterVar) => {
@@ -785,6 +800,93 @@ let vizSettings = {
 			}
 		]
 	},
+	"drone-strikes__libya__strike-map": {
+		vizType: "tabbed_chart_layout",
+		primaryDataSheet: "libya_strikes",
+		tabIcons: ["globe", "table"],
+		chartSettingsList: [
+			{
+				vizType: "mapbox_map",
+				// filterInitialDataBy: { field: "country", value:"Pakistan"},
+		        mapboxSettings: {
+		        	style: "mapbox://styles/newamericamapbox/ciynaplyx001k2sqepxshx05u",
+		        	center: [17.5, 31],
+		        	zoom: 5,
+		        	maxBounds: [
+		        		[5, 17],
+		        		[35, 37]
+		        	],
+		        },
+		        colorVar: variables.belligerent_combined,
+		        radiusVar: variables.total_avg,
+		        showLegend: true,
+		        sliderSettings: {
+					sliderVar: variables.year,
+					showAllButton: true,
+					automated: false,
+		        },
+		        dataBoxVars: {
+		        	title: variables.date,
+		        	subtitle: [variables.village, variables.city_district],
+		        	categories: [
+			        	{
+			        		label: "Target",
+			        		fields: [variables.target_description]
+			        	},
+			        	{
+			        		label: "Casualties",
+			        		fields: [variables.civilians_lowhigh, variables.militants_lowhigh, variables.unknown_lowhigh, variables.total_lowhigh]
+			        	},
+			        	{
+			        		label: "Sources",
+			        		fields: [variables.sources_combined]
+			        	}
+		        	],
+		        }
+		    },
+		    {
+				vizType: "table",
+				tableVars: [ variables.date, variables.village, variables.city_district, variables.belligerent_combined, variables.target_description, variables.civilians_avg, variables.militants_avg, variables.unknown_avg, variables.total_avg, variables.sources_combined],
+				defaultOrdering: [0, "desc"],
+				pagination: true,
+				numPerPage: 10,
+				colorScaling: false
+			}
+		]
+	},
+	"drone-strikes__libya__strike-totals-by-belligerent": {
+		primaryDataSheet: "libya_strikes_by_belligerent",
+		vizType: "table",
+		tableVars: [ variables.belligerent, variables.lb_total_strikes, variables.lb_civilians_lowhigh, variables.lb_militants_lowhigh, variables.lb_unknown_lowhigh, variables.lb_total_lowhigh],
+		defaultOrdering: [0, "desc"],
+		pagination: false,
+		numPerPage: 10,
+		colorScaling: false,
+		disableSearching: true,
+	 	disableOrdering: true
+	},
+	"drone-strikes__libya__by-belligerent": {
+		vizType: "stacked_bar",
+		primaryDataSheet: "libya_strikes",
+		dataNestFunction: strikesNestDataFunction,
+		xVar: variables.year,
+		filterVar: variables.belligerent_combined,
+		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
+		xAxisLabelInterval: {"small": 5, "medium": 2, "large": 1},
+		yAxisLabelText: "Strikes",
+		showYAxis: true,
+		tooltipColorVals: true,
+	},
+	"drone-strikes__libya__us-strikes": {
+		vizType: "bar_chart",
+		primaryDataSheet: "libya_us_strikes",
+		groupingVar: variables.us_strikes_year,
+		filterVars: [ variables.us_strikes_strikes, variables.us_strikes_casualties],
+		legendSettings: {"orientation": "horizontal-center", "showTitle": false, "disableValueToggling": false},
+		groupingAxisLabelInterval: {"small": 1, "medium": 1, "large": 1},
+		labelValues: true,
+		showYAxis: false
+	},
 	"drone-strikes__yemen__call-out-data": {
 		isReact: true,
 		vizType: "callout_box",
@@ -1001,7 +1103,7 @@ let vizSettings = {
 										{ label: "Civilians", type: "value", variable: variables.civilians_lowhigh, query: {varName:"date", operation:"max"} },
 										{ label: "Unknown", type: "value", variable: variables.unknown_lowhigh, query: {varName:"date", operation:"max"} }
 									]},
-									{ label: "Target organization", type: "value", variable: variables.target_organization_name, query: {varName:"date", operation:"max"} }
+									{ label: "Belligerent", type: "value", variable: variables.belligerent_combined, format: "string", query: {varName:"date", operation:"max"} },
 								],
 							},
 							{
@@ -1072,6 +1174,7 @@ const preProcessData = (data) => {
 		})
 	})
 
+	console.log(data)
 
 	return data;
 }

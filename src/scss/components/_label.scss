@@ -5,5 +5,6 @@
 
 	&__value {
 		@include chart-secondary-text;
+		transform: none !important;
 	}
 }

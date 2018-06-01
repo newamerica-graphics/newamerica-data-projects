@@ -39,7 +39,7 @@ export class Slider {
 		this.valueDisplay = d3.select(this.id)
 			.append("div")
 			.attr("class", "slider__value-display");
-		
+
 		if(this.showAllButton) {
 			this.containerDiv
 				.classed("has-show-all", true);
@@ -48,12 +48,12 @@ export class Slider {
 				.append("div")
 				.attr("class", "slider__button show-all selected")
 				.html(animationButtonIcons.showAll)
-				.on("click", () => { 
-					this.showAll.classed("selected", true); 
-					this.handle.classed("hidden", true); 
+				.on("click", () => {
+					this.showAll.classed("selected", true);
+					this.handle.classed("hidden", true);
 					this.changeValueDisplay("All");
 					this.toggleAnimation(this.scale.range()[0], "pause");
-					this.filterChangeFunction("all"); 
+					this.filterChangeFunction("all");
 				});
 		}
 
@@ -67,7 +67,7 @@ export class Slider {
 		this.svg = this.containerDiv
 			.append("svg")
 			.attr("class", "slider")
-			
+
 		this.slider = this.svg.append("g")
 			.attr("transform", "translate(0, 20)");
 
@@ -103,7 +103,7 @@ export class Slider {
 
 	setDimensions() {
 		this.w = $(this.id + " > .slider-div").width();
-		
+
 		this.svg
 			.attr("width", "100%")
 			.attr("height", this.h + 30);
@@ -122,6 +122,7 @@ export class Slider {
 		}
 
 		let numTicks = this.w > 600 ? 15 : 5;
+		numTicks = numTicks > this.scale.domain().length ? this.scale.domain().length : numTicks;
 
 		let axis = d3.axisBottom(this.scale)
 			.ticks(numTicks, "f")
@@ -141,7 +142,7 @@ export class Slider {
 		} else {
 			this.data = data[this.primaryDataSheet];
 		}
-		
+
 		let dataExtents = d3.extent(this.data, (d) => { return Number(d[this.sliderVar.variable]) != 0 ? Number(d[this.sliderVar.variable]) : null; });
 		this.scale.domain([dataExtents[0], dataExtents[1]]);
 		this.sliderVal = dataExtents[0];
@@ -150,7 +151,7 @@ export class Slider {
 		this.currAnimationVal = this.scale.range()[0];
 
 		this.changeValueDisplay("All");
- 
+
 		this.track.call(d3.drag()
 	        .on("start.interrupt", () => { this.slider.interrupt(); })
 	        .on("start drag", () => { this.showAll ? this.showAll.classed("selected", false) : null; this.handle.classed("hidden", false); this.animationState == "playing" ? this.toggleAnimation(d3.event.x) : null; this.dragEvent(d3.event.x); }));
@@ -160,7 +161,7 @@ export class Slider {
 	        .on("start.interrupt", () => { this.slider.interrupt(); })
 	        .on("start drag",() => { this.showAll ? this.showAll.classed("selected", false) : null; this.handle.classed("hidden", false); this.dragEvent(d3.event.x); }));
 	        // .on("end", () => { this.endEvent(d3.event.x); }));
-		
+
 		this.containerDiv.selectAll(".slider .tick > text")
 			.style("cursor", "pointer")
 			.on("click", (d) => {
@@ -199,7 +200,7 @@ export class Slider {
 			this.animationState = "paused";
 			this.currAnimationVal = newAnimationVal;
 			window.clearInterval(this.intervalFunction);
-			
+
 			this.animationButton
 				.html(animationButtonIcons.play)
 		} else {
@@ -221,7 +222,7 @@ export class Slider {
 						this.changeValueDisplay("All");
 						this.toggleAnimation(this.scale.range()[0]);
 					}
-					
+
 					return;
 				}
 				this.dragEvent(this.currAnimationVal);
@@ -263,7 +264,7 @@ export class Slider {
 		}
 		this.valueDisplay.text(value);
 	}
-	
+
 	resize() {
 		this.setDimensions();
 		// halts animation when resized

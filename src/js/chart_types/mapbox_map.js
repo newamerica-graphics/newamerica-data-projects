@@ -23,7 +23,7 @@ export class MapboxMap {
         //     alert('Your browser does not support Mapbox GL');
         //     return;
         // }
-        
+
         Object.assign(this, vizSettings);
 
         this.mapContainer = d3.select(this.id).append("div")
@@ -133,7 +133,7 @@ export class MapboxMap {
             if (this.hasHover) {
                 this.map.on('mousemove', (e) => {
                     let features = this.map.queryRenderedFeatures(e.point, { layers: ['points'] });
-                    
+
 
                     if (!features.length) {
                         this.map.setFilter("points-selected", ["==", "id", ""]);
@@ -157,7 +157,7 @@ export class MapboxMap {
 
             this.map.on('click', (e) => {
                 let features = this.map.queryRenderedFeatures(e.point, { layers: ['points'] });
-                
+
                 if (!features.length) {
                     this.map.setFilter("points-selected", ["==", "id", ""]);
                     this.dataBox.hide();
@@ -170,7 +170,7 @@ export class MapboxMap {
                     this.overrideClickFunction(features[0].properties)
                 } else {
                     this.dataBox.show(features[0].properties, this.h);
-                    
+
                     let newZoom = this.map.getZoom() < 7 ? 7 : this.map.getZoom();
                     this.map.flyTo({
                         center: e.lngLat,
@@ -211,7 +211,7 @@ export class MapboxMap {
 
     setColorScale(data) {
         this.colorScale = getColorScale(data, this.colorVar);
-        
+
         this.colorStops = [];
         for (let i = 0; i < this.colorScale.domain().length; i++) {
             this.colorStops.push([this.colorScale.domain()[i], this.colorScale.range()[i]]);
@@ -280,13 +280,13 @@ export class MapboxMap {
 
         legendCells.append("h5")
             .attr("class", "mapbox-map__legend__cell-label")
-            .text((d) => { return d[0]; }); 
+            .text((d) => { return d[0]; });
     }
 
     setLegendPropCircleContents() {
         let width = 80,
             height = 90;
-        
+
         let svg = this.propCircleContainer
             .append("div")
             .attr("class", "mapbox-map__legend__proportional-circle__wrapper")
