@@ -12,14 +12,21 @@ export const getValue = (variableSettings, data) => {
 			if (query) {
 				if (query.operation == "max") {
 					let sortedData = data.sort((a, b) => {return Date.parse(b[query.varName]) - Date.parse(a[query.varName]); });
-					
+
 					return formatValue(sortedData[0][variable.variable], variable.format);
 				}
 			} else {
 				return formatValue(data[variable.variable], variable.format);
 			}
 		case "sum":
+		if (query) {
+			let filterFunc = getFilterFunc(query);
+			let filteredList = data.filter((d) => { return filterFunc(d); })
+
+			return formatValue(d3.sum(filteredList, (d) => { return d[variable.variable]; }), variable.format);
+		} else {
 			return formatValue(d3.sum(data, (d) => { return d[variable.variable]; }), variable.format);
+		}
 
 		case "count":
 			if (query) {
