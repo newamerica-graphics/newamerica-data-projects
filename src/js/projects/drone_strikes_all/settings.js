@@ -858,7 +858,7 @@ let vizSettings = {
 		    },
 		    {
 				vizType: "table",
-				tableVars: [ variables.date, variables.village, variables.city_district, variables.belligerent_combined, variables.target_description, variables.civilians_avg, variables.militants_avg, variables.unknown_avg, variables.total_avg, variables.sources_combined],
+				tableVars: [ variables.date, variables.village, variables.city_district, variables.belligerent_combined, variables.civilians_avg, variables.militants_avg, variables.total_avg, variables.sources_combined],
 				defaultOrdering: [0, "desc"],
 				pagination: true,
 				numPerPage: 25,
