@@ -22,6 +22,7 @@ import { ComparativeDotHistogram } from "./chart_types/comparative_dot_histogram
 import { FilterableChart } from "./layouts/filterable_chart.js";
 import { BarLineCombo } from "./chart_types/bar_line_combo.js";
 import { PinDropMap } from "./chart_types/pindrop_map.js";
+import { PinDropMapOer } from "./chart_types/pindrop_map_oer.js";
 import { VerticalTimeline } from "./chart_types/vertical_timeline.js";
 import { InteractiveSvg } from "./chart_types/interactive_svg.js";
 import { DroneStrikesTargetsStackedBar } from "./chart_types/drone_strikes_targets_stacked_bar.js";
@@ -53,6 +54,7 @@ export const whichChart = {
 	"percentage_stacked_bar": PercentageStackedBar,
 	"pie_chart": PieChart,
 	"pindrop_map": PinDropMap,
+	"pindrop_map_oer": PinDropMapOer,
 	"stacked_bar": StackedBar,
 	"step_chart": StepChart,
 	"summary_box": SummaryBox,
