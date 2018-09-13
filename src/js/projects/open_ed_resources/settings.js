@@ -60,6 +60,6 @@ let vizSettings = {
 
 module.exports = {
 	vizSettings: vizSettings,
-	dataUrl: "http://na-data-projects.s3.amazonaws.com/data/edpolicy/open-ed-resources-test.json",
+	dataUrl: "http://na-data-projects.s3.amazonaws.com/data/edpolicy/open-ed-resources.json",
 	downloadableSheets: ["districts", "oer", "professional_learning_resources"]
 }
