@@ -259,6 +259,7 @@ let variables = {
 };
 
 let vizSettings = {
+<<<<<<< HEAD
   "muslim-community-restrictions__states-map": {
     vizType: "dashboard",
     layoutRows: [
@@ -356,7 +357,7 @@ let vizSettings = {
       variables.processed_date,
       variables.description
     ],
-    dotScaleRange: [1, 4],
+    dotScaleRange: [1, 3],
     interaction: "mouseover",
     layouts: [
       {
@@ -380,6 +381,87 @@ let vizSettings = {
     ]
   }
 };
+=======
+	"muslim-community-restrictions__states-map": {
+		vizType: "dashboard",
+		layoutRows: [
+			[
+				{
+					vizType: "topo_json_map",
+					primaryDataSheet: "states",
+					width: "70%",
+					filterVars: [ variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_hate, variables.per_capita_total, variables.per_capita_anti_sharia, variables.per_capita_anti_refugee, variables.per_capita_anti_construction, variables.per_capita_elected_official, variables.per_capita_hate],
+					geometryType: "states",
+					geometryVar: variables.state_id,
+					stroke: {"color": colors.white, "width":"1", "opacity": "1", "hoverColor": colors.white, "hoverWidth": "3"},
+					filterGroupSettings: {"hidden": false, "keepVarIndexSameWhenCatChanged": true},
+					// tooltipVars: [ variables.state, variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official],
+					legendSettings: {"orientation": "horizontal-center", "showTitle": true},
+					addSmallStateInsets: true,
+					isMessagePasser: true,
+					interaction: "click",
+					defaultFill: colors.grey.light,
+					mouseoverOnlyIfValue: true,
+					sameFilterIndexWhenCategoryChanged: true
+				},
+				{
+					vizType: "content_stream",
+					primaryDataSheet: "incidents",
+					clickable: false,
+					defaultFilter: variables.incidents_total,
+					noValueText: "No incidents of this type recorded for this state",
+					width: "30%",
+					isMessagePasser: false,
+					messageHandlerType: "change_value",
+					idVar: variables.state,
+					showCurrFilterVal: true,
+					filterVar: variables.category,
+					additionalDataVars: [variables.population_total, variables.population_muslim],
+					dateVar: variables.processed_date,
+					hasColorOutline: true
+				}
+			],
+		]
+	},
+	"muslim-community-restrictions__states-table": {
+		vizType: "table",
+		primaryDataSheet: "states",
+		tableVars: [ variables.state, variables.incidents_total, variables.incidents_anti_sharia, variables.incidents_anti_refugee, variables.incidents_anti_construction, variables.incidents_elected_official, variables.incidents_hate],
+		defaultOrdering: [1, "desc"],
+		pagination: false,
+		colorScaling: false,
+		filterInitialDataFunction: d => d.state != "United States"
+	},
+	"muslim-community-restrictions__dot-chart": {
+		isReact: true,
+		vizType: "dot_chart",
+		primaryDataSheet: "incidents",
+		colorSettings: { colorVar: variables.category, showLegend: true },
+		tooltipTitleVar: variables.title,
+		tooltipVars: [variables.state, variables.category, variables.processed_date, variables.description],
+		dotScaleRange: [1, 3],
+		interaction: "mouseover",
+		layouts: [
+			{
+				label: "Incidents Over Time",
+				layout: "histogram_fixed_interval",
+				xVar: variables.year_month,
+				sortingVar: variables.date,
+				isYearMonth: true,
+				annotationSheet: "key_events"
+			},
+			{
+				label: "Incidents by State",
+				layout: "category",
+				categoryVar: variables.state,
+				sortCategoryValsFunction: (a, b) => { return new Date(a.date) - new Date(b.date)},
+				leftMargin: 120,
+				verticalPadding: 5
+			}
+		]
+	},
+}
+>>>>>>> master
 
 const preProcessData = data => {
   const fullDateFormat = d3.timeFormat("%B %-d, %Y"),
