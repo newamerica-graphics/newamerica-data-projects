@@ -8,7 +8,7 @@ export default class LegendCategorical extends React.Component {
 
 		this.numVals = this.props.colorScale.domain().length
 		this.fullValList = this.props.colorScale.domain();
-		
+
 		this.state = {
 			valsShown: this.fullValList
 		};
@@ -53,7 +53,7 @@ export default class LegendCategorical extends React.Component {
 			          return (
 			          	<li className={classes} onClick={() => this.toggleVals(variable)}>
 			          		<div className="legend__cell-contents">
-				          		<svg height="10" width="10" className="legend__cell__color-swatch-container">
+				          		<svg height="10" width="10" className="legend__cell__color-swatch-container" style={{transform: "translateY(-50%)"}}>
 				          			<circle key={variable} stroke={this.props.colorScale(variable)} fill={this.props.colorScale(variable)} cx="5" cy="5" r="4" className="legend__cell__color-swatch"></circle>
 				          		</svg>
 				          		<h5 className="legend__cell__label">{variable}</h5>

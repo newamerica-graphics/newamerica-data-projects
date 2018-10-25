@@ -88,7 +88,7 @@ export class StackedBar {
 		if (this.filterInitialDataBy) {
             this.data = this.data.filter((d) => { return d[this.filterInitialDataBy.field] == this.filterInitialDataBy.value; })
         }
-	    
+
 		this.setScaleDomains();
 		this.setColorScale();
 
@@ -125,16 +125,14 @@ export class StackedBar {
 		this.nestedVals = this.dataNestFunction(this.data, this.filterVar);
 
 		this.nestedVals.forEach((yearObject, i) => {
-			if (isNaN(yearObject.key)) {
-				this.nestedVals.splice(i, 1)
-			} else {
+			if (!isNaN(yearObject.key)) {
 				yearList.push(yearObject.key);
 				let valArray = yearObject.values || yearObject.value;
-				let localSum = d3.sum(valArray, (d) => { return d.value; })
+				let localSum = d3.sum(valArray, d => d.value )
 				maxTotalYearVal = Math.max(maxTotalYearVal, localSum);
 			}
 		})
-		
+
 		let yearExtents = d3.extent(yearList);
 
 		this.yScale.domain([0, maxTotalYearVal]);
@@ -149,7 +147,7 @@ export class StackedBar {
 		} else {
 			this.colorScale = getColorScale(this.data, this.filterVar);
 		}
-		
+
 	}
 
 	renderBars() {
@@ -202,13 +200,13 @@ export class StackedBar {
 	setBarHeights() {
 		this.barGroups
 			.attr("transform", (d) => { return "translate(" + this.xScale(d.key) + ")"})
-		
+
 		let currCumulativeY = 0;
 		this.bars
 			.attr("y", (d, i) => {
 				let barHeight = this.h - this.yScale(d.value);
 				currCumulativeY = i == 0 ? this.h - barHeight : currCumulativeY - barHeight;
-				return currCumulativeY; 
+				return currCumulativeY;
 			})
 			.attr("height", (d) => { return this.h - this.yScale(d.value); })
 			.attr("width", this.xScale.bandwidth());
@@ -264,7 +262,7 @@ export class StackedBar {
 	mouseover(datum, path, eventObject) {
 		d3.select(path).selectAll("rect")
 			.style("fill-opacity", .7);
-		
+
 		let mousePos = [];
 		mousePos[0] = eventObject.pageX;
 		mousePos[1] = eventObject.pageY;
@@ -276,7 +274,7 @@ export class StackedBar {
 		valArray.forEach((d) => {
 			tooltipData[d.key] = d.value;
 		})
-			
+
 		this.tooltip.show(tooltipData, mousePos);
 	}
 

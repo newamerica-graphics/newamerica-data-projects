@@ -30,7 +30,7 @@
 	&__description-popup {
 		max-width: 330px;
 		z-index: 1000;
-		
+
 		position:absolute;
 		background-color: white;
 		padding: 10px;
@@ -67,6 +67,12 @@
 				/*@include breakpoint(medium) {*/
 					display: inline-block !important;
 				/*}*/
+
+				&:hover {
+					.legend__cell__label {
+						color: palette-get(na-black-70) !important
+					}
+				}
 			}
 
 			.legend__cell-list {

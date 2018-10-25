@@ -7,7 +7,7 @@
         z-index: 1;
         top: 10px;
         display: none;
-        
+
         border: 1px solid palette-get(na-black-10);
 
         &.select {
@@ -49,7 +49,7 @@
                 width: $select-filter-group-width - $select-filter-group-label-width;
             }
         }
-    
+
 	    &:last-of-type {
 	        right: 225px;
             @media (min-width: 750px) {
@@ -115,7 +115,7 @@
 	        text-decoration: none;
 	        border-bottom: 1px solid palette-get(na-black-10);
 	        text-align: center;
-	    
+
 
 		    &:last-child {
 		        border: none;
@@ -289,6 +289,8 @@
             font-size: 14px;
             padding-top: 10px;
             color: palette-get(na-black);
+            -webkit-margin-before: 0px !important;
+            -webkit-margin-after: 0px !important;
         }
 
     }
@@ -602,7 +604,7 @@
 
 			&__properties {
 				margin-top: 20px;
-				
+
 				-moz-column-count: 2;
 				-webkit-column-count: 2;
 				columns: 2;

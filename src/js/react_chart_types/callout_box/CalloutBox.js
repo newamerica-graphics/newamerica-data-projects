@@ -8,6 +8,8 @@ import CalloutBoxDataElement from './CalloutBoxDataElement.js';
 
 const d3 = require("d3");
 
+const $ = require('jquery');
+
 class CalloutBox extends React.Component {
 	constructor(props) {
 		super(props);

@@ -5,7 +5,7 @@
 		display: inline-block;
 		padding: 10px 12px;
 		margin: 3px;
-		border: 2px solid palette-get(na-black-10);
+		border: 1px solid palette-get(na-black-10);
 		color: palette-get(na-black-40);
 		cursor: pointer;
 		font-size: 16px !important;
@@ -34,11 +34,11 @@
 
 	&__variable {
 		display: block;
-
 		margin-bottom: 5px;
 		cursor: pointer;
 		color: palette-get(na-black-40);
 		font-size: 1rem;
+		border: 1px solid white;
 
 		@include breakpoint(medium) {
 			font-size: 16px;

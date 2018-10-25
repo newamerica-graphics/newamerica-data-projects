@@ -4,7 +4,7 @@ const combineSources = (sourceArray) => {
 	for (let i = 0; i < sourceArray.length; i+=2) {
 
 		if (sourceArray[i] && sourceArray[i+1]) {
-			retString += i > 0 ? "," : ""
+			retString += i > 0 ? ", " : ""
 			retString += "<a href='" + sourceArray[i] + "'>" + sourceArray[i+1] + "</a>"
 		}
 	}

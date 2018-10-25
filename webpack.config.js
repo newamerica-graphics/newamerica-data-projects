@@ -30,7 +30,7 @@ const config = env => {
         'mapbox-gl-geocoder': path.resolve('./node_modules/mapbox-gl/plugins/src/mapbox-gl-geocoder/v2.0.1/'),
       }
     },
-    devtool: env.NODE_ENV === "development" ? 'cheap-module-eval-source-map' : '',
+    devtool: env.NODE_ENV === "development" ? 'cheap-module-eval-source-map' : 'eval',
     devServer: {
       contentBase: "./"
     },
@@ -45,17 +45,17 @@ const config = env => {
           test: /\.scss$/,
           use: [ {loader: 'style-loader'}, {loader: 'css-loader'}, {loader:'sass-loader'} ]
         },
-        { 
-          test: /\.png$/, 
-          use: "url-loader?limit=100000" 
+        {
+          test: /\.png$/,
+          use: "url-loader?limit=100000"
         },
-        { 
-          test: /\.svg$/, 
-          use: "svg-inline-loader" 
+        {
+          test: /\.svg$/,
+          use: "svg-inline-loader"
         },
-        { 
-          test: /\.json$/, 
-          use: "json-loader" 
+        {
+          test: /\.json$/,
+          use: "json-loader"
         },
         {
           test: /mapbox-gl.+\.js$/,
@@ -63,7 +63,7 @@ const config = env => {
         },
       ]
     },
-    plugins: (env.NODE_ENV === 'development') ? 
+    plugins: (env.NODE_ENV === 'development') ?
       [
         // new BundleAnalyzerPlugin(),
         new HtmlWebpackPlugin({
@@ -83,9 +83,9 @@ const config = env => {
           PROJECT: JSON.stringify(env.project)
         }),
         new S3Plugin({
-          // Only upload css and js 
+          // Only upload css and js
           include: /.*\.(scss|css|js)/,
-          // s3Options are required 
+          // s3Options are required
           s3Options: {
             accessKeyId: AWS_ACCESS_KEY_ID,
             secretAccessKey: AWS_SECRET_ACCESS_KEY,
