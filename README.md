@@ -1,3 +1,7 @@
+**DEPRECATED**
+
+All New America data viz projects now get their own repo in [newamerica-graphics](https://github.com/newamerica-graphics).
+
 # NA Data Projects
 
 Primary repository for New America's data visualization projects
